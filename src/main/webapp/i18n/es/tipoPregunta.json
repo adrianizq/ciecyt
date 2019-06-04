@@ -1,0 +1,23 @@
+{
+  "ciecytApp": {
+    "tipoPregunta": {
+      "home": {
+        "title": "Tipo Preguntas",
+        "createLabel": "Crear nuevo Tipo Pregunta",
+        "createOrEditLabel": "Crear o editar Tipo Pregunta"
+      },
+      "created": "Un nuevo Tipo Pregunta ha sido creado con el identificador {{ param }}",
+      "updated": "Un Tipo Pregunta ha sido actualizado con el identificador {{ param }}",
+      "deleted": "Un Tipo Pregunta ha sido eliminado con el identificador {{ param }}",
+      "delete": {
+        "question": "¿Seguro que quiere eliminar Tipo Pregunta {{ id }}?"
+      },
+      "detail": {
+        "title": "Tipo Pregunta"
+      },
+      "tipoPregunta": "Tipo Pregunta",
+      "tipoDato": "Tipo Dato",
+      "preguntaRespuesta": "Pregunta Respuesta"
+    }
+  }
+}

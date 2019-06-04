@@ -1,0 +1,37 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <div *ngIf="entidadFinanciadora">
+            <h2><span jhiTranslate="ciecytApp.entidadFinanciadora.detail.title">Entidad Financiadora</span> {{entidadFinanciadora.id}}</h2>
+            <hr>
+            <jhi-alert-error></jhi-alert-error>
+            <dl class="row-md jh-entity-details">
+                <dt><span jhiTranslate="ciecytApp.entidadFinanciadora.valor">Valor</span></dt>
+                <dd>
+                    <span>{{entidadFinanciadora.valor}}</span>
+                </dd>
+                <dt><span jhiTranslate="ciecytApp.entidadFinanciadora.estadoFinanciacion">Estado Financiacion</span></dt>
+                <dd>
+                    <span>{{entidadFinanciadora.estadoFinanciacion}}</span>
+                </dd>
+                <dt><span jhiTranslate="ciecytApp.entidadFinanciadora.proyecto">Proyecto</span></dt>
+                <dd>
+                    <div *ngIf="entidadFinanciadora.proyecto">
+                        <a [routerLink]="['/proyecto', entidadFinanciadora.proyecto?.id, 'view']">{{entidadFinanciadora.proyecto?.id}}</a>
+                    </div>
+                </dd>
+            </dl>
+
+            <button type="submit"
+                    (click)="previousState()"
+                    class="btn btn-info">
+                <fa-icon [icon]="'arrow-left'"></fa-icon>&nbsp;<span jhiTranslate="entity.action.back"> Back</span>
+            </button>
+
+            <button type="button"
+                    [routerLink]="['/entidad-financiadora', entidadFinanciadora.id, 'edit']"
+                    class="btn btn-primary">
+                <fa-icon [icon]="'pencil-alt'"></fa-icon>&nbsp;<span jhiTranslate="entity.action.edit"> Edit</span>
+            </button>
+        </div>
+    </div>
+</div>

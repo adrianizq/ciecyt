@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+    <!--
+        Added the constraints for entity Proyecto.
+    -->
+    <changeSet id="20190604045749-2" author="jhipster">
+        
+        <addForeignKeyConstraint baseColumnNames="linea_de_investigacion_id"
+                                 baseTableName="proyecto"
+                                 constraintName="fk_proyecto_linea_de_investigacion_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="linea_de_investigacion"/>
+
+        <addForeignKeyConstraint baseColumnNames="grupo_semillero_id"
+                                 baseTableName="proyecto"
+                                 constraintName="fk_proyecto_grupo_semillero_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="grupo_semillero"/>
+
+        <addForeignKeyConstraint baseColumnNames="facultad_id"
+                                 baseTableName="proyecto"
+                                 constraintName="fk_proyecto_facultad_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="facultad"/>
+
+        <addForeignKeyConstraint baseColumnNames="modalidad_de_grado_id"
+                                 baseTableName="proyecto"
+                                 constraintName="fk_proyecto_modalidad_de_grado_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="modalidad_de_grado"/>
+
+    </changeSet>
+</databaseChangeLog>

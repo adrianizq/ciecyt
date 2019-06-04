@@ -1,0 +1,34 @@
+{
+    "name": "Solicitud",
+    "fields": [
+        {
+            "fieldName": "estado",
+            "fieldType": "Boolean"
+        },
+        {
+            "fieldName": "asunto",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "fechaCreancion",
+            "fieldType": "LocalDate"
+        }
+    ],
+    "relationships": [
+        {
+            "relationshipName": "integrantesProyecto",
+            "otherEntityName": "integrantesProyecto",
+            "relationshipType": "many-to-one",
+            "otherEntityField": "id"
+        }
+    ],
+    "changelogDate": "20190604045812",
+    "entityTableName": "solicitud",
+    "dto": "no",
+    "pagination": "no",
+    "service": "serviceImpl",
+    "jpaMetamodelFiltering": false,
+    "fluentMethods": true,
+    "clientRootFolder": "",
+    "applications": "*"
+}

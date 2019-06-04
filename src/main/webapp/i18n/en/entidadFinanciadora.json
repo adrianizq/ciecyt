@@ -1,0 +1,24 @@
+{
+  "ciecytApp": {
+    "entidadFinanciadora": {
+      "home": {
+        "title": "Entidad Financiadoras",
+        "createLabel": "Create a new Entidad Financiadora",
+        "createOrEditLabel": "Create or edit a Entidad Financiadora"
+      },
+      "created": "A new Entidad Financiadora is created with identifier {{ param }}",
+      "updated": "A Entidad Financiadora is updated with identifier {{ param }}",
+      "deleted": "A Entidad Financiadora is deleted with identifier {{ param }}",
+      "delete": {
+        "question": "Are you sure you want to delete Entidad Financiadora {{ id }}?"
+      },
+      "detail": {
+        "title": "Entidad Financiadora"
+      },
+      "valor": "Valor",
+      "estadoFinanciacion": "Estado Financiacion",
+      "proyecto": "Proyecto",
+      "empresas": "Empresas"
+    }
+  }
+}

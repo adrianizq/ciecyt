@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+    <!--
+        Added the constraints for entity IntegrantesProyecto.
+    -->
+    <changeSet id="20190604045810-2" author="jhipster">
+        
+        <addForeignKeyConstraint baseColumnNames="proyecto_id"
+                                 baseTableName="integrantes_proyecto"
+                                 constraintName="fk_integrantes_proyecto_proyecto_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="proyecto"/>
+
+        <addForeignKeyConstraint baseColumnNames="user_id"
+                                 baseTableName="integrantes_proyecto"
+                                 constraintName="fk_integrantes_proyecto_user_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="jhi_user"/>
+
+        <addForeignKeyConstraint baseColumnNames="roles_usuario_proyecto_id"
+                                 baseTableName="integrantes_proyecto"
+                                 constraintName="fk_integrantes_proyecto_roles_usuario_proyecto_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="roles_usuario_proyecto"/>
+
+    </changeSet>
+</databaseChangeLog>

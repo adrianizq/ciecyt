@@ -1,0 +1,104 @@
+<div>
+    <h2 id="page-heading">
+        <span jhiTranslate="ciecytApp.proyecto.home.title">Proyectos</span>
+        <button id="jh-create-entity" class="btn btn-primary float-right jh-create-entity create-proyecto" [routerLink]="['/proyecto/new']">
+            <fa-icon [icon]="'plus'"></fa-icon>
+            <span  jhiTranslate="ciecytApp.proyecto.home.createLabel">
+            Create new Proyecto
+            </span>
+        </button>
+    </h2>
+    <jhi-alert></jhi-alert>
+    <br/>
+    <div class="table-responsive" *ngIf="proyectos">
+        <table class="table table-striped">
+            <thead>
+            <tr jhiSort [(predicate)]="predicate" [(ascending)]="reverse" [callback]="transition.bind(this)">
+            <th jhiSortBy="id"><span jhiTranslate="global.field.id">ID</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="titulo"><span jhiTranslate="ciecytApp.proyecto.titulo">Titulo</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="url"><span jhiTranslate="ciecytApp.proyecto.url">Url</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="lugarEjecucion"><span jhiTranslate="ciecytApp.proyecto.lugarEjecucion">Lugar Ejecucion</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="duracion"><span jhiTranslate="ciecytApp.proyecto.duracion">Duracion</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="fechaIni"><span jhiTranslate="ciecytApp.proyecto.fechaIni">Fecha Ini</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="fechaFin"><span jhiTranslate="ciecytApp.proyecto.fechaFin">Fecha Fin</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="contrapartidaPesos"><span jhiTranslate="ciecytApp.proyecto.contrapartidaPesos">Contrapartida Pesos</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="contrapartidaEspecie"><span jhiTranslate="ciecytApp.proyecto.contrapartidaEspecie">Contrapartida Especie</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="palabraClave"><span jhiTranslate="ciecytApp.proyecto.palabraClave">Palabra Clave</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="convocatoria"><span jhiTranslate="ciecytApp.proyecto.convocatoria">Convocatoria</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="lineaDeInvestigacion.id"><span jhiTranslate="ciecytApp.proyecto.lineaDeInvestigacion">Linea De Investigacion</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="grupoSemillero.id"><span jhiTranslate="ciecytApp.proyecto.grupoSemillero">Grupo Semillero</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="facultad.id"><span jhiTranslate="ciecytApp.proyecto.facultad">Facultad</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="modalidadDeGrado.id"><span jhiTranslate="ciecytApp.proyecto.modalidadDeGrado">Modalidad De Grado</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let proyecto of proyectos ;trackBy: trackId">
+                <td><a [routerLink]="['/proyecto', proyecto.id, 'view' ]">{{proyecto.id}}</a></td>
+                <td>{{proyecto.titulo}}</td>
+                <td>{{proyecto.url}}</td>
+                <td>{{proyecto.lugarEjecucion}}</td>
+                <td>{{proyecto.duracion}}</td>
+                <td>{{proyecto.fechaIni | date:'mediumDate'}}</td>
+                <td>{{proyecto.fechaFin | date:'mediumDate'}}</td>
+                <td>{{proyecto.contrapartidaPesos}}</td>
+                <td>{{proyecto.contrapartidaEspecie}}</td>
+                <td>{{proyecto.palabraClave}}</td>
+                <td>{{proyecto.convocatoria}}</td>
+                <td>
+                    <div *ngIf="proyecto.lineaDeInvestigacion">
+                        <a [routerLink]="['../linea-de-investigacion', proyecto.lineaDeInvestigacion?.id, 'view' ]" >{{proyecto.lineaDeInvestigacion?.id}}</a>
+                    </div>
+                </td>
+                <td>
+                    <div *ngIf="proyecto.grupoSemillero">
+                        <a [routerLink]="['../grupo-semillero', proyecto.grupoSemillero?.id, 'view' ]" >{{proyecto.grupoSemillero?.id}}</a>
+                    </div>
+                </td>
+                <td>
+                    <div *ngIf="proyecto.facultad">
+                        <a [routerLink]="['../facultad', proyecto.facultad?.id, 'view' ]" >{{proyecto.facultad?.id}}</a>
+                    </div>
+                </td>
+                <td>
+                    <div *ngIf="proyecto.modalidadDeGrado">
+                        <a [routerLink]="['../modalidad-de-grado', proyecto.modalidadDeGrado?.id, 'view' ]" >{{proyecto.modalidadDeGrado?.id}}</a>
+                    </div>
+                </td>
+                <td class="text-right">
+                    <div class="btn-group">
+                        <button type="submit"
+                                [routerLink]="['/proyecto', proyecto.id, 'view' ]"
+                                class="btn btn-info btn-sm">
+                            <fa-icon [icon]="'eye'"></fa-icon>
+                            <span class="d-none d-md-inline" jhiTranslate="entity.action.view">View</span>
+                        </button>
+                        <button type="submit"
+                                [routerLink]="['/proyecto', proyecto.id, 'edit']"
+                                class="btn btn-primary btn-sm">
+                            <fa-icon [icon]="'pencil-alt'"></fa-icon>
+                            <span class="d-none d-md-inline" jhiTranslate="entity.action.edit">Edit</span>
+                        </button>
+                        <button type="submit"
+                                [routerLink]="['/', 'proyecto', { outlets: { popup: proyecto.id + '/delete'} }]"
+                                replaceUrl="true"
+                                queryParamsHandling="merge"
+                                class="btn btn-danger btn-sm">
+                            <fa-icon [icon]="'times'"></fa-icon>
+                            <span class="d-none d-md-inline" jhiTranslate="entity.action.delete">Delete</span>
+                        </button>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <div *ngIf="proyectos && proyectos.length">
+        <div class="row justify-content-center">
+            <jhi-item-count [page]="page" [total]="totalItems" [maxSize]="5" [itemsPerPage]="itemsPerPage"></jhi-item-count>
+        </div>
+        <div class="row justify-content-center">
+            <ngb-pagination [collectionSize]="totalItems" [(page)]="page" [pageSize]="itemsPerPage" [maxSize]="5" [rotate]="true" [boundaryLinks]="true" (pageChange)="loadPage(page)"></ngb-pagination>
+        </div>
+    </div>
+</div>

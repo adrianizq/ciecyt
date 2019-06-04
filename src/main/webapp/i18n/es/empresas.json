@@ -1,0 +1,22 @@
+{
+  "ciecytApp": {
+    "empresas": {
+      "home": {
+        "title": "Empresas",
+        "createLabel": "Crear nuevo Empresas",
+        "createOrEditLabel": "Crear o editar Empresas"
+      },
+      "created": "Un nuevo Empresas ha sido creado con el identificador {{ param }}",
+      "updated": "Un Empresas ha sido actualizado con el identificador {{ param }}",
+      "deleted": "Un Empresas ha sido eliminado con el identificador {{ param }}",
+      "delete": {
+        "question": "¿Seguro que quiere eliminar Empresas {{ id }}?"
+      },
+      "detail": {
+        "title": "Empresas"
+      },
+      "entidad": "Entidad",
+      "entidadFinanciadora": "Entidad Financiadora"
+    }
+  }
+}

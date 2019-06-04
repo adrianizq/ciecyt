@@ -1,0 +1,35 @@
+{
+    "name": "FichaTecnica",
+    "fields": [
+        {
+            "fieldName": "tituloProfecional",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "tituloPosgrado",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "experencia",
+            "fieldType": "String"
+        }
+    ],
+    "relationships": [
+        {
+            "relationshipType": "many-to-one",
+            "otherEntityName": "user",
+            "otherEntityRelationshipName": "fichaTecnica",
+            "relationshipName": "user",
+            "otherEntityField": "login"
+        }
+    ],
+    "changelogDate": "20190604045811",
+    "entityTableName": "ficha_tecnica",
+    "dto": "no",
+    "pagination": "no",
+    "service": "serviceImpl",
+    "jpaMetamodelFiltering": false,
+    "fluentMethods": true,
+    "clientRootFolder": "",
+    "applications": "*"
+}

@@ -1,0 +1,26 @@
+{
+    "name": "Rubros",
+    "fields": [
+        {
+            "fieldName": "rubro",
+            "fieldType": "String"
+        }
+    ],
+    "relationships": [
+        {
+            "relationshipType": "one-to-many",
+            "otherEntityName": "presupuestoValor",
+            "otherEntityRelationshipName": "rubros",
+            "relationshipName": "presupuestoValor"
+        }
+    ],
+    "changelogDate": "20190604045801",
+    "entityTableName": "rubros",
+    "dto": "no",
+    "pagination": "no",
+    "service": "serviceImpl",
+    "jpaMetamodelFiltering": false,
+    "fluentMethods": true,
+    "clientRootFolder": "",
+    "applications": "*"
+}

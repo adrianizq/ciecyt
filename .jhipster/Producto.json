@@ -1,0 +1,26 @@
+{
+    "name": "Producto",
+    "fields": [
+        {
+            "fieldName": "producto",
+            "fieldType": "String"
+        }
+    ],
+    "relationships": [
+        {
+            "relationshipType": "one-to-many",
+            "otherEntityName": "productoProyecto",
+            "otherEntityRelationshipName": "producto",
+            "relationshipName": "productoProyecto"
+        }
+    ],
+    "changelogDate": "20190604045759",
+    "entityTableName": "producto",
+    "dto": "no",
+    "pagination": "no",
+    "service": "serviceImpl",
+    "jpaMetamodelFiltering": false,
+    "fluentMethods": true,
+    "clientRootFolder": "",
+    "applications": "*"
+}

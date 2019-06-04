@@ -1,0 +1,33 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <div *ngIf="categorizacion">
+            <h2><span jhiTranslate="ciecytApp.categorizacion.detail.title">Categorizacion</span> {{categorizacion.id}}</h2>
+            <hr>
+            <jhi-alert-error></jhi-alert-error>
+            <dl class="row-md jh-entity-details">
+                <dt><span jhiTranslate="ciecytApp.categorizacion.categoria">Categoria</span></dt>
+                <dd>
+                    <span>{{categorizacion.categoria}}</span>
+                </dd>
+                <dt><span jhiTranslate="ciecytApp.categorizacion.proyecto">Proyecto</span></dt>
+                <dd>
+                    <div *ngIf="categorizacion.proyecto">
+                        <a [routerLink]="['/proyecto', categorizacion.proyecto?.id, 'view']">{{categorizacion.proyecto?.id}}</a>
+                    </div>
+                </dd>
+            </dl>
+
+            <button type="submit"
+                    (click)="previousState()"
+                    class="btn btn-info">
+                <fa-icon [icon]="'arrow-left'"></fa-icon>&nbsp;<span jhiTranslate="entity.action.back"> Back</span>
+            </button>
+
+            <button type="button"
+                    [routerLink]="['/categorizacion', categorizacion.id, 'edit']"
+                    class="btn btn-primary">
+                <fa-icon [icon]="'pencil-alt'"></fa-icon>&nbsp;<span jhiTranslate="entity.action.edit"> Edit</span>
+            </button>
+        </div>
+    </div>
+</div>

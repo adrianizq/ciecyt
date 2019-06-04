@@ -1,0 +1,23 @@
+{
+  "ciecytApp": {
+    "grupoSemillero": {
+      "home": {
+        "title": "Grupo Semilleros",
+        "createLabel": "Create a new Grupo Semillero",
+        "createOrEditLabel": "Create or edit a Grupo Semillero"
+      },
+      "created": "A new Grupo Semillero is created with identifier {{ param }}",
+      "updated": "A Grupo Semillero is updated with identifier {{ param }}",
+      "deleted": "A Grupo Semillero is deleted with identifier {{ param }}",
+      "delete": {
+        "question": "Are you sure you want to delete Grupo Semillero {{ id }}?"
+      },
+      "detail": {
+        "title": "Grupo Semillero"
+      },
+      "nombre": "Nombre",
+      "tipo": "Tipo",
+      "proyecto": "Proyecto"
+    }
+  }
+}

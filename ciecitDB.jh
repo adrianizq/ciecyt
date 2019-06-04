@@ -1,0 +1,229 @@
+entity Proyecto {
+	titulo String,
+    url String,
+    lugarEjecucion String,
+    duracion String,
+    fechaIni LocalDate,
+    fechaFin LocalDate,
+    contrapartidaPesos Double,
+    contrapartidaEspecie Double,
+    palabraClave String,
+    convocatoria String
+}
+entity LineaDeInvestigacion {
+	linea String,
+}
+
+relationship ManyToOne {
+	LineaDeInvestigacion{padre} to LineaDeInvestigacion
+}
+
+relationship OneToMany {
+	LineaDeInvestigacion{proyecto} to Proyecto
+}
+
+
+entity GrupoSemillero {
+	nombre String,
+    tipo Boolean
+}
+relationship OneToMany {
+	GrupoSemillero{proyecto} to Proyecto
+}
+
+entity Facultad {
+	nombre String
+}
+relationship OneToMany {
+	Facultad{proyecto} to Proyecto
+}
+
+relationship ManyToOne {
+	Facultad{padre} to Facultad
+}
+
+entity ModalidadDeGrado {
+	modalidad String
+}
+
+relationship OneToMany {
+	ModalidadDeGrado{proyecto} to Proyecto
+}
+
+entity Categorizacion {
+	categoria String
+}
+
+relationship ManyToOne {
+	Categorizacion{proyecto} to Proyecto
+}
+
+entity Empresas{
+	entidad String
+}
+
+entity EntidadFinanciadora{
+	valor Double,
+    estadoFinanciacion Boolean
+}
+
+relationship OneToMany {
+	EntidadFinanciadora{empresas} to Empresas
+}
+relationship OneToMany {
+	Proyecto{entidadFinanciadora} to EntidadFinanciadora
+}
+
+entity Elementos {
+	elemento String
+}
+
+entity ElementosProyecto{
+	dato String
+}
+relationship OneToMany {
+	Proyecto{elementosProyecto} to ElementosProyecto
+}
+relationship OneToMany {
+	Elementos{elementosProyecto} to ElementosProyecto
+}
+
+entity Producto {
+	producto String
+}
+
+entity ProductoProyecto {
+	aplica Boolean,
+    descripcion String
+}
+relationship OneToMany {
+	Proyecto{productoProyecto} to ProductoProyecto
+    Producto{productoProyecto} to ProductoProyecto
+}
+
+entity Rubros {
+	rubro String
+}
+
+entity PresupuestoValor {
+	descripcion String, 
+    justificacion String, 
+    cantidad Integer,
+    valorUnitario Integer,
+    especie Double, 
+    dinero Double, 
+    entidadFinanciadora String
+}
+relationship OneToMany {
+	Proyecto{presupuestoValor} to PresupuestoValor
+    Rubros{presupuestoValor} to PresupuestoValor
+}
+
+entity ImpactosEsperados {
+	impacto String,
+    plazo Integer, 
+    indicador String, 
+    supuestos String
+}
+
+relationship OneToMany {
+	Proyecto{impactosEsperados} to ImpactosEsperados
+}
+
+
+entity Cronograma {
+	actividad String, 
+    duracion Integer,
+    fechaIni LocalDate,
+    fechaFin LocalDate
+}
+
+relationship OneToMany {
+	Proyecto{cronograma} to Cronograma
+}
+
+
+entity ResultadosEsperados {
+	resultado String, 
+    indicador String,
+    beneficiario String
+}
+
+relationship OneToMany {
+	Proyecto{resultadosEsperados} to ResultadosEsperados
+}
+
+
+//Relaciones de las entidades
+
+
+entity Preguntas{
+	pregunta String
+}
+
+relationship OneToMany {
+	Elementos{Preguntas} to Preguntas
+	FaseTrabajo{faseTrabajo} to Preguntas
+}
+
+entity FaseTrabajo{
+	faseTrabajo String
+} 
+entity PreguntaRespuesta{
+
+}
+relationship OneToMany {
+	Preguntas{preguntaRespuesta} to PreguntaRespuesta	
+    TipoPregunta{preguntaRespuesta} to PreguntaRespuesta	
+    IntegrantesProyecto{preguntaRespuesta} to PreguntaRespuesta	
+}
+
+
+entity TipoPregunta{
+	tipoPregunta String,
+    tipoDato String
+}
+entity IntegrantesProyecto{
+}
+relationship OneToMany {
+	Proyecto{integrantesProyecto} to IntegrantesProyecto
+    RolesUsuarioProyecto{integrantesProyecto} to IntegrantesProyecto    
+}
+relationship ManyToOne {
+	IntegrantesProyecto{user(login)} to User
+    }
+entity FichaTecnica{
+	tituloProfecional String,
+	tituloPosgrado String,
+	experencia String
+}
+relationship ManyToOne {
+	FichaTecnica{user(login)} to User    
+}
+
+entity Solicitud{
+	estado Boolean,
+	asunto String,
+	fechaCreancion LocalDate
+}
+relationship OneToMany {
+	IntegrantesProyecto{solicitud} to Solicitud
+}
+
+entity RolesUsuarioProyecto{
+	rol Integer,
+	descripcion String
+}
+
+// Set pagination options
+paginate Proyecto with pagination
+
+// Use Data Transfert Objects (DTO)
+// dto * with mapstruct
+
+// Set service options to all except few
+service all with serviceImpl 
+
+// Set an angular suffix
+// angularSuffix * with mySuffix
+

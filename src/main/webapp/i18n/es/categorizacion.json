@@ -1,0 +1,22 @@
+{
+  "ciecytApp": {
+    "categorizacion": {
+      "home": {
+        "title": "Categorizacions",
+        "createLabel": "Crear nuevo Categorizacion",
+        "createOrEditLabel": "Crear o editar Categorizacion"
+      },
+      "created": "Un nuevo Categorizacion ha sido creado con el identificador {{ param }}",
+      "updated": "Un Categorizacion ha sido actualizado con el identificador {{ param }}",
+      "deleted": "Un Categorizacion ha sido eliminado con el identificador {{ param }}",
+      "delete": {
+        "question": "¿Seguro que quiere eliminar Categorizacion {{ id }}?"
+      },
+      "detail": {
+        "title": "Categorizacion"
+      },
+      "categoria": "Categoria",
+      "proyecto": "Proyecto"
+    }
+  }
+}

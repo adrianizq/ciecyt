@@ -1,0 +1,23 @@
+{
+  "ciecytApp": {
+    "elementos": {
+      "home": {
+        "title": "Elementos",
+        "createLabel": "Create a new Elementos",
+        "createOrEditLabel": "Create or edit a Elementos"
+      },
+      "created": "A new Elementos is created with identifier {{ param }}",
+      "updated": "A Elementos is updated with identifier {{ param }}",
+      "deleted": "A Elementos is deleted with identifier {{ param }}",
+      "delete": {
+        "question": "Are you sure you want to delete Elementos {{ id }}?"
+      },
+      "detail": {
+        "title": "Elementos"
+      },
+      "elemento": "Elemento",
+      "elementosProyecto": "Elementos Proyecto",
+      "preguntas": "Preguntas"
+    }
+  }
+}

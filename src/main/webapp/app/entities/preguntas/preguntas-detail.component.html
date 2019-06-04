@@ -1,0 +1,39 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <div *ngIf="preguntas">
+            <h2><span jhiTranslate="ciecytApp.preguntas.detail.title">Preguntas</span> {{preguntas.id}}</h2>
+            <hr>
+            <jhi-alert-error></jhi-alert-error>
+            <dl class="row-md jh-entity-details">
+                <dt><span jhiTranslate="ciecytApp.preguntas.pregunta">Pregunta</span></dt>
+                <dd>
+                    <span>{{preguntas.pregunta}}</span>
+                </dd>
+                <dt><span jhiTranslate="ciecytApp.preguntas.elementos">Elementos</span></dt>
+                <dd>
+                    <div *ngIf="preguntas.elementos">
+                        <a [routerLink]="['/elementos', preguntas.elementos?.id, 'view']">{{preguntas.elementos?.id}}</a>
+                    </div>
+                </dd>
+                <dt><span jhiTranslate="ciecytApp.preguntas.faseTrabajo">Fase Trabajo</span></dt>
+                <dd>
+                    <div *ngIf="preguntas.faseTrabajo">
+                        <a [routerLink]="['/fase-trabajo', preguntas.faseTrabajo?.id, 'view']">{{preguntas.faseTrabajo?.id}}</a>
+                    </div>
+                </dd>
+            </dl>
+
+            <button type="submit"
+                    (click)="previousState()"
+                    class="btn btn-info">
+                <fa-icon [icon]="'arrow-left'"></fa-icon>&nbsp;<span jhiTranslate="entity.action.back"> Back</span>
+            </button>
+
+            <button type="button"
+                    [routerLink]="['/preguntas', preguntas.id, 'edit']"
+                    class="btn btn-primary">
+                <fa-icon [icon]="'pencil-alt'"></fa-icon>&nbsp;<span jhiTranslate="entity.action.edit"> Edit</span>
+            </button>
+        </div>
+    </div>
+</div>

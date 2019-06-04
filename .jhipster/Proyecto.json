@@ -1,0 +1,128 @@
+{
+    "name": "Proyecto",
+    "fields": [
+        {
+            "fieldName": "titulo",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "url",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "lugarEjecucion",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "duracion",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "fechaIni",
+            "fieldType": "LocalDate"
+        },
+        {
+            "fieldName": "fechaFin",
+            "fieldType": "LocalDate"
+        },
+        {
+            "fieldName": "contrapartidaPesos",
+            "fieldType": "Double"
+        },
+        {
+            "fieldName": "contrapartidaEspecie",
+            "fieldType": "Double"
+        },
+        {
+            "fieldName": "palabraClave",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "convocatoria",
+            "fieldType": "String"
+        }
+    ],
+    "relationships": [
+        {
+            "relationshipType": "one-to-many",
+            "otherEntityName": "entidadFinanciadora",
+            "otherEntityRelationshipName": "proyecto",
+            "relationshipName": "entidadFinanciadora"
+        },
+        {
+            "relationshipType": "one-to-many",
+            "otherEntityName": "elementosProyecto",
+            "otherEntityRelationshipName": "proyecto",
+            "relationshipName": "elementosProyecto"
+        },
+        {
+            "relationshipType": "one-to-many",
+            "otherEntityName": "productoProyecto",
+            "otherEntityRelationshipName": "proyecto",
+            "relationshipName": "productoProyecto"
+        },
+        {
+            "relationshipType": "one-to-many",
+            "otherEntityName": "presupuestoValor",
+            "otherEntityRelationshipName": "proyecto",
+            "relationshipName": "presupuestoValor"
+        },
+        {
+            "relationshipType": "one-to-many",
+            "otherEntityName": "impactosEsperados",
+            "otherEntityRelationshipName": "proyecto",
+            "relationshipName": "impactosEsperados"
+        },
+        {
+            "relationshipType": "one-to-many",
+            "otherEntityName": "cronograma",
+            "otherEntityRelationshipName": "proyecto",
+            "relationshipName": "cronograma"
+        },
+        {
+            "relationshipType": "one-to-many",
+            "otherEntityName": "resultadosEsperados",
+            "otherEntityRelationshipName": "proyecto",
+            "relationshipName": "resultadosEsperados"
+        },
+        {
+            "relationshipType": "one-to-many",
+            "otherEntityName": "integrantesProyecto",
+            "otherEntityRelationshipName": "proyecto",
+            "relationshipName": "integrantesProyecto"
+        },
+        {
+            "relationshipName": "lineaDeInvestigacion",
+            "otherEntityName": "lineaDeInvestigacion",
+            "relationshipType": "many-to-one",
+            "otherEntityField": "id"
+        },
+        {
+            "relationshipName": "grupoSemillero",
+            "otherEntityName": "grupoSemillero",
+            "relationshipType": "many-to-one",
+            "otherEntityField": "id"
+        },
+        {
+            "relationshipName": "facultad",
+            "otherEntityName": "facultad",
+            "relationshipType": "many-to-one",
+            "otherEntityField": "id"
+        },
+        {
+            "relationshipName": "modalidadDeGrado",
+            "otherEntityName": "modalidadDeGrado",
+            "relationshipType": "many-to-one",
+            "otherEntityField": "id"
+        }
+    ],
+    "changelogDate": "20190604045749",
+    "entityTableName": "proyecto",
+    "dto": "no",
+    "pagination": "pagination",
+    "service": "serviceImpl",
+    "jpaMetamodelFiltering": false,
+    "fluentMethods": true,
+    "clientRootFolder": "",
+    "applications": "*"
+}

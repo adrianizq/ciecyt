@@ -1,0 +1,24 @@
+{
+  "ciecytApp": {
+    "preguntas": {
+      "home": {
+        "title": "Preguntas",
+        "createLabel": "Create a new Preguntas",
+        "createOrEditLabel": "Create or edit a Preguntas"
+      },
+      "created": "A new Preguntas is created with identifier {{ param }}",
+      "updated": "A Preguntas is updated with identifier {{ param }}",
+      "deleted": "A Preguntas is deleted with identifier {{ param }}",
+      "delete": {
+        "question": "Are you sure you want to delete Preguntas {{ id }}?"
+      },
+      "detail": {
+        "title": "Preguntas"
+      },
+      "pregunta": "Pregunta",
+      "elementos": "Elementos",
+      "preguntaRespuesta": "Pregunta Respuesta",
+      "faseTrabajo": "Fase Trabajo"
+    }
+  }
+}

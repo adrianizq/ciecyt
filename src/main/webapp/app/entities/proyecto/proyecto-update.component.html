@@ -1,0 +1,110 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <form name="editForm" role="form" novalidate (ngSubmit)="save()" [formGroup]="editForm">
+            <h2 id="jhi-proyecto-heading" jhiTranslate="ciecytApp.proyecto.home.createOrEditLabel">Create or edit a Proyecto</h2>
+            <div>
+                <jhi-alert-error></jhi-alert-error>
+                <div class="form-group" [hidden]="!proyecto.id">
+                    <label for="id" jhiTranslate="global.field.id">ID</label>
+                    <input type="text" class="form-control" id="id" name="id" formControlName="id"
+                        readonly />
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="ciecytApp.proyecto.titulo" for="field_titulo">Titulo</label>
+                    <input type="text" class="form-control" name="titulo" id="field_titulo"
+                           formControlName="titulo"/>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="ciecytApp.proyecto.url" for="field_url">Url</label>
+                    <input type="text" class="form-control" name="url" id="field_url"
+                           formControlName="url"/>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="ciecytApp.proyecto.lugarEjecucion" for="field_lugarEjecucion">Lugar Ejecucion</label>
+                    <input type="text" class="form-control" name="lugarEjecucion" id="field_lugarEjecucion"
+                           formControlName="lugarEjecucion"/>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="ciecytApp.proyecto.duracion" for="field_duracion">Duracion</label>
+                    <input type="text" class="form-control" name="duracion" id="field_duracion"
+                           formControlName="duracion"/>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="ciecytApp.proyecto.fechaIni" for="field_fechaIni">Fecha Ini</label>
+                    <div class="input-group">
+                        <input id="field_fechaIni" type="text" class="form-control" name="fechaIni" ngbDatepicker  #fechaIniDp="ngbDatepicker" formControlName="fechaIni"/>
+                        <span class="input-group-append">
+                            <button type="button" class="btn btn-secondary" (click)="fechaIniDp.toggle()"><fa-icon [icon]="'calendar-alt'"></fa-icon></button>
+                        </span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="ciecytApp.proyecto.fechaFin" for="field_fechaFin">Fecha Fin</label>
+                    <div class="input-group">
+                        <input id="field_fechaFin" type="text" class="form-control" name="fechaFin" ngbDatepicker  #fechaFinDp="ngbDatepicker" formControlName="fechaFin"/>
+                        <span class="input-group-append">
+                            <button type="button" class="btn btn-secondary" (click)="fechaFinDp.toggle()"><fa-icon [icon]="'calendar-alt'"></fa-icon></button>
+                        </span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="ciecytApp.proyecto.contrapartidaPesos" for="field_contrapartidaPesos">Contrapartida Pesos</label>
+                    <input type="number" class="form-control" name="contrapartidaPesos" id="field_contrapartidaPesos"
+                           formControlName="contrapartidaPesos"/>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="ciecytApp.proyecto.contrapartidaEspecie" for="field_contrapartidaEspecie">Contrapartida Especie</label>
+                    <input type="number" class="form-control" name="contrapartidaEspecie" id="field_contrapartidaEspecie"
+                           formControlName="contrapartidaEspecie"/>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="ciecytApp.proyecto.palabraClave" for="field_palabraClave">Palabra Clave</label>
+                    <input type="text" class="form-control" name="palabraClave" id="field_palabraClave"
+                           formControlName="palabraClave"/>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="ciecytApp.proyecto.convocatoria" for="field_convocatoria">Convocatoria</label>
+                    <input type="text" class="form-control" name="convocatoria" id="field_convocatoria"
+                           formControlName="convocatoria"/>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="ciecytApp.proyecto.lineaDeInvestigacion" for="field_lineaDeInvestigacion">Linea De Investigacion</label>
+                    <select class="form-control" id="field_lineaDeInvestigacion" name="lineaDeInvestigacion" formControlName="lineaDeInvestigacion">
+                        <option [ngValue]="null"></option>
+                        <option [ngValue]="lineaDeInvestigacionOption.id === editForm.get('lineaDeInvestigacion').value?.id ? editForm.get('lineaDeInvestigacion').value : lineaDeInvestigacionOption" *ngFor="let lineaDeInvestigacionOption of lineadeinvestigacions; trackBy: trackLineaDeInvestigacionById">{{lineaDeInvestigacionOption.id}}</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="ciecytApp.proyecto.grupoSemillero" for="field_grupoSemillero">Grupo Semillero</label>
+                    <select class="form-control" id="field_grupoSemillero" name="grupoSemillero" formControlName="grupoSemillero">
+                        <option [ngValue]="null"></option>
+                        <option [ngValue]="grupoSemilleroOption.id === editForm.get('grupoSemillero').value?.id ? editForm.get('grupoSemillero').value : grupoSemilleroOption" *ngFor="let grupoSemilleroOption of gruposemilleros; trackBy: trackGrupoSemilleroById">{{grupoSemilleroOption.id}}</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="ciecytApp.proyecto.facultad" for="field_facultad">Facultad</label>
+                    <select class="form-control" id="field_facultad" name="facultad" formControlName="facultad">
+                        <option [ngValue]="null"></option>
+                        <option [ngValue]="facultadOption.id === editForm.get('facultad').value?.id ? editForm.get('facultad').value : facultadOption" *ngFor="let facultadOption of facultads; trackBy: trackFacultadById">{{facultadOption.id}}</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="ciecytApp.proyecto.modalidadDeGrado" for="field_modalidadDeGrado">Modalidad De Grado</label>
+                    <select class="form-control" id="field_modalidadDeGrado" name="modalidadDeGrado" formControlName="modalidadDeGrado">
+                        <option [ngValue]="null"></option>
+                        <option [ngValue]="modalidadDeGradoOption.id === editForm.get('modalidadDeGrado').value?.id ? editForm.get('modalidadDeGrado').value : modalidadDeGradoOption" *ngFor="let modalidadDeGradoOption of modalidaddegrados; trackBy: trackModalidadDeGradoById">{{modalidadDeGradoOption.id}}</option>
+                    </select>
+                </div>
+            </div>
+            <div>
+                <button type="button" id="cancel-save" class="btn btn-secondary"  (click)="previousState()">
+                    <fa-icon [icon]="'ban'"></fa-icon>&nbsp;<span jhiTranslate="entity.action.cancel">Cancel</span>
+                </button>
+                <button type="submit" id="save-entity" [disabled]="editForm.invalid || isSaving" class="btn btn-primary">
+                    <fa-icon [icon]="'save'"></fa-icon>&nbsp;<span jhiTranslate="entity.action.save">Save</span>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

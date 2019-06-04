@@ -1,0 +1,32 @@
+{
+    "name": "Elementos",
+    "fields": [
+        {
+            "fieldName": "elemento",
+            "fieldType": "String"
+        }
+    ],
+    "relationships": [
+        {
+            "relationshipType": "one-to-many",
+            "otherEntityName": "elementosProyecto",
+            "otherEntityRelationshipName": "elementos",
+            "relationshipName": "elementosProyecto"
+        },
+        {
+            "relationshipType": "one-to-many",
+            "otherEntityName": "preguntas",
+            "otherEntityRelationshipName": "elementos",
+            "relationshipName": "preguntas"
+        }
+    ],
+    "changelogDate": "20190604045757",
+    "entityTableName": "elementos",
+    "dto": "no",
+    "pagination": "no",
+    "service": "serviceImpl",
+    "jpaMetamodelFiltering": false,
+    "fluentMethods": true,
+    "clientRootFolder": "",
+    "applications": "*"
+}

@@ -1,0 +1,23 @@
+{
+  "ciecytApp": {
+    "preguntaRespuesta": {
+      "home": {
+        "title": "Pregunta Respuestas",
+        "createLabel": "Create a new Pregunta Respuesta",
+        "createOrEditLabel": "Create or edit a Pregunta Respuesta"
+      },
+      "created": "A new Pregunta Respuesta is created with identifier {{ param }}",
+      "updated": "A Pregunta Respuesta is updated with identifier {{ param }}",
+      "deleted": "A Pregunta Respuesta is deleted with identifier {{ param }}",
+      "delete": {
+        "question": "Are you sure you want to delete Pregunta Respuesta {{ id }}?"
+      },
+      "detail": {
+        "title": "Pregunta Respuesta"
+      },
+      "preguntas": "Preguntas",
+      "tipoPregunta": "Tipo Pregunta",
+      "integrantesProyecto": "Integrantes Proyecto"
+    }
+  }
+}

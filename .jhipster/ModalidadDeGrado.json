@@ -1,0 +1,26 @@
+{
+    "name": "ModalidadDeGrado",
+    "fields": [
+        {
+            "fieldName": "modalidad",
+            "fieldType": "String"
+        }
+    ],
+    "relationships": [
+        {
+            "relationshipType": "one-to-many",
+            "otherEntityName": "proyecto",
+            "otherEntityRelationshipName": "modalidadDeGrado",
+            "relationshipName": "proyecto"
+        }
+    ],
+    "changelogDate": "20190604045753",
+    "entityTableName": "modalidad_de_grado",
+    "dto": "no",
+    "pagination": "no",
+    "service": "serviceImpl",
+    "jpaMetamodelFiltering": false,
+    "fluentMethods": true,
+    "clientRootFolder": "",
+    "applications": "*"
+}

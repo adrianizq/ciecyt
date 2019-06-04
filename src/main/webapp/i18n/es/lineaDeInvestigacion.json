@@ -1,0 +1,23 @@
+{
+  "ciecytApp": {
+    "lineaDeInvestigacion": {
+      "home": {
+        "title": "Linea De Investigacions",
+        "createLabel": "Crear nuevo Linea De Investigacion",
+        "createOrEditLabel": "Crear o editar Linea De Investigacion"
+      },
+      "created": "Un nuevo Linea De Investigacion ha sido creado con el identificador {{ param }}",
+      "updated": "Un Linea De Investigacion ha sido actualizado con el identificador {{ param }}",
+      "deleted": "Un Linea De Investigacion ha sido eliminado con el identificador {{ param }}",
+      "delete": {
+        "question": "¿Seguro que quiere eliminar Linea De Investigacion {{ id }}?"
+      },
+      "detail": {
+        "title": "Linea De Investigacion"
+      },
+      "linea": "Linea",
+      "proyecto": "Proyecto",
+      "padre": "Padre"
+    }
+  }
+}

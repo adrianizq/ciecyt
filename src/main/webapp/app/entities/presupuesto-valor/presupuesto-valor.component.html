@@ -1,0 +1,78 @@
+<div>
+    <h2 id="page-heading">
+        <span jhiTranslate="ciecytApp.presupuestoValor.home.title">Presupuesto Valors</span>
+        <button id="jh-create-entity" class="btn btn-primary float-right jh-create-entity create-presupuesto-valor" [routerLink]="['/presupuesto-valor/new']">
+            <fa-icon [icon]="'plus'"></fa-icon>
+            <span  jhiTranslate="ciecytApp.presupuestoValor.home.createLabel">
+            Create new Presupuesto Valor
+            </span>
+        </button>
+    </h2>
+    <jhi-alert></jhi-alert>
+    <br/>
+    <div class="table-responsive" *ngIf="presupuestoValors">
+        <table class="table table-striped">
+            <thead>
+            <tr>
+            <th><span jhiTranslate="global.field.id">ID</span></th>
+            <th><span jhiTranslate="ciecytApp.presupuestoValor.descripcion">Descripcion</span></th>
+            <th><span jhiTranslate="ciecytApp.presupuestoValor.justificacion">Justificacion</span></th>
+            <th><span jhiTranslate="ciecytApp.presupuestoValor.cantidad">Cantidad</span></th>
+            <th><span jhiTranslate="ciecytApp.presupuestoValor.valorUnitario">Valor Unitario</span></th>
+            <th><span jhiTranslate="ciecytApp.presupuestoValor.especie">Especie</span></th>
+            <th><span jhiTranslate="ciecytApp.presupuestoValor.dinero">Dinero</span></th>
+            <th><span jhiTranslate="ciecytApp.presupuestoValor.entidadFinanciadora">Entidad Financiadora</span></th>
+            <th><span jhiTranslate="ciecytApp.presupuestoValor.proyecto">Proyecto</span></th>
+            <th><span jhiTranslate="ciecytApp.presupuestoValor.rubros">Rubros</span></th>
+            <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let presupuestoValor of presupuestoValors ;trackBy: trackId">
+                <td><a [routerLink]="['/presupuesto-valor', presupuestoValor.id, 'view' ]">{{presupuestoValor.id}}</a></td>
+                <td>{{presupuestoValor.descripcion}}</td>
+                <td>{{presupuestoValor.justificacion}}</td>
+                <td>{{presupuestoValor.cantidad}}</td>
+                <td>{{presupuestoValor.valorUnitario}}</td>
+                <td>{{presupuestoValor.especie}}</td>
+                <td>{{presupuestoValor.dinero}}</td>
+                <td>{{presupuestoValor.entidadFinanciadora}}</td>
+                <td>
+                    <div *ngIf="presupuestoValor.proyecto">
+                        <a [routerLink]="['../proyecto', presupuestoValor.proyecto?.id, 'view' ]" >{{presupuestoValor.proyecto?.id}}</a>
+                    </div>
+                </td>
+                <td>
+                    <div *ngIf="presupuestoValor.rubros">
+                        <a [routerLink]="['../rubros', presupuestoValor.rubros?.id, 'view' ]" >{{presupuestoValor.rubros?.id}}</a>
+                    </div>
+                </td>
+                <td class="text-right">
+                    <div class="btn-group">
+                        <button type="submit"
+                                [routerLink]="['/presupuesto-valor', presupuestoValor.id, 'view' ]"
+                                class="btn btn-info btn-sm">
+                            <fa-icon [icon]="'eye'"></fa-icon>
+                            <span class="d-none d-md-inline" jhiTranslate="entity.action.view">View</span>
+                        </button>
+                        <button type="submit"
+                                [routerLink]="['/presupuesto-valor', presupuestoValor.id, 'edit']"
+                                class="btn btn-primary btn-sm">
+                            <fa-icon [icon]="'pencil-alt'"></fa-icon>
+                            <span class="d-none d-md-inline" jhiTranslate="entity.action.edit">Edit</span>
+                        </button>
+                        <button type="submit"
+                                [routerLink]="['/', 'presupuesto-valor', { outlets: { popup: presupuestoValor.id + '/delete'} }]"
+                                replaceUrl="true"
+                                queryParamsHandling="merge"
+                                class="btn btn-danger btn-sm">
+                            <fa-icon [icon]="'times'"></fa-icon>
+                            <span class="d-none d-md-inline" jhiTranslate="entity.action.delete">Delete</span>
+                        </button>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

@@ -1,0 +1,26 @@
+{
+    "name": "Empresas",
+    "fields": [
+        {
+            "fieldName": "entidad",
+            "fieldType": "String"
+        }
+    ],
+    "relationships": [
+        {
+            "relationshipName": "entidadFinanciadora",
+            "otherEntityName": "entidadFinanciadora",
+            "relationshipType": "many-to-one",
+            "otherEntityField": "id"
+        }
+    ],
+    "changelogDate": "20190604045755",
+    "entityTableName": "empresas",
+    "dto": "no",
+    "pagination": "no",
+    "service": "serviceImpl",
+    "jpaMetamodelFiltering": false,
+    "fluentMethods": true,
+    "clientRootFolder": "",
+    "applications": "*"
+}

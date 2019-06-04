@@ -1,0 +1,22 @@
+{
+  "ciecytApp": {
+    "faseTrabajo": {
+      "home": {
+        "title": "Fase Trabajos",
+        "createLabel": "Crear nuevo Fase Trabajo",
+        "createOrEditLabel": "Crear o editar Fase Trabajo"
+      },
+      "created": "Un nuevo Fase Trabajo ha sido creado con el identificador {{ param }}",
+      "updated": "Un Fase Trabajo ha sido actualizado con el identificador {{ param }}",
+      "deleted": "Un Fase Trabajo ha sido eliminado con el identificador {{ param }}",
+      "delete": {
+        "question": "¿Seguro que quiere eliminar Fase Trabajo {{ id }}?"
+      },
+      "detail": {
+        "title": "Fase Trabajo"
+      },
+      "faseTrabajo": "Fase Trabajo",
+      "faseTrabajo": "Fase Trabajo"
+    }
+  }
+}

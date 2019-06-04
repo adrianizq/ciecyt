@@ -1,0 +1,22 @@
+{
+  "ciecytApp": {
+    "modalidadDeGrado": {
+      "home": {
+        "title": "Modalidad De Grados",
+        "createLabel": "Crear nuevo Modalidad De Grado",
+        "createOrEditLabel": "Crear o editar Modalidad De Grado"
+      },
+      "created": "Un nuevo Modalidad De Grado ha sido creado con el identificador {{ param }}",
+      "updated": "Un Modalidad De Grado ha sido actualizado con el identificador {{ param }}",
+      "deleted": "Un Modalidad De Grado ha sido eliminado con el identificador {{ param }}",
+      "delete": {
+        "question": "¿Seguro que quiere eliminar Modalidad De Grado {{ id }}?"
+      },
+      "detail": {
+        "title": "Modalidad De Grado"
+      },
+      "modalidad": "Modalidad",
+      "proyecto": "Proyecto"
+    }
+  }
+}

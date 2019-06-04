@@ -1,0 +1,42 @@
+{
+  "ciecytApp": {
+    "proyecto": {
+      "home": {
+        "title": "Proyectos",
+        "createLabel": "Create a new Proyecto",
+        "createOrEditLabel": "Create or edit a Proyecto"
+      },
+      "created": "A new Proyecto is created with identifier {{ param }}",
+      "updated": "A Proyecto is updated with identifier {{ param }}",
+      "deleted": "A Proyecto is deleted with identifier {{ param }}",
+      "delete": {
+        "question": "Are you sure you want to delete Proyecto {{ id }}?"
+      },
+      "detail": {
+        "title": "Proyecto"
+      },
+      "titulo": "Titulo",
+      "url": "Url",
+      "lugarEjecucion": "Lugar Ejecucion",
+      "duracion": "Duracion",
+      "fechaIni": "Fecha Ini",
+      "fechaFin": "Fecha Fin",
+      "contrapartidaPesos": "Contrapartida Pesos",
+      "contrapartidaEspecie": "Contrapartida Especie",
+      "palabraClave": "Palabra Clave",
+      "convocatoria": "Convocatoria",
+      "entidadFinanciadora": "Entidad Financiadora",
+      "elementosProyecto": "Elementos Proyecto",
+      "productoProyecto": "Producto Proyecto",
+      "presupuestoValor": "Presupuesto Valor",
+      "impactosEsperados": "Impactos Esperados",
+      "cronograma": "Cronograma",
+      "resultadosEsperados": "Resultados Esperados",
+      "integrantesProyecto": "Integrantes Proyecto",
+      "lineaDeInvestigacion": "Linea De Investigacion",
+      "grupoSemillero": "Grupo Semillero",
+      "facultad": "Facultad",
+      "modalidadDeGrado": "Modalidad De Grado"
+    }
+  }
+}

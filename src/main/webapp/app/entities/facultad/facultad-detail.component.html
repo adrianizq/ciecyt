@@ -1,0 +1,33 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <div *ngIf="facultad">
+            <h2><span jhiTranslate="ciecytApp.facultad.detail.title">Facultad</span> {{facultad.id}}</h2>
+            <hr>
+            <jhi-alert-error></jhi-alert-error>
+            <dl class="row-md jh-entity-details">
+                <dt><span jhiTranslate="ciecytApp.facultad.nombre">Nombre</span></dt>
+                <dd>
+                    <span>{{facultad.nombre}}</span>
+                </dd>
+                <dt><span jhiTranslate="ciecytApp.facultad.padre">Padre</span></dt>
+                <dd>
+                    <div *ngIf="facultad.padre">
+                        <a [routerLink]="['/facultad', facultad.padre?.id, 'view']">{{facultad.padre?.id}}</a>
+                    </div>
+                </dd>
+            </dl>
+
+            <button type="submit"
+                    (click)="previousState()"
+                    class="btn btn-info">
+                <fa-icon [icon]="'arrow-left'"></fa-icon>&nbsp;<span jhiTranslate="entity.action.back"> Back</span>
+            </button>
+
+            <button type="button"
+                    [routerLink]="['/facultad', facultad.id, 'edit']"
+                    class="btn btn-primary">
+                <fa-icon [icon]="'pencil-alt'"></fa-icon>&nbsp;<span jhiTranslate="entity.action.edit"> Edit</span>
+            </button>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,33 @@
+{
+    "name": "PreguntaRespuesta",
+    "fields": [],
+    "relationships": [
+        {
+            "relationshipName": "preguntas",
+            "otherEntityName": "preguntas",
+            "relationshipType": "many-to-one",
+            "otherEntityField": "id"
+        },
+        {
+            "relationshipName": "tipoPregunta",
+            "otherEntityName": "tipoPregunta",
+            "relationshipType": "many-to-one",
+            "otherEntityField": "id"
+        },
+        {
+            "relationshipName": "integrantesProyecto",
+            "otherEntityName": "integrantesProyecto",
+            "relationshipType": "many-to-one",
+            "otherEntityField": "id"
+        }
+    ],
+    "changelogDate": "20190604045808",
+    "entityTableName": "pregunta_respuesta",
+    "dto": "no",
+    "pagination": "no",
+    "service": "serviceImpl",
+    "jpaMetamodelFiltering": false,
+    "fluentMethods": true,
+    "clientRootFolder": "",
+    "applications": "*"
+}

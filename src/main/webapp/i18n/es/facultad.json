@@ -1,0 +1,23 @@
+{
+  "ciecytApp": {
+    "facultad": {
+      "home": {
+        "title": "Facultads",
+        "createLabel": "Crear nuevo Facultad",
+        "createOrEditLabel": "Crear o editar Facultad"
+      },
+      "created": "Un nuevo Facultad ha sido creado con el identificador {{ param }}",
+      "updated": "Un Facultad ha sido actualizado con el identificador {{ param }}",
+      "deleted": "Un Facultad ha sido eliminado con el identificador {{ param }}",
+      "delete": {
+        "question": "¿Seguro que quiere eliminar Facultad {{ id }}?"
+      },
+      "detail": {
+        "title": "Facultad"
+      },
+      "nombre": "Nombre",
+      "proyecto": "Proyecto",
+      "padre": "Padre"
+    }
+  }
+}

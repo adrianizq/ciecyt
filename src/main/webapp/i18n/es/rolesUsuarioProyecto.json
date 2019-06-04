@@ -1,0 +1,23 @@
+{
+  "ciecytApp": {
+    "rolesUsuarioProyecto": {
+      "home": {
+        "title": "Roles Usuario Proyectos",
+        "createLabel": "Crear nuevo Roles Usuario Proyecto",
+        "createOrEditLabel": "Crear o editar Roles Usuario Proyecto"
+      },
+      "created": "Un nuevo Roles Usuario Proyecto ha sido creado con el identificador {{ param }}",
+      "updated": "Un Roles Usuario Proyecto ha sido actualizado con el identificador {{ param }}",
+      "deleted": "Un Roles Usuario Proyecto ha sido eliminado con el identificador {{ param }}",
+      "delete": {
+        "question": "¿Seguro que quiere eliminar Roles Usuario Proyecto {{ id }}?"
+      },
+      "detail": {
+        "title": "Roles Usuario Proyecto"
+      },
+      "rol": "Rol",
+      "descripcion": "Descripcion",
+      "integrantesProyecto": "Integrantes Proyecto"
+    }
+  }
+}

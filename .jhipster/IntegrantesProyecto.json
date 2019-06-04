@@ -1,0 +1,46 @@
+{
+    "name": "IntegrantesProyecto",
+    "fields": [],
+    "relationships": [
+        {
+            "relationshipName": "proyecto",
+            "otherEntityName": "proyecto",
+            "relationshipType": "many-to-one",
+            "otherEntityField": "id"
+        },
+        {
+            "relationshipType": "one-to-many",
+            "otherEntityName": "preguntaRespuesta",
+            "otherEntityRelationshipName": "integrantesProyecto",
+            "relationshipName": "preguntaRespuesta"
+        },
+        {
+            "relationshipType": "one-to-many",
+            "otherEntityName": "solicitud",
+            "otherEntityRelationshipName": "integrantesProyecto",
+            "relationshipName": "solicitud"
+        },
+        {
+            "relationshipType": "many-to-one",
+            "otherEntityName": "user",
+            "otherEntityRelationshipName": "integrantesProyecto",
+            "relationshipName": "user",
+            "otherEntityField": "login"
+        },
+        {
+            "relationshipName": "rolesUsuarioProyecto",
+            "otherEntityName": "rolesUsuarioProyecto",
+            "relationshipType": "many-to-one",
+            "otherEntityField": "id"
+        }
+    ],
+    "changelogDate": "20190604045810",
+    "entityTableName": "integrantes_proyecto",
+    "dto": "no",
+    "pagination": "no",
+    "service": "serviceImpl",
+    "jpaMetamodelFiltering": false,
+    "fluentMethods": true,
+    "clientRootFolder": "",
+    "applications": "*"
+}

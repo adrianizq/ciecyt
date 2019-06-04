@@ -1,0 +1,73 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <form name="editForm" role="form" novalidate (ngSubmit)="save()" [formGroup]="editForm">
+            <h2 id="jhi-presupuesto-valor-heading" jhiTranslate="ciecytApp.presupuestoValor.home.createOrEditLabel">Create or edit a Presupuesto Valor</h2>
+            <div>
+                <jhi-alert-error></jhi-alert-error>
+                <div class="form-group" [hidden]="!presupuestoValor.id">
+                    <label for="id" jhiTranslate="global.field.id">ID</label>
+                    <input type="text" class="form-control" id="id" name="id" formControlName="id"
+                        readonly />
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="ciecytApp.presupuestoValor.descripcion" for="field_descripcion">Descripcion</label>
+                    <input type="text" class="form-control" name="descripcion" id="field_descripcion"
+                           formControlName="descripcion"/>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="ciecytApp.presupuestoValor.justificacion" for="field_justificacion">Justificacion</label>
+                    <input type="text" class="form-control" name="justificacion" id="field_justificacion"
+                           formControlName="justificacion"/>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="ciecytApp.presupuestoValor.cantidad" for="field_cantidad">Cantidad</label>
+                    <input type="number" class="form-control" name="cantidad" id="field_cantidad"
+                           formControlName="cantidad"/>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="ciecytApp.presupuestoValor.valorUnitario" for="field_valorUnitario">Valor Unitario</label>
+                    <input type="number" class="form-control" name="valorUnitario" id="field_valorUnitario"
+                           formControlName="valorUnitario"/>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="ciecytApp.presupuestoValor.especie" for="field_especie">Especie</label>
+                    <input type="number" class="form-control" name="especie" id="field_especie"
+                           formControlName="especie"/>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="ciecytApp.presupuestoValor.dinero" for="field_dinero">Dinero</label>
+                    <input type="number" class="form-control" name="dinero" id="field_dinero"
+                           formControlName="dinero"/>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="ciecytApp.presupuestoValor.entidadFinanciadora" for="field_entidadFinanciadora">Entidad Financiadora</label>
+                    <input type="text" class="form-control" name="entidadFinanciadora" id="field_entidadFinanciadora"
+                           formControlName="entidadFinanciadora"/>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="ciecytApp.presupuestoValor.proyecto" for="field_proyecto">Proyecto</label>
+                    <select class="form-control" id="field_proyecto" name="proyecto" formControlName="proyecto">
+                        <option [ngValue]="null"></option>
+                        <option [ngValue]="proyectoOption.id === editForm.get('proyecto').value?.id ? editForm.get('proyecto').value : proyectoOption" *ngFor="let proyectoOption of proyectos; trackBy: trackProyectoById">{{proyectoOption.id}}</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="ciecytApp.presupuestoValor.rubros" for="field_rubros">Rubros</label>
+                    <select class="form-control" id="field_rubros" name="rubros" formControlName="rubros">
+                        <option [ngValue]="null"></option>
+                        <option [ngValue]="rubrosOption.id === editForm.get('rubros').value?.id ? editForm.get('rubros').value : rubrosOption" *ngFor="let rubrosOption of rubros; trackBy: trackRubrosById">{{rubrosOption.id}}</option>
+                    </select>
+                </div>
+            </div>
+            <div>
+                <button type="button" id="cancel-save" class="btn btn-secondary"  (click)="previousState()">
+                    <fa-icon [icon]="'ban'"></fa-icon>&nbsp;<span jhiTranslate="entity.action.cancel">Cancel</span>
+                </button>
+                <button type="submit" id="save-entity" [disabled]="editForm.invalid || isSaving" class="btn btn-primary">
+                    <fa-icon [icon]="'save'"></fa-icon>&nbsp;<span jhiTranslate="entity.action.save">Save</span>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

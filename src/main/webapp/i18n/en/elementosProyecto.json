@@ -1,0 +1,23 @@
+{
+  "ciecytApp": {
+    "elementosProyecto": {
+      "home": {
+        "title": "Elementos Proyectos",
+        "createLabel": "Create a new Elementos Proyecto",
+        "createOrEditLabel": "Create or edit a Elementos Proyecto"
+      },
+      "created": "A new Elementos Proyecto is created with identifier {{ param }}",
+      "updated": "A Elementos Proyecto is updated with identifier {{ param }}",
+      "deleted": "A Elementos Proyecto is deleted with identifier {{ param }}",
+      "delete": {
+        "question": "Are you sure you want to delete Elementos Proyecto {{ id }}?"
+      },
+      "detail": {
+        "title": "Elementos Proyecto"
+      },
+      "dato": "Dato",
+      "proyecto": "Proyecto",
+      "elementos": "Elementos"
+    }
+  }
+}

@@ -1,0 +1,34 @@
+{
+    "name": "ResultadosEsperados",
+    "fields": [
+        {
+            "fieldName": "resultado",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "indicador",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "beneficiario",
+            "fieldType": "String"
+        }
+    ],
+    "relationships": [
+        {
+            "relationshipName": "proyecto",
+            "otherEntityName": "proyecto",
+            "relationshipType": "many-to-one",
+            "otherEntityField": "id"
+        }
+    ],
+    "changelogDate": "20190604045805",
+    "entityTableName": "resultados_esperados",
+    "dto": "no",
+    "pagination": "no",
+    "service": "serviceImpl",
+    "jpaMetamodelFiltering": false,
+    "fluentMethods": true,
+    "clientRootFolder": "",
+    "applications": "*"
+}

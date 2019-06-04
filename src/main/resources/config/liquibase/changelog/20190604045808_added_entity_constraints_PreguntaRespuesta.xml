@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+    <!--
+        Added the constraints for entity PreguntaRespuesta.
+    -->
+    <changeSet id="20190604045808-2" author="jhipster">
+        
+        <addForeignKeyConstraint baseColumnNames="preguntas_id"
+                                 baseTableName="pregunta_respuesta"
+                                 constraintName="fk_pregunta_respuesta_preguntas_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="preguntas"/>
+
+        <addForeignKeyConstraint baseColumnNames="tipo_pregunta_id"
+                                 baseTableName="pregunta_respuesta"
+                                 constraintName="fk_pregunta_respuesta_tipo_pregunta_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="tipo_pregunta"/>
+
+        <addForeignKeyConstraint baseColumnNames="integrantes_proyecto_id"
+                                 baseTableName="pregunta_respuesta"
+                                 constraintName="fk_pregunta_respuesta_integrantes_proyecto_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="integrantes_proyecto"/>
+
+    </changeSet>
+</databaseChangeLog>

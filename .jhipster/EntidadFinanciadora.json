@@ -1,0 +1,36 @@
+{
+    "name": "EntidadFinanciadora",
+    "fields": [
+        {
+            "fieldName": "valor",
+            "fieldType": "Double"
+        },
+        {
+            "fieldName": "estadoFinanciacion",
+            "fieldType": "Boolean"
+        }
+    ],
+    "relationships": [
+        {
+            "relationshipName": "proyecto",
+            "otherEntityName": "proyecto",
+            "relationshipType": "many-to-one",
+            "otherEntityField": "id"
+        },
+        {
+            "relationshipType": "one-to-many",
+            "otherEntityName": "empresas",
+            "otherEntityRelationshipName": "entidadFinanciadora",
+            "relationshipName": "empresas"
+        }
+    ],
+    "changelogDate": "20190604045756",
+    "entityTableName": "entidad_financiadora",
+    "dto": "no",
+    "pagination": "no",
+    "service": "serviceImpl",
+    "jpaMetamodelFiltering": false,
+    "fluentMethods": true,
+    "clientRootFolder": "",
+    "applications": "*"
+}

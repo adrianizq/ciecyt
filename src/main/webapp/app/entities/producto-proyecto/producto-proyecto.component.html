@@ -1,0 +1,68 @@
+<div>
+    <h2 id="page-heading">
+        <span jhiTranslate="ciecytApp.productoProyecto.home.title">Producto Proyectos</span>
+        <button id="jh-create-entity" class="btn btn-primary float-right jh-create-entity create-producto-proyecto" [routerLink]="['/producto-proyecto/new']">
+            <fa-icon [icon]="'plus'"></fa-icon>
+            <span  jhiTranslate="ciecytApp.productoProyecto.home.createLabel">
+            Create new Producto Proyecto
+            </span>
+        </button>
+    </h2>
+    <jhi-alert></jhi-alert>
+    <br/>
+    <div class="table-responsive" *ngIf="productoProyectos">
+        <table class="table table-striped">
+            <thead>
+            <tr>
+            <th><span jhiTranslate="global.field.id">ID</span></th>
+            <th><span jhiTranslate="ciecytApp.productoProyecto.aplica">Aplica</span></th>
+            <th><span jhiTranslate="ciecytApp.productoProyecto.descripcion">Descripcion</span></th>
+            <th><span jhiTranslate="ciecytApp.productoProyecto.proyecto">Proyecto</span></th>
+            <th><span jhiTranslate="ciecytApp.productoProyecto.producto">Producto</span></th>
+            <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let productoProyecto of productoProyectos ;trackBy: trackId">
+                <td><a [routerLink]="['/producto-proyecto', productoProyecto.id, 'view' ]">{{productoProyecto.id}}</a></td>
+                <td>{{productoProyecto.aplica}}</td>
+                <td>{{productoProyecto.descripcion}}</td>
+                <td>
+                    <div *ngIf="productoProyecto.proyecto">
+                        <a [routerLink]="['../proyecto', productoProyecto.proyecto?.id, 'view' ]" >{{productoProyecto.proyecto?.id}}</a>
+                    </div>
+                </td>
+                <td>
+                    <div *ngIf="productoProyecto.producto">
+                        <a [routerLink]="['../producto', productoProyecto.producto?.id, 'view' ]" >{{productoProyecto.producto?.id}}</a>
+                    </div>
+                </td>
+                <td class="text-right">
+                    <div class="btn-group">
+                        <button type="submit"
+                                [routerLink]="['/producto-proyecto', productoProyecto.id, 'view' ]"
+                                class="btn btn-info btn-sm">
+                            <fa-icon [icon]="'eye'"></fa-icon>
+                            <span class="d-none d-md-inline" jhiTranslate="entity.action.view">View</span>
+                        </button>
+                        <button type="submit"
+                                [routerLink]="['/producto-proyecto', productoProyecto.id, 'edit']"
+                                class="btn btn-primary btn-sm">
+                            <fa-icon [icon]="'pencil-alt'"></fa-icon>
+                            <span class="d-none d-md-inline" jhiTranslate="entity.action.edit">Edit</span>
+                        </button>
+                        <button type="submit"
+                                [routerLink]="['/', 'producto-proyecto', { outlets: { popup: productoProyecto.id + '/delete'} }]"
+                                replaceUrl="true"
+                                queryParamsHandling="merge"
+                                class="btn btn-danger btn-sm">
+                            <fa-icon [icon]="'times'"></fa-icon>
+                            <span class="d-none d-md-inline" jhiTranslate="entity.action.delete">Delete</span>
+                        </button>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

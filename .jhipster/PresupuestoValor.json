@@ -1,0 +1,56 @@
+{
+    "name": "PresupuestoValor",
+    "fields": [
+        {
+            "fieldName": "descripcion",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "justificacion",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "cantidad",
+            "fieldType": "Integer"
+        },
+        {
+            "fieldName": "valorUnitario",
+            "fieldType": "Integer"
+        },
+        {
+            "fieldName": "especie",
+            "fieldType": "Double"
+        },
+        {
+            "fieldName": "dinero",
+            "fieldType": "Double"
+        },
+        {
+            "fieldName": "entidadFinanciadora",
+            "fieldType": "String"
+        }
+    ],
+    "relationships": [
+        {
+            "relationshipName": "proyecto",
+            "otherEntityName": "proyecto",
+            "relationshipType": "many-to-one",
+            "otherEntityField": "id"
+        },
+        {
+            "relationshipName": "rubros",
+            "otherEntityName": "rubros",
+            "relationshipType": "many-to-one",
+            "otherEntityField": "id"
+        }
+    ],
+    "changelogDate": "20190604045802",
+    "entityTableName": "presupuesto_valor",
+    "dto": "no",
+    "pagination": "no",
+    "service": "serviceImpl",
+    "jpaMetamodelFiltering": false,
+    "fluentMethods": true,
+    "clientRootFolder": "",
+    "applications": "*"
+}

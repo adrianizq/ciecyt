@@ -1,0 +1,33 @@
+{
+    "name": "Facultad",
+    "fields": [
+        {
+            "fieldName": "nombre",
+            "fieldType": "String"
+        }
+    ],
+    "relationships": [
+        {
+            "relationshipType": "one-to-many",
+            "otherEntityName": "proyecto",
+            "otherEntityRelationshipName": "facultad",
+            "relationshipName": "proyecto"
+        },
+        {
+            "relationshipType": "many-to-one",
+            "otherEntityName": "facultad",
+            "otherEntityRelationshipName": "facultad",
+            "relationshipName": "padre",
+            "otherEntityField": "id"
+        }
+    ],
+    "changelogDate": "20190604045752",
+    "entityTableName": "facultad",
+    "dto": "no",
+    "pagination": "no",
+    "service": "serviceImpl",
+    "jpaMetamodelFiltering": false,
+    "fluentMethods": true,
+    "clientRootFolder": "",
+    "applications": "*"
+}

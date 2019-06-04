@@ -1,0 +1,33 @@
+{
+    "name": "LineaDeInvestigacion",
+    "fields": [
+        {
+            "fieldName": "linea",
+            "fieldType": "String"
+        }
+    ],
+    "relationships": [
+        {
+            "relationshipType": "one-to-many",
+            "otherEntityName": "proyecto",
+            "otherEntityRelationshipName": "lineaDeInvestigacion",
+            "relationshipName": "proyecto"
+        },
+        {
+            "relationshipType": "many-to-one",
+            "otherEntityName": "lineaDeInvestigacion",
+            "otherEntityRelationshipName": "lineaDeInvestigacion",
+            "relationshipName": "padre",
+            "otherEntityField": "id"
+        }
+    ],
+    "changelogDate": "20190604045750",
+    "entityTableName": "linea_de_investigacion",
+    "dto": "no",
+    "pagination": "no",
+    "service": "serviceImpl",
+    "jpaMetamodelFiltering": false,
+    "fluentMethods": true,
+    "clientRootFolder": "",
+    "applications": "*"
+}

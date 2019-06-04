@@ -1,0 +1,25 @@
+{
+  "ciecytApp": {
+    "impactosEsperados": {
+      "home": {
+        "title": "Impactos Esperados",
+        "createLabel": "Crear nuevo Impactos Esperados",
+        "createOrEditLabel": "Crear o editar Impactos Esperados"
+      },
+      "created": "Un nuevo Impactos Esperados ha sido creado con el identificador {{ param }}",
+      "updated": "Un Impactos Esperados ha sido actualizado con el identificador {{ param }}",
+      "deleted": "Un Impactos Esperados ha sido eliminado con el identificador {{ param }}",
+      "delete": {
+        "question": "¿Seguro que quiere eliminar Impactos Esperados {{ id }}?"
+      },
+      "detail": {
+        "title": "Impactos Esperados"
+      },
+      "impacto": "Impacto",
+      "plazo": "Plazo",
+      "indicador": "Indicador",
+      "supuestos": "Supuestos",
+      "proyecto": "Proyecto"
+    }
+  }
+}

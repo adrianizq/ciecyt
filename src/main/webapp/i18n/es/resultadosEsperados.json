@@ -1,0 +1,24 @@
+{
+  "ciecytApp": {
+    "resultadosEsperados": {
+      "home": {
+        "title": "Resultados Esperados",
+        "createLabel": "Crear nuevo Resultados Esperados",
+        "createOrEditLabel": "Crear o editar Resultados Esperados"
+      },
+      "created": "Un nuevo Resultados Esperados ha sido creado con el identificador {{ param }}",
+      "updated": "Un Resultados Esperados ha sido actualizado con el identificador {{ param }}",
+      "deleted": "Un Resultados Esperados ha sido eliminado con el identificador {{ param }}",
+      "delete": {
+        "question": "¿Seguro que quiere eliminar Resultados Esperados {{ id }}?"
+      },
+      "detail": {
+        "title": "Resultados Esperados"
+      },
+      "resultado": "Resultado",
+      "indicador": "Indicador",
+      "beneficiario": "Beneficiario",
+      "proyecto": "Proyecto"
+    }
+  }
+}

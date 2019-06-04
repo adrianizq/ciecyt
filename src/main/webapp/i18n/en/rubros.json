@@ -1,0 +1,22 @@
+{
+  "ciecytApp": {
+    "rubros": {
+      "home": {
+        "title": "Rubros",
+        "createLabel": "Create a new Rubros",
+        "createOrEditLabel": "Create or edit a Rubros"
+      },
+      "created": "A new Rubros is created with identifier {{ param }}",
+      "updated": "A Rubros is updated with identifier {{ param }}",
+      "deleted": "A Rubros is deleted with identifier {{ param }}",
+      "delete": {
+        "question": "Are you sure you want to delete Rubros {{ id }}?"
+      },
+      "detail": {
+        "title": "Rubros"
+      },
+      "rubro": "Rubro",
+      "presupuestoValor": "Presupuesto Valor"
+    }
+  }
+}

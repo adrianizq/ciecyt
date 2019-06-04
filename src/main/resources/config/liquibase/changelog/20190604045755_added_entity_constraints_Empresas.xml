@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+    <!--
+        Added the constraints for entity Empresas.
+    -->
+    <changeSet id="20190604045755-2" author="jhipster">
+        
+        <addForeignKeyConstraint baseColumnNames="entidad_financiadora_id"
+                                 baseTableName="empresas"
+                                 constraintName="fk_empresas_entidad_financiadora_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="entidad_financiadora"/>
+
+    </changeSet>
+</databaseChangeLog>

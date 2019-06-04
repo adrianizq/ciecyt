@@ -1,0 +1,63 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <div *ngIf="presupuestoValor">
+            <h2><span jhiTranslate="ciecytApp.presupuestoValor.detail.title">Presupuesto Valor</span> {{presupuestoValor.id}}</h2>
+            <hr>
+            <jhi-alert-error></jhi-alert-error>
+            <dl class="row-md jh-entity-details">
+                <dt><span jhiTranslate="ciecytApp.presupuestoValor.descripcion">Descripcion</span></dt>
+                <dd>
+                    <span>{{presupuestoValor.descripcion}}</span>
+                </dd>
+                <dt><span jhiTranslate="ciecytApp.presupuestoValor.justificacion">Justificacion</span></dt>
+                <dd>
+                    <span>{{presupuestoValor.justificacion}}</span>
+                </dd>
+                <dt><span jhiTranslate="ciecytApp.presupuestoValor.cantidad">Cantidad</span></dt>
+                <dd>
+                    <span>{{presupuestoValor.cantidad}}</span>
+                </dd>
+                <dt><span jhiTranslate="ciecytApp.presupuestoValor.valorUnitario">Valor Unitario</span></dt>
+                <dd>
+                    <span>{{presupuestoValor.valorUnitario}}</span>
+                </dd>
+                <dt><span jhiTranslate="ciecytApp.presupuestoValor.especie">Especie</span></dt>
+                <dd>
+                    <span>{{presupuestoValor.especie}}</span>
+                </dd>
+                <dt><span jhiTranslate="ciecytApp.presupuestoValor.dinero">Dinero</span></dt>
+                <dd>
+                    <span>{{presupuestoValor.dinero}}</span>
+                </dd>
+                <dt><span jhiTranslate="ciecytApp.presupuestoValor.entidadFinanciadora">Entidad Financiadora</span></dt>
+                <dd>
+                    <span>{{presupuestoValor.entidadFinanciadora}}</span>
+                </dd>
+                <dt><span jhiTranslate="ciecytApp.presupuestoValor.proyecto">Proyecto</span></dt>
+                <dd>
+                    <div *ngIf="presupuestoValor.proyecto">
+                        <a [routerLink]="['/proyecto', presupuestoValor.proyecto?.id, 'view']">{{presupuestoValor.proyecto?.id}}</a>
+                    </div>
+                </dd>
+                <dt><span jhiTranslate="ciecytApp.presupuestoValor.rubros">Rubros</span></dt>
+                <dd>
+                    <div *ngIf="presupuestoValor.rubros">
+                        <a [routerLink]="['/rubros', presupuestoValor.rubros?.id, 'view']">{{presupuestoValor.rubros?.id}}</a>
+                    </div>
+                </dd>
+            </dl>
+
+            <button type="submit"
+                    (click)="previousState()"
+                    class="btn btn-info">
+                <fa-icon [icon]="'arrow-left'"></fa-icon>&nbsp;<span jhiTranslate="entity.action.back"> Back</span>
+            </button>
+
+            <button type="button"
+                    [routerLink]="['/presupuesto-valor', presupuestoValor.id, 'edit']"
+                    class="btn btn-primary">
+                <fa-icon [icon]="'pencil-alt'"></fa-icon>&nbsp;<span jhiTranslate="entity.action.edit"> Edit</span>
+            </button>
+        </div>
+    </div>
+</div>

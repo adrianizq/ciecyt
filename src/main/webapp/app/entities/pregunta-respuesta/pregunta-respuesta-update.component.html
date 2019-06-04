@@ -1,0 +1,45 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <form name="editForm" role="form" novalidate (ngSubmit)="save()" [formGroup]="editForm">
+            <h2 id="jhi-pregunta-respuesta-heading" jhiTranslate="ciecytApp.preguntaRespuesta.home.createOrEditLabel">Create or edit a Pregunta Respuesta</h2>
+            <div>
+                <jhi-alert-error></jhi-alert-error>
+                <div class="form-group" [hidden]="!preguntaRespuesta.id">
+                    <label for="id" jhiTranslate="global.field.id">ID</label>
+                    <input type="text" class="form-control" id="id" name="id" formControlName="id"
+                        readonly />
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="ciecytApp.preguntaRespuesta.preguntas" for="field_preguntas">Preguntas</label>
+                    <select class="form-control" id="field_preguntas" name="preguntas" formControlName="preguntas">
+                        <option [ngValue]="null"></option>
+                        <option [ngValue]="preguntasOption.id === editForm.get('preguntas').value?.id ? editForm.get('preguntas').value : preguntasOption" *ngFor="let preguntasOption of preguntas; trackBy: trackPreguntasById">{{preguntasOption.id}}</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="ciecytApp.preguntaRespuesta.tipoPregunta" for="field_tipoPregunta">Tipo Pregunta</label>
+                    <select class="form-control" id="field_tipoPregunta" name="tipoPregunta" formControlName="tipoPregunta">
+                        <option [ngValue]="null"></option>
+                        <option [ngValue]="tipoPreguntaOption.id === editForm.get('tipoPregunta').value?.id ? editForm.get('tipoPregunta').value : tipoPreguntaOption" *ngFor="let tipoPreguntaOption of tipopreguntas; trackBy: trackTipoPreguntaById">{{tipoPreguntaOption.id}}</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="ciecytApp.preguntaRespuesta.integrantesProyecto" for="field_integrantesProyecto">Integrantes Proyecto</label>
+                    <select class="form-control" id="field_integrantesProyecto" name="integrantesProyecto" formControlName="integrantesProyecto">
+                        <option [ngValue]="null"></option>
+                        <option [ngValue]="integrantesProyectoOption.id === editForm.get('integrantesProyecto').value?.id ? editForm.get('integrantesProyecto').value : integrantesProyectoOption" *ngFor="let integrantesProyectoOption of integrantesproyectos; trackBy: trackIntegrantesProyectoById">{{integrantesProyectoOption.id}}</option>
+                    </select>
+                </div>
+            </div>
+            <div>
+                <button type="button" id="cancel-save" class="btn btn-secondary"  (click)="previousState()">
+                    <fa-icon [icon]="'ban'"></fa-icon>&nbsp;<span jhiTranslate="entity.action.cancel">Cancel</span>
+                </button>
+                <button type="submit" id="save-entity" [disabled]="editForm.invalid || isSaving" class="btn btn-primary">
+                    <fa-icon [icon]="'save'"></fa-icon>&nbsp;<span jhiTranslate="entity.action.save">Save</span>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

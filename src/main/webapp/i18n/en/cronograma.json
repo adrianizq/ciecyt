@@ -1,0 +1,25 @@
+{
+  "ciecytApp": {
+    "cronograma": {
+      "home": {
+        "title": "Cronogramas",
+        "createLabel": "Create a new Cronograma",
+        "createOrEditLabel": "Create or edit a Cronograma"
+      },
+      "created": "A new Cronograma is created with identifier {{ param }}",
+      "updated": "A Cronograma is updated with identifier {{ param }}",
+      "deleted": "A Cronograma is deleted with identifier {{ param }}",
+      "delete": {
+        "question": "Are you sure you want to delete Cronograma {{ id }}?"
+      },
+      "detail": {
+        "title": "Cronograma"
+      },
+      "actividad": "Actividad",
+      "duracion": "Duracion",
+      "fechaIni": "Fecha Ini",
+      "fechaFin": "Fecha Fin",
+      "proyecto": "Proyecto"
+    }
+  }
+}

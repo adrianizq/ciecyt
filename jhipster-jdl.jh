@@ -1,0 +1,244 @@
+entity Propuesta {
+	titulo String,
+    url String,
+    lugarEjecucion String,
+    duracion String,
+    fechaIni LocalDate,
+    fechaFin LocalDate,
+    contrapartidaPesos Double,
+    contrapartidaEspecie Double,
+    palabraClave String,
+    convocatoria String
+}
+entity LineaDeInvestigacion {
+	linea String,
+}
+
+relationship ManyToOne {
+	LineaDeInvestigacion{padre} to LineaDeInvestigacion
+}
+
+relationship OneToMany {
+	LineaDeInvestigacion{propuesta} to Propuesta
+}
+
+
+entity GrupoSemillero {
+	nombre String,
+    tipo Boolean
+}
+relationship OneToMany {
+	GrupoSemillero{propuesta} to Propuesta
+}
+
+entity Facultad {
+	nombre String
+}
+relationship OneToMany {
+	Facultad{propuesta} to Propuesta
+}
+
+relationship ManyToOne {
+	Facultad{padre} to Facultad
+}
+
+entity ModalidadDeGrado {
+	modalidad String
+}
+
+relationship OneToMany {
+	ModalidadDeGrado{propuesta} to Propuesta
+}
+
+entity Categorizacion {
+	categoria String
+}
+
+relationship ManyToOne {
+	Categorizacion{propuesta} to Propuesta
+}
+
+entity Empresas{
+	entidad String
+}
+
+entity EntidadFinanciadora{
+	valor Double,
+    estadoFinanciacion Boolean
+}
+
+relationship OneToMany {
+	EntidadFinanciadora{empresas} to Empresas
+}
+relationship OneToMany {
+	Propuesta{entidadFinanciadora} to EntidadFinanciadora
+}
+
+entity Elementos {
+	elemento String
+}
+
+entity ElementosPropuesta{
+	dato String
+}
+relationship OneToMany {
+	Propuesta{elementosPropuesta} to ElementosPropuesta
+}
+relationship OneToMany {
+	Elementos{elementosPropuesta} to ElementosPropuesta
+}
+
+entity Producto {
+	producto String
+}
+
+entity ProductoPropuesta {
+	aplica Boolean,
+    descripcion String
+}
+relationship OneToMany {
+	Propuesta{productoPropuesta} to ProductoPropuesta
+    Producto{productoPropuesta} to ProductoPropuesta
+}
+
+entity Rubros {
+	rubro String
+}
+
+entity PresupuestoValor {
+	descripcion String, 
+    justificacion String, 
+    cantidad Integer,
+    valorUnitario Integer,
+    especie Double, 
+    dinero Double, 
+    entidadFinanciadora String
+}
+relationship OneToMany {
+	Propuesta{presupuestoValor} to PresupuestoValor
+    Rubros{presupuestoValor} to PresupuestoValor
+}
+
+entity ImpactosEsperados {
+	impacto String,
+    plazo Integer, 
+    indicador String, 
+    supuestos String
+}
+
+relationship OneToMany {
+	Propuesta{impactosEsperados} to ImpactosEsperados
+}
+
+
+entity Cronograma {
+	actividad String, 
+    duracion Integer,
+    fechaIni LocalDate,
+    fechaFin LocalDate
+}
+
+relationship OneToMany {
+	Propuesta{cronograma} to Cronograma
+}
+
+
+entity ResultadosEsperados {
+	resultado String, 
+    indicador String,
+    beneficiario String
+}
+
+relationship OneToMany {
+	Propuesta{resultadosEsperados} to ResultadosEsperados
+}
+
+
+//Relaciones de las entidades
+
+
+entity Preguntas{
+	pregunta String
+}
+
+relationship OneToMany {
+	Elementos{Preguntas} to Preguntas
+	FaseTrabajo{faseTrabajo} to Preguntas
+}
+
+entity FaseTrabajo{
+	faseTrabajo String
+} 
+entity PreguntaRespuesta{
+
+}
+relationship OneToMany {
+	Preguntas{preguntaRespuesta} to PreguntaRespuesta	
+    TipoPregunta{preguntaRespuesta} to PreguntaRespuesta	
+    IntegrantesPropuesta{preguntaRespuesta} to PreguntaRespuesta	
+}
+
+
+entity TipoPregunta{
+	tipoPregunta String,
+    tipoDato String
+}
+entity IntegrantesPropuesta{
+}
+relationship OneToMany {
+	Propuesta{integrantesPropuesta} to IntegrantesPropuesta
+    RolesPropueta{integrantesPropuesta} to IntegrantesPropuesta
+	TipoUsuarioPropuesta{tipoUsuarioPropuesta} to IntegrantesPropuesta
+    
+}
+
+
+entity TipoUsuarioPropuesta{
+
+}
+
+relationship OneToMany {
+	Usuario{TipoUsuarioPropuesta} to TipoUsuarioPropuesta    
+    TipoUsuario{TipoUsuarioPropuesta} to TipoUsuarioPropuesta    
+}
+entity TipoUsuario{
+	tipoUsuario Boolean
+}
+entity FichaTecnica{
+	tituloProfecional String,
+	tituloPosgrado String,
+	experencia String
+}
+relationship OneToMany {
+	Usuario{fichaTecnica} to FichaTecnica    
+}
+entity Usuario{
+}
+
+entity Solicitud{
+	estado Boolean,
+	asunto String,
+	fechaCreancion LocalDate
+}
+relationship OneToMany {
+	IntegrantesPropuesta{solicitud} to Solicitud
+}
+
+entity RolesPropueta{
+	rol Integer,
+	descripcion String
+}
+
+
+// Set pagination options
+paginate Propuesta with pagination
+
+// Use Data Transfert Objects (DTO)
+// dto * with mapstruct
+
+// Set service options to all except few
+service all with serviceImpl 
+
+// Set an angular suffix
+// angularSuffix * with mySuffix
+

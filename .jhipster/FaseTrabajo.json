@@ -1,0 +1,26 @@
+{
+    "name": "FaseTrabajo",
+    "fields": [
+        {
+            "fieldName": "faseTrabajo",
+            "fieldType": "String"
+        }
+    ],
+    "relationships": [
+        {
+            "relationshipType": "one-to-many",
+            "otherEntityName": "preguntas",
+            "otherEntityRelationshipName": "faseTrabajo",
+            "relationshipName": "faseTrabajo"
+        }
+    ],
+    "changelogDate": "20190604045807",
+    "entityTableName": "fase_trabajo",
+    "dto": "no",
+    "pagination": "no",
+    "service": "serviceImpl",
+    "jpaMetamodelFiltering": false,
+    "fluentMethods": true,
+    "clientRootFolder": "",
+    "applications": "*"
+}

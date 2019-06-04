@@ -1,0 +1,30 @@
+{
+    "name": "TipoPregunta",
+    "fields": [
+        {
+            "fieldName": "tipoPregunta",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "tipoDato",
+            "fieldType": "String"
+        }
+    ],
+    "relationships": [
+        {
+            "relationshipType": "one-to-many",
+            "otherEntityName": "preguntaRespuesta",
+            "otherEntityRelationshipName": "tipoPregunta",
+            "relationshipName": "preguntaRespuesta"
+        }
+    ],
+    "changelogDate": "20190604045809",
+    "entityTableName": "tipo_pregunta",
+    "dto": "no",
+    "pagination": "no",
+    "service": "serviceImpl",
+    "jpaMetamodelFiltering": false,
+    "fluentMethods": true,
+    "clientRootFolder": "",
+    "applications": "*"
+}

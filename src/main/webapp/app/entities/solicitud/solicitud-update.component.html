@@ -1,0 +1,50 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <form name="editForm" role="form" novalidate (ngSubmit)="save()" [formGroup]="editForm">
+            <h2 id="jhi-solicitud-heading" jhiTranslate="ciecytApp.solicitud.home.createOrEditLabel">Create or edit a Solicitud</h2>
+            <div>
+                <jhi-alert-error></jhi-alert-error>
+                <div class="form-group" [hidden]="!solicitud.id">
+                    <label for="id" jhiTranslate="global.field.id">ID</label>
+                    <input type="text" class="form-control" id="id" name="id" formControlName="id"
+                        readonly />
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="ciecytApp.solicitud.estado" for="field_estado">Estado</label>
+                    <input type="checkbox" class="form-control" name="estado" id="field_estado"
+                           formControlName="estado"/>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="ciecytApp.solicitud.asunto" for="field_asunto">Asunto</label>
+                    <input type="text" class="form-control" name="asunto" id="field_asunto"
+                           formControlName="asunto"/>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="ciecytApp.solicitud.fechaCreancion" for="field_fechaCreancion">Fecha Creancion</label>
+                    <div class="input-group">
+                        <input id="field_fechaCreancion" type="text" class="form-control" name="fechaCreancion" ngbDatepicker  #fechaCreancionDp="ngbDatepicker" formControlName="fechaCreancion"/>
+                        <span class="input-group-append">
+                            <button type="button" class="btn btn-secondary" (click)="fechaCreancionDp.toggle()"><fa-icon [icon]="'calendar-alt'"></fa-icon></button>
+                        </span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="ciecytApp.solicitud.integrantesProyecto" for="field_integrantesProyecto">Integrantes Proyecto</label>
+                    <select class="form-control" id="field_integrantesProyecto" name="integrantesProyecto" formControlName="integrantesProyecto">
+                        <option [ngValue]="null"></option>
+                        <option [ngValue]="integrantesProyectoOption.id === editForm.get('integrantesProyecto').value?.id ? editForm.get('integrantesProyecto').value : integrantesProyectoOption" *ngFor="let integrantesProyectoOption of integrantesproyectos; trackBy: trackIntegrantesProyectoById">{{integrantesProyectoOption.id}}</option>
+                    </select>
+                </div>
+            </div>
+            <div>
+                <button type="button" id="cancel-save" class="btn btn-secondary"  (click)="previousState()">
+                    <fa-icon [icon]="'ban'"></fa-icon>&nbsp;<span jhiTranslate="entity.action.cancel">Cancel</span>
+                </button>
+                <button type="submit" id="save-entity" [disabled]="editForm.invalid || isSaving" class="btn btn-primary">
+                    <fa-icon [icon]="'save'"></fa-icon>&nbsp;<span jhiTranslate="entity.action.save">Save</span>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

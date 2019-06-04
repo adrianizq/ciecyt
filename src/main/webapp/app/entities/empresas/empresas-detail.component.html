@@ -1,0 +1,33 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <div *ngIf="empresas">
+            <h2><span jhiTranslate="ciecytApp.empresas.detail.title">Empresas</span> {{empresas.id}}</h2>
+            <hr>
+            <jhi-alert-error></jhi-alert-error>
+            <dl class="row-md jh-entity-details">
+                <dt><span jhiTranslate="ciecytApp.empresas.entidad">Entidad</span></dt>
+                <dd>
+                    <span>{{empresas.entidad}}</span>
+                </dd>
+                <dt><span jhiTranslate="ciecytApp.empresas.entidadFinanciadora">Entidad Financiadora</span></dt>
+                <dd>
+                    <div *ngIf="empresas.entidadFinanciadora">
+                        <a [routerLink]="['/entidad-financiadora', empresas.entidadFinanciadora?.id, 'view']">{{empresas.entidadFinanciadora?.id}}</a>
+                    </div>
+                </dd>
+            </dl>
+
+            <button type="submit"
+                    (click)="previousState()"
+                    class="btn btn-info">
+                <fa-icon [icon]="'arrow-left'"></fa-icon>&nbsp;<span jhiTranslate="entity.action.back"> Back</span>
+            </button>
+
+            <button type="button"
+                    [routerLink]="['/empresas', empresas.id, 'edit']"
+                    class="btn btn-primary">
+                <fa-icon [icon]="'pencil-alt'"></fa-icon>&nbsp;<span jhiTranslate="entity.action.edit"> Edit</span>
+            </button>
+        </div>
+    </div>
+</div>

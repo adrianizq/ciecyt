@@ -1,0 +1,30 @@
+{
+    "name": "RolesUsuarioProyecto",
+    "fields": [
+        {
+            "fieldName": "rol",
+            "fieldType": "Integer"
+        },
+        {
+            "fieldName": "descripcion",
+            "fieldType": "String"
+        }
+    ],
+    "relationships": [
+        {
+            "relationshipType": "one-to-many",
+            "otherEntityName": "integrantesProyecto",
+            "otherEntityRelationshipName": "rolesUsuarioProyecto",
+            "relationshipName": "integrantesProyecto"
+        }
+    ],
+    "changelogDate": "20190604045813",
+    "entityTableName": "roles_usuario_proyecto",
+    "dto": "no",
+    "pagination": "no",
+    "service": "serviceImpl",
+    "jpaMetamodelFiltering": false,
+    "fluentMethods": true,
+    "clientRootFolder": "",
+    "applications": "*"
+}

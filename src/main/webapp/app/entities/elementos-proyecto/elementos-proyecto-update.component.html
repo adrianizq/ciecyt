@@ -1,0 +1,43 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <form name="editForm" role="form" novalidate (ngSubmit)="save()" [formGroup]="editForm">
+            <h2 id="jhi-elementos-proyecto-heading" jhiTranslate="ciecytApp.elementosProyecto.home.createOrEditLabel">Create or edit a Elementos Proyecto</h2>
+            <div>
+                <jhi-alert-error></jhi-alert-error>
+                <div class="form-group" [hidden]="!elementosProyecto.id">
+                    <label for="id" jhiTranslate="global.field.id">ID</label>
+                    <input type="text" class="form-control" id="id" name="id" formControlName="id"
+                        readonly />
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="ciecytApp.elementosProyecto.dato" for="field_dato">Dato</label>
+                    <input type="text" class="form-control" name="dato" id="field_dato"
+                           formControlName="dato"/>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="ciecytApp.elementosProyecto.proyecto" for="field_proyecto">Proyecto</label>
+                    <select class="form-control" id="field_proyecto" name="proyecto" formControlName="proyecto">
+                        <option [ngValue]="null"></option>
+                        <option [ngValue]="proyectoOption.id === editForm.get('proyecto').value?.id ? editForm.get('proyecto').value : proyectoOption" *ngFor="let proyectoOption of proyectos; trackBy: trackProyectoById">{{proyectoOption.id}}</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="ciecytApp.elementosProyecto.elementos" for="field_elementos">Elementos</label>
+                    <select class="form-control" id="field_elementos" name="elementos" formControlName="elementos">
+                        <option [ngValue]="null"></option>
+                        <option [ngValue]="elementosOption.id === editForm.get('elementos').value?.id ? editForm.get('elementos').value : elementosOption" *ngFor="let elementosOption of elementos; trackBy: trackElementosById">{{elementosOption.id}}</option>
+                    </select>
+                </div>
+            </div>
+            <div>
+                <button type="button" id="cancel-save" class="btn btn-secondary"  (click)="previousState()">
+                    <fa-icon [icon]="'ban'"></fa-icon>&nbsp;<span jhiTranslate="entity.action.cancel">Cancel</span>
+                </button>
+                <button type="submit" id="save-entity" [disabled]="editForm.invalid || isSaving" class="btn btn-primary">
+                    <fa-icon [icon]="'save'"></fa-icon>&nbsp;<span jhiTranslate="entity.action.save">Save</span>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

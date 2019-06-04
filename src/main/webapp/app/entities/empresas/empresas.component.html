@@ -1,0 +1,60 @@
+<div>
+    <h2 id="page-heading">
+        <span jhiTranslate="ciecytApp.empresas.home.title">Empresas</span>
+        <button id="jh-create-entity" class="btn btn-primary float-right jh-create-entity create-empresas" [routerLink]="['/empresas/new']">
+            <fa-icon [icon]="'plus'"></fa-icon>
+            <span  jhiTranslate="ciecytApp.empresas.home.createLabel">
+            Create new Empresas
+            </span>
+        </button>
+    </h2>
+    <jhi-alert></jhi-alert>
+    <br/>
+    <div class="table-responsive" *ngIf="empresas">
+        <table class="table table-striped">
+            <thead>
+            <tr>
+            <th><span jhiTranslate="global.field.id">ID</span></th>
+            <th><span jhiTranslate="ciecytApp.empresas.entidad">Entidad</span></th>
+            <th><span jhiTranslate="ciecytApp.empresas.entidadFinanciadora">Entidad Financiadora</span></th>
+            <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let empresas of empresas ;trackBy: trackId">
+                <td><a [routerLink]="['/empresas', empresas.id, 'view' ]">{{empresas.id}}</a></td>
+                <td>{{empresas.entidad}}</td>
+                <td>
+                    <div *ngIf="empresas.entidadFinanciadora">
+                        <a [routerLink]="['../entidad-financiadora', empresas.entidadFinanciadora?.id, 'view' ]" >{{empresas.entidadFinanciadora?.id}}</a>
+                    </div>
+                </td>
+                <td class="text-right">
+                    <div class="btn-group">
+                        <button type="submit"
+                                [routerLink]="['/empresas', empresas.id, 'view' ]"
+                                class="btn btn-info btn-sm">
+                            <fa-icon [icon]="'eye'"></fa-icon>
+                            <span class="d-none d-md-inline" jhiTranslate="entity.action.view">View</span>
+                        </button>
+                        <button type="submit"
+                                [routerLink]="['/empresas', empresas.id, 'edit']"
+                                class="btn btn-primary btn-sm">
+                            <fa-icon [icon]="'pencil-alt'"></fa-icon>
+                            <span class="d-none d-md-inline" jhiTranslate="entity.action.edit">Edit</span>
+                        </button>
+                        <button type="submit"
+                                [routerLink]="['/', 'empresas', { outlets: { popup: empresas.id + '/delete'} }]"
+                                replaceUrl="true"
+                                queryParamsHandling="merge"
+                                class="btn btn-danger btn-sm">
+                            <fa-icon [icon]="'times'"></fa-icon>
+                            <span class="d-none d-md-inline" jhiTranslate="entity.action.delete">Delete</span>
+                        </button>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

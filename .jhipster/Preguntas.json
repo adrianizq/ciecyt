@@ -1,0 +1,38 @@
+{
+    "name": "Preguntas",
+    "fields": [
+        {
+            "fieldName": "pregunta",
+            "fieldType": "String"
+        }
+    ],
+    "relationships": [
+        {
+            "relationshipName": "elementos",
+            "otherEntityName": "elementos",
+            "relationshipType": "many-to-one",
+            "otherEntityField": "id"
+        },
+        {
+            "relationshipType": "one-to-many",
+            "otherEntityName": "preguntaRespuesta",
+            "otherEntityRelationshipName": "preguntas",
+            "relationshipName": "preguntaRespuesta"
+        },
+        {
+            "relationshipName": "faseTrabajo",
+            "otherEntityName": "faseTrabajo",
+            "relationshipType": "many-to-one",
+            "otherEntityField": "id"
+        }
+    ],
+    "changelogDate": "20190604045806",
+    "entityTableName": "preguntas",
+    "dto": "no",
+    "pagination": "no",
+    "service": "serviceImpl",
+    "jpaMetamodelFiltering": false,
+    "fluentMethods": true,
+    "clientRootFolder": "",
+    "applications": "*"
+}
