@@ -354,11 +354,6 @@ export function initVueXStore(vue) {
         },
       ],
       menu_lateral_nueva: [
-        /* {
-          title: 'Mis propuestas',
-          description: 'Propuestas creadas',
-          to: '/propuesta-nueva/propuestas-investigador',
-        },*/
         {
           title: 'Propuesta Nueva',
           description: 'Espacio para crear las propuestas del Ciecyt',
@@ -375,15 +370,8 @@ export function initVueXStore(vue) {
           to: '/propuesta-nueva/asesor-nueva',
         },
         {
-          title: 'Jurado de Viabilidad',
-          description: 'Jurados Viabilidad del proyecto',
-          to: '/propuesta-nueva/viabilidad-nueva',
-        },
-
-        ///propuesta-nueva/asignar-jurado-nueva/
-        {
-          title: 'Jurados',
-          description: 'Jurados del proyecto',
+          title: 'Jurado',
+          description: 'Jurado del proyecto (viabilidad y sustentación)',
           to: '/propuesta-nueva/jurado-nueva',
         },
       ],

@@ -96,8 +96,8 @@ public class ProyectoResourceIT {
     private static final ZonedDateTime DEFAULT_FECHA_ENVIO_PROYECTO = ZonedDateTime.ofInstant(Instant.ofEpochMilli(0L), ZoneOffset.UTC);
     private static final ZonedDateTime UPDATED_FECHA_ENVIO_PROYECTO = ZonedDateTime.now(ZoneId.systemDefault()).withNano(0);
 
-    private static final Float DEFAULT_NOTA = 1F;
-    private static final Float UPDATED_NOTA = 2F;
+    private static final Double DEFAULT_NOTA = 1D;
+    private static final Double UPDATED_NOTA = 2D;
 
     private static final String DEFAULT_CONCLUSION = "AAAAAAAAAA";
     private static final String UPDATED_CONCLUSION = "BBBBBBBBBB";
@@ -111,29 +111,19 @@ public class ProyectoResourceIT {
     private static final Boolean DEFAULT_PRE_ENVIADO = false;
     private static final Boolean UPDATED_PRE_ENVIADO = true;
 
-    private static final ZonedDateTime DEFAULT_FECHA_PRE_ENVIO_PROPUESTA = ZonedDateTime.ofInstant(Instant.ofEpochMilli(0L), ZoneOffset.UTC);
-    private static final ZonedDateTime UPDATED_FECHA_PRE_ENVIO_PROPUESTA = ZonedDateTime.now(ZoneId.systemDefault()).withNano(0);
+    private static final LocalDate DEFAULT_FECHA_PRE_ENVIO_PROPUESTA = LocalDate.ofEpochDay(0L);
+    private static final LocalDate UPDATED_FECHA_PRE_ENVIO_PROPUESTA = LocalDate.now(ZoneId.systemDefault());
 
-    private static final ZonedDateTime DEFAULT_FECHA_VIABILIDAD_PROPUESTA = ZonedDateTime.ofInstant(Instant.ofEpochMilli(0L), ZoneOffset.UTC);
-    private static final ZonedDateTime UPDATED_FECHA_VIABILIDAD_PROPUESTA = ZonedDateTime.now(ZoneId.systemDefault()).withNano(0);
+    private static final LocalDate DEFAULT_FECHA_VIABILIDAD_PROPUESTA = LocalDate.ofEpochDay(0L);
+    private static final LocalDate UPDATED_FECHA_VIABILIDAD_PROPUESTA = LocalDate.now(ZoneId.systemDefault());
 
-    private static final ZonedDateTime DEFAULT_FECHA_SUSTENTACION_PROYECTO = ZonedDateTime.ofInstant(Instant.ofEpochMilli(0L), ZoneOffset.UTC);
-    private static final ZonedDateTime UPDATED_FECHA_SUSTENTACION_PROYECTO = ZonedDateTime.now(ZoneId.systemDefault()).withNano(0);
+    private static final LocalDate DEFAULT_FECHA_SUSTENTACION_PROYECTO = LocalDate.ofEpochDay(0L);
+    private static final LocalDate UPDATED_FECHA_SUSTENTACION_PROYECTO = LocalDate.now(ZoneId.systemDefault());
 
     private static final Boolean DEFAULT_SUSTENTAR = false;
     private static final Boolean UPDATED_SUSTENTAR = true;
 
-    private static final String DEFAULT_RECOMENDACIONES_JURADO_PROYECTO = "AAAAAAAAAA";
-    private static final String UPDATED_RECOMENDACIONES_JURADO_PROYECTO = "BBBBBBBBBB";
 
-    private static final String DEFAULT_RECOMENDACIONES_ASESOR_PROPUESTA = "AAAAAAAAAA";
-    private static final String UPDATED_RECOMENDACIONES_ASESOR_PROPUESTA = "BBBBBBBBBB";
-
-    private static final String DEFAULT_RECOMENDACIONES_ASESOR_PROYECTO = "AAAAAAAAAA";
-    private static final String UPDATED_RECOMENDACIONES_ASESOR_PROYECTO = "BBBBBBBBBB";
-
-    private static final String DEFAULT_RECOMENDACIONES_JURADO_SUSTENTACION = "AAAAAAAAAA";
-    private static final String UPDATED_RECOMENDACIONES_JURADO_SUSTENTACION = "BBBBBBBBBB";
 
     private static final Boolean DEFAULT_PROYECTO_ENVIADO = false;
     private static final Boolean UPDATED_PROYECTO_ENVIADO = true;
@@ -185,16 +175,12 @@ public class ProyectoResourceIT {
             .nota(DEFAULT_NOTA)
             .conclusion(DEFAULT_CONCLUSION)
             .recomendaciones(DEFAULT_RECOMENDACIONES)
-            .viabilidad(DEFAULT_VIABILIDAD)
+            .viabilidad(DEFAULT_VIABILIDAD.toString())
             .preEnviado(DEFAULT_PRE_ENVIADO)
             .fechaPreEnvioPropuesta(DEFAULT_FECHA_PRE_ENVIO_PROPUESTA)
             .fechaViabilidadPropuesta(DEFAULT_FECHA_VIABILIDAD_PROPUESTA)
             .fechaSustentacionProyecto(DEFAULT_FECHA_SUSTENTACION_PROYECTO)
             .sustentar(DEFAULT_SUSTENTAR)
-            .recomendacionesJuradoProyecto(DEFAULT_RECOMENDACIONES_JURADO_PROYECTO)
-            .recomendacionesAsesorPropuesta(DEFAULT_RECOMENDACIONES_ASESOR_PROPUESTA)
-            .recomendacionesAsesorProyecto(DEFAULT_RECOMENDACIONES_ASESOR_PROYECTO)
-            .recomendacionesJuradoSustentacion(DEFAULT_RECOMENDACIONES_JURADO_SUSTENTACION)
             .proyectoEnviado(DEFAULT_PROYECTO_ENVIADO);
         return proyecto;
     }
@@ -228,16 +214,12 @@ public class ProyectoResourceIT {
             .nota(UPDATED_NOTA)
             .conclusion(UPDATED_CONCLUSION)
             .recomendaciones(UPDATED_RECOMENDACIONES)
-            .viabilidad(UPDATED_VIABILIDAD)
+            .viabilidad(UPDATED_VIABILIDAD.toString())
             .preEnviado(UPDATED_PRE_ENVIADO)
             .fechaPreEnvioPropuesta(UPDATED_FECHA_PRE_ENVIO_PROPUESTA)
             .fechaViabilidadPropuesta(UPDATED_FECHA_VIABILIDAD_PROPUESTA)
             .fechaSustentacionProyecto(UPDATED_FECHA_SUSTENTACION_PROYECTO)
             .sustentar(UPDATED_SUSTENTAR)
-            .recomendacionesJuradoProyecto(UPDATED_RECOMENDACIONES_JURADO_PROYECTO)
-            .recomendacionesAsesorPropuesta(UPDATED_RECOMENDACIONES_ASESOR_PROPUESTA)
-            .recomendacionesAsesorProyecto(UPDATED_RECOMENDACIONES_ASESOR_PROYECTO)
-            .recomendacionesJuradoSustentacion(UPDATED_RECOMENDACIONES_JURADO_SUSTENTACION)
             .proyectoEnviado(UPDATED_PROYECTO_ENVIADO);
         return proyecto;
     }
@@ -290,10 +272,6 @@ public class ProyectoResourceIT {
         assertThat(testProyecto.getFechaViabilidadPropuesta()).isEqualTo(DEFAULT_FECHA_VIABILIDAD_PROPUESTA);
         assertThat(testProyecto.getFechaSustentacionProyecto()).isEqualTo(DEFAULT_FECHA_SUSTENTACION_PROYECTO);
         assertThat(testProyecto.isSustentar()).isEqualTo(DEFAULT_SUSTENTAR);
-        assertThat(testProyecto.getRecomendacionesJuradoProyecto()).isEqualTo(DEFAULT_RECOMENDACIONES_JURADO_PROYECTO);
-        assertThat(testProyecto.getRecomendacionesAsesorPropuesta()).isEqualTo(DEFAULT_RECOMENDACIONES_ASESOR_PROPUESTA);
-        assertThat(testProyecto.getRecomendacionesAsesorProyecto()).isEqualTo(DEFAULT_RECOMENDACIONES_ASESOR_PROYECTO);
-        assertThat(testProyecto.getRecomendacionesJuradoSustentacion()).isEqualTo(DEFAULT_RECOMENDACIONES_JURADO_SUSTENTACION);
         assertThat(testProyecto.isProyectoEnviado()).isEqualTo(DEFAULT_PROYECTO_ENVIADO);
     }
 
@@ -353,14 +331,10 @@ public class ProyectoResourceIT {
             .andExpect(jsonPath("$.[*].recomendaciones").value(hasItem(DEFAULT_RECOMENDACIONES)))
             .andExpect(jsonPath("$.[*].viabilidad").value(hasItem(DEFAULT_VIABILIDAD.toString())))
             .andExpect(jsonPath("$.[*].preEnviado").value(hasItem(DEFAULT_PRE_ENVIADO.booleanValue())))
-            .andExpect(jsonPath("$.[*].fechaPreEnvioPropuesta").value(hasItem(sameInstant(DEFAULT_FECHA_PRE_ENVIO_PROPUESTA))))
-            .andExpect(jsonPath("$.[*].fechaViabilidadPropuesta").value(hasItem(sameInstant(DEFAULT_FECHA_VIABILIDAD_PROPUESTA))))
-            .andExpect(jsonPath("$.[*].fechaSustentacionProyecto").value(hasItem(sameInstant(DEFAULT_FECHA_SUSTENTACION_PROYECTO))))
+            .andExpect(jsonPath("$.[*].fechaPreEnvioPropuesta").value(hasItem(DEFAULT_FECHA_PRE_ENVIO_PROPUESTA.toString())))
+            .andExpect(jsonPath("$.[*].fechaViabilidadPropuesta").value(hasItem(DEFAULT_FECHA_VIABILIDAD_PROPUESTA.toString())))
+            .andExpect(jsonPath("$.[*].fechaSustentacionProyecto").value(hasItem(DEFAULT_FECHA_SUSTENTACION_PROYECTO.toString())))
             .andExpect(jsonPath("$.[*].sustentar").value(hasItem(DEFAULT_SUSTENTAR.booleanValue())))
-            .andExpect(jsonPath("$.[*].recomendacionesJuradoProyecto").value(hasItem(DEFAULT_RECOMENDACIONES_JURADO_PROYECTO)))
-            .andExpect(jsonPath("$.[*].recomendacionesAsesorPropuesta").value(hasItem(DEFAULT_RECOMENDACIONES_ASESOR_PROPUESTA)))
-            .andExpect(jsonPath("$.[*].recomendacionesAsesorProyecto").value(hasItem(DEFAULT_RECOMENDACIONES_ASESOR_PROYECTO)))
-            .andExpect(jsonPath("$.[*].recomendacionesJuradoSustentacion").value(hasItem(DEFAULT_RECOMENDACIONES_JURADO_SUSTENTACION)))
             .andExpect(jsonPath("$.[*].proyectoEnviado").value(hasItem(DEFAULT_PROYECTO_ENVIADO.booleanValue())));
     }
     
@@ -399,14 +373,10 @@ public class ProyectoResourceIT {
             .andExpect(jsonPath("$.recomendaciones").value(DEFAULT_RECOMENDACIONES))
             .andExpect(jsonPath("$.viabilidad").value(DEFAULT_VIABILIDAD.toString()))
             .andExpect(jsonPath("$.preEnviado").value(DEFAULT_PRE_ENVIADO.booleanValue()))
-            .andExpect(jsonPath("$.fechaPreEnvioPropuesta").value(sameInstant(DEFAULT_FECHA_PRE_ENVIO_PROPUESTA)))
-            .andExpect(jsonPath("$.fechaViabilidadPropuesta").value(sameInstant(DEFAULT_FECHA_VIABILIDAD_PROPUESTA)))
-            .andExpect(jsonPath("$.fechaSustentacionProyecto").value(sameInstant(DEFAULT_FECHA_SUSTENTACION_PROYECTO)))
+            .andExpect(jsonPath("$.fechaPreEnvioPropuesta").value(DEFAULT_FECHA_PRE_ENVIO_PROPUESTA.toString()))
+            .andExpect(jsonPath("$.fechaViabilidadPropuesta").value(DEFAULT_FECHA_VIABILIDAD_PROPUESTA.toString()))
+            .andExpect(jsonPath("$.fechaSustentacionProyecto").value(DEFAULT_FECHA_SUSTENTACION_PROYECTO.toString()))
             .andExpect(jsonPath("$.sustentar").value(DEFAULT_SUSTENTAR.booleanValue()))
-            .andExpect(jsonPath("$.recomendacionesJuradoProyecto").value(DEFAULT_RECOMENDACIONES_JURADO_PROYECTO))
-            .andExpect(jsonPath("$.recomendacionesAsesorPropuesta").value(DEFAULT_RECOMENDACIONES_ASESOR_PROPUESTA))
-            .andExpect(jsonPath("$.recomendacionesAsesorProyecto").value(DEFAULT_RECOMENDACIONES_ASESOR_PROYECTO))
-            .andExpect(jsonPath("$.recomendacionesJuradoSustentacion").value(DEFAULT_RECOMENDACIONES_JURADO_SUSTENTACION))
             .andExpect(jsonPath("$.proyectoEnviado").value(DEFAULT_PROYECTO_ENVIADO.booleanValue()));
     }
     @Test
@@ -452,16 +422,12 @@ public class ProyectoResourceIT {
             .nota(UPDATED_NOTA)
             .conclusion(UPDATED_CONCLUSION)
             .recomendaciones(UPDATED_RECOMENDACIONES)
-            .viabilidad(UPDATED_VIABILIDAD)
+            .viabilidad(UPDATED_VIABILIDAD.toString())
             .preEnviado(UPDATED_PRE_ENVIADO)
             .fechaPreEnvioPropuesta(UPDATED_FECHA_PRE_ENVIO_PROPUESTA)
             .fechaViabilidadPropuesta(UPDATED_FECHA_VIABILIDAD_PROPUESTA)
             .fechaSustentacionProyecto(UPDATED_FECHA_SUSTENTACION_PROYECTO)
             .sustentar(UPDATED_SUSTENTAR)
-            .recomendacionesJuradoProyecto(UPDATED_RECOMENDACIONES_JURADO_PROYECTO)
-            .recomendacionesAsesorPropuesta(UPDATED_RECOMENDACIONES_ASESOR_PROPUESTA)
-            .recomendacionesAsesorProyecto(UPDATED_RECOMENDACIONES_ASESOR_PROYECTO)
-            .recomendacionesJuradoSustentacion(UPDATED_RECOMENDACIONES_JURADO_SUSTENTACION)
             .proyectoEnviado(UPDATED_PROYECTO_ENVIADO);
         ProyectoDTO proyectoDTO = proyectoMapper.toDto(updatedProyecto);
 
@@ -502,10 +468,6 @@ public class ProyectoResourceIT {
         assertThat(testProyecto.getFechaViabilidadPropuesta()).isEqualTo(UPDATED_FECHA_VIABILIDAD_PROPUESTA);
         assertThat(testProyecto.getFechaSustentacionProyecto()).isEqualTo(UPDATED_FECHA_SUSTENTACION_PROYECTO);
         assertThat(testProyecto.isSustentar()).isEqualTo(UPDATED_SUSTENTAR);
-        assertThat(testProyecto.getRecomendacionesJuradoProyecto()).isEqualTo(UPDATED_RECOMENDACIONES_JURADO_PROYECTO);
-        assertThat(testProyecto.getRecomendacionesAsesorPropuesta()).isEqualTo(UPDATED_RECOMENDACIONES_ASESOR_PROPUESTA);
-        assertThat(testProyecto.getRecomendacionesAsesorProyecto()).isEqualTo(UPDATED_RECOMENDACIONES_ASESOR_PROYECTO);
-        assertThat(testProyecto.getRecomendacionesJuradoSustentacion()).isEqualTo(UPDATED_RECOMENDACIONES_JURADO_SUSTENTACION);
         assertThat(testProyecto.isProyectoEnviado()).isEqualTo(UPDATED_PROYECTO_ENVIADO);
     }
 

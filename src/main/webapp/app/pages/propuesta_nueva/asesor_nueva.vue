@@ -26,7 +26,7 @@
                         <button type="button" id="cancel" class="btn btn-secondary" v-on:click="back">
                             <font-awesome-icon icon="arrow-left"></font-awesome-icon>&nbsp;Volver
                         </button>
-                        <button type="button" id="save" class="btn btn-primary" v-on:click="save()">
+                        <button type="button" id="save" class="btn btn-primary" v-on:click="save()" :disabled="isSaving || !integranteProyecto.integranteProyectoUserId">
                             <font-awesome-icon icon="save"></font-awesome-icon>&nbsp;<span v-text="$t('entity.action.save')">Guardar</span>
                         </button>
                     </div>
@@ -92,72 +92,72 @@
             this.$router.push({ name: 'PropuestaIntegrantesNuevaEditView', params: { proyectoId: this.proyId } });
         }
 
-        public save(): void {
+        public async save(): Promise<void> {
+            if (!this.integranteProyecto.integranteProyectoUserId) {
+                this.alertService().showAlert('Debe seleccionar un asesor', 'danger');
+                return;
+            }
+
+            this.isSaving = true;
             try {
-                this.isSaving = true;
                 if (this.integranteProyecto.id) {
-                    this.integranteProyectoService().update(this.integranteProyecto)
-                        .then(param => {
-                            this.$router.push({ name: 'PropuestaViabilidadNuevaEditView', params: { proyectoId: this.proyId } });
-                        });
+                    const param = await this.integranteProyectoService().update(this.integranteProyecto);
+                    this.integranteProyecto = param;
+                    this.alertService().showAlert('Asesor actualizado correctamente', 'success');
                 } else {
-                    this.integranteProyectoService().create(this.integranteProyecto)
-                        .then(param => {
-                            this.$router.push({ name: 'PropuestaViabilidadNuevaEditView', params: { proyectoId: this.proyId } });
-                        });
+                    const param = await this.integranteProyectoService().create(this.integranteProyecto);
+                    this.integranteProyecto = param;
+                    this.alertService().showAlert('Asesor guardado correctamente', 'success');
                 }
-            } catch (e) {
-                //TODO: mostrar mensajes de error
+                this.$router.push({ name: 'PropuestaViabilidadNuevaEditView', params: { proyectoId: this.proyId } });
+            } catch (err) {
+                this.isSaving = false;
+                console.error('Error guardando asesor:', err);
+                this.alertService().showAlert('Error al guardar el asesor: ' + (err.response ? err.response.data.message : err.message), 'danger');
             }
         }
 
         async initRelationships() {
+            this.isSaving = true;
             try {
-                this.usuarioService()
-                    .retrieveAsesores()
-                    .then(res => {
-                        res.data.forEach((item) => {
-                            if (item.firstName && item.lastName && item.userInfo) {
-                                if (item.userInfo.nuip)
-                                    item.nombresApellidos = item.firstName + ' ' + item.lastName + ' ' + item.userInfo.nuip;
-                            } else if (item.firstName && item.lastName) {
-                                item.nombresApellidos = item.firstName + ' ' + item.lastName;
-                            }
-
-                            this.users.push(item);
-                            this.options.push({ value: item.id, text: item.nombresApellidos })
-                        });
-                    });
-
                 this.proyId = parseInt(this.$route.params.proyectoId);
                 this.proyecto = await this.proyectoService().find(this.proyId);
                 this.modalidadId = this.proyecto.proyectoModalidadId;
 
-                // Buscar si ya tiene un asesor asignado
-                await this.integranteProyectoService()
-                    .retrieveAsesoresProyecto(this.proyId)
-                    .then(res => {
-                        if (res.data && res.data.length > 0) {
-                            this.integranteProyecto = res.data[0];
-                        }
-                    });
-
-                // Si no tiene asesor, crear uno nuevo con el rol correspondiente
-                if (!this.integranteProyecto.id) {
-                    await this.rolesModalidadService()
-                        .findRolModalidad("Asesor", this.modalidadId)
-                        .then(res => {
-                            this.rolesModalidad = res;
-                            this.rolModalidadId = res.id;
-
-                            this.integranteProyecto = new IntegranteProyecto();
-                            this.integranteProyecto.integranteProyectoProyectoId = this.proyId;
-                            this.integranteProyecto.integranteProyectoRolesModalidadId = this.rolModalidadId;
-                        });
+                const asesoresRes = await this.integranteProyectoService().retrieveAsesoresProyecto(this.proyId);
+                if (asesoresRes.data && asesoresRes.data.length > 0) {
+                    this.integranteProyecto = asesoresRes.data[0];
                 }
 
-            } catch (e) {
+                // Si no tiene asesor, preparar uno nuevo con el rol correspondiente
+                if (!this.integranteProyecto.id) {
+                    const rolRes = await this.rolesModalidadService().findRolModalidad("Asesor", this.modalidadId);
+                    this.rolesModalidad = rolRes;
+                    this.rolModalidadId = rolRes.id;
 
+                    this.integranteProyecto = new IntegranteProyecto();
+                    this.integranteProyecto.integranteProyectoProyectoId = this.proyId;
+                    this.integranteProyecto.integranteProyectoRolesModalidadId = this.rolModalidadId;
+                }
+
+                // Cargar usuarios asesores al final para que el select tenga sus opciones
+                const usuariosRes = await this.usuarioService().retrieveAsesores();
+                usuariosRes.data.forEach((item) => {
+                    if (item.firstName && item.lastName && item.userInfo) {
+                        if (item.userInfo.nuip)
+                            item.nombresApellidos = item.firstName + ' ' + item.lastName + ' ' + item.userInfo.nuip;
+                    } else if (item.firstName && item.lastName) {
+                        item.nombresApellidos = item.firstName + ' ' + item.lastName;
+                    }
+
+                    this.users.push(item);
+                    this.options.push({ value: item.id, text: item.nombresApellidos })
+                });
+            } catch (e) {
+                console.error('Error cargando datos del asesor:', e);
+                this.alertService().showAlert('Error al cargar los datos del asesor', 'danger');
+            } finally {
+                this.isSaving = false;
             }
         }
 

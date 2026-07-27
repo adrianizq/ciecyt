@@ -19,7 +19,6 @@
                             </b-form-select>-->
                              <model-select 
                             :options="options"
-                            @input="selectFromParentComponent"
                             placeholder="busque por nombre o cedula"
                             v-model="integrante.integranteProyectoUserId"
                             >
@@ -35,7 +34,7 @@
                         <button type="button" id="cancel" class="btn btn-secondary" v-on:click="back">
                             <font-awesome-icon icon="arrow-left"></font-awesome-icon>&nbsp;Volver
                         </button>
-                        <button type="button" id="save" class="btn btn-primary" v-on:click="save()">
+                        <button type="button" id="save" class="btn btn-primary" v-on:click="save()" :disabled="isSaving">
                             <font-awesome-icon icon="save"></font-awesome-icon>&nbsp;<span v-text="$t('entity.action.save')">Guardar</span>
                         </button>
                     </div>
@@ -100,126 +99,92 @@
 
             });
         }
-       
-        mounted() {
-            this.proyId = this.$route.params.proyectoId;
-             
-
-          
-        }
-        beforeMount() {
-            
-       
-          
-        }
 
         public back() {
              this.$router.go(-1);
            // this.$router.push({ name: 'PropuestaListadoCiecytView', params: { proyectoId: this.proyId } });
         }
 
-        public save(): void {
+        public async save(): Promise<void> {
+            if (!this.integrantesProyecto || this.integrantesProyecto.length === 0) {
+                this.alertService().showAlert('No hay jurados para guardar', 'warning');
+                return;
+            }
+
+            const sinSeleccionar = this.integrantesProyecto.some(i => !i.integranteProyectoUserId);
+            if (sinSeleccionar) {
+                this.alertService().showAlert('Debe seleccionar un jurado para cada campo', 'danger');
+                return;
+            }
+
+            this.isSaving = true;
             try {
-                this.isSaving = true;
                 for (let integrante of this.integrantesProyecto) {
-                    //Actualizando el integrante
                     if (integrante.id) {
-                        this.integranteProyectoService().update(integrante);
-                          (<any>this).$router.go(0);
+                        await this.integranteProyectoService().update(integrante);
                     } else {
-                        //Creando un nuevo integrante
-                        this.integranteProyectoService().create(integrante)
-                            .then(param => {
-                               // this.$router.push({ name: 'PropuestaElementosView', params: { proyectoId: this.proyId } });
-                                 (<any>this).$router.go(0);
-                            });
+                        await this.integranteProyectoService().create(integrante);
                     }
-                     var proyId: string = String(this.proyId);
-                    // this.$router.push({ name: 'PropuestaElementosView', params: { proyectoId: proyId } });
-                     
-
                 }
-
+                this.alertService().showAlert('Jurados guardados correctamente', 'success');
+                // Recargar la lista para reflejar los IDs asignados
+                await this.cargarJuradosExistentes();
             } catch (e) {
-                //TODO: mostrar mensajes de error
+                this.isSaving = false;
+                console.error('Error guardando jurados:', e);
+                this.alertService().showAlert('Error al guardar los jurados: ' + (e.response ? e.response.data.message : e.message), 'danger');
             }
         }
 
-         async initRelationships() {
+        async initRelationships() {
+            this.isSaving = true;
             try {
-                //Obteniendo los usuarios estudiantes
-                
-                this.usuarioService()
-                    .retrieveJurados()
-                    .then(res => {
-                      
-                        res.data.forEach((item) => {
-                            if(item.firstName && item.lastName && item.userInfo ){
-                                if(item.userInfo.nuip)
-                                item.nombresApellidos = item.firstName + ' ' + item.lastName  + ' ' +  item.userInfo.nuip;
-                            }else if(item.firstName && item.lastName){
-                                item.nombresApellidos = item.firstName + ' ' + item.lastName;
-                            }
-
-                            this.users.push(item);
-                            this.options.push({value: item.id, text: item.nombresApellidos})
-
-                        });
-
-                    });
-                
-               
-                  
-
                 this.proyId = parseInt(this.$route.params.proyectoId);
-
                 this.proyecto = await this.proyectoService().find(this.proyId);
-                //console.log(this.proyecto);
-
-                /*await this.proyectoService().find(this.proyId).then
-                    (res=> {
-                            this.proyecto = res;
-                    });
-                */
                 this.modalidadId = this.proyecto.proyectoModalidadId;
 
-                
-                            
-                 await this.integranteProyectoService()
-                    .retrieveJuradosProyecto(this.proyId, "Jurado" )
-                    .then(res => {
-                       this.integrantesProyecto = res.data;
-                       //console.log(res.data);
-                   });
-                    
-                  if(this.integrantesProyecto.length==0){  
-                  await this.rolesModalidadService()
-                    .findRolModalidad("Jurado", this.modalidadId )
-                    .then(res => {
-                        this.rolesModalidad = res;
-                        this.cantJurados = res.cantidad;
-                        this.rolModalidadId = res.id;
+                // Cargar jurados existentes del proyecto
+                await this.cargarJuradosExistentes();
 
-                        console.log( this.cantJurados);
-                        
-                         for (var i = 0; i < this.cantJurados; i++) {
-                            let integrante = new IntegranteProyecto();
+                // Cargar lista de jurados disponibles
+                const res = await this.usuarioService().retrieveJurados();
+                res.data.forEach((item) => {
+                    if (item.firstName && item.lastName && item.userInfo) {
+                        if (item.userInfo.nuip)
+                            item.nombresApellidos = item.firstName + ' ' + item.lastName + ' ' + item.userInfo.nuip;
+                    } else if (item.firstName && item.lastName) {
+                        item.nombresApellidos = item.firstName + ' ' + item.lastName;
+                    }
 
-                            integrante.integranteProyectoProyectoId = this.proyId;
-                            integrante.integranteProyectoRolesModalidadId = this.rolModalidadId;
-
-                            this.integrantesProyecto.push(integrante);
-                            
-                           
-                        }
-                
-                    });
-               
-                  }
-   
-
+                    this.users.push(item);
+                    this.options.push({ value: item.id, text: item.nombresApellidos });
+                });
             } catch (e) {
+                console.error('Error cargando jurados:', e);
+                this.alertService().showAlert('Error al cargar los datos de los jurados', 'danger');
+            } finally {
+                this.isSaving = false;
+            }
+        }
 
+        async cargarJuradosExistentes() {
+            try {
+                const res = await this.integranteProyectoService().retrieveJuradosProyecto(this.proyId, "Jurado");
+                this.integrantesProyecto = res.data;
+
+                if (this.integrantesProyecto.length === 0) {
+                    const rolRes = await this.rolesModalidadService().findRolModalidad("Jurado", this.modalidadId);
+                    this.rolesModalidad = rolRes;
+                    this.cantJurados = 1;
+                    this.rolModalidadId = rolRes.id;
+
+                    let integrante = new IntegranteProyecto();
+                    integrante.integranteProyectoProyectoId = this.proyId;
+                    integrante.integranteProyectoRolesModalidadId = this.rolModalidadId;
+                    this.integrantesProyecto.push(integrante);
+                }
+            } catch (e) {
+                console.error('Error cargando jurados existentes:', e);
             }
         }
 

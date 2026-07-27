@@ -185,10 +185,8 @@
                 >Linea de Investigación</label
               >
               <b-form-select :disabled="!modalidad.contieneLinea"
-              text-field="linea" value-field="id" id="linea_investigacion" v-model="proyecto.proyectoLineaInvestigacionId">
-                <option v-for="(selectOption, indexOpt) in LineasInvestigacion" :key="indexOpt" :value="selectOption.id">
-                  ({{ selectOption.codigoLinea }}) {{ selectOption.linea }}
-                </option>
+              text-field="linea" value-field="id" id="linea_investigacion" v-model="proyecto.proyectoLineaInvestigacionId"
+              :options="LineasInvestigacionOptions">
               </b-form-select>
             </div>
           </div>
@@ -203,10 +201,7 @@
                 value-field="id"
                 id="sub_linea_linea_investigacion"
                 v-model="proyecto.subLineaLineaInvestigacionId"
-              >
-                <option v-for="(selectOption, indexOpt) in SubLineas" :key="indexOpt" :value="selectOption.id">
-                  ({{ selectOption.codigoLinea }}) {{ selectOption.linea }}
-                </option>
+                :options="SubLineasOptions">
               </b-form-select>
             </div>
           </div>
@@ -320,6 +315,7 @@ export default class PropuestaInformacionGeneral extends Vue {
 
   public save(): void {
     this.isSaving = true;
+    console.log('Guardando proyecto:', JSON.stringify(this.proyecto));
 
     // this.$v.$touch();
     /* if (this.$v.$invalid) {
@@ -405,15 +401,28 @@ export default class PropuestaInformacionGeneral extends Vue {
 
   get LineasInvestigacion() {
     return this.lineas_investigacion.filter(linea => {
-      //return !linea.lineaPadreId && linea.lineaInvestigacionProgramaId == this.proyecto.proyectoProgramaId;
       return !linea.lineaPadreId ;
     });
+  }
+
+  get LineasInvestigacionOptions() {
+    return this.LineasInvestigacion.map(l => ({
+      id: l.id,
+      linea: (l.codigoLinea ? '(' + l.codigoLinea + ') ' : '') + l.linea
+    }));
   }
 
   get SubLineas() {
     return this.lineas_investigacion.filter(linea => {
       return linea.lineaPadreId == this.proyecto.proyectoLineaInvestigacionId && linea.lineaPadreId;
     });
+  }
+
+  get SubLineasOptions() {
+    return this.SubLineas.map(l => ({
+      id: l.id,
+      linea: (l.codigoLinea ? '(' + l.codigoLinea + ') ' : '') + l.linea
+    }));
   }
 
 /*get Modalidad() {
@@ -446,71 +455,40 @@ export default class PropuestaInformacionGeneral extends Vue {
     return false;
   }
 
-  initRelationships() {
+  async initRelationships() {
     this.proyId = this.$route.params.proyectoId;
 
-    this.cicloService()
-      .retrieveAll()
-      .then(res => {
-        this.ciclos = res;
-      });
+    // Cargar listas base necesarias para los selects
+    this.ciclos = await this.cicloService().retrieveAll();
 
-    this.programaService()
-      .retrieve()
-      .then(res => {
-        this.programs = res.data;
-        //this.setProgramas(res.data);
-      });
+    this.facultades = (await this.facultadService().retrieve()).data;
 
-    //obteniendo el programa que ya existe
-    /*  this.programaService()
-                .find(this.proyecto.proyectoProgramaId)
-                .then(res => {
-                    this.programa = res;
-                    console.log(this.programa);
-                    
-                });*/
+    this.lineas_investigacion = (await this.lineaInvestigacionService().retrieve()).data;
 
-    //Obtenienedo el asesor del proyecto
+    // Si estamos editando un proyecto existente, cargar sus datos y relaciones
     if (this.proyId) {
-      this.proyectoService()
-        .retrieveWithAsesor(this.proyId)
-        .then(res => {
-          this.proyecto = res.data;
-          console.log(this.proyecto);
-          // Si el proyecto ya tiene ciclo, cargar sus modalidades y programas
-          if (this.proyecto.proyectoCicloId) {
-            this.cicloService()
-              .findModalidadesByCiclo(this.proyecto.proyectoCicloId)
-              .then(res2 => {
-                this.modalidads = res2;
-              });
-            const selectedCiclo = this.ciclos.find(c => c.id === this.proyecto.proyectoCicloId);
-            if (selectedCiclo && selectedCiclo.ciclo) {
-              this.programaService()
-                .findByCiclo(selectedCiclo.ciclo)
-                .then(res3 => {
-                  this.programs = res3;
-                });
-            }
-          }
-        });
+      const res = await this.proyectoService().retrieveWithAsesor(this.proyId);
+      const proyectoCargado = res.data;
+      console.log('Proyecto cargado:', proyectoCargado);
+
+      // Cargar la modalidad completa para saber si contiene linea/sublinea
+      if (proyectoCargado.proyectoModalidadId) {
+        this.modalidad = await this.modalidadService().find(proyectoCargado.proyectoModalidadId);
+        console.log('Modalidad cargada:', this.modalidad);
+      }
+
+      // Cargar modalidades y programas asociados al ciclo del proyecto
+      if (proyectoCargado.proyectoCicloId) {
+        this.modalidads = await this.cicloService().findModalidadesByCiclo(proyectoCargado.proyectoCicloId);
+        const selectedCiclo = this.ciclos.find(c => c.id === proyectoCargado.proyectoCicloId);
+        if (selectedCiclo && selectedCiclo.ciclo) {
+          this.programs = await this.programaService().findByCiclo(selectedCiclo.ciclo);
+        }
+      }
+
+      // Asignar el proyecto al final, cuando todo lo demas ya esta listo
+      this.proyecto = proyectoCargado;
     }
-
-    //Obteniendo las facultadas
-    this.facultadService()
-      .retrieve()
-      .then(res => {
-        this.facultades = res.data;
-      });
-
-    //Obteniendo las lineas de investigacion
-    this.lineaInvestigacionService()
-      .retrieve()
-      .then(res => {
-        this.lineas_investigacion = res.data;
-        
-      });
   }
   //metodos para las validaciones
   /*   setTitulo(value) {
@@ -546,15 +524,30 @@ export default class PropuestaInformacionGeneral extends Vue {
   setModalidad(value){
       if (!value) {
         this.modalidad = new Modalidad();
+        this.proyecto.proyectoLineaInvestigacionId = null;
+        this.proyecto.subLineaLineaInvestigacionId = null;
+        this.proyecto.proyectoLineaInvestigacionLinea = null;
+        this.proyecto.subLineaLineaInvestigacionLinea = null;
+        return;
+      }
+      // Si la modalidad no cambio realmente, no limpiar la linea/sublinea ya cargada
+      if (value === this.proyecto.proyectoModalidadId) {
+        this.modalidadService()
+          .find(value)
+          .then(res => {
+            this.modalidad = res;
+          });
         return;
       }
       this.modalidadService()
-                .find(value)
-                .then(res => {
-                    this.modalidad = res;
-                });
-                this.proyecto.proyectoLineaInvestigacionId=null;
-                this.proyecto.subLineaLineaInvestigacionId=null;
+        .find(value)
+        .then(res => {
+          this.modalidad = res;
+        });
+      this.proyecto.proyectoLineaInvestigacionId = null;
+      this.proyecto.subLineaLineaInvestigacionId = null;
+      this.proyecto.proyectoLineaInvestigacionLinea = null;
+      this.proyecto.subLineaLineaInvestigacionLinea = null;
   }
 
   onCicloChange(cicloId: number) {
@@ -562,6 +555,8 @@ export default class PropuestaInformacionGeneral extends Vue {
     this.modalidad = new Modalidad();
     this.proyecto.proyectoLineaInvestigacionId = null;
     this.proyecto.subLineaLineaInvestigacionId = null;
+    this.proyecto.proyectoLineaInvestigacionLinea = null;
+    this.proyecto.subLineaLineaInvestigacionLinea = null;
     this.proyecto.proyectoProgramaId = null;
     if (cicloId) {
       this.cicloService()

@@ -1,8 +1,12 @@
 package co.edu.itp.ciecyt.service.impl;
 
 import co.edu.itp.ciecyt.domain.IntegranteProyecto;
+import co.edu.itp.ciecyt.domain.LineaInvestigacion;
 import co.edu.itp.ciecyt.domain.Modalidad;
+import co.edu.itp.ciecyt.domain.Programa;
 import co.edu.itp.ciecyt.domain.Proyecto;
+import co.edu.itp.ciecyt.repository.LineaInvestigacionRepository;
+import co.edu.itp.ciecyt.repository.ProgramaRepository;
 import co.edu.itp.ciecyt.repository.ProyectoRepository;
 import co.edu.itp.ciecyt.service.IntegranteProyectoService;
 import co.edu.itp.ciecyt.service.ProyectoService;
@@ -35,6 +39,8 @@ public class ProyectoServiceImpl implements ProyectoService {
     private final IntegranteProyectoService integranteProyectoService;
     //private final IntegranteProyectoRepository integranteProyectoRepository;
     private final RolesModalidadService rolesModalidadService;
+    private final LineaInvestigacionRepository lineaInvestigacionRepository;
+    private final ProgramaRepository programaRepository;
 
     private final ProyectoMapper proyectoMapper;
 
@@ -42,12 +48,16 @@ public class ProyectoServiceImpl implements ProyectoService {
         ProyectoRepository proyectoRepository,
         ProyectoMapper proyectoMapper,
         IntegranteProyectoService integranteProyectoService,
-        RolesModalidadService rolesModalidadService
+        RolesModalidadService rolesModalidadService,
+        LineaInvestigacionRepository lineaInvestigacionRepository,
+        ProgramaRepository programaRepository
     ) {
         this.proyectoRepository = proyectoRepository;
         this.proyectoMapper = proyectoMapper;
         this.integranteProyectoService = integranteProyectoService;
         this.rolesModalidadService = rolesModalidadService;
+        this.lineaInvestigacionRepository = lineaInvestigacionRepository;
+        this.programaRepository = programaRepository;
     }
 
     /**
@@ -59,7 +69,24 @@ public class ProyectoServiceImpl implements ProyectoService {
     @Override
     public ProyectoDTO save(ProyectoDTO proyectoDTO) {
         log.debug("Request to save Proyecto : {}", proyectoDTO);
+        log.debug("proyectoLineaInvestigacionId: {}, subLineaLineaInvestigacionId: {}",
+            proyectoDTO.getProyectoLineaInvestigacionId(), proyectoDTO.getSubLineaLineaInvestigacionId());
         Proyecto proyecto = proyectoMapper.toEntity(proyectoDTO);
+
+        // Asegurar que se persistan las relaciones provenientes del DTO
+        if (proyectoDTO.getProyectoLineaInvestigacionId() != null && proyecto.getProyectoLineaInvestigacion() == null) {
+            LineaInvestigacion linea = lineaInvestigacionRepository.findById(proyectoDTO.getProyectoLineaInvestigacionId()).orElse(null);
+            proyecto.setProyectoLineaInvestigacion(linea);
+        }
+        if (proyectoDTO.getSubLineaLineaInvestigacionId() != null && proyecto.getSubLineaLineaInvestigacion() == null) {
+            LineaInvestigacion subLinea = lineaInvestigacionRepository.findById(proyectoDTO.getSubLineaLineaInvestigacionId()).orElse(null);
+            proyecto.setSubLineaLineaInvestigacion(subLinea);
+        }
+        if (proyectoDTO.getProyectoProgramaId() != null && proyecto.getProyectoPrograma() == null) {
+            Programa programa = programaRepository.findById(proyectoDTO.getProyectoProgramaId()).orElse(null);
+            proyecto.setProyectoPrograma(programa);
+        }
+
         proyecto = proyectoRepository.save(proyecto);
         return proyectoMapper.toDto(proyecto);
     }
@@ -236,8 +263,10 @@ public class ProyectoServiceImpl implements ProyectoService {
         ProyectoDTO proyectoDTO;
 
         proyectoDTO = proyectoMapper.toDto(p);
-
         proyectoDTO.setAsesorId(integranteProyectoId);
+
+        log.debug("findOneWithAsesor - proyectoDTO linea: {}, sublinea: {}",
+            proyectoDTO.getProyectoLineaInvestigacionId(), proyectoDTO.getSubLineaLineaInvestigacionId());
 
         return proyectoDTO;
     }
