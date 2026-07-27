@@ -155,3 +155,7 @@ filesretro/47801.unknown
 filesretro/47803.doc
 adjuntoproyectofases/61102.pdf
 adjuntoproyectofases/61101.pdf
+*.backup
+*.bakcup
+*.zip
+debug.txt
