@@ -1,0 +1,67 @@
+/*
+ * Bootstrap overrides - Paleta Universitaria CIECYT-ITP
+ * https://getbootstrap.com/docs/4.0/getting-started/theming/
+ */
+
+// Colors: Paleta institucional
+$primary: #003366;
+$secondary: #C4A94D;
+$success: #28a745;
+$info: #17a2b8;
+$warning: #C4A94D;
+$danger: #dc3545;
+$light: #F4F6F9;
+$dark: #1a2332;
+
+// Options
+$enable-rounded: true;
+$enable-shadows: true;
+$enable-gradients: false;
+$enable-transitions: true;
+$enable-hover-media-query: false;
+$enable-grid-classes: true;
+$enable-print-styles: true;
+
+// Components
+$border-radius: 0.5rem;
+$border-radius-lg: 0.75rem;
+$border-radius-sm: 0.35rem;
+
+// Body
+$body-bg: #F4F6F9;
+$font-size-base: 0.95rem;
+
+// Typography
+$font-family-sans-serif: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+$headings-font-weight: 600;
+
+// Shadows
+$box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+$box-shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.06);
+$box-shadow-lg: 0 4px 16px rgba(0, 0, 0, 0.12);
+
+// Navbar
+$navbar-dark-color: #ffffff;
+$navbar-dark-hover-color: #C4A94D;
+
+// Cards
+$card-cap-bg: #003366;
+
+// Links
+$link-color: #003366;
+$link-decoration: none;
+$link-hover-decoration: underline;
+
+// Buttons
+$btn-border-radius: 0.5rem;
+$btn-padding-y: 0.5rem;
+$btn-padding-x: 1.25rem;
+
+// Forms
+$input-border-color: #d1d5db;
+$input-focus-border-color: #C4A94D;
+$input-focus-box-shadow: 0 0 0 0.2rem rgba(196, 169, 77, 0.25);
+$input-border-radius: 0.5rem;
+
+// Transitions
+$transition-base: all 0.2s ease-in-out;

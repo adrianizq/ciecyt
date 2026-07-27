@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.9.xsd
+                        http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog-ext/dbchangelog-3.9.xsd">
+
+    <!-- Fix mismatch: entity expects 'proyecto_fase_id' but DB has 'proyecto_fases_id' -->
+    <changeSet id="20260726000001-1" author="fix" dbms="postgresql">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists tableName="proyecto" columnName="proyecto_fase_id"/>
+            </not>
+            <columnExists tableName="proyecto" columnName="proyecto_fases_id"/>
+        </preConditions>
+        <renameColumn tableName="proyecto" oldColumnName="proyecto_fases_id" newColumnName="proyecto_fase_id" columnDataType="bigint"/>
+        <rollback>
+            <renameColumn tableName="proyecto" oldColumnName="proyecto_fase_id" newColumnName="proyecto_fases_id" columnDataType="bigint"/>
+        </rollback>
+    </changeSet>
+
+    <!-- Add missing 'fase' column (String) to proyecto table -->
+    <changeSet id="20260726000001-2" author="fix" dbms="postgresql">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists tableName="proyecto" columnName="fase"/>
+            </not>
+        </preConditions>
+        <addColumn tableName="proyecto">
+            <column name="fase" type="varchar(255)">
+                <constraints nullable="true"/>
+            </column>
+        </addColumn>
+        <rollback>
+            <dropColumn tableName="proyecto" columnName="fase"/>
+        </rollback>
+    </changeSet>
+
+    <!-- Add missing 'proyecto_ciclo_id' FK column to proyecto table -->
+    <changeSet id="20260726000001-3" author="fix" dbms="postgresql">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists tableName="proyecto" columnName="proyecto_ciclo_id"/>
+            </not>
+        </preConditions>
+        <addColumn tableName="proyecto">
+            <column name="proyecto_ciclo_id" type="bigint">
+                <constraints nullable="true"/>
+            </column>
+        </addColumn>
+        <addForeignKeyConstraint
+            baseColumnNames="proyecto_ciclo_id"
+            baseTableName="proyecto"
+            constraintName="fk_proyecto_ciclo"
+            referencedColumnNames="id"
+            referencedTableName="ciclo"/>
+        <rollback>
+            <dropForeignKeyConstraint baseTableName="proyecto" constraintName="fk_proyecto_ciclo"/>
+            <dropColumn tableName="proyecto" columnName="proyecto_ciclo_id"/>
+        </rollback>
+    </changeSet>
+
+    <!-- Fix: DB has 'time with time zone' but entity uses LocalDate (date) -->
+    <changeSet id="20260726000001-4" author="fix" dbms="postgresql">
+        <preConditions onFail="MARK_RAN">
+            <or>
+                <sqlCheck expectedResult="timestamp with time zone">
+                    SELECT data_type FROM information_schema.columns
+                    WHERE table_name='proyecto' AND column_name='fecha_pre_envio_propuesta'
+                </sqlCheck>
+                <sqlCheck expectedResult="timestamp with time zone">
+                    SELECT data_type FROM information_schema.columns
+                    WHERE table_name='proyecto' AND column_name='fecha_viabilidad_propuesta'
+                </sqlCheck>
+                <sqlCheck expectedResult="timestamp with time zone">
+                    SELECT data_type FROM information_schema.columns
+                    WHERE table_name='proyecto' AND column_name='fecha_sustentacion_proyecto'
+                </sqlCheck>
+            </or>
+        </preConditions>
+        <modifyDataType tableName="proyecto" columnName="fecha_pre_envio_propuesta" newDataType="date"/>
+        <modifyDataType tableName="proyecto" columnName="fecha_viabilidad_propuesta" newDataType="date"/>
+        <modifyDataType tableName="proyecto" columnName="fecha_sustentacion_proyecto" newDataType="date"/>
+        <rollback>
+            <modifyDataType tableName="proyecto" columnName="fecha_pre_envio_propuesta" newDataType="timestamp with time zone"/>
+            <modifyDataType tableName="proyecto" columnName="fecha_viabilidad_propuesta" newDataType="timestamp with time zone"/>
+            <modifyDataType tableName="proyecto" columnName="fecha_sustentacion_proyecto" newDataType="timestamp with time zone"/>
+        </rollback>
+    </changeSet>
+
+</databaseChangeLog>

@@ -1,0 +1,44 @@
+{
+  "name": "CronogramaCiecytFases",
+  "fields": [
+    {
+      "fieldName": "inicioFase",
+      "fieldType": "LocalDate"
+    },
+    {
+      "fieldName": "finFase",
+      "fieldType": "LocalDate"
+    },
+    {
+      "fieldName": "textoExplicativo",
+      "fieldType": "String"
+    }
+  ],
+  "relationships": [
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "cronogramaCiecyt",
+      "otherEntityRelationshipName": "cronogramaCiecytFases",
+      "relationshipName": "cronogramaCiecytFasesCronogramaCiecyt",
+      "otherEntityField": "tituloCronograma"
+    },
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "fases",
+      "otherEntityRelationshipName": "cronogramaCiecytFases",
+      "relationshipName": "cronogramaCiecytFasesFases",
+      "otherEntityField": "fase"
+    }
+  ],
+  "changelogDate": "20201008033803",
+  "entityTableName": "cronograma_ciecyt_fases",
+  "dto": "mapstruct",
+  "pagination": "pagination",
+  "service": "serviceImpl",
+  "jpaMetamodelFiltering": false,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "clientRootFolder": "",
+  "applications": "*"
+}

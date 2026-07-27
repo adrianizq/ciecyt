@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.9.xsd">
+    <!--
+        Added the constraints for entity CicloPropedeutico.
+    -->
+    <changeSet id="20201008033503-2" author="jhipster">
+        
+        <addForeignKeyConstraint baseColumnNames="ciclo_propedeutico_acuerdo_id"
+                                 baseTableName="ciclo_propedeutico"
+                                 constraintName="fk_ciclo_propedeutico_ciclo_propedeutico_acuerdo_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="acuerdo"/>
+
+        <addForeignKeyConstraint baseColumnNames="modalidad_id"
+                                 baseTableName="ciclo_propedeutico"
+                                 constraintName="fk_ciclo_propedeutico_modalidad_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="modalidad"/>
+
+    </changeSet>
+</databaseChangeLog>

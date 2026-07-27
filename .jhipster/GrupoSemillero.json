@@ -1,0 +1,25 @@
+{
+  "name": "GrupoSemillero",
+  "fields": [
+    {
+      "fieldName": "nombre",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "tipo",
+      "fieldType": "Boolean"
+    }
+  ],
+  "relationships": [],
+  "changelogDate": "20201008034703",
+  "entityTableName": "grupo_semillero",
+  "dto": "mapstruct",
+  "pagination": "pagination",
+  "service": "serviceImpl",
+  "jpaMetamodelFiltering": false,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "clientRootFolder": "",
+  "applications": "*"
+}

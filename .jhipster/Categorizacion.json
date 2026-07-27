@@ -1,0 +1,33 @@
+{
+  "name": "Categorizacion",
+  "fields": [
+    {
+      "fieldName": "categoria",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "descripcion",
+      "fieldType": "String"
+    }
+  ],
+  "relationships": [
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "proyecto",
+      "otherEntityRelationshipName": "categorizacion",
+      "relationshipName": "categorizacionProyecto",
+      "otherEntityField": "titulo"
+    }
+  ],
+  "changelogDate": "20201008033403",
+  "entityTableName": "categorizacion",
+  "dto": "mapstruct",
+  "pagination": "pagination",
+  "service": "serviceImpl",
+  "jpaMetamodelFiltering": false,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "clientRootFolder": "",
+  "applications": "*"
+}

@@ -1,0 +1,45 @@
+{
+  "name": "RolMenu",
+  "fields": [
+    {
+      "fieldName": "permitirAcceso",
+      "fieldType": "Boolean"
+    },
+    {
+      "fieldName": "permitirCrear",
+      "fieldType": "Boolean"
+    },
+    {
+      "fieldName": "permitirEditar",
+      "fieldType": "Boolean"
+    },
+    {
+      "fieldName": "permitirEliminar",
+      "fieldType": "Boolean"
+    },
+    {
+      "fieldName": "authName",
+      "fieldType": "String"
+    }
+  ],
+  "relationships": [
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "menu",
+      "otherEntityRelationshipName": "rolMenu",
+      "relationshipName": "rolMenuMenu",
+      "otherEntityField": "nombre"
+    }
+  ],
+  "changelogDate": "20201008040503",
+  "entityTableName": "rol_menu",
+  "dto": "mapstruct",
+  "pagination": "pagination",
+  "service": "serviceImpl",
+  "jpaMetamodelFiltering": false,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "clientRootFolder": "",
+  "applications": "*"
+}

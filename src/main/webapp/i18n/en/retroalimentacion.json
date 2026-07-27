@@ -1,0 +1,28 @@
+{
+  "ciecytApp": {
+    "retroalimentacion": {
+      "home": {
+        "title": "Retroalimentacions",
+        "createLabel": "Create a new Retroalimentacion",
+        "createOrEditLabel": "Create or edit a Retroalimentacion",
+        "notFound": "No Retroalimentacions found"
+      },
+      "created": "A new Retroalimentacion is created with identifier {{ param }}",
+      "updated": "A Retroalimentacion is updated with identifier {{ param }}",
+      "deleted": "A Retroalimentacion is deleted with identifier {{ param }}",
+      "delete": {
+        "question": "Are you sure you want to delete Retroalimentacion {{ id }}?"
+      },
+      "detail": {
+        "title": "Retroalimentacion"
+      },
+      "titulo": "Titulo",
+      "retroalimentacion": "Retroalimentacion",
+      "fechaRetroalimentacion": "Fecha Retroalimentacion",
+      "estadoRetroalimentacion": "Estado Retroalimentacion",
+      "estadoProyectoFase": "Estado Proyecto Fase",
+      "retroalimentacionProyectoFase": "Retroalimentacion Proyecto Fase",
+      "retroalimentacionUser": "Retroalimentacion User"
+    }
+  }
+}

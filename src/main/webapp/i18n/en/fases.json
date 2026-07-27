@@ -1,0 +1,24 @@
+{
+  "ciecytApp": {
+    "fases": {
+      "home": {
+        "title": "Fases",
+        "createLabel": "Create a new Fases",
+        "createOrEditLabel": "Create or edit a Fases",
+        "notFound": "No Fases found"
+      },
+      "created": "A new Fases is created with identifier {{ param }}",
+      "updated": "A Fases is updated with identifier {{ param }}",
+      "deleted": "A Fases is deleted with identifier {{ param }}",
+      "delete": {
+        "question": "Are you sure you want to delete Fases {{ id }}?"
+      },
+      "detail": {
+        "title": "Fases"
+      },
+      "fase": "Fase",
+      "notificable": "Notificable",
+      "fasesModalidad": "Fases Modalidad"
+    }
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "ciecytApp": {
+    "cronogramaCiecyt": {
+      "home": {
+        "title": "Cronograma Ciecyts",
+        "createLabel": "Create a new Cronograma Ciecyt",
+        "createOrEditLabel": "Create or edit a Cronograma Ciecyt",
+        "notFound": "No Cronograma Ciecyts found"
+      },
+      "created": "A new Cronograma Ciecyt is created with identifier {{ param }}",
+      "updated": "A Cronograma Ciecyt is updated with identifier {{ param }}",
+      "deleted": "A Cronograma Ciecyt is deleted with identifier {{ param }}",
+      "delete": {
+        "question": "Are you sure you want to delete Cronograma Ciecyt {{ id }}?"
+      },
+      "detail": {
+        "title": "Cronograma Ciecyt"
+      },
+      "tituloCronograma": "Titulo Cronograma",
+      "fechaInicio": "Fecha Inicio",
+      "fechaFin": "Fecha Fin",
+      "observaciones": "Observaciones",
+      "cronogramaCiecytModalidad": "Cronograma Ciecyt Modalidad"
+    }
+  }
+}

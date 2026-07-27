@@ -1,0 +1,25 @@
+{
+  "ciecytApp": {
+    "productoProyecto": {
+      "home": {
+        "title": "Producto Proyectos",
+        "createLabel": "Crear nuevo Producto Proyecto",
+        "createOrEditLabel": "Crear o editar Producto Proyecto",
+        "notFound": "No Producto Proyectos found"
+      },
+      "created": "Un nuevo Producto Proyecto ha sido creado con el identificador {{ param }}",
+      "updated": "Un Producto Proyecto ha sido actualizado con el identificador {{ param }}",
+      "deleted": "Un Producto Proyecto ha sido eliminado con el identificador {{ param }}",
+      "delete": {
+        "question": "¿Seguro que quiere eliminar Producto Proyecto {{ id }}?"
+      },
+      "detail": {
+        "title": "Producto Proyecto"
+      },
+      "aplica": "Aplica",
+      "descripcion": "Descripcion",
+      "productoProyectoProducto": "Producto Proyecto Producto",
+      "productoProyectoProyecto": "Producto Proyecto Proyecto"
+    }
+  }
+}

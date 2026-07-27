@@ -1,0 +1,36 @@
+{
+  "fluentMethods": true,
+  "clientRootFolder": "",
+  "relationships": [],
+  "fields": [
+    {
+      "fieldName": "region",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "codigoDaneDepartamento",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "departamento",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "codigoDaneMunicipio",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "municipio",
+      "fieldType": "String"
+    }
+  ],
+  "changelogDate": "20220318154956",
+  "dto": "mapstruct",
+  "searchEngine": false,
+  "service": "serviceImpl",
+  "entityTableName": "municipio",
+  "databaseType": "sql",
+  "readOnly": false,
+  "jpaMetamodelFiltering": false,
+  "pagination": "pagination"
+}

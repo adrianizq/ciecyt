@@ -1,0 +1,25 @@
+{
+  "ciecytApp": {
+    "lineaInvestigacion": {
+      "home": {
+        "title": "Linea Investigacions",
+        "createLabel": "Create a new Linea Investigacion",
+        "createOrEditLabel": "Create or edit a Linea Investigacion",
+        "notFound": "No Linea Investigacions found"
+      },
+      "created": "A new Linea Investigacion is created with identifier {{ param }}",
+      "updated": "A Linea Investigacion is updated with identifier {{ param }}",
+      "deleted": "A Linea Investigacion is deleted with identifier {{ param }}",
+      "delete": {
+        "question": "Are you sure you want to delete Linea Investigacion {{ id }}?"
+      },
+      "detail": {
+        "title": "Linea Investigacion"
+      },
+      "linea": "Linea",
+      "codigoLinea": "Codigo Linea",
+      "lineaPadre": "Linea Padre",
+      "lineaInvestigacionPrograma": "Linea Investigacion Programa"
+    }
+  }
+}

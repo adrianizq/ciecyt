@@ -1,0 +1,209 @@
+{
+  "name": "Proyecto",
+  "fields": [
+    {
+      "fieldName": "titulo",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "url",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "lugarEjecucion",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "duracion",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "fechaIni",
+      "fieldType": "LocalDate"
+    },
+    {
+      "fieldName": "fechaFin",
+      "fieldType": "LocalDate"
+    },
+    {
+      "fieldName": "contrapartidaPesos",
+      "fieldType": "Double"
+    },
+    {
+      "fieldName": "contrapartidaEspecie",
+      "fieldType": "Double"
+    },
+    {
+      "fieldName": "palabrasClave",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "convocatoria",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "tipo",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "referencias",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "programa",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "departamento",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "municipio",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "viable",
+      "fieldType": "Boolean"
+    },
+    {
+      "fieldName": "enviado",
+      "fieldType": "Boolean"
+    },
+    {
+      "fieldName": "fechaEnvioPropuesta",
+      "fieldType": "ZonedDateTime"
+    },
+    {
+      "fieldName": "fechaEnvioProyecto",
+      "fieldType": "ZonedDateTime"
+    },
+    {
+      "fieldName": "nota",
+      "fieldType": "Float"
+    },
+    {
+      "fieldName": "conclusion",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "recomendaciones",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "viabilidad",
+      "fieldType": "EnumViabilidad",
+      "fieldValues": "VIABLE,PENDIENTE,NO_VIABLE"
+    },
+    {
+      "fieldName": "preEnviado",
+      "fieldType": "Boolean"
+    },
+    {
+      "fieldName": "fechaPreEnvioPropuesta",
+      "fieldType": "ZonedDateTime"
+    },
+    {
+      "fieldName": "fechaViabilidadPropuesta",
+      "fieldType": "ZonedDateTime"
+    },
+    {
+      "fieldName": "fechaSustentacionProyecto",
+      "fieldType": "ZonedDateTime"
+    },
+    {
+      "fieldName": "sustentar",
+      "fieldType": "Boolean"
+    },
+    {
+      "fieldName": "recomendacionesJuradoProyecto",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "recomendacionesAsesorPropuesta",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "recomendacionesAsesorProyecto",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "recomendacionesJuradoSustentacion",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "proyectoEnviado",
+      "fieldType": "Boolean"
+    }
+  ],
+  "relationships": [
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "lineaInvestigacion",
+      "otherEntityRelationshipName": "proyecto",
+      "relationshipName": "proyectoLineaInvestigacion",
+      "otherEntityField": "linea"
+    },
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "grupoSemillero",
+      "otherEntityRelationshipName": "proyecto",
+      "relationshipName": "proyectoGrupoSemillero",
+      "otherEntityField": "nombre"
+    },
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "modalidad",
+      "otherEntityRelationshipName": "proyecto",
+      "relationshipName": "proyectoModalidad",
+      "otherEntityField": "modalidad"
+    },
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "lineaInvestigacion",
+      "otherEntityRelationshipName": "proyecto",
+      "relationshipName": "subLineaLineaInvestigacion",
+      "otherEntityField": "linea"
+    },
+    {
+      "relationshipType": "one-to-one",
+      "otherEntityName": "informacionPasantia",
+      "otherEntityRelationshipName": "informacionPasantiaProyecto",
+      "relationshipName": "id",
+      "ownerSide": false
+    },
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "facultad",
+      "otherEntityRelationshipName": "facultadProyecto",
+      "relationshipName": "facultad",
+      "otherEntityField": "id"
+    },
+    {
+      "relationshipName": "proyectoPrograma",
+      "otherEntityName": "programa",
+      "relationshipType": "many-to-one",
+      "otherEntityField": "programa",
+      "otherEntityRelationshipName": "proyecto"
+    },
+    {
+      "relationshipName": "proyectoFases",
+      "otherEntityName": "fases",
+      "relationshipType": "many-to-one",
+      "otherEntityField": "fase",
+      "otherEntityRelationshipName": "proyecto"
+    }
+  ],
+  "changelogDate": "20201008035903",
+  "entityTableName": "proyecto",
+  "dto": "mapstruct",
+  "pagination": "pagination",
+  "service": "serviceImpl",
+  "jpaMetamodelFiltering": false,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "clientRootFolder": "",
+  "applications": "*",
+  "searchEngine": false,
+  "databaseType": "sql"
+}

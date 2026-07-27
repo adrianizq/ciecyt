@@ -1,0 +1,55 @@
+{
+  "name": "Menu",
+  "fields": [
+    {
+      "fieldName": "nombre",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "url",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "icono",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "activo",
+      "fieldType": "Boolean"
+    },
+    {
+      "fieldName": "esPublico",
+      "fieldType": "Boolean"
+    },
+    {
+      "fieldName": "orden",
+      "fieldType": "Integer"
+    },
+    {
+      "fieldName": "rol",
+      "fieldType": "String"
+    }
+  ],
+  "relationships": [
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "menu",
+      "otherEntityRelationshipName": "menu",
+      "relationshipName": "menuPadre",
+      "otherEntityField": "nombre"
+    }
+  ],
+  "changelogDate": "20201008035303",
+  "entityTableName": "menu",
+  "dto": "mapstruct",
+  "pagination": "pagination",
+  "service": "serviceImpl",
+  "jpaMetamodelFiltering": false,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "clientRootFolder": "",
+  "applications": "*",
+  "searchEngine": false,
+  "databaseType": "sql"
+}

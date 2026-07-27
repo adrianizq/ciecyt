@@ -1,0 +1,46 @@
+{
+  "name": "ElementoProyecto",
+  "fields": [
+    {
+      "fieldName": "dato",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "elementoProyectoProyectoDescripcion",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "elementoFasesId",
+      "fieldType": "Long"
+    }
+  ],
+  "relationships": [
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "elemento",
+      "otherEntityRelationshipName": "elementoProyecto",
+      "relationshipName": "elementoProyectoElemento",
+      "otherEntityField": "elemento"
+    },
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "proyecto",
+      "otherEntityRelationshipName": "elementoProyecto",
+      "relationshipName": "elementoProyectoProyecto",
+      "otherEntityField": "titulo"
+    }
+  ],
+  "changelogDate": "20201008034003",
+  "entityTableName": "elemento_proyecto",
+  "dto": "mapstruct",
+  "pagination": "pagination",
+  "service": "serviceImpl",
+  "jpaMetamodelFiltering": false,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "clientRootFolder": "",
+  "applications": "*",
+  "searchEngine": false,
+  "databaseType": "sql"
+}

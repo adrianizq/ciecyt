@@ -1,0 +1,61 @@
+{
+  "name": "Pregunta",
+  "fields": [
+    {
+      "fieldName": "encabezado",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "descripcion",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "pregunta",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "puntaje",
+      "fieldType": "Float"
+    },
+    {
+      "fieldName": "puntajeMaximo",
+      "fieldType": "Float"
+    }
+  ],
+  "relationships": [
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "tipoPregunta",
+      "otherEntityRelationshipName": "pregunta",
+      "relationshipName": "preguntaTipoPregunta",
+      "otherEntityField": "tipoPregunta"
+    },
+    {
+      "relationshipName": "preguntaElemento",
+      "otherEntityName": "elemento",
+      "relationshipType": "many-to-one",
+      "otherEntityField": "elemento",
+      "otherEntityRelationshipName": "pregunta"
+    },
+    {
+      "relationshipName": "preguntaFase",
+      "otherEntityName": "fases",
+      "relationshipType": "many-to-one",
+      "otherEntityField": "fase",
+      "otherEntityRelationshipName": "pregunta"
+    }
+  ],
+  "changelogDate": "20201008035503",
+  "entityTableName": "pregunta",
+  "dto": "mapstruct",
+  "pagination": "pagination",
+  "service": "serviceImpl",
+  "jpaMetamodelFiltering": false,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "clientRootFolder": "",
+  "applications": "*",
+  "searchEngine": false,
+  "databaseType": "sql"
+}

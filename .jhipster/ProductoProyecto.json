@@ -1,0 +1,40 @@
+{
+  "name": "ProductoProyecto",
+  "fields": [
+    {
+      "fieldName": "aplica",
+      "fieldType": "Boolean"
+    },
+    {
+      "fieldName": "descripcion",
+      "fieldType": "String"
+    }
+  ],
+  "relationships": [
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "producto",
+      "otherEntityRelationshipName": "productoProyecto",
+      "relationshipName": "productoProyectoProducto",
+      "otherEntityField": "producto"
+    },
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "proyecto",
+      "otherEntityRelationshipName": "productoProyecto",
+      "relationshipName": "productoProyectoProyecto",
+      "otherEntityField": "titulo"
+    }
+  ],
+  "changelogDate": "20201008035803",
+  "entityTableName": "producto_proyecto",
+  "dto": "mapstruct",
+  "pagination": "pagination",
+  "service": "serviceImpl",
+  "jpaMetamodelFiltering": false,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "clientRootFolder": "",
+  "applications": "*"
+}

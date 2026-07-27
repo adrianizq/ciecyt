@@ -1,0 +1,23 @@
+{
+  "fluentMethods": true,
+  "clientRootFolder": "",
+  "relationships": [
+    {
+      "relationshipName": "pregunta3",
+      "otherEntityName": "pregunta",
+      "relationshipType": "many-to-one",
+      "otherEntityField": "pregunta",
+      "otherEntityRelationshipName": "preguntaAuthority"
+    }
+  ],
+  "fields": [],
+  "changelogDate": "20210227182807",
+  "dto": "mapstruct",
+  "searchEngine": false,
+  "service": "serviceImpl",
+  "entityTableName": "pregunta_authority",
+  "databaseType": "sql",
+  "readOnly": false,
+  "jpaMetamodelFiltering": false,
+  "pagination": "no"
+}

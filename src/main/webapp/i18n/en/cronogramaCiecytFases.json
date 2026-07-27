@@ -1,0 +1,26 @@
+{
+  "ciecytApp": {
+    "cronogramaCiecytFases": {
+      "home": {
+        "title": "Cronograma Ciecyt Fases",
+        "createLabel": "Create a new Cronograma Ciecyt Fases",
+        "createOrEditLabel": "Create or edit a Cronograma Ciecyt Fases",
+        "notFound": "No Cronograma Ciecyt Fases found"
+      },
+      "created": "A new Cronograma Ciecyt Fases is created with identifier {{ param }}",
+      "updated": "A Cronograma Ciecyt Fases is updated with identifier {{ param }}",
+      "deleted": "A Cronograma Ciecyt Fases is deleted with identifier {{ param }}",
+      "delete": {
+        "question": "Are you sure you want to delete Cronograma Ciecyt Fases {{ id }}?"
+      },
+      "detail": {
+        "title": "Cronograma Ciecyt Fases"
+      },
+      "inicioFase": "Inicio Fase",
+      "finFase": "Fin Fase",
+      "textoExplicativo": "Texto Explicativo",
+      "cronogramaCiecytFasesCronogramaCiecyt": "Cronograma Ciecyt Fases Cronograma Ciecyt",
+      "cronogramaCiecytFasesFases": "Cronograma Ciecyt Fases Fases"
+    }
+  }
+}

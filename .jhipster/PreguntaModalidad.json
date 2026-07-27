@@ -1,0 +1,30 @@
+{
+  "fluentMethods": true,
+  "clientRootFolder": "",
+  "relationships": [
+    {
+      "relationshipName": "pregunta",
+      "otherEntityName": "pregunta",
+      "relationshipType": "many-to-one",
+      "otherEntityField": "pregunta",
+      "otherEntityRelationshipName": "preguntaModalidad"
+    },
+    {
+      "relationshipName": "modalidad2",
+      "otherEntityName": "modalidad",
+      "relationshipType": "many-to-one",
+      "otherEntityField": "modalidad",
+      "otherEntityRelationshipName": "preguntaModalidad"
+    }
+  ],
+  "fields": [],
+  "changelogDate": "20210227181719",
+  "dto": "mapstruct",
+  "searchEngine": false,
+  "service": "serviceImpl",
+  "entityTableName": "pregunta_modalidad",
+  "databaseType": "sql",
+  "readOnly": false,
+  "jpaMetamodelFiltering": false,
+  "pagination": "no"
+}

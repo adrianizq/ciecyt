@@ -1,0 +1,15 @@
+/* after changing this file run 'npm run webpack:build' */
+//src/main/webapp/content/scss/vendor.scss
+
+// Override Bootstrap variables
+@import '~bootswatch/dist/simplex/variables';
+@import '~bootstrap/scss/bootstrap';
+@import '~bootstrap-vue/src/index.scss';
+@import '~bootswatch/dist/simplex/bootswatch';
+
+/* Navbar active link fix */
+nav li.router-link-active .navbar-dropdown-menu {
+  color: #C4A94D;
+}
+
+/* jhipster-needle-scss-add-vendor JHipster will add new css style */

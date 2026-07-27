@@ -1,0 +1,863 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.9.xsd
+                        http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog-ext.xsd">
+
+    <!-- ================================================================== -->
+    <!-- CONFIGURACION DE MODALIDADES: 7 modalidades con flujos independientes -->
+    <!-- ================================================================== -->
+
+    <!-- ========== FASES GLOBALES ========== -->
+    <!-- Fases compartidas por las diferentes modalidades -->
+    <changeSet id="20260724000000-1" author="ciecyt">
+        <comment>Crear fases globales para los flujos de las 7 modalidades</comment>
+
+        <!-- Fases comunes a pasantias y tesis -->
+        <insert tableName="fases">
+            <column name="id" valueNumeric="900"/>
+            <column name="fase" value="Propuesta"/>
+            <column name="notificable" valueBoolean="true"/>
+        </insert>
+        <insert tableName="fases">
+            <column name="id" valueNumeric="901"/>
+            <column name="fase" value="Viabilidad"/>
+            <column name="notificable" valueBoolean="true"/>
+        </insert>
+        <insert tableName="fases">
+            <column name="id" valueNumeric="902"/>
+            <column name="fase" value="Ejecucion"/>
+            <column name="notificable" valueBoolean="true"/>
+        </insert>
+        <insert tableName="fases">
+            <column name="id" valueNumeric="903"/>
+            <column name="fase" value="Informe Final"/>
+            <column name="notificable" valueBoolean="true"/>
+        </insert>
+        <insert tableName="fases">
+            <column name="id" valueNumeric="904"/>
+            <column name="fase" value="Sustentacion"/>
+            <column name="notificable" valueBoolean="true"/>
+        </insert>
+
+        <!-- Fases adicionales para tesis y especializacion -->
+        <insert tableName="fases">
+            <column name="id" valueNumeric="905"/>
+            <column name="fase" value="Anteproyecto"/>
+            <column name="notificable" valueBoolean="true"/>
+        </insert>
+        <insert tableName="fases">
+            <column name="id" valueNumeric="906"/>
+            <column name="fase" value="Desarrollo"/>
+            <column name="notificable" valueBoolean="true"/>
+        </insert>
+
+        <!-- Fases para diplomado -->
+        <insert tableName="fases">
+            <column name="id" valueNumeric="907"/>
+            <column name="fase" value="Aprobacion"/>
+            <column name="notificable" valueBoolean="true"/>
+        </insert>
+        <insert tableName="fases">
+            <column name="id" valueNumeric="908"/>
+            <column name="fase" value="Cierre"/>
+            <column name="notificable" valueBoolean="true"/>
+        </insert>
+
+        <!-- Fases para publicacion de articulo -->
+        <insert tableName="fases">
+            <column name="id" valueNumeric="909"/>
+            <column name="fase" value="Revision"/>
+            <column name="notificable" valueBoolean="true"/>
+        </insert>
+        <insert tableName="fases">
+            <column name="id" valueNumeric="910"/>
+            <column name="fase" value="Envio"/>
+            <column name="notificable" valueBoolean="true"/>
+        </insert>
+        <insert tableName="fases">
+            <column name="id" valueNumeric="911"/>
+            <column name="fase" value="Publicacion"/>
+            <column name="notificable" valueBoolean="true"/>
+        </insert>
+    </changeSet>
+
+    <!-- ========== MODALIDADES ========== -->
+    <changeSet id="20260724000000-2" author="ciecyt">
+        <comment>Crear las 7 modalidades academicas</comment>
+
+        <insert tableName="modalidad">
+            <column name="id" valueNumeric="9001"/>
+            <column name="modalidad" value="Pasantia Tecnologica"/>
+            <column name="contiene_linea" valueBoolean="false"/>
+        </insert>
+        <insert tableName="modalidad">
+            <column name="id" valueNumeric="9002"/>
+            <column name="modalidad" value="Pasantia Investigativa"/>
+            <column name="contiene_linea" valueBoolean="true"/>
+        </insert>
+        <insert tableName="modalidad">
+            <column name="id" valueNumeric="9003"/>
+            <column name="modalidad" value="Pasantia Internacional"/>
+            <column name="contiene_linea" valueBoolean="false"/>
+        </insert>
+        <insert tableName="modalidad">
+            <column name="id" valueNumeric="9004"/>
+            <column name="modalidad" value="Tesis"/>
+            <column name="contiene_linea" valueBoolean="true"/>
+        </insert>
+        <insert tableName="modalidad">
+            <column name="id" valueNumeric="9005"/>
+            <column name="modalidad" value="Diplomado"/>
+            <column name="contiene_linea" valueBoolean="false"/>
+        </insert>
+        <insert tableName="modalidad">
+            <column name="id" valueNumeric="9006"/>
+            <column name="modalidad" value="Publicacion de Articulo"/>
+            <column name="contiene_linea" valueBoolean="true"/>
+        </insert>
+        <insert tableName="modalidad">
+            <column name="id" valueNumeric="9007"/>
+            <column name="modalidad" value="Especializacion"/>
+            <column name="contiene_linea" valueBoolean="true"/>
+        </insert>
+    </changeSet>
+
+    <!-- ========== ROLES POR MODALIDAD ========== -->
+    <changeSet id="20260724000000-3" author="ciecyt">
+        <comment>Configurar roles para cada modalidad</comment>
+
+        <!-- === ROLES: Pasantia Tecnologica (9001) === -->
+        <insert tableName="roles_modalidad">
+            <column name="id" valueNumeric="9100"/>
+            <column name="rol" value="Estudiante"/>
+            <column name="cantidad" valueNumeric="1"/>
+            <column name="calificador" valueBoolean="false"/>
+            <column name="roles_modalidad_modalidad_id" valueNumeric="9001"/>
+            <column name="roles_modalidad_authority_name" value="ROLE_ESTUDIANTE"/>
+        </insert>
+        <insert tableName="roles_modalidad">
+            <column name="id" valueNumeric="9101"/>
+            <column name="rol" value="Asesor"/>
+            <column name="cantidad" valueNumeric="1"/>
+            <column name="calificador" valueBoolean="true"/>
+            <column name="roles_modalidad_modalidad_id" valueNumeric="9001"/>
+            <column name="roles_modalidad_authority_name" value="ROLE_ASESOR"/>
+        </insert>
+        <insert tableName="roles_modalidad">
+            <column name="id" valueNumeric="9102"/>
+            <column name="rol" value="Jurado"/>
+            <column name="cantidad" valueNumeric="2"/>
+            <column name="calificador" valueBoolean="true"/>
+            <column name="roles_modalidad_modalidad_id" valueNumeric="9001"/>
+            <column name="roles_modalidad_authority_name" value="ROLE_JURADO"/>
+        </insert>
+        <insert tableName="roles_modalidad">
+            <column name="id" valueNumeric="9103"/>
+            <column name="rol" value="Viabilidad"/>
+            <column name="cantidad" valueNumeric="1"/>
+            <column name="calificador" valueBoolean="true"/>
+            <column name="roles_modalidad_modalidad_id" valueNumeric="9001"/>
+            <column name="roles_modalidad_authority_name" value="ROLE_JURADO"/>
+        </insert>
+
+        <!-- === ROLES: Pasantia Investigativa (9002) === -->
+        <insert tableName="roles_modalidad">
+            <column name="id" valueNumeric="9110"/>
+            <column name="rol" value="Estudiante"/>
+            <column name="cantidad" valueNumeric="1"/>
+            <column name="calificador" valueBoolean="false"/>
+            <column name="roles_modalidad_modalidad_id" valueNumeric="9002"/>
+            <column name="roles_modalidad_authority_name" value="ROLE_ESTUDIANTE"/>
+        </insert>
+        <insert tableName="roles_modalidad">
+            <column name="id" valueNumeric="9111"/>
+            <column name="rol" value="Asesor"/>
+            <column name="cantidad" valueNumeric="1"/>
+            <column name="calificador" valueBoolean="true"/>
+            <column name="roles_modalidad_modalidad_id" valueNumeric="9002"/>
+            <column name="roles_modalidad_authority_name" value="ROLE_ASESOR"/>
+        </insert>
+        <insert tableName="roles_modalidad">
+            <column name="id" valueNumeric="9112"/>
+            <column name="rol" value="Jurado"/>
+            <column name="cantidad" valueNumeric="2"/>
+            <column name="calificador" valueBoolean="true"/>
+            <column name="roles_modalidad_modalidad_id" valueNumeric="9002"/>
+            <column name="roles_modalidad_authority_name" value="ROLE_JURADO"/>
+        </insert>
+        <insert tableName="roles_modalidad">
+            <column name="id" valueNumeric="9113"/>
+            <column name="rol" value="Viabilidad"/>
+            <column name="cantidad" valueNumeric="1"/>
+            <column name="calificador" valueBoolean="true"/>
+            <column name="roles_modalidad_modalidad_id" valueNumeric="9002"/>
+            <column name="roles_modalidad_authority_name" value="ROLE_JURADO"/>
+        </insert>
+
+        <!-- === ROLES: Pasantia Internacional (9003) === -->
+        <insert tableName="roles_modalidad">
+            <column name="id" valueNumeric="9120"/>
+            <column name="rol" value="Estudiante"/>
+            <column name="cantidad" valueNumeric="1"/>
+            <column name="calificador" valueBoolean="false"/>
+            <column name="roles_modalidad_modalidad_id" valueNumeric="9003"/>
+            <column name="roles_modalidad_authority_name" value="ROLE_ESTUDIANTE"/>
+        </insert>
+        <insert tableName="roles_modalidad">
+            <column name="id" valueNumeric="9121"/>
+            <column name="rol" value="Asesor"/>
+            <column name="cantidad" valueNumeric="1"/>
+            <column name="calificador" valueBoolean="true"/>
+            <column name="roles_modalidad_modalidad_id" valueNumeric="9003"/>
+            <column name="roles_modalidad_authority_name" value="ROLE_ASESOR"/>
+        </insert>
+        <insert tableName="roles_modalidad">
+            <column name="id" valueNumeric="9122"/>
+            <column name="rol" value="Asesor Internacional"/>
+            <column name="cantidad" valueNumeric="1"/>
+            <column name="calificador" valueBoolean="true"/>
+            <column name="roles_modalidad_modalidad_id" valueNumeric="9003"/>
+            <column name="roles_modalidad_authority_name" value="ROLE_ASESOR"/>
+        </insert>
+        <insert tableName="roles_modalidad">
+            <column name="id" valueNumeric="9123"/>
+            <column name="rol" value="Coordinador"/>
+            <column name="cantidad" valueNumeric="1"/>
+            <column name="calificador" valueBoolean="true"/>
+            <column name="roles_modalidad_modalidad_id" valueNumeric="9003"/>
+            <column name="roles_modalidad_authority_name" value="ROLE_CIECYT"/>
+        </insert>
+        <insert tableName="roles_modalidad">
+            <column name="id" valueNumeric="9124"/>
+            <column name="rol" value="Jurado"/>
+            <column name="cantidad" valueNumeric="2"/>
+            <column name="calificador" valueBoolean="true"/>
+            <column name="roles_modalidad_modalidad_id" valueNumeric="9003"/>
+            <column name="roles_modalidad_authority_name" value="ROLE_JURADO"/>
+        </insert>
+        <insert tableName="roles_modalidad">
+            <column name="id" valueNumeric="9125"/>
+            <column name="rol" value="Viabilidad"/>
+            <column name="cantidad" valueNumeric="1"/>
+            <column name="calificador" valueBoolean="true"/>
+            <column name="roles_modalidad_modalidad_id" valueNumeric="9003"/>
+            <column name="roles_modalidad_authority_name" value="ROLE_JURADO"/>
+        </insert>
+
+        <!-- === ROLES: Tesis (9004) === -->
+        <insert tableName="roles_modalidad">
+            <column name="id" valueNumeric="9130"/>
+            <column name="rol" value="Estudiante"/>
+            <column name="cantidad" valueNumeric="1"/>
+            <column name="calificador" valueBoolean="false"/>
+            <column name="roles_modalidad_modalidad_id" valueNumeric="9004"/>
+            <column name="roles_modalidad_authority_name" value="ROLE_ESTUDIANTE"/>
+        </insert>
+        <insert tableName="roles_modalidad">
+            <column name="id" valueNumeric="9131"/>
+            <column name="rol" value="Asesor"/>
+            <column name="cantidad" valueNumeric="1"/>
+            <column name="calificador" valueBoolean="true"/>
+            <column name="roles_modalidad_modalidad_id" valueNumeric="9004"/>
+            <column name="roles_modalidad_authority_name" value="ROLE_ASESOR"/>
+        </insert>
+        <insert tableName="roles_modalidad">
+            <column name="id" valueNumeric="9132"/>
+            <column name="rol" value="Co-asesor"/>
+            <column name="cantidad" valueNumeric="1"/>
+            <column name="calificador" valueBoolean="true"/>
+            <column name="roles_modalidad_modalidad_id" valueNumeric="9004"/>
+            <column name="roles_modalidad_authority_name" value="ROLE_ASESOR"/>
+        </insert>
+        <insert tableName="roles_modalidad">
+            <column name="id" valueNumeric="9133"/>
+            <column name="rol" value="Jurado"/>
+            <column name="cantidad" valueNumeric="3"/>
+            <column name="calificador" valueBoolean="true"/>
+            <column name="roles_modalidad_modalidad_id" valueNumeric="9004"/>
+            <column name="roles_modalidad_authority_name" value="ROLE_JURADO"/>
+        </insert>
+        <insert tableName="roles_modalidad">
+            <column name="id" valueNumeric="9134"/>
+            <column name="rol" value="Viabilidad"/>
+            <column name="cantidad" valueNumeric="1"/>
+            <column name="calificador" valueBoolean="true"/>
+            <column name="roles_modalidad_modalidad_id" valueNumeric="9004"/>
+            <column name="roles_modalidad_authority_name" value="ROLE_JURADO"/>
+        </insert>
+
+        <!-- === ROLES: Diplomado (9005) === -->
+        <insert tableName="roles_modalidad">
+            <column name="id" valueNumeric="9140"/>
+            <column name="rol" value="Participante"/>
+            <column name="cantidad" valueNumeric="30"/>
+            <column name="calificador" valueBoolean="false"/>
+            <column name="roles_modalidad_modalidad_id" valueNumeric="9005"/>
+            <column name="roles_modalidad_authority_name" value="ROLE_ESTUDIANTE"/>
+        </insert>
+        <insert tableName="roles_modalidad">
+            <column name="id" valueNumeric="9141"/>
+            <column name="rol" value="Coordinador"/>
+            <column name="cantidad" valueNumeric="1"/>
+            <column name="calificador" valueBoolean="true"/>
+            <column name="roles_modalidad_modalidad_id" valueNumeric="9005"/>
+            <column name="roles_modalidad_authority_name" value="ROLE_CIECYT"/>
+        </insert>
+        <insert tableName="roles_modalidad">
+            <column name="id" valueNumeric="9142"/>
+            <column name="rol" value="Instructor"/>
+            <column name="cantidad" valueNumeric="5"/>
+            <column name="calificador" valueBoolean="true"/>
+            <column name="roles_modalidad_modalidad_id" valueNumeric="9005"/>
+            <column name="roles_modalidad_authority_name" value="ROLE_ASESOR"/>
+        </insert>
+
+        <!-- === ROLES: Publicacion de Articulo (9006) === -->
+        <insert tableName="roles_modalidad">
+            <column name="id" valueNumeric="9150"/>
+            <column name="rol" value="Autor"/>
+            <column name="cantidad" valueNumeric="3"/>
+            <column name="calificador" valueBoolean="false"/>
+            <column name="roles_modalidad_modalidad_id" valueNumeric="9006"/>
+            <column name="roles_modalidad_authority_name" value="ROLE_ESTUDIANTE"/>
+        </insert>
+        <insert tableName="roles_modalidad">
+            <column name="id" valueNumeric="9151"/>
+            <column name="rol" value="Asesor"/>
+            <column name="cantidad" valueNumeric="1"/>
+            <column name="calificador" valueBoolean="true"/>
+            <column name="roles_modalidad_modalidad_id" valueNumeric="9006"/>
+            <column name="roles_modalidad_authority_name" value="ROLE_ASESOR"/>
+        </insert>
+        <insert tableName="roles_modalidad">
+            <column name="id" valueNumeric="9152"/>
+            <column name="rol" value="Revisor"/>
+            <column name="cantidad" valueNumeric="2"/>
+            <column name="calificador" valueBoolean="true"/>
+            <column name="roles_modalidad_modalidad_id" valueNumeric="9006"/>
+            <column name="roles_modalidad_authority_name" value="ROLE_JURADO"/>
+        </insert>
+        <insert tableName="roles_modalidad">
+            <column name="id" valueNumeric="9153"/>
+            <column name="rol" value="Viabilidad"/>
+            <column name="cantidad" valueNumeric="1"/>
+            <column name="calificador" valueBoolean="true"/>
+            <column name="roles_modalidad_modalidad_id" valueNumeric="9006"/>
+            <column name="roles_modalidad_authority_name" value="ROLE_JURADO"/>
+        </insert>
+
+        <!-- === ROLES: Especializacion (9007) === -->
+        <insert tableName="roles_modalidad">
+            <column name="id" valueNumeric="9160"/>
+            <column name="rol" value="Estudiante"/>
+            <column name="cantidad" valueNumeric="1"/>
+            <column name="calificador" valueBoolean="false"/>
+            <column name="roles_modalidad_modalidad_id" valueNumeric="9007"/>
+            <column name="roles_modalidad_authority_name" value="ROLE_ESTUDIANTE"/>
+        </insert>
+        <insert tableName="roles_modalidad">
+            <column name="id" valueNumeric="9161"/>
+            <column name="rol" value="Asesor"/>
+            <column name="cantidad" valueNumeric="1"/>
+            <column name="calificador" valueBoolean="true"/>
+            <column name="roles_modalidad_modalidad_id" valueNumeric="9007"/>
+            <column name="roles_modalidad_authority_name" value="ROLE_ASESOR"/>
+        </insert>
+        <insert tableName="roles_modalidad">
+            <column name="id" valueNumeric="9162"/>
+            <column name="rol" value="Jurado"/>
+            <column name="cantidad" valueNumeric="3"/>
+            <column name="calificador" valueBoolean="true"/>
+            <column name="roles_modalidad_modalidad_id" valueNumeric="9007"/>
+            <column name="roles_modalidad_authority_name" value="ROLE_JURADO"/>
+        </insert>
+        <insert tableName="roles_modalidad">
+            <column name="id" valueNumeric="9163"/>
+            <column name="rol" value="Viabilidad"/>
+            <column name="cantidad" valueNumeric="1"/>
+            <column name="calificador" valueBoolean="true"/>
+            <column name="roles_modalidad_modalidad_id" valueNumeric="9007"/>
+            <column name="roles_modalidad_authority_name" value="ROLE_JURADO"/>
+        </insert>
+    </changeSet>
+
+    <!-- ========== CRONOGRAMAS POR MODALIDAD ========== -->
+    <changeSet id="20260724000000-4" author="ciecyt">
+        <comment>Crear cronogramas maestros para cada modalidad</comment>
+
+        <!-- Cronograma Pasantia Tecnologica -->
+        <insert tableName="cronograma_ciecyt">
+            <column name="id" valueNumeric="9200"/>
+            <column name="titulo_cronograma" value="Cronograma Pasantia Tecnologica"/>
+            <column name="fecha_inicio" valueDate="2026-01-01"/>
+            <column name="fecha_fin" valueDate="2026-12-31"/>
+            <column name="observaciones" value="Flujo estandar de pasantia tecnologica"/>
+            <column name="cronograma_ciecyt_modalidad_id" valueNumeric="9001"/>
+        </insert>
+
+        <!-- Cronograma Pasantia Investigativa -->
+        <insert tableName="cronograma_ciecyt">
+            <column name="id" valueNumeric="9201"/>
+            <column name="titulo_cronograma" value="Cronograma Pasantia Investigativa"/>
+            <column name="fecha_inicio" valueDate="2026-01-01"/>
+            <column name="fecha_fin" valueDate="2026-12-31"/>
+            <column name="observaciones" value="Flujo de pasantia con enfoque investigativo"/>
+            <column name="cronograma_ciecyt_modalidad_id" valueNumeric="9002"/>
+        </insert>
+
+        <!-- Cronograma Pasantia Internacional -->
+        <insert tableName="cronograma_ciecyt">
+            <column name="id" valueNumeric="9202"/>
+            <column name="titulo_cronograma" value="Cronograma Pasantia Internacional"/>
+            <column name="fecha_inicio" valueDate="2026-01-01"/>
+            <column name="fecha_fin" valueDate="2026-12-31"/>
+            <column name="observaciones" value="Flujo de pasantia internacional con convenio"/>
+            <column name="cronograma_ciecyt_modalidad_id" valueNumeric="9003"/>
+        </insert>
+
+        <!-- Cronograma Tesis -->
+        <insert tableName="cronograma_ciecyt">
+            <column name="id" valueNumeric="9203"/>
+            <column name="titulo_cronograma" value="Cronograma Tesis"/>
+            <column name="fecha_inicio" valueDate="2026-01-01"/>
+            <column name="fecha_fin" valueDate="2026-12-31"/>
+            <column name="observaciones" value="Flujo completo de tesis con anteproyecto y sustentacion"/>
+            <column name="cronograma_ciecyt_modalidad_id" valueNumeric="9004"/>
+        </insert>
+
+        <!-- Cronograma Diplomado -->
+        <insert tableName="cronograma_ciecyt">
+            <column name="id" valueNumeric="9204"/>
+            <column name="titulo_cronograma" value="Cronograma Diplomado"/>
+            <column name="fecha_inicio" valueDate="2026-01-01"/>
+            <column name="fecha_fin" valueDate="2026-12-31"/>
+            <column name="observaciones" value="Flujo de diplomado con modulos y cierre"/>
+            <column name="cronograma_ciecyt_modalidad_id" valueNumeric="9005"/>
+        </insert>
+
+        <!-- Cronograma Publicacion de Articulo -->
+        <insert tableName="cronograma_ciecyt">
+            <column name="id" valueNumeric="9205"/>
+            <column name="titulo_cronograma" value="Cronograma Publicacion de Articulo"/>
+            <column name="fecha_inicio" valueDate="2026-01-01"/>
+            <column name="fecha_fin" valueDate="2026-12-31"/>
+            <column name="observaciones" value="Flujo de publicacion: revision, envio y publicacion"/>
+            <column name="cronograma_ciecyt_modalidad_id" valueNumeric="9006"/>
+        </insert>
+
+        <!-- Cronograma Especializacion -->
+        <insert tableName="cronograma_ciecyt">
+            <column name="id" valueNumeric="9206"/>
+            <column name="titulo_cronograma" value="Cronograma Especializacion"/>
+            <column name="fecha_inicio" valueDate="2026-01-01"/>
+            <column name="fecha_fin" valueDate="2026-12-31"/>
+            <column name="observaciones" value="Flujo de especializacion con anteproyecto y sustentacion"/>
+            <column name="cronograma_ciecyt_modalidad_id" valueNumeric="9007"/>
+        </insert>
+    </changeSet>
+
+    <!-- ========== FASES DEL CRONOGRAMA POR MODALIDAD ========== -->
+    <changeSet id="20260724000000-5" author="ciecyt">
+        <comment>Asociar fases a cada cronograma de modalidad</comment>
+
+        <!-- === Pasantia Tecnologica: Propuesta -> Viabilidad -> Ejecucion -> Informe Final -> Sustentacion === -->
+        <insert tableName="cronograma_ciecyt_fases">
+            <column name="id" valueNumeric="9300"/>
+            <column name="inicio_fase" valueDate="2026-01-01"/>
+            <column name="fin_fase" valueDate="2026-02-28"/>
+            <column name="texto_explicativo" value="El estudiante elabora la propuesta de pasantia tecnologica con el asesor"/>
+            <column name="cronograma_ciecyt_fases_cronograma_ciecyt_id" valueNumeric="9200"/>
+            <column name="cronograma_ciecyt_fases_fases_id" valueNumeric="900"/>
+        </insert>
+        <insert tableName="cronograma_ciecyt_fases">
+            <column name="id" valueNumeric="9301"/>
+            <column name="inicio_fase" valueDate="2026-03-01"/>
+            <column name="fin_fase" valueDate="2026-03-31"/>
+            <column name="texto_explicativo" value="Evaluacion de viabilidad de la propuesta por el jurado"/>
+            <column name="cronograma_ciecyt_fases_cronograma_ciecyt_id" valueNumeric="9200"/>
+            <column name="cronograma_ciecyt_fases_fases_id" valueNumeric="901"/>
+        </insert>
+        <insert tableName="cronograma_ciecyt_fases">
+            <column name="id" valueNumeric="9302"/>
+            <column name="inicio_fase" valueDate="2026-04-01"/>
+            <column name="fin_fase" valueDate="2026-08-31"/>
+            <column name="texto_explicativo" value="Ejecucion de la pasantia en la empresa o entidad receptora"/>
+            <column name="cronograma_ciecyt_fases_cronograma_ciecyt_id" valueNumeric="9200"/>
+            <column name="cronograma_ciecyt_fases_fases_id" valueNumeric="902"/>
+        </insert>
+        <insert tableName="cronograma_ciecyt_fases">
+            <column name="id" valueNumeric="9303"/>
+            <column name="inicio_fase" valueDate="2026-09-01"/>
+            <column name="fin_fase" valueDate="2026-10-15"/>
+            <column name="texto_explicativo" value="Elaboracion del informe final de pasantia tecnologica"/>
+            <column name="cronograma_ciecyt_fases_cronograma_ciecyt_id" valueNumeric="9200"/>
+            <column name="cronograma_ciecyt_fases_fases_id" valueNumeric="903"/>
+        </insert>
+        <insert tableName="cronograma_ciecyt_fases">
+            <column name="id" valueNumeric="9304"/>
+            <column name="inicio_fase" valueDate="2026-10-16"/>
+            <column name="fin_fase" valueDate="2026-11-30"/>
+            <column name="texto_explicativo" value="Sustentacion del informe ante el jurado evaluador"/>
+            <column name="cronograma_ciecyt_fases_cronograma_ciecyt_id" valueNumeric="9200"/>
+            <column name="cronograma_ciecyt_fases_fases_id" valueNumeric="904"/>
+        </insert>
+
+        <!-- === Pasantia Investigativa: Propuesta -> Viabilidad -> Ejecucion -> Informe Final -> Sustentacion === -->
+        <insert tableName="cronograma_ciecyt_fases">
+            <column name="id" valueNumeric="9310"/>
+            <column name="inicio_fase" valueDate="2026-01-01"/>
+            <column name="fin_fase" valueDate="2026-02-28"/>
+            <column name="texto_explicativo" value="El estudiante elabora la propuesta de pasantia investigativa"/>
+            <column name="cronograma_ciecyt_fases_cronograma_ciecyt_id" valueNumeric="9201"/>
+            <column name="cronograma_ciecyt_fases_fases_id" valueNumeric="900"/>
+        </insert>
+        <insert tableName="cronograma_ciecyt_fases">
+            <column name="id" valueNumeric="9311"/>
+            <column name="inicio_fase" valueDate="2026-03-01"/>
+            <column name="fin_fase" valueDate="2026-03-31"/>
+            <column name="texto_explicativo" value="Evaluacion de viabilidad con enfoque investigativo"/>
+            <column name="cronograma_ciecyt_fases_cronograma_ciecyt_id" valueNumeric="9201"/>
+            <column name="cronograma_ciecyt_fases_fases_id" valueNumeric="901"/>
+        </insert>
+        <insert tableName="cronograma_ciecyt_fases">
+            <column name="id" valueNumeric="9312"/>
+            <column name="inicio_fase" valueDate="2026-04-01"/>
+            <column name="fin_fase" valueDate="2026-08-31"/>
+            <column name="texto_explicativo" value="Desarrollo de la investigacion y recoleccion de datos"/>
+            <column name="cronograma_ciecyt_fases_cronograma_ciecyt_id" valueNumeric="9201"/>
+            <column name="cronograma_ciecyt_fases_fases_id" valueNumeric="902"/>
+        </insert>
+        <insert tableName="cronograma_ciecyt_fases">
+            <column name="id" valueNumeric="9313"/>
+            <column name="inicio_fase" valueDate="2026-09-01"/>
+            <column name="fin_fase" valueDate="2026-10-15"/>
+            <column name="texto_explicativo" value="Elaboracion del informe final con resultados de investigacion"/>
+            <column name="cronograma_ciecyt_fases_cronograma_ciecyt_id" valueNumeric="9201"/>
+            <column name="cronograma_ciecyt_fases_fases_id" valueNumeric="903"/>
+        </insert>
+        <insert tableName="cronograma_ciecyt_fases">
+            <column name="id" valueNumeric="9314"/>
+            <column name="inicio_fase" valueDate="2026-10-16"/>
+            <column name="fin_fase" valueDate="2026-11-30"/>
+            <column name="texto_explicativo" value="Sustentacion de los resultados de investigacion"/>
+            <column name="cronograma_ciecyt_fases_cronograma_ciecyt_id" valueNumeric="9201"/>
+            <column name="cronograma_ciecyt_fases_fases_id" valueNumeric="904"/>
+        </insert>
+
+        <!-- === Pasantia Internacional: Propuesta -> Viabilidad -> Ejecucion -> Informe Final -> Sustentacion === -->
+        <insert tableName="cronograma_ciecyt_fases">
+            <column name="id" valueNumeric="9320"/>
+            <column name="inicio_fase" valueDate="2026-01-01"/>
+            <column name="fin_fase" valueDate="2026-03-31"/>
+            <column name="texto_explicativo" value="Elaboracion de propuesta con convenio internacional"/>
+            <column name="cronograma_ciecyt_fases_cronograma_ciecyt_id" valueNumeric="9202"/>
+            <column name="cronograma_ciecyt_fases_fases_id" valueNumeric="900"/>
+        </insert>
+        <insert tableName="cronograma_ciecyt_fases">
+            <column name="id" valueNumeric="9321"/>
+            <column name="inicio_fase" valueDate="2026-04-01"/>
+            <column name="fin_fase" valueDate="2026-04-30"/>
+            <column name="texto_explicativo" value="Evaluacion de viabilidad internacional y aprobacion del convenio"/>
+            <column name="cronograma_ciecyt_fases_cronograma_ciecyt_id" valueNumeric="9202"/>
+            <column name="cronograma_ciecyt_fases_fases_id" valueNumeric="901"/>
+        </insert>
+        <insert tableName="cronograma_ciecyt_fases">
+            <column name="id" valueNumeric="9322"/>
+            <column name="inicio_fase" valueDate="2026-05-01"/>
+            <column name="fin_fase" valueDate="2026-09-30"/>
+            <column name="texto_explicativo" value="Ejecucion de la pasantia en la entidad internacional"/>
+            <column name="cronograma_ciecyt_fases_cronograma_ciecyt_id" valueNumeric="9202"/>
+            <column name="cronograma_ciecyt_fases_fases_id" valueNumeric="902"/>
+        </insert>
+        <insert tableName="cronograma_ciecyt_fases">
+            <column name="id" valueNumeric="9323"/>
+            <column name="inicio_fase" valueDate="2026-10-01"/>
+            <column name="fin_fase" valueDate="2026-10-31"/>
+            <column name="texto_explicativo" value="Elaboracion del informe final de pasantia internacional"/>
+            <column name="cronograma_ciecyt_fases_cronograma_ciecyt_id" valueNumeric="9202"/>
+            <column name="cronograma_ciecyt_fases_fases_id" valueNumeric="903"/>
+        </insert>
+        <insert tableName="cronograma_ciecyt_fases">
+            <column name="id" valueNumeric="9324"/>
+            <column name="inicio_fase" valueDate="2026-11-01"/>
+            <column name="fin_fase" valueDate="2026-12-15"/>
+            <column name="texto_explicativo" value="Sustentacion internacional con jurado y asesor internacional"/>
+            <column name="cronograma_ciecyt_fases_cronograma_ciecyt_id" valueNumeric="9202"/>
+            <column name="cronograma_ciecyt_fases_fases_id" valueNumeric="904"/>
+        </insert>
+
+        <!-- === Tesis: Propuesta -> Anteproyecto -> Viabilidad -> Desarrollo -> Informe Final -> Sustentacion === -->
+        <insert tableName="cronograma_ciecyt_fases">
+            <column name="id" valueNumeric="9330"/>
+            <column name="inicio_fase" valueDate="2026-01-01"/>
+            <column name="fin_fase" valueDate="2026-02-28"/>
+            <column name="texto_explicativo" value="El estudiante presenta la propuesta inicial de tesis"/>
+            <column name="cronograma_ciecyt_fases_cronograma_ciecyt_id" valueNumeric="9203"/>
+            <column name="cronograma_ciecyt_fases_fases_id" valueNumeric="900"/>
+        </insert>
+        <insert tableName="cronograma_ciecyt_fases">
+            <column name="id" valueNumeric="9331"/>
+            <column name="inicio_fase" valueDate="2026-03-01"/>
+            <column name="fin_fase" valueDate="2026-04-30"/>
+            <column name="texto_explicativo" value="Elaboracion del anteproyecto de investigacion"/>
+            <column name="cronograma_ciecyt_fases_cronograma_ciecyt_id" valueNumeric="9203"/>
+            <column name="cronograma_ciecyt_fases_fases_id" valueNumeric="905"/>
+        </insert>
+        <insert tableName="cronograma_ciecyt_fases">
+            <column name="id" valueNumeric="9332"/>
+            <column name="inicio_fase" valueDate="2026-05-01"/>
+            <column name="fin_fase" valueDate="2026-05-31"/>
+            <column name="texto_explicativo" value="Evaluacion de viabilidad del anteproyecto"/>
+            <column name="cronograma_ciecyt_fases_cronograma_ciecyt_id" valueNumeric="9203"/>
+            <column name="cronograma_ciecyt_fases_fases_id" valueNumeric="901"/>
+        </insert>
+        <insert tableName="cronograma_ciecyt_fases">
+            <column name="id" valueNumeric="9333"/>
+            <column name="inicio_fase" valueDate="2026-06-01"/>
+            <column name="fin_fase" valueDate="2026-09-30"/>
+            <column name="texto_explicativo" value="Desarrollo de la investigacion: recoleccion y analisis de datos"/>
+            <column name="cronograma_ciecyt_fases_cronograma_ciecyt_id" valueNumeric="9203"/>
+            <column name="cronograma_ciecyt_fases_fases_id" valueNumeric="906"/>
+        </insert>
+        <insert tableName="cronograma_ciecyt_fases">
+            <column name="id" valueNumeric="9334"/>
+            <column name="inicio_fase" valueDate="2026-10-01"/>
+            <column name="fin_fase" valueDate="2026-10-31"/>
+            <column name="texto_explicativo" value="Elaboracion del informe final de tesis"/>
+            <column name="cronograma_ciecyt_fases_cronograma_ciecyt_id" valueNumeric="9203"/>
+            <column name="cronograma_ciecyt_fases_fases_id" valueNumeric="903"/>
+        </insert>
+        <insert tableName="cronograma_ciecyt_fases">
+            <column name="id" valueNumeric="9335"/>
+            <column name="inicio_fase" valueDate="2026-11-01"/>
+            <column name="fin_fase" valueDate="2026-12-15"/>
+            <column name="texto_explicativo" value="Sustentacion de tesis ante jurado evaluador"/>
+            <column name="cronograma_ciecyt_fases_cronograma_ciecyt_id" valueNumeric="9203"/>
+            <column name="cronograma_ciecyt_fases_fases_id" valueNumeric="904"/>
+        </insert>
+
+        <!-- === Diplomado: Propuesta -> Aprobacion -> Ejecucion -> Cierre === -->
+        <insert tableName="cronograma_ciecyt_fases">
+            <column name="id" valueNumeric="9340"/>
+            <column name="inicio_fase" valueDate="2026-01-01"/>
+            <column name="fin_fase" valueDate="2026-02-28"/>
+            <column name="texto_explicativo" value="Elaboracion de la propuesta del diplomado con programas de formacion"/>
+            <column name="cronograma_ciecyt_fases_cronograma_ciecyt_id" valueNumeric="9204"/>
+            <column name="cronograma_ciecyt_fases_fases_id" valueNumeric="900"/>
+        </insert>
+        <insert tableName="cronograma_ciecyt_fases">
+            <column name="id" valueNumeric="9341"/>
+            <column name="inicio_fase" valueDate="2026-03-01"/>
+            <column name="fin_fase" valueDate="2026-03-31"/>
+            <column name="texto_explicativo" value="Aprobacion de la propuesta por parte de CIECYT"/>
+            <column name="cronograma_ciecyt_fases_cronograma_ciecyt_id" valueNumeric="9204"/>
+            <column name="cronograma_ciecyt_fases_fases_id" valueNumeric="907"/>
+        </insert>
+        <insert tableName="cronograma_ciecyt_fases">
+            <column name="id" valueNumeric="9342"/>
+            <column name="inicio_fase" valueDate="2026-04-01"/>
+            <column name="fin_fase" valueDate="2026-10-31"/>
+            <column name="texto_explicativo" value="Ejecucion de los modulos del diplomado"/>
+            <column name="cronograma_ciecyt_fases_cronograma_ciecyt_id" valueNumeric="9204"/>
+            <column name="cronograma_ciecyt_fases_fases_id" valueNumeric="902"/>
+        </insert>
+        <insert tableName="cronograma_ciecyt_fases">
+            <column name="id" valueNumeric="9343"/>
+            <column name="inicio_fase" valueDate="2026-11-01"/>
+            <column name="fin_fase" valueDate="2026-12-15"/>
+            <column name="texto_explicativo" value="Cierre del diplomado: entregable de certificados y evaluacion final"/>
+            <column name="cronograma_ciecyt_fases_cronograma_ciecyt_id" valueNumeric="9204"/>
+            <column name="cronograma_ciecyt_fases_fases_id" valueNumeric="908"/>
+        </insert>
+
+        <!-- === Publicacion de Articulo: Propuesta -> Revision -> Envio -> Publicacion === -->
+        <insert tableName="cronograma_ciecyt_fases">
+            <column name="id" valueNumeric="9350"/>
+            <column name="inicio_fase" valueDate="2026-01-01"/>
+            <column name="fin_fase" valueDate="2026-02-28"/>
+            <column name="texto_explicativo" value="Elaboracion de la propuesta del articulo cientifico"/>
+            <column name="cronograma_ciecyt_fases_cronograma_ciecyt_id" valueNumeric="9205"/>
+            <column name="cronograma_ciecyt_fases_fases_id" valueNumeric="900"/>
+        </insert>
+        <insert tableName="cronograma_ciecyt_fases">
+            <column name="id" valueNumeric="9351"/>
+            <column name="inicio_fase" valueDate="2026-03-01"/>
+            <column name="fin_fase" valueDate="2026-05-31"/>
+            <column name="texto_explicativo" value="Revision y retroalimentacion del articulo por pares"/>
+            <column name="cronograma_ciecyt_fases_cronograma_ciecyt_id" valueNumeric="9205"/>
+            <column name="cronograma_ciecyt_fases_fases_id" valueNumeric="909"/>
+        </insert>
+        <insert tableName="cronograma_ciecyt_fases">
+            <column name="id" valueNumeric="9352"/>
+            <column name="inicio_fase" valueDate="2026-06-01"/>
+            <column name="fin_fase" valueDate="2026-08-31"/>
+            <column name="texto_explicativo" value="Envio del articulo a la revista o conferencia"/>
+            <column name="cronograma_ciecyt_fases_cronograma_ciecyt_id" valueNumeric="9205"/>
+            <column name="cronograma_ciecyt_fases_fases_id" valueNumeric="910"/>
+        </insert>
+        <insert tableName="cronograma_ciecyt_fases">
+            <column name="id" valueNumeric="9353"/>
+            <column name="inicio_fase" valueDate="2026-09-01"/>
+            <column name="fin_fase" valueDate="2026-12-31"/>
+            <column name="texto_explicativo" value="Publicacion del articulo en la revista indexada"/>
+            <column name="cronograma_ciecyt_fases_cronograma_ciecyt_id" valueNumeric="9205"/>
+            <column name="cronograma_ciecyt_fases_fases_id" valueNumeric="911"/>
+        </insert>
+
+        <!-- === Especializacion: Propuesta -> Anteproyecto -> Viabilidad -> Desarrollo -> Informe Final -> Sustentacion === -->
+        <insert tableName="cronograma_ciecyt_fases">
+            <column name="id" valueNumeric="9360"/>
+            <column name="inicio_fase" valueDate="2026-01-01"/>
+            <column name="fin_fase" valueDate="2026-02-28"/>
+            <column name="texto_explicativo" value="El estudiante presenta la propuesta de especializacion"/>
+            <column name="cronograma_ciecyt_fases_cronograma_ciecyt_id" valueNumeric="9206"/>
+            <column name="cronograma_ciecyt_fases_fases_id" valueNumeric="900"/>
+        </insert>
+        <insert tableName="cronograma_ciecyt_fases">
+            <column name="id" valueNumeric="9361"/>
+            <column name="inicio_fase" valueDate="2026-03-01"/>
+            <column name="fin_fase" valueDate="2026-04-30"/>
+            <column name="texto_explicativo" value="Elaboracion del anteproyecto de especializacion"/>
+            <column name="cronograma_ciecyt_fases_cronograma_ciecyt_id" valueNumeric="9206"/>
+            <column name="cronograma_ciecyt_fases_fases_id" valueNumeric="905"/>
+        </insert>
+        <insert tableName="cronograma_ciecyt_fases">
+            <column name="id" valueNumeric="9362"/>
+            <column name="inicio_fase" valueDate="2026-05-01"/>
+            <column name="fin_fase" valueDate="2026-05-31"/>
+            <column name="texto_explicativo" value="Evaluacion de viabilidad del anteproyecto"/>
+            <column name="cronograma_ciecyt_fases_cronograma_ciecyt_id" valueNumeric="9206"/>
+            <column name="cronograma_ciecyt_fases_fases_id" valueNumeric="901"/>
+        </insert>
+        <insert tableName="cronograma_ciecyt_fases">
+            <column name="id" valueNumeric="9363"/>
+            <column name="inicio_fase" valueDate="2026-06-01"/>
+            <column name="fin_fase" valueDate="2026-09-30"/>
+            <column name="texto_explicativo" value="Desarrollo del proyecto de especializacion"/>
+            <column name="cronograma_ciecyt_fases_cronograma_ciecyt_id" valueNumeric="9206"/>
+            <column name="cronograma_ciecyt_fases_fases_id" valueNumeric="906"/>
+        </insert>
+        <insert tableName="cronograma_ciecyt_fases">
+            <column name="id" valueNumeric="9364"/>
+            <column name="inicio_fase" valueDate="2026-10-01"/>
+            <column name="fin_fase" valueDate="2026-10-31"/>
+            <column name="texto_explicativo" value="Elaboracion del informe final de especializacion"/>
+            <column name="cronograma_ciecyt_fases_cronograma_ciecyt_id" valueNumeric="9206"/>
+            <column name="cronograma_ciecyt_fases_fases_id" valueNumeric="903"/>
+        </insert>
+        <insert tableName="cronograma_ciecyt_fases">
+            <column name="id" valueNumeric="9365"/>
+            <column name="inicio_fase" valueDate="2026-11-01"/>
+            <column name="fin_fase" valueDate="2026-12-15"/>
+            <column name="texto_explicativo" value="Sustentacion de especializacion ante jurado evaluador"/>
+            <column name="cronograma_ciecyt_fases_cronograma_ciecyt_id" valueNumeric="9206"/>
+            <column name="cronograma_ciecyt_fases_fases_id" valueNumeric="904"/>
+        </insert>
+    </changeSet>
+
+    <!-- ========== CICLOS Y TABLA INTERMEDIA MODALIDAD_CICLO ========== -->
+    <changeSet id="20260724000000-6" author="ciecyt">
+        <comment>Re-key ciclos (IDs 1-4) y crear tabla intermedia modalidad_ciclo</comment>
+
+        <!-- Ciclos re-keyed with new names -->
+        <delete tableName="ciclo" />
+        <insert tableName="ciclo">
+            <column name="id" valueNumeric="1"/>
+            <column name="ciclo" value="Técnico"/>
+        </insert>
+        <insert tableName="ciclo">
+            <column name="id" valueNumeric="2"/>
+            <column name="ciclo" value="Tecnológico"/>
+        </insert>
+        <insert tableName="ciclo">
+            <column name="id" valueNumeric="3"/>
+            <column name="ciclo" value="Profesional"/>
+        </insert>
+        <insert tableName="ciclo">
+            <column name="id" valueNumeric="4"/>
+            <column name="ciclo" value="Posgrado"/>
+        </insert>
+
+        <!-- Tabla intermedia modalidad_ciclo -->
+        <createTable tableName="modalidad_ciclo">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="modalidad_id" type="bigint" valueNumeric="0">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ciclo_id" type="bigint" valueNumeric="0">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addForeignKeyConstraint baseColumnNames="modalidad_id"
+                                 baseTableName="modalidad_ciclo"
+                                 constraintName="fk_modalidad_ciclo_modalidad"
+                                 referencedColumnNames="id"
+                                 referencedTableName="modalidad"/>
+        <addForeignKeyConstraint baseColumnNames="ciclo_id"
+                                 baseTableName="modalidad_ciclo"
+                                 constraintName="fk_modalidad_ciclo_ciclo"
+                                 referencedColumnNames="id"
+                                 referencedTableName="ciclo"/>
+        <addUniqueConstraint tableName="modalidad_ciclo"
+                             columnNames="modalidad_id, ciclo_id"
+                             constraintName="uq_modalidad_ciclo"/>
+
+        <!-- Datos de la tabla intermedia -->
+        <insert tableName="modalidad_ciclo">
+            <column name="modalidad_id" valueNumeric="9001"/>
+            <column name="ciclo_id" valueNumeric="1"/>
+        </insert>
+        <insert tableName="modalidad_ciclo">
+            <column name="modalidad_id" valueNumeric="9005"/>
+            <column name="ciclo_id" valueNumeric="1"/>
+        </insert>
+        <insert tableName="modalidad_ciclo">
+            <column name="modalidad_id" valueNumeric="9001"/>
+            <column name="ciclo_id" valueNumeric="2"/>
+        </insert>
+        <insert tableName="modalidad_ciclo">
+            <column name="modalidad_id" valueNumeric="9004"/>
+            <column name="ciclo_id" valueNumeric="2"/>
+        </insert>
+        <insert tableName="modalidad_ciclo">
+            <column name="modalidad_id" valueNumeric="9005"/>
+            <column name="ciclo_id" valueNumeric="2"/>
+        </insert>
+        <insert tableName="modalidad_ciclo">
+            <column name="modalidad_id" valueNumeric="9006"/>
+            <column name="ciclo_id" valueNumeric="2"/>
+        </insert>
+        <insert tableName="modalidad_ciclo">
+            <column name="modalidad_id" valueNumeric="9002"/>
+            <column name="ciclo_id" valueNumeric="3"/>
+        </insert>
+        <insert tableName="modalidad_ciclo">
+            <column name="modalidad_id" valueNumeric="9003"/>
+            <column name="ciclo_id" valueNumeric="3"/>
+        </insert>
+        <insert tableName="modalidad_ciclo">
+            <column name="modalidad_id" valueNumeric="9004"/>
+            <column name="ciclo_id" valueNumeric="3"/>
+        </insert>
+        <insert tableName="modalidad_ciclo">
+            <column name="modalidad_id" valueNumeric="9006"/>
+            <column name="ciclo_id" valueNumeric="3"/>
+        </insert>
+        <insert tableName="modalidad_ciclo">
+            <column name="modalidad_id" valueNumeric="9007"/>
+            <column name="ciclo_id" valueNumeric="3"/>
+        </insert>
+        <insert tableName="modalidad_ciclo">
+            <column name="modalidad_id" valueNumeric="9004"/>
+            <column name="ciclo_id" valueNumeric="4"/>
+        </insert>
+    </changeSet>
+
+    <!-- jhipster-needle-liquibase-add-incremental-changelog - JHipster will add incremental liquibase changelogs here -->
+
+</databaseChangeLog>

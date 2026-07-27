@@ -1,0 +1,40 @@
+{
+  "name": "EntidadFinanciadora",
+  "fields": [
+    {
+      "fieldName": "valor",
+      "fieldType": "Double"
+    },
+    {
+      "fieldName": "aprobada",
+      "fieldType": "Boolean"
+    }
+  ],
+  "relationships": [
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "entidad",
+      "otherEntityRelationshipName": "entidadFinanciadora",
+      "relationshipName": "entidadFinanciadoraEntidad",
+      "otherEntityField": "entidad"
+    },
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "proyecto",
+      "otherEntityRelationshipName": "entidadFinanciadora",
+      "relationshipName": "entidadFinanciadoraProyecto",
+      "otherEntityField": "titulo"
+    }
+  ],
+  "changelogDate": "20201008034203",
+  "entityTableName": "entidad_financiadora",
+  "dto": "mapstruct",
+  "pagination": "pagination",
+  "service": "serviceImpl",
+  "jpaMetamodelFiltering": false,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "clientRootFolder": "",
+  "applications": "*"
+}

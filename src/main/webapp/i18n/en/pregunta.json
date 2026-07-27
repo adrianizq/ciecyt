@@ -1,0 +1,29 @@
+{
+  "ciecytApp": {
+    "pregunta": {
+      "home": {
+        "title": "Preguntas",
+        "createLabel": "Create a new Pregunta",
+        "createOrEditLabel": "Create or edit a Pregunta",
+        "notFound": "No Preguntas found"
+      },
+      "created": "A new Pregunta is created with identifier {{ param }}",
+      "updated": "A Pregunta is updated with identifier {{ param }}",
+      "deleted": "A Pregunta is deleted with identifier {{ param }}",
+      "delete": {
+        "question": "Are you sure you want to delete Pregunta {{ id }}?"
+      },
+      "detail": {
+        "title": "Pregunta"
+      },
+      "encabezado": "Encabezado",
+      "descripcion": "Descripcion",
+      "orden": "Order",
+      "pregunta": "Pregunta",
+      "preguntaTipoPregunta": "Pregunta Tipo Pregunta",
+      "preguntaModalidad": "Pregunta Modalidad",
+      "preguntaRolesModalidad": "Pregunta Roles Modalidad",
+      "puntajeMaximo": "Puntaje Máximo"
+    }
+  }
+}

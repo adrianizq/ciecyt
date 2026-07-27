@@ -1,0 +1,23 @@
+{
+  "ciecytApp": {
+    "entidad": {
+      "home": {
+        "title": "Entidads",
+        "createLabel": "Create a new Entidad",
+        "createOrEditLabel": "Create or edit a Entidad",
+        "notFound": "No Entidads found"
+      },
+      "created": "A new Entidad is created with identifier {{ param }}",
+      "updated": "A Entidad is updated with identifier {{ param }}",
+      "deleted": "A Entidad is deleted with identifier {{ param }}",
+      "delete": {
+        "question": "Are you sure you want to delete Entidad {{ id }}?"
+      },
+      "detail": {
+        "title": "Entidad"
+      },
+      "entidad": "Entidad",
+      "nit": "Nit"
+    }
+  }
+}

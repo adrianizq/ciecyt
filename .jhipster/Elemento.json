@@ -1,0 +1,35 @@
+{
+  "name": "Elemento",
+  "fields": [
+    {
+      "fieldName": "elemento",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "descripcion",
+      "fieldType": "String"
+    }
+  ],
+  "relationships": [
+    {
+      "relationshipName": "elementoFases",
+      "otherEntityName": "fases",
+      "relationshipType": "many-to-one",
+      "otherEntityField": "fase",
+      "otherEntityRelationshipName": "elemento"
+    }
+  ],
+  "changelogDate": "20201008033903",
+  "entityTableName": "elemento",
+  "dto": "mapstruct",
+  "pagination": "pagination",
+  "service": "serviceImpl",
+  "jpaMetamodelFiltering": false,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "clientRootFolder": "",
+  "applications": "*",
+  "searchEngine": false,
+  "databaseType": "sql"
+}

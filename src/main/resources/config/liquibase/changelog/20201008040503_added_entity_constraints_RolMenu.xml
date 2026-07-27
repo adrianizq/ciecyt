@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.9.xsd">
+    <!--
+        Added the constraints for entity RolMenu.
+    -->
+    <changeSet id="20201008040503-2" author="jhipster">
+        
+        <addForeignKeyConstraint baseColumnNames="rol_menu_menu_id"
+                                 baseTableName="rol_menu"
+                                 constraintName="fk_rol_menu_rol_menu_menu_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="menu"/>
+
+    </changeSet>
+</databaseChangeLog>

@@ -1,0 +1,28 @@
+{
+  "ciecytApp": {
+    "menu": {
+      "home": {
+        "title": "Aplicaciones",
+        "createLabel": "Nueva aplicación",
+        "createOrEditLabel": "Crear o editar aplicación",
+        "notFound": "Registros no encontrados"
+      },
+      "created": "Una nueva aplicación ha sido creado con el identificador {{ param }}",
+      "updated": "Una aplicación ha sido actualizada con el identificador {{ param }}",
+      "deleted": "Una aplicación ha sido eliminado con el identificador {{ param }}",
+      "delete": {
+        "question": "¿Seguro que quiere eliminar la aplicación {{ name }}?"
+      },
+      "detail": {
+        "title": "Aplicación"
+      },
+      "nombre": "Nombre",
+      "url": "Url",
+      "icono": "Icono",
+      "activo": "Estado",
+      "menuPadre": "Padre",
+      "es_publico": "Alcance",
+      "orden": "Orden"
+    }
+  }
+}

@@ -1,0 +1,422 @@
+application {
+  config {
+    applicationType monolith
+    authenticationType jwt
+    baseName ciecyt
+    blueprints [generator-jhipster-vuejs]
+    buildTool maven
+    cacheProvider ehcache
+    clientFramework vue
+    clientPackageManager npm
+    clientTheme journal
+    clientThemeVariant primary
+    creationTimestamp 1602127011214
+    databaseType sql
+    devDatabaseType postgresql
+    dtoSuffix DTO
+    embeddableLaunchScript false
+    enableHibernateCache true
+    enableSwaggerCodegen false
+    enableTranslation true
+    jhiPrefix jhi
+    jhipsterVersion "6.10.3"
+    jwtSecretKey "MWRkODA5MWIwMTIyODQzY2EzNjM1ODljYTQwMjEyNzE2NDYyMmZmMTYxNGNiYTJlZTg5MzVjYjk0MzlhMTk1ZmM5NWIzMGE3ZTg1NDE3ODIxNDIxOGI4MDBhMjU0ZWEyODlmNjlkY2M3ZjRjYzg2NWU3NmRlODQ5NmZjNDBiNzI="
+    languages [es, en]
+    messageBroker false
+    nativeLanguage es
+    otherModules [[object Object]]
+    packageName co.edu.itp.ciecyt
+    prodDatabaseType postgresql
+    searchEngine false
+    serverPort 8080
+    serviceDiscoveryType false
+    skipClient false
+    skipServer false
+    skipUserManagement false
+    testFrameworks []
+    useSass true
+    websocket false
+  }
+
+  entities Acuerdo, AdjuntoProyectoFase, AdjuntoRetroalimentacion, Categorizacion, CicloPropedeutico, Cronograma, CronogramaCiecyt, CronogramaCiecytFases, Elemento, ElementoProyecto, Entidad, EntidadFinanciadora, Facultad, Fases, FichaTecnica, Formato, GrupoSemillero, ImpactosEsperados, InformacionPasantia, IntegranteProyecto, InvestigacionTipo, LineaInvestigacion, Menu, Modalidad, Pregunta, PresupuestoValor, Producto, ProductoProyecto, Programa, Proyecto, ProyectoFase, ProyectoRespuestas, ResultadosEsperados, Retroalimentacion, RolesModalidad, RolMenu, Rubro, Solicitud, TipoPregunta, UserInfo, Usuario
+}
+
+entity Acuerdo {
+  acuerdo String,
+  version String,
+  codigo String,
+  fecha LocalDate
+}
+entity AdjuntoProyectoFase {
+  nombreAdjunto String,
+  fechaCreacion LocalDate,
+  fechaModificacion LocalDate,
+  estadoAdjunto Integer,
+  adjuntoProyectoFase String,
+  nombreArchivoOriginal String,
+  fechaInicio LocalDate,
+  fechaFin LocalDate,
+  archivo AnyBlob,
+  archivoContentType String,
+  proyectoFaseProyectoId Long,
+  proyectoFaseProyectoTitulo String,
+  adjuntoProyectoFaseFaseId Long,
+  adjuntoProyectoFaseFaseFase String,
+  file String
+}
+entity AdjuntoRetroalimentacion {
+  nombreAdjunto String,
+  fechaCreacion LocalDate,
+  fechaModificacion LocalDate,
+  estadoAdjunto Integer,
+  adjuntoRetroalimentacion String,
+  nombreArchivoOriginal String,
+  fechaInicio LocalDate,
+  fechaFin LocalDate,
+  archivo AnyBlob,
+  archivoContentType String
+}
+entity Categorizacion {
+  categoria String,
+  descripcion String
+}
+entity CicloPropedeutico {
+  ciclo String
+}
+entity Cronograma {
+  actividad String,
+  duracion Integer,
+  fechaInicio LocalDate,
+  fechaFin LocalDate,
+  ordenVista Integer
+}
+entity CronogramaCiecyt {
+  tituloCronograma String,
+  fechaInicio LocalDate,
+  fechaFin LocalDate,
+  observaciones String
+}
+entity CronogramaCiecytFases {
+  inicioFase LocalDate,
+  finFase LocalDate,
+  textoExplicativo String
+}
+entity Elemento {
+  elemento String,
+  descripcion String
+}
+entity ElementoProyecto {
+  dato String,
+  elementoProyectoProyectoDescripcion String
+}
+entity Entidad {
+  entidad String,
+  nit String
+}
+entity EntidadFinanciadora {
+  valor Double,
+  aprobada Boolean
+}
+entity Facultad {
+  codigoFacultad String,
+  facultad String
+}
+entity Fases {
+  fase String,
+  notificable Boolean
+}
+entity FichaTecnica {
+  tituloProfesional String,
+  tituloPostgrado String,
+  experiencia String
+}
+entity Formato {
+  formato String,
+  version String,
+  codigo String,
+  fecha LocalDate
+}
+entity GrupoSemillero {
+  nombre String,
+  tipo Boolean
+}
+entity ImpactosEsperados {
+  impacto String,
+  plazo Integer,
+  indicador String,
+  supuestos String,
+  ordenVista Integer
+}
+entity InformacionPasantia {
+  duracionHoras Integer,
+  direccion String,
+  email String,
+  lunes Boolean,
+  martes Boolean,
+  miercoles Boolean,
+  jueves Boolean,
+  viernes Boolean,
+  sabado Boolean,
+  domingo Boolean,
+  horasMes Integer,
+  bonoAlimenticio Boolean,
+  apoyoEconomico Boolean,
+  auxilioTransporte Boolean,
+  capacitacion Boolean,
+  otroApoyo String,
+  nombreEmpresa String,
+  nitEmpresa String,
+  direccionEmpresa String,
+  sectorEconomicoEmpresa String,
+  representanteLegalEmpresa String,
+  asesorEmpresa String,
+  cargoAsesorEmpresa String,
+  emailAsesorEmpresa String,
+  municipioEmpresa String,
+  telefonoContactoEmpresa String,
+  emailEmpresa String,
+  departamentoEmpresa String,
+  identificacionRepresentanteLegal String,
+  profesionAsesorEmpresa String,
+  celularAsesorEmpresa String
+}
+entity IntegranteProyecto {
+  integrante String,
+  descripcion String
+}
+entity InvestigacionTipo {
+  investigacionTipo String,
+  investigacionTipoDescripcion String,
+  tipo String,
+  tipoDescripcion String
+}
+entity LineaInvestigacion {
+  linea String,
+  codigoLinea String
+}
+entity Menu {
+  nombre String,
+  url String,
+  icono String,
+  activo Boolean,
+  esPublico Boolean,
+  orden Integer
+}
+entity Modalidad {
+  modalidad String
+}
+entity Pregunta {
+  encabezado String,
+  descripcion String,
+  pregunta String,
+  puntaje Float,
+  puntajeMaximo Float
+}
+entity PresupuestoValor {
+  descripcion String,
+  justificacion String,
+  cantidad Integer,
+  valorUnitario Double,
+  especie Double,
+  dinero Double,
+  ordenVista Integer
+}
+entity Producto {
+  producto String
+}
+entity ProductoProyecto {
+  aplica Boolean,
+  descripcion String
+}
+entity Programa {
+  programa String,
+  descripcion String,
+  codigoInterno String,
+  codigoSnies String,
+  creditos Integer,
+  ciclo String,
+  resolucion String,
+  titulo String,
+  duracionSemestres Integer
+}
+entity Proyecto {
+  titulo String,
+  url String,
+  lugarEjecucion String,
+  duracion String,
+  fechaIni LocalDate,
+  fechaFin LocalDate,
+  contrapartidaPesos Double,
+  contrapartidaEspecie Double,
+  palabrasClave String,
+  convocatoria String,
+  tipo String,
+  referencias String,
+  programa String,
+  departamento String,
+  municipio String,
+  viable Boolean,
+  enviado Boolean,
+  fechaEnvioPropuesta ZonedDateTime,
+  fechaEnvioProyecto ZonedDateTime,
+  nota Float,
+  conclusion String,
+  recomendaciones String,
+  viabilidad EnumViabilidad,
+  preEnviado Boolean
+}
+entity ProyectoFase {
+  titulo String,
+  cumplida Boolean,
+  fechaCumplimiento LocalDate,
+  observaciones String
+}
+entity ProyectoRespuestas {
+  respuesta EnumRespuestas,
+  observaciones String,
+  viable Boolean,
+  puntaje Float,
+  siNo Boolean,
+  elemento String,
+  preguntaTipoPreguntaId Long,
+  preguntaTipoPreguntaTipoPregunta String,
+  encabezado String,
+  dato String,
+  respuestaTexto String,
+  respuestaNumero Float
+}
+entity ResultadosEsperados {
+  resultado String,
+  indicador String,
+  beneficiario String,
+  ordenVista Integer
+}
+entity Retroalimentacion {
+  titulo String,
+  retroalimentacion String,
+  fechaRetroalimentacion LocalDate,
+  estadoRetroalimentacion LocalDate,
+  estadoProyectoFase Integer
+}
+entity RolesModalidad {
+  rol String,
+  cantidad Integer,
+  calificador Boolean
+}
+entity RolMenu {
+  permitirAcceso Boolean,
+  permitirCrear Boolean,
+  permitirEditar Boolean,
+  permitirEliminar Boolean,
+  authName String
+}
+entity Rubro {
+  rubro String
+}
+entity Solicitud {
+  estado Boolean,
+  asunto String,
+  textoSolicitud String,
+  fechaSolicitud LocalDate
+}
+entity TipoPregunta {
+  tipoPregunta String,
+  tipoDato String
+}
+entity UserInfo {
+  nuip String,
+  codigoItp String,
+  genero genero,
+  celular String,
+  telefono String,
+  foto TextBlob,
+  fotoContentType String
+}
+entity Usuario {
+  usuario String,
+  descripcion String
+}
+enum EnumViabilidad {
+  VIABLE,
+  PENDIENTE,
+  NO_VIABLE
+}
+enum EnumRespuestas {
+  CUMPLE,
+  NO_CUMPLE,
+  NO_APLICA,
+  SI,
+  NO
+}
+enum genero {
+  MASCULINO,
+  FEMENINO,
+  OTRO
+}
+
+relationship OneToOne {
+  InformacionPasantia{informacionPasantiaProyecto} to Proyecto{id},
+  UserInfo{user(login)} to User with jpaDerivedIdentifier
+}
+relationship OneToMany {
+  Modalidad{modalidadCicloPropedeutico} to CicloPropedeutico{modalidad},
+  Facultad{facultadProyecto} to Proyecto{facultad}
+}
+relationship ManyToOne {
+  AdjuntoProyectoFase{proyectoFaseProyecto(titulo)} to Proyecto,
+  AdjuntoProyectoFase{adjuntoProyectoFaseFase(fase)} to Fases,
+  AdjuntoRetroalimentacion{adjuntoRetroalimentacionRetroalimentacion(titulo)} to Retroalimentacion,
+  Categorizacion{categorizacionProyecto(titulo)} to Proyecto,
+  CicloPropedeutico{cicloPropedeuticoAcuerdo(acuerdo)} to Acuerdo,
+  Cronograma{cronogramaProyecto(titulo)} to Proyecto,
+  CronogramaCiecyt{cronogramaCiecytModalidad(modalidad)} to Modalidad,
+  CronogramaCiecytFases{cronogramaCiecytFasesCronogramaCiecyt(tituloCronograma)} to CronogramaCiecyt,
+  CronogramaCiecytFases{cronogramaCiecytFasesFases(fase)} to Fases,
+  Elemento{elementoFormato(formato)} to Formato,
+  Elemento{elementoModalidad(modalidad)} to Modalidad,
+  ElementoProyecto{elementoProyectoElemento(elemento)} to Elemento,
+  ElementoProyecto{elementoProyectoProyecto(titulo)} to Proyecto,
+  EntidadFinanciadora{entidadFinanciadoraEntidad(entidad)} to Entidad,
+  EntidadFinanciadora{entidadFinanciadoraProyecto(titulo)} to Proyecto,
+  Fases{fasesModalidad(modalidad)} to Modalidad,
+  FichaTecnica{fichaTecnicaUser(login)} to User,
+  ImpactosEsperados{impactosEsperadoProyecto(titulo)} to Proyecto,
+  IntegranteProyecto{integranteProyectoUser(login)} to User,
+  IntegranteProyecto{integranteProyectoProyecto(titulo)} to Proyecto,
+  IntegranteProyecto{integranteProyectoRolesModalidad(rol)} to RolesModalidad,
+  LineaInvestigacion{lineaPadre(linea)} to LineaInvestigacion,
+  LineaInvestigacion{lineaInvestigacionFacultad(facultad)} to Facultad,
+  Menu{menuPadre(nombre)} to Menu,
+  Modalidad{modalidadAcuerdo(acuerdo)} to Acuerdo,
+  Pregunta{preguntaTipoPregunta(tipoPregunta)} to TipoPregunta,
+  Pregunta{preguntaModalidad(modalidad)} to Modalidad,
+  Pregunta{preguntaRolesModalidad(rol)} to RolesModalidad,
+  Pregunta{preguntaElemento(elemento)} to Elemento,
+  Pregunta{preguntaFase(fase)} to Fases,
+  PresupuestoValor{presupuestoValorRubro(rubro)} to Rubro,
+  PresupuestoValor{presupuestoValorProyecto(titulo)} to Proyecto,
+  PresupuestoValor{presupuestoValorEntidad(entidad)} to Entidad,
+  ProductoProyecto{productoProyectoProducto(producto)} to Producto,
+  ProductoProyecto{productoProyectoProyecto(titulo)} to Proyecto,
+  Programa{programaFacultad(facultad)} to Facultad,
+  Proyecto{proyectoLineaInvestigacion(linea)} to LineaInvestigacion,
+  Proyecto{proyectoGrupoSemillero(nombre)} to GrupoSemillero,
+  Proyecto{proyectoModalidad(modalidad)} to Modalidad,
+  Proyecto{subLineaLineaInvestigacion(linea)} to LineaInvestigacion,
+  Proyecto{proyectoPrograma(programa)} to Programa,
+  Proyecto{proyectoFases(fase)} to Fases,
+  ProyectoFase{proyectoFaseFases(fase)} to Fases,
+  ProyectoFase{proyectoFaseProyecto(titulo)} to Proyecto,
+  ProyectoRespuestas{proyectoRespuestasPregunta(pregunta)} to Pregunta,
+  ProyectoRespuestas{proyectoRespuestasProyecto(titulo)} to Proyecto,
+  ResultadosEsperados{resultadosEsperadosProyecto(titulo)} to Proyecto,
+  Retroalimentacion{retroalimentacionProyectoFase(titulo)} to ProyectoFase,
+  Retroalimentacion{retroalimentacionUser(login)} to User,
+  RolesModalidad{rolesModalidadModalidad(modalidad)} to Modalidad,
+  RolMenu{rolMenuMenu(nombre)} to Menu,
+  Solicitud{solicitudIntegranteProyecto(integrante)} to IntegranteProyecto
+}
+
+dto Acuerdo, AdjuntoProyectoFase, AdjuntoRetroalimentacion, Categorizacion, CicloPropedeutico, Cronograma, CronogramaCiecyt, CronogramaCiecytFases, Elemento, ElementoProyecto, Entidad, EntidadFinanciadora, Facultad, Fases, FichaTecnica, Formato, GrupoSemillero, ImpactosEsperados, IntegranteProyecto, InvestigacionTipo, LineaInvestigacion, Menu, Modalidad, Pregunta, PresupuestoValor, Producto, ProductoProyecto, Programa, Proyecto, ProyectoFase, ProyectoRespuestas, ResultadosEsperados, Retroalimentacion, RolesModalidad, RolMenu, Rubro, Solicitud, TipoPregunta, UserInfo, Usuario with mapstruct
+paginate Acuerdo, AdjuntoProyectoFase, AdjuntoRetroalimentacion, Categorizacion, CicloPropedeutico, Cronograma, CronogramaCiecyt, CronogramaCiecytFases, Elemento, ElementoProyecto, Entidad, EntidadFinanciadora, Facultad, Fases, FichaTecnica, Formato, GrupoSemillero, ImpactosEsperados, IntegranteProyecto, LineaInvestigacion, Menu, Modalidad, Pregunta, PresupuestoValor, Producto, ProductoProyecto, Proyecto, ProyectoFase, ProyectoRespuestas, ResultadosEsperados, Retroalimentacion, RolesModalidad, RolMenu, Rubro, Solicitud, TipoPregunta, Usuario with pagination
+service Acuerdo, AdjuntoProyectoFase, AdjuntoRetroalimentacion, Categorizacion, CicloPropedeutico, Cronograma, CronogramaCiecyt, CronogramaCiecytFases, Elemento, ElementoProyecto, Entidad, EntidadFinanciadora, Facultad, Fases, FichaTecnica, Formato, GrupoSemillero, ImpactosEsperados, IntegranteProyecto, InvestigacionTipo, LineaInvestigacion, Menu, Modalidad, Pregunta, PresupuestoValor, Producto, ProductoProyecto, Programa, Proyecto, ProyectoFase, ProyectoRespuestas, ResultadosEsperados, Retroalimentacion, RolesModalidad, RolMenu, Rubro, Solicitud, TipoPregunta, UserInfo, Usuario with serviceImpl

@@ -1,0 +1,67 @@
+{
+  "name": "PresupuestoValor",
+  "fields": [
+    {
+      "fieldName": "descripcion",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "justificacion",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "cantidad",
+      "fieldType": "Integer"
+    },
+    {
+      "fieldName": "valorUnitario",
+      "fieldType": "Double"
+    },
+    {
+      "fieldName": "especie",
+      "fieldType": "Double"
+    },
+    {
+      "fieldName": "dinero",
+      "fieldType": "Double"
+    },
+    {
+      "fieldName": "ordenVista",
+      "fieldType": "Integer"
+    }
+  ],
+  "relationships": [
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "rubro",
+      "otherEntityRelationshipName": "presupuestoValor",
+      "relationshipName": "presupuestoValorRubro",
+      "otherEntityField": "rubro"
+    },
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "proyecto",
+      "otherEntityRelationshipName": "presupuestoValor",
+      "relationshipName": "presupuestoValorProyecto",
+      "otherEntityField": "titulo"
+    },
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "entidad",
+      "otherEntityRelationshipName": "presupuestoValor",
+      "relationshipName": "presupuestoValorEntidad",
+      "otherEntityField": "entidad"
+    }
+  ],
+  "changelogDate": "20201008035603",
+  "entityTableName": "presupuesto_valor",
+  "dto": "mapstruct",
+  "pagination": "pagination",
+  "service": "serviceImpl",
+  "jpaMetamodelFiltering": false,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "clientRootFolder": "",
+  "applications": "*"
+}

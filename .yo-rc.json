@@ -1,0 +1,54 @@
+{
+  "generator-jhipster": {
+    "promptValues": {
+      "packageName": "co.edu.itp.ciecyt",
+      "nativeLanguage": "es"
+    },
+    "jhipsterVersion": "6.10.3",
+    "applicationType": "monolith",
+    "baseName": "ciecyt",
+    "packageName": "co.edu.itp.ciecyt",
+    "packageFolder": "co/edu/itp/ciecyt",
+    "serverPort": "8080",
+    "authenticationType": "jwt",
+    "cacheProvider": "ehcache",
+    "enableHibernateCache": true,
+    "websocket": false,
+    "databaseType": "sql",
+    "devDatabaseType": "postgresql",
+    "prodDatabaseType": "postgresql",
+    "searchEngine": false,
+    "messageBroker": false,
+    "serviceDiscoveryType": false,
+    "buildTool": "maven",
+    "enableSwaggerCodegen": false,
+    "jwtSecretKey": "MWRkODA5MWIwMTIyODQzY2EzNjM1ODljYTQwMjEyNzE2NDYyMmZmMTYxNGNiYTJlZTg5MzVjYjk0MzlhMTk1ZmM5NWIzMGE3ZTg1NDE3ODIxNDIxOGI4MDBhMjU0ZWEyODlmNjlkY2M3ZjRjYzg2NWU3NmRlODQ5NmZjNDBiNzI=",
+    "embeddableLaunchScript": false,
+    "useSass": true,
+    "clientPackageManager": "npm",
+    "clientFramework": "vue",
+    "clientTheme": "journal",
+    "clientThemeVariant": "primary",
+    "creationTimestamp": 1602127011214,
+    "testFrameworks": [],
+    "jhiPrefix": "jhi",
+    "entitySuffix": "",
+    "dtoSuffix": "DTO",
+    "otherModules": [
+      {
+        "name": "generator-jhipster-vuejs",
+        "version": "1.9.2"
+      }
+    ],
+    "enableTranslation": true,
+    "nativeLanguage": "es",
+    "languages": ["es", "en"],
+    "blueprints": [
+      {
+        "name": "generator-jhipster-vuejs",
+        "version": "1.9.2"
+      }
+    ],
+    "lastLiquibaseTimestamp": 1650287417000
+  }
+}

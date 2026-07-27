@@ -1,0 +1,34 @@
+{
+  "ciecytApp": {
+    "adjuntoRetroalimentacion": {
+      "home": {
+        "title": "Adjunto Retroalimentacions",
+        "createLabel": "Crear nuevo Adjunto Retroalimentacion",
+        "createOrEditLabel": "Crear o editar Adjunto Retroalimentacion",
+        "notFound": "No Adjunto Retroalimentacions found"
+      },
+      "created": "Un nuevo Adjunto Retroalimentacion ha sido creado con el identificador {{ param }}",
+      "updated": "Un Adjunto Retroalimentacion ha sido actualizado con el identificador {{ param }}",
+      "deleted": "Un Adjunto Retroalimentacion ha sido eliminado con el identificador {{ param }}",
+      "delete": {
+        "question": "¿Seguro que quiere eliminar Adjunto Retroalimentacion {{ id }}?"
+      },
+      "detail": {
+        "title": "Adjunto Retroalimentacion"
+      },
+      "nombreAdjunto": "Nombre Adjunto",
+      "fechaCreacion": "Fecha Creacion",
+      "fechaModificacion": "Fecha Modificacion",
+      "estadoAdjunto": "Estado Adjunto",
+      "adjuntoRetroalimentacion": "Adjunto Retroalimentacion",
+      "nombreArchivoOriginal": "Nombre Archivo Original",
+      "archivo": "Archivo Adjunto",
+      "correcionesAsesor": "Correcciones del Asesor",
+      "correcionesPropuesta": "Correcciones de la Propuesta",
+      "correcionesProyecto": "Correcciones del Proyecto",
+      "fechaInicio": "Fecha Inicio",
+      "fechaFin": "Fecha Fin",
+      "adjuntoRetroalimentacionRetroalimentacion": "Adjunto Retroalimentacion Retroalimentacion"
+    }
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "ciecytApp": {
+    "EnumRespuestas": {
+      "null": "",
+      "CUMPLE": "CUMPLE",
+      "NO_CUMPLE": "NO_CUMPLE",
+      "NO_APLICA": "NO_APLICA",
+      "SI": "SI",
+      "NO": "NO"
+    }
+  }
+}

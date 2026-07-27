@@ -1,0 +1,30 @@
+{
+  "fluentMethods": true,
+  "clientRootFolder": "",
+  "relationships": [
+    {
+      "relationshipName": "elemento",
+      "otherEntityName": "elemento",
+      "relationshipType": "many-to-one",
+      "otherEntityField": "elemento",
+      "otherEntityRelationshipName": "elementoModalidad"
+    },
+    {
+      "relationshipName": "modalidad",
+      "otherEntityName": "modalidad",
+      "relationshipType": "many-to-one",
+      "otherEntityField": "modalidad",
+      "otherEntityRelationshipName": "elementoModalidad"
+    }
+  ],
+  "fields": [],
+  "changelogDate": "20210501223720",
+  "dto": "mapstruct",
+  "searchEngine": false,
+  "service": "serviceImpl",
+  "entityTableName": "elemento_modalidad",
+  "databaseType": "sql",
+  "readOnly": false,
+  "jpaMetamodelFiltering": false,
+  "pagination": "no"
+}

@@ -1,0 +1,35 @@
+{
+  "name": "Modalidad",
+  "fields": [
+    {
+      "fieldName": "modalidad",
+      "fieldType": "String"
+    }
+  ],
+  "relationships": [
+    {
+      "relationshipType": "one-to-many",
+      "otherEntityName": "cicloPropedeutico",
+      "otherEntityRelationshipName": "modalidad",
+      "relationshipName": "modalidadCicloPropedeutico"
+    },
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "acuerdo",
+      "otherEntityRelationshipName": "modalidad",
+      "relationshipName": "modalidadAcuerdo",
+      "otherEntityField": "acuerdo"
+    }
+  ],
+  "changelogDate": "20201008035403",
+  "entityTableName": "modalidad",
+  "dto": "mapstruct",
+  "pagination": "pagination",
+  "service": "serviceImpl",
+  "jpaMetamodelFiltering": false,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "clientRootFolder": "",
+  "applications": "*"
+}

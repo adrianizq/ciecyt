@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.9.xsd">
+    <!--
+        Added the constraints for entity Proyecto.
+    -->
+    <changeSet id="20201008035903-2" author="jhipster">
+        
+        <addForeignKeyConstraint baseColumnNames="proyecto_linea_investigacion_id"
+                                 baseTableName="proyecto"
+                                 constraintName="fk_proyecto_proyecto_linea_investigacion_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="linea_investigacion"/>
+
+        <addForeignKeyConstraint baseColumnNames="proyecto_grupo_semillero_id"
+                                 baseTableName="proyecto"
+                                 constraintName="fk_proyecto_proyecto_grupo_semillero_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="grupo_semillero"/>
+
+        <addForeignKeyConstraint baseColumnNames="proyecto_modalidad_id"
+                                 baseTableName="proyecto"
+                                 constraintName="fk_proyecto_proyecto_modalidad_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="modalidad"/>
+
+        <addForeignKeyConstraint baseColumnNames="sub_linea_linea_investigacion_id"
+                                 baseTableName="proyecto"
+                                 constraintName="fk_proyecto_sub_linea_linea_investigacion_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="linea_investigacion"/>
+
+        <addForeignKeyConstraint baseColumnNames="facultad_id"
+                                 baseTableName="proyecto"
+                                 constraintName="fk_proyecto_facultad_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="facultad"/>
+
+        <addForeignKeyConstraint baseColumnNames="proyecto_programa_id"
+                                 baseTableName="proyecto"
+                                 constraintName="fk_proyecto_proyecto_programa_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="programa"/>
+
+        <addForeignKeyConstraint baseColumnNames="proyecto_fases_id"
+                                 baseTableName="proyecto"
+                                 constraintName="fk_proyecto_proyecto_fases_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="fases"/>
+
+    </changeSet>
+</databaseChangeLog>

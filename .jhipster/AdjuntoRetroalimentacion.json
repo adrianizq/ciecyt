@@ -1,0 +1,80 @@
+{
+  "name": "AdjuntoRetroalimentacion",
+  "fields": [
+    {
+      "fieldName": "nombreAdjunto",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "fechaCreacion",
+      "fieldType": "LocalDate"
+    },
+    {
+      "fieldName": "fechaModificacion",
+      "fieldType": "LocalDate"
+    },
+    {
+      "fieldName": "estadoAdjunto",
+      "fieldType": "Integer"
+    },
+    {
+      "fieldName": "adjuntoRetroalimentacion",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "nombreArchivoOriginal",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "fechaInicio",
+      "fieldType": "LocalDate"
+    },
+    {
+      "fieldName": "fechaFin",
+      "fieldType": "LocalDate"
+    },
+    {
+      "fieldName": "archivo",
+      "fieldType": "byte[]",
+      "fieldTypeBlobContent": "any"
+    },
+    {
+      "fieldName": "archivoContentType",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "file",
+      "fieldType": "String"
+    }
+
+  ],
+  "relationships": [
+    {
+      "relationshipName": "adjuntoRetroalimentacionProyecto",
+      "otherEntityName": "proyecto",
+      "relationshipType": "many-to-one",
+      "otherEntityField": "titulo",
+      "otherEntityRelationshipName": "adjuntoRetroalimentacion"
+    },
+    {
+      "relationshipName": "adjuntoRetroalimentacionFase",
+      "otherEntityName": "fases",
+      "relationshipType": "many-to-one",
+      "otherEntityField": "fase",
+      "otherEntityRelationshipName": "adjuntoRetroalimentacion"
+    }
+  ],
+  "changelogDate": "20201008033303",
+  "entityTableName": "adjunto_retroalimentacion",
+  "dto": "mapstruct",
+  "pagination": "pagination",
+  "service": "serviceImpl",
+  "jpaMetamodelFiltering": false,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "clientRootFolder": "",
+  "applications": "*",
+  "searchEngine": false,
+  "databaseType": "sql"
+}

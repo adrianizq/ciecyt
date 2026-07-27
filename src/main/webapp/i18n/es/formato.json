@@ -1,0 +1,25 @@
+{
+  "ciecytApp": {
+    "formato": {
+      "home": {
+        "title": "Formato",
+        "createLabel": "Crear nuevo Formato",
+        "createOrEditLabel": "Crear o editar Formato",
+        "notFound": "No Formatoes found"
+      },
+      "created": "Un nuevo Formato ha sido creado con el identificador {{ param }}",
+      "updated": "Un Formato ha sido actualizado con el identificador {{ param }}",
+      "deleted": "Un Formato ha sido eliminado con el identificador {{ param }}",
+      "delete": {
+        "question": "¿Seguro que quiere eliminar Formato {{ id }}?"
+      },
+      "detail": {
+        "title": "Formato"
+      },
+      "formato": "Formato",
+      "version": "Version",
+      "codigo": "Codigo",
+      "fecha": "Fecha"
+    }
+  }
+}

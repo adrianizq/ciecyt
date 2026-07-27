@@ -1,0 +1,52 @@
+{
+  "name": "Retroalimentacion",
+  "fields": [
+    {
+      "fieldName": "titulo",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "retroalimentacion",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "fechaRetroalimentacion",
+      "fieldType": "LocalDate"
+    },
+    {
+      "fieldName": "estadoRetroalimentacion",
+      "fieldType": "LocalDate"
+    },
+    {
+      "fieldName": "estadoProyectoFase",
+      "fieldType": "Integer"
+    }
+  ],
+  "relationships": [
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "proyectoFase",
+      "otherEntityRelationshipName": "retroalimentacion",
+      "relationshipName": "retroalimentacionProyectoFase",
+      "otherEntityField": "titulo"
+    },
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "user",
+      "otherEntityRelationshipName": "retroalimentacion",
+      "relationshipName": "retroalimentacionUser",
+      "otherEntityField": "login"
+    }
+  ],
+  "changelogDate": "20201008040303",
+  "entityTableName": "retroalimentacion",
+  "dto": "mapstruct",
+  "pagination": "pagination",
+  "service": "serviceImpl",
+  "jpaMetamodelFiltering": false,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "clientRootFolder": "",
+  "applications": "*"
+}

@@ -1,0 +1,41 @@
+{
+  "name": "CronogramaCiecyt",
+  "fields": [
+    {
+      "fieldName": "tituloCronograma",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "fechaInicio",
+      "fieldType": "LocalDate"
+    },
+    {
+      "fieldName": "fechaFin",
+      "fieldType": "LocalDate"
+    },
+    {
+      "fieldName": "observaciones",
+      "fieldType": "String"
+    }
+  ],
+  "relationships": [
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "modalidad",
+      "otherEntityRelationshipName": "cronogramaCiecyt",
+      "relationshipName": "cronogramaCiecytModalidad",
+      "otherEntityField": "modalidad"
+    }
+  ],
+  "changelogDate": "20201008033703",
+  "entityTableName": "cronograma_ciecyt",
+  "dto": "mapstruct",
+  "pagination": "pagination",
+  "service": "serviceImpl",
+  "jpaMetamodelFiltering": false,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "clientRootFolder": "",
+  "applications": "*"
+}

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.9.xsd">
+    <!--
+        Added the constraints for entity CronogramaCiecytFases.
+    -->
+    <changeSet id="20201008033803-2" author="jhipster">
+        
+        <addForeignKeyConstraint baseColumnNames="cronograma_ciecyt_fases_cronograma_ciecyt_id"
+                                 baseTableName="cronograma_ciecyt_fases"
+                                 constraintName="cronograma_ciecyt_fases_cronograma_ciecyt_fases_cronograma_c_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="cronograma_ciecyt"/>
+
+        <addForeignKeyConstraint baseColumnNames="cronograma_ciecyt_fases_fases_id"
+                                 baseTableName="cronograma_ciecyt_fases"
+                                 constraintName="fk_cronograma_ciecyt_fases_cronograma_ciecyt_fases_fases_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="fases"/>
+
+    </changeSet>
+</databaseChangeLog>

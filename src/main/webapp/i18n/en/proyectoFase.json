@@ -1,0 +1,27 @@
+{
+  "ciecytApp": {
+    "proyectoFase": {
+      "home": {
+        "title": "Proyecto Fases",
+        "createLabel": "Create a new Proyecto Fase",
+        "createOrEditLabel": "Create or edit a Proyecto Fase",
+        "notFound": "No Proyecto Fases found"
+      },
+      "created": "A new Proyecto Fase is created with identifier {{ param }}",
+      "updated": "A Proyecto Fase is updated with identifier {{ param }}",
+      "deleted": "A Proyecto Fase is deleted with identifier {{ param }}",
+      "delete": {
+        "question": "Are you sure you want to delete Proyecto Fase {{ id }}?"
+      },
+      "detail": {
+        "title": "Proyecto Fase"
+      },
+      "titulo": "Titulo",
+      "cumplida": "Cumplida",
+      "fechaCumplimiento": "Fecha Cumplimiento",
+      "observaciones": "Observaciones",
+      "proyectoFaseFases": "Proyecto Fase Fases",
+      "proyectoFaseProyecto": "Proyecto Fase Proyecto"
+    }
+  }
+}

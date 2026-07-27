@@ -1,0 +1,31 @@
+{
+  "ciecytApp": {
+    "presupuestoValor": {
+      "home": {
+        "title": "Presupuesto Valors",
+        "createLabel": "Crear nuevo Presupuesto Valor",
+        "createOrEditLabel": "Crear o editar Presupuesto Valor",
+        "notFound": "No Presupuesto Valors found"
+      },
+      "created": "Un nuevo Presupuesto Valor ha sido creado con el identificador {{ param }}",
+      "updated": "Un Presupuesto Valor ha sido actualizado con el identificador {{ param }}",
+      "deleted": "Un Presupuesto Valor ha sido eliminado con el identificador {{ param }}",
+      "delete": {
+        "question": "¿Seguro que quiere eliminar Presupuesto Valor {{ id }}?"
+      },
+      "detail": {
+        "title": "Presupuesto Valor"
+      },
+      "descripcion": "Descripcion",
+      "justificacion": "Justificacion",
+      "cantidad": "Cantidad",
+      "valorUnitario": "Valor Unitario",
+      "especie": "Especie",
+      "dinero": "Dinero",
+      "ordenVista": "Orden Vista",
+      "presupuestoValorRubro": "Presupuesto Valor Rubro",
+      "presupuestoValorProyecto": "Presupuesto Valor Proyecto",
+      "presupuestoValorEntidad": "Presupuesto Valor Entidad"
+    }
+  }
+}

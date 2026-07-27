@@ -1,0 +1,26 @@
+{
+  "ciecytApp": {
+    "integranteProyecto": {
+      "home": {
+        "title": "Integrante Proyectos",
+        "createLabel": "Create a new Integrante Proyecto",
+        "createOrEditLabel": "Create or edit a Integrante Proyecto",
+        "notFound": "No Integrante Proyectos found"
+      },
+      "created": "A new Integrante Proyecto is created with identifier {{ param }}",
+      "updated": "A Integrante Proyecto is updated with identifier {{ param }}",
+      "deleted": "A Integrante Proyecto is deleted with identifier {{ param }}",
+      "delete": {
+        "question": "Are you sure you want to delete Integrante Proyecto {{ id }}?"
+      },
+      "detail": {
+        "title": "Integrante Proyecto"
+      },
+      "integrante": "Integrante",
+      "descripcion": "Descripcion",
+      "integranteProyectoUser": "Integrante Proyecto User",
+      "integranteProyectoProyecto": "Integrante Proyecto Proyecto",
+      "integranteProyectoRolesModalidad": "Integrante Proyecto Roles Modalidad"
+    }
+  }
+}

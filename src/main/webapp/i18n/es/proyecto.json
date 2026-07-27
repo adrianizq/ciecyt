@@ -1,0 +1,42 @@
+{
+  "ciecytApp": {
+    "proyecto": {
+      "home": {
+        "title": "Proyectos",
+        "createLabel": "Crear nuevo Proyecto",
+        "createOrEditLabel": "Crear o editar Proyecto",
+        "notFound": "No Proyectos found"
+      },
+      "created": "Un nuevo Proyecto ha sido creado con el identificador {{ param }}",
+      "updated": "Un Proyecto ha sido actualizado con el identificador {{ param }}",
+      "deleted": "Un Proyecto ha sido eliminado con el identificador {{ param }}",
+      "delete": {
+        "question": "¿Seguro que quiere eliminar Proyecto {{ id }}?"
+      },
+      "detail": {
+        "title": "Proyecto"
+      },
+      "titulo": "Titulo",
+      "url": "Url",
+      "lugarEjecucion": "Lugar de Ejecución",
+      "duracion": "Duracion en meses",
+      "fechaIni": "Fecha de Inicio",
+      "fechaFin": "Fecha de Finalización",
+      "contrapartidaPesos": "Contrapartida en Pesos",
+      "contrapartidaEspecie": "Contrapartida en Especie",
+      "palabrasClave": "Palabras Clave",
+      "convocatoria": "Convocatoria",
+      "proyectoLineaInvestigacion": "Linea de Investigacion",
+      "proyectoGrupoSemillero": "Grupo o Semillero",
+      "proyectoModalidad": "Modalidad",
+      "facultad": "Facultad",
+      "subLineaLineaInvestigacion": "Sub Linea de Investigacion",
+      "asesor": "Asesor del Proyecto",
+      "referencias": "Referencias Bibliográficas",
+      "tipo": "Tipo de Investigación",
+      "modalidad": "Modalidad",
+      "enviado": "Enviado",
+      "recomendaciones": "Recomendaciones Generales"
+    }
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "name": "TipoPregunta",
+  "fields": [
+    {
+      "fieldName": "tipoPregunta",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "tipoDato",
+      "fieldType": "String"
+    }
+  ],
+  "relationships": [],
+  "changelogDate": "20201008040803",
+  "entityTableName": "tipo_pregunta",
+  "dto": "mapstruct",
+  "pagination": "pagination",
+  "service": "serviceImpl",
+  "jpaMetamodelFiltering": false,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "clientRootFolder": "",
+  "applications": "*"
+}

@@ -1,0 +1,31 @@
+{
+  "ciecytApp": {
+    "programa": {
+      "home": {
+        "title": "Programas",
+        "createLabel": "Crear nuevo Programa",
+        "createOrEditLabel": "Crear o editar Programa",
+        "notFound": "Ningún Programas encontrado"
+      },
+      "created": "Un nuevo Programa ha sido creado con el identificador {{ param }}",
+      "updated": "Un Programa ha sido actualizado con el identificador {{ param }}",
+      "deleted": "Un Programa ha sido eliminado con el identificador {{ param }}",
+      "delete": {
+        "question": "¿Seguro que quiere eliminar Programa {{ id }}?"
+      },
+      "detail": {
+        "title": "Programa"
+      },
+      "programa": "Programa",
+      "descripcion": "Descripcion",
+      "codigoInterno": "Codigo Interno",
+      "codigoSnies": "Codigo Snies",
+      "creditos": "Creditos",
+      "ciclo": "Ciclo",
+      "resolucion": "Resolucion",
+      "titulo": "Titulo",
+      "duracionSemestres": "Duracion Semestres",
+      "programaFacultad": "Programa Facultad"
+    }
+  }
+}

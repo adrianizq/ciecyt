@@ -1,0 +1,26 @@
+{
+  "ciecytApp": {
+    "proyectoRespuestas": {
+      "home": {
+        "title": "Proyecto Respuestas",
+        "createLabel": "Create a new Proyecto Respuestas",
+        "createOrEditLabel": "Create or edit a Proyecto Respuestas",
+        "notFound": "No Proyecto Respuestas found"
+      },
+      "created": "A new Proyecto Respuestas is created with identifier {{ param }}",
+      "updated": "A Proyecto Respuestas is updated with identifier {{ param }}",
+      "deleted": "A Proyecto Respuestas is deleted with identifier {{ param }}",
+      "delete": {
+        "question": "Are you sure you want to delete Proyecto Respuestas {{ id }}?"
+      },
+      "detail": {
+        "title": "Proyecto Respuestas"
+      },
+      "respuesta": "Respuesta",
+      "observaciones": "Observaciones",
+      "viable": "Viable",
+      "proyectoRespuestasPregunta": "Proyecto Respuestas Pregunta",
+      "proyectoRespuestasProyecto": "Proyecto Respuestas Proyecto"
+    }
+  }
+}

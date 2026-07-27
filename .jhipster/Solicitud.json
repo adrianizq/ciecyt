@@ -1,0 +1,41 @@
+{
+  "name": "Solicitud",
+  "fields": [
+    {
+      "fieldName": "estado",
+      "fieldType": "Boolean"
+    },
+    {
+      "fieldName": "asunto",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "textoSolicitud",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "fechaSolicitud",
+      "fieldType": "LocalDate"
+    }
+  ],
+  "relationships": [
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "integranteProyecto",
+      "otherEntityRelationshipName": "solicitud",
+      "relationshipName": "solicitudIntegranteProyecto",
+      "otherEntityField": "integrante"
+    }
+  ],
+  "changelogDate": "20201008040703",
+  "entityTableName": "solicitud",
+  "dto": "mapstruct",
+  "pagination": "pagination",
+  "service": "serviceImpl",
+  "jpaMetamodelFiltering": false,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "clientRootFolder": "",
+  "applications": "*"
+}

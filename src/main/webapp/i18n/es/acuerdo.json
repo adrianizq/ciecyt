@@ -1,0 +1,25 @@
+{
+  "ciecytApp": {
+    "acuerdo": {
+      "home": {
+        "title": "Acuerdos",
+        "createLabel": "Nuevo Acuerdo",
+        "createOrEditLabel": "Crear o editar Acuerdo",
+        "notFound": "No Acuerdos found"
+      },
+      "created": "Un nuevo Acuerdo ha sido creado con el identificador {{ param }}",
+      "updated": "Un Acuerdo ha sido actualizado con el identificador {{ param }}",
+      "deleted": "Un Acuerdo ha sido eliminado con el identificador {{ param }}",
+      "delete": {
+        "question": "¿Seguro que quiere eliminar Acuerdo {{ id }}?"
+      },
+      "detail": {
+        "title": "Acuerdo"
+      },
+      "acuerdo": "Acuerdo",
+      "version": "Version",
+      "codigo": "Código",
+      "fecha": "Fecha"
+    }
+  }
+}

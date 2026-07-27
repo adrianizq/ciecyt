@@ -1,0 +1,27 @@
+{
+  "ciecytApp": {
+    "rolMenu": {
+      "home": {
+        "title": "Rol Menus",
+        "createLabel": "Create a new Rol Menu",
+        "createOrEditLabel": "Create or edit a Rol Menu",
+        "notFound": "No Rol Menus found"
+      },
+      "created": "A new Rol Menu is created with identifier {{ param }}",
+      "updated": "A Rol Menu is updated with identifier {{ param }}",
+      "deleted": "A Rol Menu is deleted with identifier {{ param }}",
+      "delete": {
+        "question": "Are you sure you want to delete Rol Menu {{ id }}?"
+      },
+      "detail": {
+        "title": "Rol Menu"
+      },
+      "permitirAcceso": "Permitir Acceso",
+      "permitirCrear": "Permitir Crear",
+      "permitirEditar": "Permitir Editar",
+      "permitirEliminar": "Permitir Eliminar",
+      "authName": "Auth Name",
+      "rolMenuMenu": "Rol Menu Menu"
+    }
+  }
+}

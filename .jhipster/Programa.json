@@ -1,0 +1,61 @@
+{
+  "name": "Programa",
+  "fields": [
+    {
+      "fieldName": "programa",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "descripcion",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "codigoInterno",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "codigoSnies",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "creditos",
+      "fieldType": "Integer"
+    },
+    {
+      "fieldName": "ciclo",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "resolucion",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "titulo",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "duracionSemestres",
+      "fieldType": "Integer"
+    }
+  ],
+  "relationships": [
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "facultad",
+      "otherEntityRelationshipName": "programa",
+      "relationshipName": "programaFacultad",
+      "otherEntityField": "facultad"
+    }
+  ],
+  "changelogDate": "20201008041003",
+  "entityTableName": "programa",
+  "dto": "mapstruct",
+  "pagination": "no",
+  "service": "serviceImpl",
+  "jpaMetamodelFiltering": false,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "clientRootFolder": "",
+  "applications": "*"
+}

@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.9.xsd
+                        http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+
+    
+    <!--
+        Added the entity Proyecto.
+    -->
+    <changeSet id="20201008035903-1" author="jhipster">
+        <createTable tableName="proyecto">
+            <column name="id" type="bigint">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="titulo" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+            <column name="url" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+            <column name="lugar_ejecucion" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+            <column name="duracion" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+            <column name="fecha_ini" type="date">
+                <constraints nullable="true" />
+            </column>
+            <column name="fecha_fin" type="date">
+                <constraints nullable="true" />
+            </column>
+            <column name="contrapartida_pesos" type="double">
+                <constraints nullable="true" />
+            </column>
+            <column name="contrapartida_especie" type="double">
+                <constraints nullable="true" />
+            </column>
+            <column name="palabras_clave" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+            <column name="convocatoria" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+            <column name="tipo" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+            <column name="referencias" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+            <column name="programa" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+            <column name="departamento" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+            <column name="municipio" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+            <column name="viable" type="boolean">
+                <constraints nullable="true" />
+            </column>
+            <column name="enviado" type="boolean">
+                <constraints nullable="true" />
+            </column>
+            <column name="fecha_envio_propuesta" type="datetime">
+                <constraints nullable="true" />
+            </column>
+            <column name="fecha_envio_proyecto" type="datetime">
+                <constraints nullable="true" />
+            </column>
+            <column name="nota" type="${floatType}">
+                <constraints nullable="true" />
+            </column>
+            <column name="conclusion" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+            <column name="recomendaciones" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+            <column name="viabilidad" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+            <column name="pre_enviado" type="boolean">
+                <constraints nullable="true" />
+            </column>
+            <column name="fecha_pre_envio_propuesta" type="datetime">
+                <constraints nullable="true" />
+            </column>
+            <column name="fecha_viabilidad_propuesta" type="datetime">
+                <constraints nullable="true" />
+            </column>
+            <column name="fecha_sustentacion_proyecto" type="datetime">
+                <constraints nullable="true" />
+            </column>
+            <column name="sustentar" type="boolean">
+                <constraints nullable="true" />
+            </column>
+            <column name="recomendaciones_jurado_proyecto" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+            <column name="recomendaciones_asesor_propuesta" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+            <column name="recomendaciones_asesor_proyecto" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+            <column name="recomendaciones_jurado_sustentacion" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+            <column name="proyecto_enviado" type="boolean">
+                <constraints nullable="true" />
+            </column>
+            <column name="proyecto_linea_investigacion_id" type="bigint">
+                <constraints nullable="true" />
+            </column>
+            <column name="proyecto_grupo_semillero_id" type="bigint">
+                <constraints nullable="true" />
+            </column>
+            <column name="proyecto_modalidad_id" type="bigint">
+                <constraints nullable="true" />
+            </column>
+            <column name="sub_linea_linea_investigacion_id" type="bigint">
+                <constraints nullable="true" />
+            </column>
+            <column name="facultad_id" type="bigint">
+                <constraints nullable="true" />
+            </column>
+            <column name="proyecto_programa_id" type="bigint">
+                <constraints nullable="true" />
+            </column>
+            <column name="proyecto_fases_id" type="bigint">
+                <constraints nullable="true" />
+            </column>
+            <!-- jhipster-needle-liquibase-add-column - JHipster will add columns here -->
+        </createTable>
+        <dropDefaultValue tableName="proyecto" columnName="fecha_envio_propuesta" columnDataType="datetime"/>
+        <dropDefaultValue tableName="proyecto" columnName="fecha_envio_proyecto" columnDataType="datetime"/>
+        <dropDefaultValue tableName="proyecto" columnName="fecha_pre_envio_propuesta" columnDataType="datetime"/>
+        <dropDefaultValue tableName="proyecto" columnName="fecha_viabilidad_propuesta" columnDataType="datetime"/>
+        <dropDefaultValue tableName="proyecto" columnName="fecha_sustentacion_proyecto" columnDataType="datetime"/>
+    </changeSet>
+
+    <changeSet id="20201008035903-1-relations" author="jhipster">
+
+    </changeSet>
+    <!-- jhipster-needle-liquibase-add-changeset - JHipster will add changesets here -->
+
+    <!--
+        Load sample data generated with Faker.js
+        - This data can be easily edited using a CSV editor (or even MS Excel) and
+          is located in the 'src/main/resources/config/liquibase/fake-data' directory
+        - By default this data is applied when running with the JHipster 'dev' profile.
+          This can be customized by adding or removing 'faker' in the 'spring.liquibase.contexts'
+          Spring Boot configuration key.
+    -->
+    <changeSet id="20201008035903-1-data" author="jhipster" context="faker">
+        <loadData
+                  file="config/liquibase/fake-data/proyecto.csv"
+                  separator=";"
+                  tableName="proyecto">
+            <column name="id" type="numeric"/>
+            <column name="titulo" type="string"/>
+            <column name="url" type="string"/>
+            <column name="lugar_ejecucion" type="string"/>
+            <column name="duracion" type="string"/>
+            <column name="fecha_ini" type="date"/>
+            <column name="fecha_fin" type="date"/>
+            <column name="contrapartida_pesos" type="numeric"/>
+            <column name="contrapartida_especie" type="numeric"/>
+            <column name="palabras_clave" type="string"/>
+            <column name="convocatoria" type="string"/>
+            <column name="tipo" type="string"/>
+            <column name="referencias" type="string"/>
+            <column name="programa" type="string"/>
+            <column name="departamento" type="string"/>
+            <column name="municipio" type="string"/>
+            <column name="viable" type="boolean"/>
+            <column name="enviado" type="boolean"/>
+            <column name="fecha_envio_propuesta" type="datetime"/>
+            <column name="fecha_envio_proyecto" type="datetime"/>
+            <column name="nota" type="numeric"/>
+            <column name="conclusion" type="string"/>
+            <column name="recomendaciones" type="string"/>
+            <column name="viabilidad" type="string"/>
+            <column name="pre_enviado" type="boolean"/>
+            <column name="fecha_pre_envio_propuesta" type="datetime"/>
+            <column name="fecha_viabilidad_propuesta" type="datetime"/>
+            <column name="fecha_sustentacion_proyecto" type="datetime"/>
+            <column name="sustentar" type="boolean"/>
+            <column name="recomendaciones_jurado_proyecto" type="string"/>
+            <column name="recomendaciones_asesor_propuesta" type="string"/>
+            <column name="recomendaciones_asesor_proyecto" type="string"/>
+            <column name="recomendaciones_jurado_sustentacion" type="string"/>
+            <column name="proyecto_enviado" type="boolean"/>
+            <!-- jhipster-needle-liquibase-add-loadcolumn - JHipster (and/or extensions) can add load columns here -->
+        </loadData>
+    </changeSet>
+
+</databaseChangeLog>

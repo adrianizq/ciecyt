@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.9.xsd
+                        http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+
+    
+    <!--
+        Added the entity InformacionPasantia.
+    -->
+    <changeSet id="20201008034903-1" author="jhipster">
+        <createTable tableName="informacion_pasantia">
+            <column name="id" type="bigint">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="duracion_horas" type="integer">
+                <constraints nullable="true" />
+            </column>
+            <column name="direccion" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+            <column name="email" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+            <column name="lunes" type="boolean">
+                <constraints nullable="true" />
+            </column>
+            <column name="martes" type="boolean">
+                <constraints nullable="true" />
+            </column>
+            <column name="miercoles" type="boolean">
+                <constraints nullable="true" />
+            </column>
+            <column name="jueves" type="boolean">
+                <constraints nullable="true" />
+            </column>
+            <column name="viernes" type="boolean">
+                <constraints nullable="true" />
+            </column>
+            <column name="sabado" type="boolean">
+                <constraints nullable="true" />
+            </column>
+            <column name="domingo" type="boolean">
+                <constraints nullable="true" />
+            </column>
+            <column name="horas_mes" type="integer">
+                <constraints nullable="true" />
+            </column>
+            <column name="bono_alimenticio" type="boolean">
+                <constraints nullable="true" />
+            </column>
+            <column name="apoyo_economico" type="boolean">
+                <constraints nullable="true" />
+            </column>
+            <column name="auxilio_transporte" type="boolean">
+                <constraints nullable="true" />
+            </column>
+            <column name="capacitacion" type="boolean">
+                <constraints nullable="true" />
+            </column>
+            <column name="otro_apoyo" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+            <column name="nombre_empresa" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+            <column name="nit_empresa" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+            <column name="direccion_empresa" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+            <column name="sector_economico_empresa" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+            <column name="representante_legal_empresa" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+            <column name="asesor_empresa" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+            <column name="cargo_asesor_empresa" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+            <column name="email_asesor_empresa" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+            <column name="municipio_empresa" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+            <column name="telefono_contacto_empresa" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+            <column name="email_empresa" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+            <column name="departamento_empresa" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+            <column name="identificacion_representante_legal" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+            <column name="profesion_asesor_empresa" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+            <column name="celular_asesor_empresa" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+            <column name="informacion_pasantia_proyecto_id" type="bigint">
+                <constraints unique="true" nullable="true" uniqueConstraintName="ux_informacion_pasantia_informacion_pasantia_proyecto_id" />
+            </column>
+            <!-- jhipster-needle-liquibase-add-column - JHipster will add columns here -->
+        </createTable>
+    </changeSet>
+
+    <changeSet id="20201008034903-1-relations" author="jhipster">
+
+    </changeSet>
+    <!-- jhipster-needle-liquibase-add-changeset - JHipster will add changesets here -->
+
+    <!--
+        Load sample data generated with Faker.js
+        - This data can be easily edited using a CSV editor (or even MS Excel) and
+          is located in the 'src/main/resources/config/liquibase/fake-data' directory
+        - By default this data is applied when running with the JHipster 'dev' profile.
+          This can be customized by adding or removing 'faker' in the 'spring.liquibase.contexts'
+          Spring Boot configuration key.
+    -->
+    <changeSet id="20201008034903-1-data" author="jhipster" context="faker">
+        <loadData
+                  file="config/liquibase/fake-data/informacion_pasantia.csv"
+                  separator=";"
+                  tableName="informacion_pasantia">
+            <column name="id" type="numeric"/>
+            <column name="duracion_horas" type="numeric"/>
+            <column name="direccion" type="string"/>
+            <column name="email" type="string"/>
+            <column name="lunes" type="boolean"/>
+            <column name="martes" type="boolean"/>
+            <column name="miercoles" type="boolean"/>
+            <column name="jueves" type="boolean"/>
+            <column name="viernes" type="boolean"/>
+            <column name="sabado" type="boolean"/>
+            <column name="domingo" type="boolean"/>
+            <column name="horas_mes" type="numeric"/>
+            <column name="bono_alimenticio" type="boolean"/>
+            <column name="apoyo_economico" type="boolean"/>
+            <column name="auxilio_transporte" type="boolean"/>
+            <column name="capacitacion" type="boolean"/>
+            <column name="otro_apoyo" type="string"/>
+            <column name="nombre_empresa" type="string"/>
+            <column name="nit_empresa" type="string"/>
+            <column name="direccion_empresa" type="string"/>
+            <column name="sector_economico_empresa" type="string"/>
+            <column name="representante_legal_empresa" type="string"/>
+            <column name="asesor_empresa" type="string"/>
+            <column name="cargo_asesor_empresa" type="string"/>
+            <column name="email_asesor_empresa" type="string"/>
+            <column name="municipio_empresa" type="string"/>
+            <column name="telefono_contacto_empresa" type="string"/>
+            <column name="email_empresa" type="string"/>
+            <column name="departamento_empresa" type="string"/>
+            <column name="identificacion_representante_legal" type="string"/>
+            <column name="profesion_asesor_empresa" type="string"/>
+            <column name="celular_asesor_empresa" type="string"/>
+            <!-- jhipster-needle-liquibase-add-loadcolumn - JHipster (and/or extensions) can add load columns here -->
+        </loadData>
+    </changeSet>
+
+</databaseChangeLog>

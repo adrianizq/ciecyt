@@ -1,0 +1,25 @@
+{
+  "ciecytApp": {
+    "investigacionTipo": {
+      "home": {
+        "title": "Type Investigation",
+        "createLabel": "Create a new Type Investigation",
+        "createOrEditLabel": "Create or edit a Type Investigation",
+        "notFound": "No Type Investigacions found"
+      },
+      "created": "A new Type Investigation is created with identifier {{ param }}",
+      "updated": "A Type Investigation is updated with identifier {{ param }}",
+      "deleted": "A Type Investigation is deleted with identifier {{ param }}",
+      "delete": {
+        "question": "Are you sure you want to delete Type Investigation {{ id }}?"
+      },
+      "detail": {
+        "title": "Type Investigation"
+      },
+      "investigacionTipo": "Type Investigation",
+      "investigacionTipoDescripcion": "Description Type Investigaciont",
+      "tipo": "Type",
+      "tipoDescripcion": "Description Type"
+    }
+  }
+}

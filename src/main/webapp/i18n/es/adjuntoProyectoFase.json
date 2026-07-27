@@ -1,0 +1,31 @@
+{
+  "ciecytApp": {
+    "adjuntoProyectoFase": {
+      "home": {
+        "title": "Adjunto Proyecto Fases",
+        "createLabel": "Crear nuevo Adjunto Proyecto Fase",
+        "createOrEditLabel": "Crear o editar Adjunto Proyecto Fase",
+        "notFound": "No Adjunto Proyecto Fases found"
+      },
+      "created": "Un nuevo Adjunto Proyecto Fase ha sido creado con el identificador {{ param }}",
+      "updated": "Un Adjunto Proyecto Fase ha sido actualizado con el identificador {{ param }}",
+      "deleted": "Un Adjunto Proyecto Fase ha sido eliminado con el identificador {{ param }}",
+      "delete": {
+        "question": "¿Seguro que quiere eliminar Adjunto Proyecto Fase {{ id }}?"
+      },
+      "detail": {
+        "title": "Adjunto Proyecto Fase"
+      },
+      "nombreAdjunto": "Nombre Adjunto",
+      "fechaCreacion": "Fecha Creacion",
+      "fechaModificacion": "Fecha Modificacion",
+      "estadoAdjunto": "Estado Adjunto",
+      "adjuntoProyectoFase": "Adjunto Proyecto Fase",
+      "archivo": "Archivo Adjunto",
+      "nombreArchivoOriginal": "Nombre Archivo Original",
+      "fechaInicio": "Fecha Inicio",
+      "fechaFin": "Fecha Fin",
+      "adjuntoProyectoFaseFase": "Fase"
+    }
+  }
+}

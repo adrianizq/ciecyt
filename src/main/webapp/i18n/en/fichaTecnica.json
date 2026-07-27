@@ -1,0 +1,25 @@
+{
+  "ciecytApp": {
+    "fichaTecnica": {
+      "home": {
+        "title": "Ficha Tecnicas",
+        "createLabel": "Create a new Ficha Tecnica",
+        "createOrEditLabel": "Create or edit a Ficha Tecnica",
+        "notFound": "No Ficha Tecnicas found"
+      },
+      "created": "A new Ficha Tecnica is created with identifier {{ param }}",
+      "updated": "A Ficha Tecnica is updated with identifier {{ param }}",
+      "deleted": "A Ficha Tecnica is deleted with identifier {{ param }}",
+      "delete": {
+        "question": "Are you sure you want to delete Ficha Tecnica {{ id }}?"
+      },
+      "detail": {
+        "title": "Ficha Tecnica"
+      },
+      "tituloProfesional": "Titulo Profesional",
+      "tituloPostgrado": "Titulo Postgrado",
+      "experiencia": "Experiencia",
+      "fichaTecnicaUser": "Ficha Tecnica User"
+    }
+  }
+}

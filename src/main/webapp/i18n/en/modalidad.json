@@ -1,0 +1,25 @@
+{
+  "ciecytApp": {
+    "modalidad": {
+      "home": {
+        "title": "Modalidads",
+        "createLabel": "Create a new Modalidad",
+        "createOrEditLabel": "Create or edit a Modalidad",
+        "notFound": "No Modalidads found"
+      },
+      "created": "A new Modalidad is created with identifier {{ param }}",
+      "updated": "A Modalidad is updated with identifier {{ param }}",
+      "deleted": "A Modalidad is deleted with identifier {{ param }}",
+      "delete": {
+        "question": "Are you sure you want to delete Modalidad {{ id }}?"
+      },
+      "detail": {
+        "title": "Modalidad"
+      },
+      "modalidad": "Modalidad",
+      "contieneLinea": "Contiene Lineas",
+      "modalidadCicloPropedeutico": "Modalidad Ciclo Propedeutico",
+      "modalidadAcuerdo": "Modalidad Acuerdo"
+    }
+  }
+}

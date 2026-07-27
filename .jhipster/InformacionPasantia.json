@@ -1,0 +1,150 @@
+{
+  "name": "InformacionPasantia",
+  "fields": [
+    {
+      "fieldName": "duracionHoras",
+      "fieldType": "Integer"
+    },
+    {
+      "fieldName": "direccion",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "email",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "lunes",
+      "fieldType": "Boolean"
+    },
+    {
+      "fieldName": "martes",
+      "fieldType": "Boolean"
+    },
+    {
+      "fieldName": "miercoles",
+      "fieldType": "Boolean"
+    },
+    {
+      "fieldName": "jueves",
+      "fieldType": "Boolean"
+    },
+    {
+      "fieldName": "viernes",
+      "fieldType": "Boolean"
+    },
+    {
+      "fieldName": "sabado",
+      "fieldType": "Boolean"
+    },
+    {
+      "fieldName": "domingo",
+      "fieldType": "Boolean"
+    },
+    {
+      "fieldName": "horasMes",
+      "fieldType": "Integer"
+    },
+    {
+      "fieldName": "bonoAlimenticio",
+      "fieldType": "Boolean"
+    },
+    {
+      "fieldName": "apoyoEconomico",
+      "fieldType": "Boolean"
+    },
+    {
+      "fieldName": "auxilioTransporte",
+      "fieldType": "Boolean"
+    },
+    {
+      "fieldName": "capacitacion",
+      "fieldType": "Boolean"
+    },
+    {
+      "fieldName": "otroApoyo",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "nombreEmpresa",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "nitEmpresa",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "direccionEmpresa",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "sectorEconomicoEmpresa",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "representanteLegalEmpresa",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "asesorEmpresa",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "cargoAsesorEmpresa",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "emailAsesorEmpresa",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "municipioEmpresa",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "telefonoContactoEmpresa",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "emailEmpresa",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "departamentoEmpresa",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "identificacionRepresentanteLegal",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "profesionAsesorEmpresa",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "celularAsesorEmpresa",
+      "fieldType": "String"
+    }
+  ],
+  "relationships": [
+    {
+      "relationshipType": "one-to-one",
+      "otherEntityName": "proyecto",
+      "otherEntityRelationshipName": "id",
+      "relationshipName": "informacionPasantiaProyecto",
+      "otherEntityField": "id",
+      "ownerSide": true
+    }
+  ],
+  "changelogDate": "20201008034903",
+  "entityTableName": "informacion_pasantia",
+  "dto": "no",
+  "pagination": "no",
+  "service": "no",
+  "jpaMetamodelFiltering": false,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "clientRootFolder": "",
+  "applications": "*"
+}

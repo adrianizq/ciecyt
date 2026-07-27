@@ -1,0 +1,13 @@
+@relation Proyectos
+
+@attribute programa string
+@attribute tipo string
+
+@data
+'Ingeniería de Sistemas',Teorica
+'Ingeniería de Sistemas',Teorica
+'Ingeniería de Sistemas',aplicada
+'Ingeniería de Sistemas',aplicada
+'Ingeniería de Sistemas',Teorica
+'Ingeniería de Sistemas',Teorica
+'Ingeniería de Sistemas',Teorica

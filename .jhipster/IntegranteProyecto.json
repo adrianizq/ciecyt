@@ -1,0 +1,47 @@
+{
+  "name": "IntegranteProyecto",
+  "fields": [
+    {
+      "fieldName": "integrante",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "descripcion",
+      "fieldType": "String"
+    }
+  ],
+  "relationships": [
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "user",
+      "otherEntityRelationshipName": "integranteProyecto",
+      "relationshipName": "integranteProyectoUser",
+      "otherEntityField": "login"
+    },
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "proyecto",
+      "otherEntityRelationshipName": "integranteProyecto",
+      "relationshipName": "integranteProyectoProyecto",
+      "otherEntityField": "titulo"
+    },
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "rolesModalidad",
+      "otherEntityRelationshipName": "integranteProyecto",
+      "relationshipName": "integranteProyectoRolesModalidad",
+      "otherEntityField": "rol"
+    }
+  ],
+  "changelogDate": "20201008035003",
+  "entityTableName": "integrante_proyecto",
+  "dto": "mapstruct",
+  "pagination": "pagination",
+  "service": "serviceImpl",
+  "jpaMetamodelFiltering": false,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "clientRootFolder": "",
+  "applications": "*"
+}

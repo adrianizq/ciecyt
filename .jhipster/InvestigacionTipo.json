@@ -1,0 +1,33 @@
+{
+  "name": "InvestigacionTipo",
+  "fields": [
+    {
+      "fieldName": "investigacionTipo",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "investigacionTipoDescripcion",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "tipo",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "tipoDescripcion",
+      "fieldType": "String"
+    }
+  ],
+  "relationships": [],
+  "changelogDate": "20201008035103",
+  "entityTableName": "investigacion_tipo",
+  "dto": "mapstruct",
+  "pagination": "no",
+  "service": "serviceImpl",
+  "jpaMetamodelFiltering": false,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "clientRootFolder": "",
+  "applications": "*"
+}

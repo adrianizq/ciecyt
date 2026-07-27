@@ -1,0 +1,95 @@
+{
+  "name": "ProyectoRespuestas",
+  "fields": [
+    {
+      "fieldName": "respuesta",
+      "fieldType": "EnumRespuestas",
+      "fieldValues": "CUMPLE,NO_CUMPLE,NO_APLICA,SI,NO"
+    },
+    {
+      "fieldName": "observaciones",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "viable",
+      "fieldType": "Boolean"
+    },
+    {
+      "fieldName": "puntaje",
+      "fieldType": "Float"
+    },
+    {
+      "fieldName": "siNo",
+      "fieldType": "Boolean"
+    },
+    {
+      "fieldName": "elemento",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "preguntaTipoPreguntaId",
+      "fieldType": "Long"
+    },
+    {
+      "fieldName": "preguntaTipoPreguntaTipoPregunta",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "encabezado",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "dato",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "respuestaTexto",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "respuestaNumero",
+      "fieldType": "Float"
+    },
+    {
+      "fieldName": "faseId",
+      "fieldType": "Long"
+    },
+    {
+      "fieldName": "authority",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "puntajeMaximo",
+      "fieldType": "Integer"
+    }
+  ],
+  "relationships": [
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "pregunta",
+      "otherEntityRelationshipName": "proyectoRespuestas",
+      "relationshipName": "proyectoRespuestasPregunta",
+      "otherEntityField": "pregunta"
+    },
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "proyecto",
+      "otherEntityRelationshipName": "proyectoRespuestas",
+      "relationshipName": "proyectoRespuestasProyecto",
+      "otherEntityField": "titulo"
+    }
+  ],
+  "changelogDate": "20201008040103",
+  "entityTableName": "proyecto_respuestas",
+  "dto": "mapstruct",
+  "pagination": "pagination",
+  "service": "serviceImpl",
+  "jpaMetamodelFiltering": false,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "clientRootFolder": "",
+  "applications": "*",
+  "searchEngine": false,
+  "databaseType": "sql"
+}

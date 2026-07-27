@@ -1,0 +1,33 @@
+{
+  "name": "Formato",
+  "fields": [
+    {
+      "fieldName": "formato",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "version",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "codigo",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "fecha",
+      "fieldType": "LocalDate"
+    }
+  ],
+  "relationships": [],
+  "changelogDate": "20201008034603",
+  "entityTableName": "formato",
+  "dto": "mapstruct",
+  "pagination": "pagination",
+  "service": "serviceImpl",
+  "jpaMetamodelFiltering": false,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "clientRootFolder": "",
+  "applications": "*"
+}

@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.9.xsd">
+
+    <property name="now" value="now()" dbms="h2"/>
+    <property name="now" value="current_timestamp" dbms="postgresql"/>
+
+    <property name="floatType" value="float4" dbms="postgresql, h2"/>
+    <property name="floatType" value="float" dbms="mysql, oracle, mssql, mariadb"/>
+    <property name="clobType" value="longvarchar" dbms="h2"/>
+    <property name="clobType" value="clob" dbms="mysql, oracle, mssql, mariadb, postgresql"/>
+    <property name="uuidType" value="uuid" dbms="h2, postgresql"/>
+
+    <include file="config/liquibase/changelog/00000000000000_initial_schema.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20201008033103_added_entity_Acuerdo.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20201008033203_added_entity_AdjuntoProyectoFase.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20201008033303_added_entity_AdjuntoRetroalimentacion.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20201008033403_added_entity_Categorizacion.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20201008033503_added_entity_CicloPropedeutico.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20201008033603_added_entity_Cronograma.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20201008033703_added_entity_CronogramaCiecyt.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20201008033803_added_entity_CronogramaCiecytFases.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20201008033903_added_entity_Elemento.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20201008034003_added_entity_ElementoProyecto.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20201008034103_added_entity_Entidad.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20201008034203_added_entity_EntidadFinanciadora.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20201008034303_added_entity_Facultad.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20201008034403_added_entity_Fases.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20201008034503_added_entity_FichaTecnica.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20201008034603_added_entity_Formato.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20201008034703_added_entity_GrupoSemillero.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20201008034803_added_entity_ImpactosEsperados.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20201008034903_added_entity_InformacionPasantia.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20201008035003_added_entity_IntegranteProyecto.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20201008035103_added_entity_InvestigacionTipo.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20201008035203_added_entity_LineaInvestigacion.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20201008035303_added_entity_Menu.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20201008035403_added_entity_Modalidad.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20201008035503_added_entity_Pregunta.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20201008035603_added_entity_PresupuestoValor.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20201008035703_added_entity_Producto.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20201008035803_added_entity_ProductoProyecto.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20201008035903_added_entity_Proyecto.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20201008040003_added_entity_ProyectoFase.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20201008040103_added_entity_ProyectoRespuestas.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20201008040203_added_entity_ResultadosEsperados.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20201008040303_added_entity_Retroalimentacion.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20201008040403_added_entity_RolesModalidad.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20201008040503_added_entity_RolMenu.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20201008040603_added_entity_Rubro.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20201008040703_added_entity_Solicitud.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20201008040803_added_entity_TipoPregunta.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20201008040903_added_entity_Usuario.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20201008041003_added_entity_Programa.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20210209153331_added_entity_UserInfo.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20210227181719_added_entity_PreguntaModalidad.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20210227182807_added_entity_PreguntaAuthority.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20210501223720_added_entity_ElementoModalidad.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20220318154956_added_entity_Municipio.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20220418131017_added_entity_Departamento.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20260724000000_added_modalidades_configuracion.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20260726000001_fix_proyecto_missing_columns.xml" relativeToChangelogFile="false"/>
+    <!-- jhipster-needle-liquibase-add-changelog - JHipster will add liquibase changelogs here -->
+    <include file="config/liquibase/changelog/20201008033203_added_entity_constraints_AdjuntoProyectoFase.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20201008033303_added_entity_constraints_AdjuntoRetroalimentacion.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20201008033403_added_entity_constraints_Categorizacion.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20201008033503_added_entity_constraints_CicloPropedeutico.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20201008033603_added_entity_constraints_Cronograma.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20201008033703_added_entity_constraints_CronogramaCiecyt.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20201008033803_added_entity_constraints_CronogramaCiecytFases.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20201008033903_added_entity_constraints_Elemento.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20201008034003_added_entity_constraints_ElementoProyecto.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20201008034203_added_entity_constraints_EntidadFinanciadora.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20201008034403_added_entity_constraints_Fases.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20201008034503_added_entity_constraints_FichaTecnica.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20201008034803_added_entity_constraints_ImpactosEsperados.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20201008034903_added_entity_constraints_InformacionPasantia.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20201008035003_added_entity_constraints_IntegranteProyecto.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20201008035203_added_entity_constraints_LineaInvestigacion.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20201008035303_added_entity_constraints_Menu.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20201008035403_added_entity_constraints_Modalidad.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20201008035503_added_entity_constraints_Pregunta.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20201008035603_added_entity_constraints_PresupuestoValor.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20201008035803_added_entity_constraints_ProductoProyecto.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20201008035903_added_entity_constraints_Proyecto.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20201008040003_added_entity_constraints_ProyectoFase.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20201008040103_added_entity_constraints_ProyectoRespuestas.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20201008040203_added_entity_constraints_ResultadosEsperados.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20201008040303_added_entity_constraints_Retroalimentacion.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20201008040403_added_entity_constraints_RolesModalidad.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20201008040503_added_entity_constraints_RolMenu.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20201008040703_added_entity_constraints_Solicitud.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20201008041003_added_entity_constraints_Programa.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20210209153331_added_entity_constraints_UserInfo.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20210227181719_added_entity_constraints_PreguntaModalidad.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20210227182807_added_entity_constraints_PreguntaAuthority.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20210501223720_added_entity_constraints_ElementoModalidad.xml" relativeToChangelogFile="false"/>
+    <!-- jhipster-needle-liquibase-add-constraints-changelog - JHipster will add liquibase constraints changelogs here -->
+    <!-- jhipster-needle-liquibase-add-incremental-changelog - JHipster will add incremental liquibase changelogs here -->
+</databaseChangeLog>

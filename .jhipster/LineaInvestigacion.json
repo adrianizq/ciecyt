@@ -1,0 +1,40 @@
+{
+  "name": "LineaInvestigacion",
+  "fields": [
+    {
+      "fieldName": "linea",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "codigoLinea",
+      "fieldType": "String"
+    }
+  ],
+  "relationships": [
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "lineaInvestigacion",
+      "otherEntityRelationshipName": "lineaInvestigacion",
+      "relationshipName": "lineaPadre",
+      "otherEntityField": "linea"
+    },
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "facultad",
+      "otherEntityRelationshipName": "lineaInvestigacion",
+      "relationshipName": "lineaInvestigacionFacultad",
+      "otherEntityField": "facultad"
+    }
+  ],
+  "changelogDate": "20201008035203",
+  "entityTableName": "linea_investigacion",
+  "dto": "mapstruct",
+  "pagination": "pagination",
+  "service": "serviceImpl",
+  "jpaMetamodelFiltering": false,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "clientRootFolder": "",
+  "applications": "*"
+}

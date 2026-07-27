@@ -1,0 +1,45 @@
+{
+  "name": "ImpactosEsperados",
+  "fields": [
+    {
+      "fieldName": "impacto",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "plazo",
+      "fieldType": "Integer"
+    },
+    {
+      "fieldName": "indicador",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "supuestos",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "ordenVista",
+      "fieldType": "Integer"
+    }
+  ],
+  "relationships": [
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "proyecto",
+      "otherEntityRelationshipName": "impactosEsperados",
+      "relationshipName": "impactosEsperadoProyecto",
+      "otherEntityField": "titulo"
+    }
+  ],
+  "changelogDate": "20201008034803",
+  "entityTableName": "impactos_esperados",
+  "dto": "mapstruct",
+  "pagination": "pagination",
+  "service": "serviceImpl",
+  "jpaMetamodelFiltering": false,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "clientRootFolder": "",
+  "applications": "*"
+}

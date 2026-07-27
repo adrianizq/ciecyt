@@ -1,0 +1,96 @@
+{
+  "name": "AdjuntoProyectoFase",
+  "fields": [
+    {
+      "fieldName": "nombreAdjunto",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "fechaCreacion",
+      "fieldType": "LocalDate"
+    },
+    {
+      "fieldName": "fechaModificacion",
+      "fieldType": "LocalDate"
+    },
+    {
+      "fieldName": "estadoAdjunto",
+      "fieldType": "Integer"
+    },
+    {
+      "fieldName": "adjuntoProyectoFase",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "nombreArchivoOriginal",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "fechaInicio",
+      "fieldType": "LocalDate"
+    },
+    {
+      "fieldName": "fechaFin",
+      "fieldType": "LocalDate"
+    },
+    {
+      "fieldName": "archivo",
+      "fieldType": "byte[]",
+      "fieldTypeBlobContent": "any"
+    },
+    {
+      "fieldName": "archivoContentType",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "proyectoFaseProyectoId",
+      "fieldType": "Long"
+    },
+    {
+      "fieldName": "proyectoFaseProyectoTitulo",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "adjuntoProyectoFaseFaseId",
+      "fieldType": "Long"
+    },
+    {
+      "fieldName": "adjuntoProyectoFaseFaseFase",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "file",
+      "fieldType": "String"
+    }
+    
+  ],
+  "relationships": [
+    {
+      "relationshipName": "proyectoFaseProyecto",
+      "otherEntityName": "proyecto",
+      "relationshipType": "many-to-one",
+      "otherEntityField": "titulo",
+      "otherEntityRelationshipName": "adjuntoProyectoFase"
+    },
+    {
+      "relationshipName": "adjuntoProyectoFaseFase",
+      "otherEntityName": "fases",
+      "relationshipType": "many-to-one",
+      "otherEntityField": "fase",
+      "otherEntityRelationshipName": "adjuntoProyectoFase"
+    }
+  ],
+  "changelogDate": "20201008033203",
+  "entityTableName": "adjunto_proyecto_fase",
+  "dto": "mapstruct",
+  "pagination": "pagination",
+  "service": "serviceImpl",
+  "jpaMetamodelFiltering": false,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "clientRootFolder": "",
+  "applications": "*",
+  "searchEngine": false,
+  "databaseType": "sql"
+}

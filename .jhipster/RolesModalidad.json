@@ -1,0 +1,37 @@
+{
+  "name": "RolesModalidad",
+  "fields": [
+    {
+      "fieldName": "rol",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "cantidad",
+      "fieldType": "Integer"
+    },
+    {
+      "fieldName": "calificador",
+      "fieldType": "Boolean"
+    }
+  ],
+  "relationships": [
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "modalidad",
+      "otherEntityRelationshipName": "rolesModalidad",
+      "relationshipName": "rolesModalidadModalidad",
+      "otherEntityField": "modalidad"
+    }
+  ],
+  "changelogDate": "20201008040403",
+  "entityTableName": "roles_modalidad",
+  "dto": "mapstruct",
+  "pagination": "pagination",
+  "service": "serviceImpl",
+  "jpaMetamodelFiltering": false,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "clientRootFolder": "",
+  "applications": "*"
+}

@@ -1,0 +1,56 @@
+{
+  "fluentMethods": true,
+  "clientRootFolder": "",
+  "relationships": [
+    {
+      "relationshipName": "user",
+      "otherEntityName": "user",
+      "relationshipType": "one-to-one",
+      "otherEntityField": "login",
+      "ownerSide": true,
+      "useJPADerivedIdentifier": true,
+      "otherEntityRelationshipName": "userInfo"
+    }
+  ],
+  "fields": [
+    {
+      "fieldName": "nuip",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "codigoItp",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "genero",
+      "fieldType": "genero",
+      "fieldValues": "MASCULINO,FEMENINO,OTRO"
+    },
+    {
+      "fieldName": "celular",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "telefono",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "foto",
+      "fieldType": "byte[]",
+      "fieldTypeBlobContent": "text"
+    },
+    {
+      "fieldName": "fotoContentType",
+      "fieldType": "String"
+    }
+  ],
+  "changelogDate": "20210209153331",
+  "dto": "mapstruct",
+  "searchEngine": false,
+  "service": "serviceImpl",
+  "entityTableName": "user_info",
+  "databaseType": "sql",
+  "readOnly": false,
+  "jpaMetamodelFiltering": false,
+  "pagination": "no"
+}

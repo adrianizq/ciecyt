@@ -1,0 +1,24 @@
+{
+  "ciecytApp": {
+    "cicloPropedeutico": {
+      "home": {
+        "title": "Ciclos Propedeuticos",
+        "createLabel": "Crear nuevo Ciclo Propedeutico",
+        "createOrEditLabel": "Crear o editar Ciclo Propedeutico",
+        "notFound": "No Ciclo Propedeuticos found"
+      },
+      "created": "Un nuevo Ciclo Propedeutico ha sido creado con el identificador {{ param }}",
+      "updated": "Un Ciclo Propedeutico ha sido actualizado con el identificador {{ param }}",
+      "deleted": "Un Ciclo Propedeutico ha sido eliminado con el identificador {{ param }}",
+      "delete": {
+        "question": "¿Seguro que quiere eliminar Ciclo Propedeutico {{ id }}?"
+      },
+      "detail": {
+        "title": "Ciclo Propedeutico"
+      },
+      "ciclo": "Ciclo",
+      "modalidad": "Modalidad",
+      "cicloPropedeuticoAcuerdo": "Acuerdo"
+    }
+  }
+}

@@ -1,0 +1,53 @@
+{
+  "ciecytApp": {
+    "informacionPasantia": {
+      "home": {
+        "title": "Informacion Pasantias",
+        "createLabel": "Create a new Informacion Pasantia",
+        "createOrEditLabel": "Create or edit a Informacion Pasantia",
+        "notFound": "No Informacion Pasantias found"
+      },
+      "created": "A new Informacion Pasantia is created with identifier {{ param }}",
+      "updated": "A Informacion Pasantia is updated with identifier {{ param }}",
+      "deleted": "A Informacion Pasantia is deleted with identifier {{ param }}",
+      "delete": {
+        "question": "Are you sure you want to delete Informacion Pasantia {{ id }}?"
+      },
+      "detail": {
+        "title": "Informacion Pasantia"
+      },
+      "duracionHoras": "Duracion Horas",
+      "direccion": "Direccion",
+      "email": "Email",
+      "lunes": "Lunes",
+      "martes": "Martes",
+      "miercoles": "Miercoles",
+      "jueves": "Jueves",
+      "viernes": "Viernes",
+      "sabado": "Sabado",
+      "domingo": "Domingo",
+      "convenio": "Convenio",
+      "bonoAlimenticio": "Bono Alimenticio",
+      "apoyoEconomico": "Apoyo Economico",
+      "auxilioTransporte": "Auxilio Transporte",
+      "capacitacion": "Capacitacion",
+      "otroApoyo": "Otro Apoyo",
+      "nombreEmpresa": "Nombre Empresa",
+      "nitEmpresa": "Nit Empresa",
+      "direccionEmpresa": "Direccion Empresa",
+      "sectorEconomicoEmpresa": "Sector Economico Empresa",
+      "representanteLegalEmpresa": "Representante Legal Empresa",
+      "asesorEmpresa": "Asesor Empresa",
+      "cargoAsesorEmpresa": "Cargo Asesor Empresa",
+      "emailAsesorEmpresa": "Email Asesor Empresa",
+      "municipioEmpresa": "Municipio Empresa",
+      "telefonoContactoEmpresa": "Telefono Contacto Empresa",
+      "emailEmpresa": "Email Empresa",
+      "departamentoEmpresa": "Departamento Empresa",
+      "identificacionRepresentanteLegal": "Identificacion Representante Legal",
+      "profesionAsesorEmpresa": "Profesion Asesor Empresa",
+      "celularAsesorEmpresa": "Celular Asesor Empresa",
+      "proyectoId": "Proyecto Id"
+    }
+  }
+}
