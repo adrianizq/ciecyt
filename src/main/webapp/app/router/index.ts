@@ -345,7 +345,7 @@ const AsignarAsesor = () => import('../pages/ciecyt/asignar_asesor.vue');
 const PropuestaInformacionGeneralNueva = () => import('../pages/propuesta_nueva/informacion_general_nueva.vue');
 const PropuestaIntegrantesNueva = () => import('../pages/propuesta_nueva/integrantes_nueva.vue');
 const PropuestaJuradoNueva = () => import('../pages/propuesta_nueva/jurado_nueva.vue');
-const PropuestaViabilidadNueva = () => import('../pages/propuesta_nueva/viabilidad_nueva.vue');
+const PropuestaInscripcionNueva = () => import('../pages/propuesta_nueva/inscripcion_nueva.vue');
 const PropuestaAsesorNueva = () => import('../pages/propuesta_nueva/asesor_nueva.vue');
 const ListadoEstudiante = () => import('../pages/estudiante/listado_estudiante.vue');
 const ListadoProyecto = () => import('../pages/estudiante/listado_proyecto.vue');
@@ -1625,24 +1625,22 @@ export default new Router({
 
   {
 
-    path: '/propuesta-nueva/viabilidad-nueva/:proyectoId',
-    name: 'PropuestaViabilidadNuevaEditView',
-    component: PropuestaViabilidadNueva,
-    props: true,
-    meta: { authorities: ['ROLE_USER'] }
-  },
-
-  {
-
     path: '/propuesta-nueva/jurado-nueva/:proyectoId',
     name: 'PropuestaJuradoNuevaEditView',
     component: PropuestaJuradoNueva,
     props: true,
     meta: { authorities: ['ROLE_USER'] }
   },
-  
-  
-  
+
+  {
+
+    path: '/propuesta-nueva/inscripcion-nueva/:proyectoId',
+    name: 'PropuestaInscripcionNuevaEditView',
+    component: PropuestaInscripcionNueva,
+    props: true,
+    meta: { authorities: ['ROLE_USER'] }
+  },
+
     //Pasantia
     {
       path: '/propuesta-pasantia/informacion-general-pasantia',

@@ -18,6 +18,10 @@ public class IntegranteProyectoDTO implements Serializable {
 
     private String integranteProyectoUserLogin;
 
+    private String integranteProyectoUserFirstName;
+
+    private String integranteProyectoUserLastName;
+
     private Long integranteProyectoProyectoId;
 
     private String integranteProyectoProyectoTitulo;
@@ -64,6 +68,22 @@ public class IntegranteProyectoDTO implements Serializable {
 
     public void setIntegranteProyectoUserLogin(String userLogin) {
         this.integranteProyectoUserLogin = userLogin;
+    }
+
+    public String getIntegranteProyectoUserFirstName() {
+        return integranteProyectoUserFirstName;
+    }
+
+    public void setIntegranteProyectoUserFirstName(String integranteProyectoUserFirstName) {
+        this.integranteProyectoUserFirstName = integranteProyectoUserFirstName;
+    }
+
+    public String getIntegranteProyectoUserLastName() {
+        return integranteProyectoUserLastName;
+    }
+
+    public void setIntegranteProyectoUserLastName(String integranteProyectoUserLastName) {
+        this.integranteProyectoUserLastName = integranteProyectoUserLastName;
     }
 
     public Long getIntegranteProyectoProyectoId() {

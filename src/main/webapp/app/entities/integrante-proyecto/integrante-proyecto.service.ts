@@ -39,28 +39,36 @@ export default class IntegranteProyectoService {
   }
 
   public retrieveEstudiantesProyecto(idProyecto?: number, paginationQuery?: any): Promise<any> {
-    return new Promise<any>(resolve => {
+    return new Promise<any>((resolve, reject) => {
       axios
         .get('/api/integrante-proyectos-estudiantes' + `/${idProyecto}` + `?${buildPaginationQueryOpts(paginationQuery)}`)
         .then(function (res) {
           resolve(res);
+        })
+        .catch(function (err) {
+          reject(err);
         });
     });
   }
   public retrieveJuradosProyecto(idProyecto?: number, tipoJurado?: string, paginationQuery?: any): Promise<any> {
-    return new Promise<any>(resolve => {
+    return new Promise<any>((resolve, reject) => {
       axios
         .get('/api/integrante-proyectos-jurados' + `/${idProyecto}/${tipoJurado}` + `?${buildPaginationQueryOpts(paginationQuery)}`)
         .then(function (res) {
           resolve(res);
+        })
+        .catch(function (err) {
+          reject(err);
         });
     });
   }
 
   public retrieveJuradosProyectoNoPage(idProyecto?: number, tipoJurado?: string): Promise<any> {
-    return new Promise<any>(resolve => {
+    return new Promise<any>((resolve, reject) => {
       axios.get('/api/integrante-proyectos-jurados' + `/${idProyecto}/${tipoJurado}`).then(function (res) {
         resolve(res);
+      }).catch(function (err) {
+        reject(err);
       });
     });
   }
@@ -74,11 +82,14 @@ export default class IntegranteProyectoService {
   }
 
   public retrieveAsesoresProyecto(idProyecto?: number, paginationQuery?: any): Promise<any> {
-    return new Promise<any>(resolve => {
+    return new Promise<any>((resolve, reject) => {
       axios
         .get('/api/integrante-proyectos-asesores' + `/${idProyecto}` + `?${buildPaginationQueryOpts(paginationQuery)}`)
         .then(function (res) {
           resolve(res);
+        })
+        .catch(function (err) {
+          reject(err);
         });
     });
   }
@@ -100,18 +111,28 @@ export default class IntegranteProyectoService {
   }
 
   public create(entity: IIntegranteProyecto): Promise<IIntegranteProyecto> {
-    return new Promise<IIntegranteProyecto>(resolve => {
-      axios.post(`${baseApiUrl}`, entity).then(function (res) {
-        resolve(res.data);
-      });
+    return new Promise<IIntegranteProyecto>((resolve, reject) => {
+      axios.post(`${baseApiUrl}`, entity).then(
+        function (res) {
+          resolve(res.data);
+        },
+        function (err) {
+          reject(err);
+        }
+      );
     });
   }
 
   public update(entity: IIntegranteProyecto): Promise<IIntegranteProyecto> {
-    return new Promise<IIntegranteProyecto>(resolve => {
-      axios.put(`${baseApiUrl}`, entity).then(function (res) {
-        resolve(res.data);
-      });
+    return new Promise<IIntegranteProyecto>((resolve, reject) => {
+      axios.put(`${baseApiUrl}`, entity).then(
+        function (res) {
+          resolve(res.data);
+        },
+        function (err) {
+          reject(err);
+        }
+      );
     });
   }
 }

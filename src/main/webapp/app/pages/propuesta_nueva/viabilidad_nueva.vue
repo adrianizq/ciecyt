@@ -117,33 +117,27 @@
         }
 
         public back() {
-             this.$router.go(-1);
-           // this.$router.push({ name: 'PropuestaListadoCiecytView', params: { proyectoId: this.proyId } });
+            this.$router.push({ name: 'PropuestaAsesorNuevaEditView', params: { proyectoId: String(this.proyId) } });
         }
 
-        public save(): void {
+        public async save(): Promise<void> {
             try {
                 this.isSaving = true;
                 for (let integrante of this.integrantesProyecto) {
-                    //Actualizando el integrante
+                    integrante.integranteProyectoProyectoId = this.proyId;
                     if (integrante.id) {
-                        this.integranteProyectoService().update(integrante);
-                          (<any>this).$router.go(0);
+                        await this.integranteProyectoService().update(integrante);
                     } else {
-                        //Creando un nuevo integrante
-                        this.integranteProyectoService().create(integrante)
-                            .then(param => {
-                               // this.$router.push({ name: 'PropuestaElementosView', params: { proyectoId: this.proyId } });
-                                 (<any>this).$router.go(0);
-                            });
+                        await this.integranteProyectoService().create(integrante);
                     }
-                     var proyId: string = String(this.proyId);
-                    // this.$router.push({ name: 'PropuestaElementosView', params: { proyectoId: proyId } });
-
                 }
-
+                this.isSaving = false;
+                this.alertService().showAlert('Jurados de viabilidad guardados correctamente', 'success');
+                this.$router.push({ name: 'PropuestaJuradoNuevaEditView', params: { proyectoId: String(this.proyId) } });
             } catch (e) {
-                //TODO: mostrar mensajes de error
+                this.isSaving = false;
+                console.error('Error guardando jurados de viabilidad:', e);
+                this.alertService().showAlert('Error al guardar los jurados de viabilidad: ' + (e.response ? e.response.data.message : e.message), 'danger');
             }
         }
 

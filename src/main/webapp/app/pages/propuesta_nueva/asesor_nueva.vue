@@ -109,7 +109,7 @@
                     this.integranteProyecto = param;
                     this.alertService().showAlert('Asesor guardado correctamente', 'success');
                 }
-                this.$router.push({ name: 'PropuestaViabilidadNuevaEditView', params: { proyectoId: this.proyId } });
+                this.$router.push({ name: 'PropuestaJuradoNuevaEditView', params: { proyectoId: String(this.proyId) } });
             } catch (err) {
                 this.isSaving = false;
                 console.error('Error guardando asesor:', err);

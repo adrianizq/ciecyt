@@ -4,6 +4,8 @@ export interface IIntegranteProyecto {
   descripcion?: string;
   integranteProyectoUserLogin?: string;
   integranteProyectoUserId?: number;
+  integranteProyectoUserFirstName?: string;
+  integranteProyectoUserLastName?: string;
   integranteProyectoProyectoTitulo?: string;
   integranteProyectoProyectoId?: number;
   integranteProyectoRolesModalidadRol?: string;
@@ -17,6 +19,8 @@ export class IntegranteProyecto implements IIntegranteProyecto {
     public descripcion?: string,
     public integranteProyectoUserLogin?: string,
     public integranteProyectoUserId?: number,
+    public integranteProyectoUserFirstName?: string,
+    public integranteProyectoUserLastName?: string,
     public integranteProyectoProyectoTitulo?: string,
     public integranteProyectoProyectoId?: number,
     public integranteProyectoRolesModalidadRol?: string,

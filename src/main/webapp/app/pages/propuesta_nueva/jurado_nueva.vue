@@ -4,7 +4,8 @@
             <menu-lateral-nueva :proyectoId='$route.params.proyectoId'></menu-lateral-nueva>
         </div>
         <div class="col-sm-8">
-            <form @submit.prevent="save()">
+                <div class="jurado-form">
+
                 <div class="row">
                     <div class="col-12" v-for="(integrante, i) in integrantesProyecto" :key="i">
                         <b-form-group
@@ -34,13 +35,13 @@
                         <button type="button" id="cancel" class="btn btn-secondary" v-on:click="back">
                             <font-awesome-icon icon="arrow-left"></font-awesome-icon>&nbsp;Volver
                         </button>
-                        <button type="button" id="save" class="btn btn-primary" v-on:click="save()" :disabled="isSaving">
+                        <button type="button" id="save" class="btn btn-primary" v-on:click="save($event)" :disabled="isSaving || !juradosCompletos">
                             <font-awesome-icon icon="save"></font-awesome-icon>&nbsp;<span v-text="$t('entity.action.save')">Guardar</span>
                         </button>
                     </div>
                 </div>
 
-            </form>
+            </div>
         </div>
     </div>
 </template>
@@ -100,12 +101,23 @@
             });
         }
 
-        public back() {
-             this.$router.go(-1);
-           // this.$router.push({ name: 'PropuestaListadoCiecytView', params: { proyectoId: this.proyId } });
+        get juradosCompletos(): boolean {
+            return (
+                this.integrantesProyecto.length > 0 &&
+                this.integrantesProyecto.every(i => !!i.integranteProyectoUserId)
+            );
         }
 
-        public async save(): Promise<void> {
+        public back() {
+            this.$router.push({ name: 'PropuestaAsesorNuevaEditView', params: { proyectoId: String(this.proyId) } });
+        }
+
+        public async save(event?: Event): Promise<void> {
+            if (event) {
+                event.preventDefault();
+                event.stopPropagation();
+            }
+            console.log('Iniciando save de jurados. rolModalidadId:', this.rolModalidadId, 'integrantes:', JSON.stringify(this.integrantesProyecto));
             if (!this.integrantesProyecto || this.integrantesProyecto.length === 0) {
                 this.alertService().showAlert('No hay jurados para guardar', 'warning');
                 return;
@@ -117,18 +129,30 @@
                 return;
             }
 
+            if (!this.rolModalidadId) {
+                this.alertService().showAlert('No se pudo determinar el rol de jurado para la modalidad actual', 'danger');
+                return;
+            }
+
             this.isSaving = true;
             try {
                 for (let integrante of this.integrantesProyecto) {
+                    // Asegurar que el integrante tenga el proyecto y el rol correctos
+                    integrante.integranteProyectoProyectoId = this.proyId;
+                    integrante.integranteProyectoRolesModalidadId = this.rolModalidadId;
+                    console.log('Guardando jurado:', JSON.stringify(integrante));
                     if (integrante.id) {
-                        await this.integranteProyectoService().update(integrante);
+                        const actualizado = await this.integranteProyectoService().update(integrante);
+                        Object.assign(integrante, actualizado);
                     } else {
-                        await this.integranteProyectoService().create(integrante);
+                        const creado = await this.integranteProyectoService().create(integrante);
+                        console.log('Jurado creado:', JSON.stringify(creado));
+                        Object.assign(integrante, creado);
                     }
                 }
+                this.isSaving = false;
                 this.alertService().showAlert('Jurados guardados correctamente', 'success');
-                // Recargar la lista para reflejar los IDs asignados
-                await this.cargarJuradosExistentes();
+                this.$router.push({ name: 'PropuestaInscripcionNuevaEditView', params: { proyectoId: String(this.proyId) } });
             } catch (e) {
                 this.isSaving = false;
                 console.error('Error guardando jurados:', e);
@@ -169,22 +193,41 @@
 
         async cargarJuradosExistentes() {
             try {
+                console.log('Cargando jurados existentes para proyecto:', this.proyId, 'modalidad:', this.modalidadId);
                 const res = await this.integranteProyectoService().retrieveJuradosProyecto(this.proyId, "Jurado");
-                this.integrantesProyecto = res.data;
+                this.integrantesProyecto = res.data || [];
+                console.log('Jurados existentes cargados:', JSON.stringify(this.integrantesProyecto));
 
                 if (this.integrantesProyecto.length === 0) {
                     const rolRes = await this.rolesModalidadService().findRolModalidad("Jurado", this.modalidadId);
+                    console.log('Rol de jurado encontrado:', JSON.stringify(rolRes));
+                    if (!rolRes || !rolRes.id) {
+                        throw new Error('No se encontro el rol "Jurado" para la modalidad ' + this.modalidadId);
+                    }
                     this.rolesModalidad = rolRes;
-                    this.cantJurados = 1;
+                    this.cantJurados = rolRes.cantidad && rolRes.cantidad > 0 ? rolRes.cantidad : 1;
                     this.rolModalidadId = rolRes.id;
 
-                    let integrante = new IntegranteProyecto();
-                    integrante.integranteProyectoProyectoId = this.proyId;
-                    integrante.integranteProyectoRolesModalidadId = this.rolModalidadId;
-                    this.integrantesProyecto.push(integrante);
+                    for (let i = 0; i < this.cantJurados; i++) {
+                        let integrante = new IntegranteProyecto();
+                        integrante.integranteProyectoProyectoId = this.proyId;
+                        integrante.integranteProyectoRolesModalidadId = this.rolModalidadId;
+                        this.integrantesProyecto.push(integrante);
+                    }
+                } else {
+                    // Sincronizar el rol a partir del primer jurado existente para futuras operaciones
+                    const primerJurado = this.integrantesProyecto[0];
+                    if (primerJurado.integranteProyectoRolesModalidadId) {
+                        this.rolModalidadId = primerJurado.integranteProyectoRolesModalidadId;
+                    }
+                    // Asegurar que todos los jurados cargados tengan el proyecto asignado
+                    this.integrantesProyecto.forEach(i => {
+                        i.integranteProyectoProyectoId = this.proyId;
+                    });
                 }
             } catch (e) {
                 console.error('Error cargando jurados existentes:', e);
+                this.alertService().showAlert('Error al cargar los jurados existentes: ' + (e.response ? e.response.data.message : e.message), 'danger');
             }
         }
 

@@ -14,6 +14,8 @@ public interface IntegranteProyectoMapper extends EntityMapper<IntegranteProyect
 
     @Mapping(source = "integranteProyectoUser.id", target = "integranteProyectoUserId")
     @Mapping(source = "integranteProyectoUser.login", target = "integranteProyectoUserLogin")
+    @Mapping(source = "integranteProyectoUser.firstName", target = "integranteProyectoUserFirstName")
+    @Mapping(source = "integranteProyectoUser.lastName", target = "integranteProyectoUserLastName")
     @Mapping(source = "integranteProyectoProyecto.id", target = "integranteProyectoProyectoId")
     @Mapping(source = "integranteProyectoProyecto.titulo", target = "integranteProyectoProyectoTitulo")
     @Mapping(source = "integranteProyectoRolesModalidad.id", target = "integranteProyectoRolesModalidadId")

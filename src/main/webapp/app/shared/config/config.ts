@@ -371,8 +371,13 @@ export function initVueXStore(vue) {
         },
         {
           title: 'Jurado',
-          description: 'Jurado del proyecto (viabilidad y sustentación)',
+          description: 'Jurados de sustentación',
           to: '/propuesta-nueva/jurado-nueva',
+        },
+        {
+          title: 'Inscripcion',
+          description: 'Inscripción del trabajo de grado',
+          to: '/propuesta-nueva/inscripcion-nueva',
         },
       ],
     },
