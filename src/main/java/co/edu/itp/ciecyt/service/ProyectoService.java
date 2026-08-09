@@ -2,6 +2,7 @@ package co.edu.itp.ciecyt.service;
 
 import co.edu.itp.ciecyt.domain.IntegranteProyecto;
 import co.edu.itp.ciecyt.domain.Proyecto;
+import co.edu.itp.ciecyt.domain.enumeration.EnumEstadoProyecto;
 import co.edu.itp.ciecyt.service.dto.ProyectoDTO;
 import java.util.List;
 import java.util.Optional;
@@ -22,6 +23,16 @@ public interface ProyectoService {
     ProyectoDTO save(ProyectoDTO proyectoDTO);
 
     ProyectoDTO saveAsesorProyecto(ProyectoDTO proyectoDTO) throws Exception;
+
+    /**
+     * Cambia el estado de un proyecto y registra el historial.
+     *
+     * @param proyectoId id del proyecto.
+     * @param nuevoEstado estado destino.
+     * @param observacion observación opcional.
+     * @return el proyecto actualizado.
+     */
+    ProyectoDTO cambiarEstado(Long proyectoId, EnumEstadoProyecto nuevoEstado, String observacion);
 
     /**
      * Get all the proyectos.

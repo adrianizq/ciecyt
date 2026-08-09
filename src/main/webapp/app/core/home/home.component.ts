@@ -70,7 +70,7 @@ export default class Home extends Vue {
     } else if (this.autoridades.includes('ROLE_CIECYT')) {
       this.$router.push('/ciecyt/listado-ciecyt');
     } else if (this.autoridades.includes('ROLE_ADMIN')) {
-      this.$router.push('/viabilidad-propuesta/listado');
+      this.$router.push('/viabilidad-propuesta/listado-jurado');
     }
   }
 

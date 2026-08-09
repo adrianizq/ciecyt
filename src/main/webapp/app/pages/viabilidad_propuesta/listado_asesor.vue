@@ -50,20 +50,12 @@
                     <td class="text-right">
                         <div class="btn-group" >
                   <!---------------------------------------------------->
-                        <router-link v-if="proyecto.preEnviado==true"
+                        <router-link v-if="proyecto.estado==='EN_REVISION_ASESOR' || proyecto.estado==='CORRECCIONES_ASESOR'"
                     :to="{ name: 'AsesoriaEvaluarView', params: { proyectoId: proyecto.id } }"
-                  
                   >
-                    <button type="submit" id="save-entity"   class="btn btn-info" v-if="proyecto.enviado==false||proyecto.enviado==null">
+                    <button type="submit" id="save-entity" class="btn btn-info">
                         <font-awesome-icon icon="pencil-alt"></font-awesome-icon>&nbsp;<span v-text="$t('entity.action.revisar')">Evaluar</span>
-   
                     </button>
-                    
-                    <button type="submit" id="save-entity"   class="btn btn-link" v-if="proyecto.enviado==true">
-                        <font-awesome-icon icon="pencil-alt"></font-awesome-icon>&nbsp;<span v-text="$t('entity.action.revisar')">Evaluar</span>
-   
-                    </button>
-                  
                   </router-link>
                   <!-------------------------------------------->
                         <!--

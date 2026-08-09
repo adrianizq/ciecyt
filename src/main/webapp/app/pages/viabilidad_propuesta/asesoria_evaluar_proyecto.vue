@@ -473,6 +473,7 @@ export default class PropuestaEvaluar extends mixins(JhiDataUtils){
                  .retrievePreguntasModalidadyFaseyAuthority(this.modalidadId, this.fase.id, this.authority)
                 
                     this.pregunts = res.data;
+                const elementosCubiertos: number[] = [];
                 this.pregunts.forEach(e => {
                   var proyResp: IProyectoRespuestas = new ProyectoRespuestas();
                   proyResp.proyectoRespuestasPreguntaPregunta= e.pregunta;
@@ -485,9 +486,9 @@ export default class PropuestaEvaluar extends mixins(JhiDataUtils){
                   proyResp.encabezado = e.encabezado;
                   proyResp.puntajeMaximo = e.puntajeMaximo;
                   this.elementoProyects.forEach(x => {
-                      console.log("Entra al ciclo elementoProyecto");
                     if (x.elementoProyectoElementoId == e.preguntaElementoId){
-                         proyResp.dato = x.dato;    
+                       proyResp.dato = x.dato;
+                       elementosCubiertos.push(x.elementoProyectoElementoId);
                     }
                   });
                   if (!this.proyectoRespuestasDatos){
@@ -495,6 +496,19 @@ export default class PropuestaEvaluar extends mixins(JhiDataUtils){
                   }
                   
                 }); //fin del foreach pregunts
+
+                //Mostrar siempre los elementos que diligenció el estudiante
+                this.elementoProyects.forEach(x => {
+                  if (!elementosCubiertos.includes(x.elementoProyectoElementoId)) {
+                    const proyRespElem: IProyectoRespuestas = new ProyectoRespuestas();
+                    proyRespElem.elemento = x.elementoProyectoElementoElemento;
+                    proyRespElem.proyectoRespuestasPreguntaPregunta = x.elementoProyectoProyectoDescripcion;
+                    proyRespElem.proyectoRespuestasProyectoId = this.proyId;
+                    proyRespElem.encabezado = x.elementoProyectoElementoElemento;
+                    proyRespElem.dato = x.dato;
+                    this.proyectoRespuests.push(proyRespElem);
+                  }
+                });
     
           
        res=  await this.adjuntoProyectoFaseService()

@@ -1,11 +1,11 @@
-id;nombre_adjunto;fecha_creacion;fecha_modificacion;estado_adjunto;adjunto_retroalimentacion;nombre_archivo_original;fecha_inicio;fecha_fin;archivo;archivo_content_type;archivo_content_type;authority;file
-1;Florida;2020-10-08;2020-10-07;50805;Virtual;synthesizing best-of-breed copying;2020-10-08;2020-10-07;../fake-data/blob/hipster.png;image/png;Legacy Checking Account sky blue;Tuvalu plum;payment
-2;neural;2020-10-08;2020-10-07;10283;Boliviano Mvdol Cotton;Wooden envisioneer;2020-10-07;2020-10-07;../fake-data/blob/hipster.png;image/png;deposit;indigo Jewelery;circuit reboot
-3;Checking Account;2020-10-07;2020-10-07;58273;New Hampshire invoice driver;Cotton Personal Loan Account;2020-10-07;2020-10-07;../fake-data/blob/hipster.png;image/png;Corporate Money Market Account well-modulated;Reverse-engineered withdrawal;stable
-4;Jordanian Dinar Small;2020-10-07;2020-10-07;76317;quantifying;Shoes New Mexico;2020-10-07;2020-10-07;../fake-data/blob/hipster.png;image/png;deposit Freeway Strategist;generating Automotive green;interactive Road Cambridgeshire
-5;Object-based;2020-10-08;2020-10-07;66597;Senior Berkshire;protocol;2020-10-07;2020-10-07;../fake-data/blob/hipster.png;image/png;alarm;program Berkshire Kentucky;target
-6;invoice Gloves;2020-10-08;2020-10-07;80684;Auto Loan Account Unbranded;Pine;2020-10-07;2020-10-08;../fake-data/blob/hipster.png;image/png;indexing solutions;Metal Legacy Cotton;Communications
-7;magenta interface;2020-10-07;2020-10-07;87295;Ports;Light Research;2020-10-07;2020-10-07;../fake-data/blob/hipster.png;image/png;Savings Account fault-tolerant;initiative;portal web-readiness
-8;Generic full-range;2020-10-07;2020-10-07;91920;Pizza card Home Loan Account;Chief TCP;2020-10-07;2020-10-07;../fake-data/blob/hipster.png;image/png;Metal Graphic Interface;synthesizing Upgradable;bypass
-9;Causeway Personal Loan Account;2020-10-07;2020-10-07;81153;Buckinghamshire Hat Incredible Metal Shirt;indexing;2020-10-07;2020-10-07;../fake-data/blob/hipster.png;image/png;Plastic innovate Afghani;virtual core;solid state portals
-10;engage incentivize white;2020-10-07;2020-10-07;14321;Central Trace Iceland Krona;synthesize;2020-10-07;2020-10-07;../fake-data/blob/hipster.png;image/png;motivating;open-source South Dakota;Intelligent Metal Pants ubiquitous
+id;nombre_adjunto;fecha_creacion;fecha_modificacion;estado_adjunto;adjunto_retroalimentacion;nombre_archivo_original;fecha_inicio;fecha_fin;archivo;archivo_content_type;authority
+1;Florida;2020-10-08;2020-10-07;50805;Virtual;synthesizing best-of-breed copying;2020-10-08;2020-10-07;../fake-data/blob/hipster.png;image/png;Tuvalu plum
+2;neural;2020-10-08;2020-10-07;10283;Boliviano Mvdol Cotton;Wooden envisioneer;2020-10-07;2020-10-07;../fake-data/blob/hipster.png;image/png;indigo Jewelery
+3;Checking Account;2020-10-07;2020-10-07;58273;New Hampshire invoice driver;Cotton Personal Loan Account;2020-10-07;2020-10-07;../fake-data/blob/hipster.png;image/png;Reverse-engineered withdrawal
+4;Jordanian Dinar Small;2020-10-07;2020-10-07;76317;quantifying;Shoes New Mexico;2020-10-07;2020-10-07;../fake-data/blob/hipster.png;image/png;generating Automotive green
+5;Object-based;2020-10-08;2020-10-07;66597;Senior Berkshire;protocol;2020-10-07;2020-10-07;../fake-data/blob/hipster.png;image/png;program Berkshire Kentucky
+6;invoice Gloves;2020-10-08;2020-10-07;80684;Auto Loan Account Unbranded;Pine;2020-10-07;2020-10-08;../fake-data/blob/hipster.png;image/png;Metal Legacy Cotton
+7;magenta interface;2020-10-07;2020-10-07;87295;Ports;Light Research;2020-10-07;2020-10-07;../fake-data/blob/hipster.png;image/png;initiative
+8;Generic full-range;2020-10-07;2020-10-07;91920;Pizza card Home Loan Account;Chief TCP;2020-10-07;2020-10-07;../fake-data/blob/hipster.png;image/png;synthesizing Upgradable
+9;Causeway Personal Loan Account;2020-10-07;2020-10-07;81153;Buckinghamshire Hat Incredible Metal Shirt;indexing;2020-10-07;2020-10-07;../fake-data/blob/hipster.png;image/png;virtual core
+10;engage incentivize white;2020-10-07;2020-10-07;14321;Central Trace Iceland Krona;synthesize;2020-10-07;2020-10-07;../fake-data/blob/hipster.png;image/png;open-source South Dakota

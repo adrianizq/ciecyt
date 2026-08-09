@@ -174,8 +174,8 @@ export function initVueXStore(vue) {
           to: '/propuesta/retroalimentacion',
         },
         {
-          title: 'Retroalimentación Viabilidad',
-          description: 'Encuentre las correcciones de Viabilidad',
+          title: 'Retroalimentación Jurados',
+          description: 'Encuentre las correcciones de los Jurados',
           to: '/propuesta/retroalimentacion-viabilidad',
         },
       ],
@@ -223,8 +223,8 @@ export function initVueXStore(vue) {
         },
 
         {
-          title: 'Retroalimentación Viabilidad',
-          description: 'Encuentre las correcciones de Viabilidad',
+          title: 'Retroalimentación Jurados',
+          description: 'Encuentre las correcciones de los Jurados',
           to: '/propuesta-pasantia/retroalimentacion-viabilidad',
         },
       ],
@@ -267,8 +267,8 @@ export function initVueXStore(vue) {
           to: '/propuesta-diplomado/retroalimentacion',
         },
         {
-          title: 'Retroalimentación Viabilidad',
-          description: 'Encuentre las correcciones de Viabilidad',
+          title: 'Retroalimentación Jurados',
+          description: 'Encuentre las correcciones de los Jurados',
           to: '/propuesta-diplomado/retroalimentacion-viabilidad',
         },
       ],
@@ -310,11 +310,6 @@ export function initVueXStore(vue) {
 
       menu_lateral_listado: [
         {
-          title: 'Viabilidad',
-          description: 'Evaluar la viabilidad a las propuestas',
-          to: '/viabilidad-propuesta/listado',
-        },
-        {
           title: 'Asesor Propuestas',
           description: 'Espacio para revisar las propuestas a cargo',
           to: '/viabilidad-propuesta/listado-asesor',
@@ -327,7 +322,7 @@ export function initVueXStore(vue) {
 
         {
           title: 'Jurado',
-          description: 'Evaluar los Proyectos',
+          description: 'Evaluar la viabilidad de las propuestas y los proyectos',
           to: '/viabilidad-propuesta/listado-jurado',
         },
         {
@@ -343,8 +338,8 @@ export function initVueXStore(vue) {
           to: '/ciecyt/listado-ciecyt',
         },
         {
-          title: 'Jurado(s) de Viabilidad',
-          description: 'Ingrese el jurado o jurados de viabilidad',
+          title: 'Jurado(s)',
+          description: 'Ingrese el jurado o jurados',
           to: '/ciecyt/asignar-jurado',
         },
         {

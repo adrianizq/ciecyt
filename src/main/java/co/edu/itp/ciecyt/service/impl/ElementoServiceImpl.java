@@ -67,18 +67,14 @@ public class ElementoServiceImpl implements ElementoService {
         elementoRepository.save(elemento);
 
         //Guardar las modalidades
-        List<ElementoModalidad> pmL = elementoModalidadRepository.findByElementoId(elemento.getId());
-        List<ElementoModalidadDTO> lpmDto = new ArrayList<>();
-        //lpmDto = preguntaDTO.getPreguntaModalidads();
-        lpmDto = elementoDTO.getElementoModalidads();
-        for (ElementoModalidad pm : pmL) {
-            elementoModalidadRepository.delete(pm);
-        }
-        pmL = elementoModalidadRepository.findByElementoId(elemento.getId());
-        for (ElementoModalidadDTO pmDto : lpmDto) {
-            pmDto.setElementoId(elemento.getId());
-            ElementoModalidad pm = elementoModalidadMapper.toEntity(pmDto);
-            elementoModalidadRepository.save(pm);
+        elementoModalidadRepository.deleteByElementoId(elemento.getId());
+        List<ElementoModalidadDTO> lpmDto = elementoDTO.getElementoModalidads();
+        if (lpmDto != null) {
+            for (ElementoModalidadDTO pmDto : lpmDto) {
+                pmDto.setElementoId(elemento.getId());
+                ElementoModalidad pm = elementoModalidadMapper.toEntity(pmDto);
+                elementoModalidadRepository.save(pm);
+            }
         }
 
         return elementoMapper.toDto(elemento);

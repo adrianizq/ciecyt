@@ -263,16 +263,14 @@ export default class Retroalimentacion extends mixins(JhiDataUtils){
     public adjuntoRetroalimentacion: IAdjuntoRetroalimentacion = new AdjuntoRetroalimentacion();
     
     public fase: IFases = new Fases();
-    public  authority: any="ROLE_VIABILIDAD";
+    public  authority: any="ROLE_JURADO";
     public nombreFase: any = "Propuesta";
     public proyectoRespuests: IProyectoRespuestas[] =[];
     
   //public fasePropuesta: IFases = new Fases();
   //public faseProyecto: IFases = new Fases();
 
-    //public  authorityJurado: any="ROLE_JURADO";
-     //public  authorityViabilidad: any="ROLE_VIABILIDAD";
-     //public nombreFasePropuesta: any = "Propuesta";
+    //public nombreFasePropuesta: any = "Propuesta";
     //public nombreFaseProyecto: any = "Proyecto";
 
   beforeRouteEnter(to, from, next) {

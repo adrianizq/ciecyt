@@ -53,7 +53,6 @@
                   
                     <th  v-on:click="changeOrder('titulo')"><span v-text="$t('ciecytApp.proyecto.titulo')">Titulo</span> <font-awesome-icon icon="sort"></font-awesome-icon></th>
                      <th  v-on:click="changeOrder('modalidad')"><span >Modalidad</span> <font-awesome-icon icon="sort"></font-awesome-icon></th>
-                     <th ><span>Jurado Viabilidad</span></th>
                      <th ><span >Jurado</span></th>
                      <th ><span >Asesor</span></th>
 
@@ -80,33 +79,16 @@
                      <td>{{proyecto.proyectoModalidadModalidad}}</td> 
                    
                 
-                    <!------ JuradoViabilidad ---->
-                     <td class="text-right">
-                        <div class="btn-group" v-if="!proyecto.tieneJuradoViabilidad&&proyecto.enviado">
-                            <router-link :to="{name: 'AsignarJuradoViabilidadView', params: {proyectoId: proyecto.id}}" tag="button" class="btn btn-info btn-sm details">
-                               <b-icon-person-fill></b-icon-person-fill>&nbsp;
-                                <span class="d-none d-md-inline" >Asignar</span>
-                            </router-link>
-                         </div>
-
-                         <div class="btn-group" v-if="proyecto.tieneJuradoViabilidad&&proyecto.enviado&&proyecto.viabilidad!=`VIABLE`">
-                            <router-link :to="{name: 'AsignarJuradoViabilidadView', params: {proyectoId: proyecto.id}}" tag="button" class="btn btn-secondary btn-sm">
-                                <b-icon-person-fill></b-icon-person-fill>&nbsp;
-                                <span class="d-none d-md-inline"  >Cambiar</span>
-                            </router-link>
-                         </div>
-                    </td>
-
                     <!------ Jurado ---->
                      <td class="text-right">
-                        <div class="btn-group" v-if="!proyecto.tieneJurado&&proyecto.viabilidad==`VIABLE`">
+                        <div class="btn-group" v-if="!proyecto.tieneJurado&&proyecto.enviado">
                             <router-link :to="{name: 'AsignarJuradoView', params: {proyectoId: proyecto.id}}" tag="button" class="btn btn-info btn-sm details">
                                 <b-icon-people-fill></b-icon-people-fill>&nbsp;
                                 <span class="d-none d-md-inline" >Asignar</span>
                             </router-link>
                          </div>
 
-                         <div class="btn-group" v-if="proyecto.tieneJurado&&proyecto.viabilidad==`VIABLE`">
+                         <div class="btn-group" v-if="proyecto.tieneJurado&&proyecto.enviado">
                             <router-link :to="{name: 'AsignarJuradoView', params: {proyectoId: proyecto.id}}" tag="button" class="btn btn-secondary btn-sm">
                                <b-icon-people-fill></b-icon-people-fill>&nbsp;
                                 <span  class="d-none d-md-inline">Cambiar </span>

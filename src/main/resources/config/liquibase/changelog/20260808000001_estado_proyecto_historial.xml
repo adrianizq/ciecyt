@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.9.xsd
+                        http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog-ext/dbchangelog-3.9.xsd">
+
+    <!-- 1. Add estado column to proyecto -->
+    <changeSet id="20260808000001-1" author="flow" dbms="postgresql">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists tableName="proyecto" columnName="estado"/>
+            </not>
+        </preConditions>
+        <addColumn tableName="proyecto">
+            <column name="estado" type="varchar(255)">
+                <constraints nullable="true"/>
+            </column>
+        </addColumn>
+        <rollback>
+            <dropColumn tableName="proyecto" columnName="estado"/>
+        </rollback>
+    </changeSet>
+
+    <!-- 2. Create proyecto_historial_estado table -->
+    <changeSet id="20260808000001-2" author="flow" dbms="postgresql">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="proyecto_historial_estado"/>
+            </not>
+        </preConditions>
+        <createTable tableName="proyecto_historial_estado">
+            <column name="id" type="bigint">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="estado_anterior" type="varchar(255)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="estado_nuevo" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="observacion" type="varchar(255)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="usuario_login" type="varchar(255)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="fecha_cambio" type="timestamp">
+                <constraints nullable="false"/>
+            </column>
+            <column name="proyecto_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addForeignKeyConstraint
+            baseColumnNames="proyecto_id"
+            baseTableName="proyecto_historial_estado"
+            constraintName="fk_proyecto_historial_estado_proyecto"
+            referencedColumnNames="id"
+            referencedTableName="proyecto"/>
+        <rollback>
+            <dropForeignKeyConstraint baseTableName="proyecto_historial_estado" constraintName="fk_proyecto_historial_estado_proyecto"/>
+            <dropTable tableName="proyecto_historial_estado"/>
+        </rollback>
+    </changeSet>
+
+    <!-- 3. Migrate existing proyectos to estado based on legacy boolean flags -->
+    <changeSet id="20260808000001-3" author="flow" dbms="postgresql" context="dev,prod">
+        <sql>
+            UPDATE proyecto
+            SET estado = CASE
+                WHEN proyecto_enviado = true AND sustentar IS NOT NULL THEN 'EN_REVISION_JURADO_PROYECTO'
+                WHEN viabilidad = 'VIABLE' THEN 'VIABLE'
+                WHEN enviado = true THEN 'EN_REVISION_ASESOR'
+                WHEN pre_enviado = true THEN 'EN_ELABORACION_PROPUESTA'
+                ELSE 'EN_ELABORACION_PROPUESTA'
+            END
+            WHERE estado IS NULL;
+        </sql>
+        <rollback>
+            <sql>
+                UPDATE proyecto SET estado = NULL;
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <!-- 4. Create initial history records for migrated proyectos -->
+    <changeSet id="20260808000001-4" author="flow" dbms="postgresql" context="dev,prod">
+        <sql>
+            INSERT INTO proyecto_historial_estado (id, estado_anterior, estado_nuevo, observacion, usuario_login, fecha_cambio, proyecto_id)
+            SELECT nextval('sequence_generator'), NULL, estado, 'Migración inicial de estado', 'system', NOW(), id
+            FROM proyecto
+            WHERE estado IS NOT NULL;
+        </sql>
+        <rollback>
+            <sql>
+                DELETE FROM proyecto_historial_estado WHERE observacion = 'Migración inicial de estado';
+            </sql>
+        </rollback>
+    </changeSet>
+
+</databaseChangeLog>

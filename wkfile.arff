@@ -1,14 +1,43 @@
 @relation Proyectos
-@attribute programa {'Tecnología en Gestión Empresarial y de la innovación','Administración de Empresas','Desarrollo de Software','Tecnología en Saneamiento Ambiental','Ingeniería de Sistemas','Ingeniería Civil','Ingeniería Forestal','Contaduría Publica','Gestion Contable','Obras Civiles'}
-@attribute modalidad {'Tesis','Diplomado','Pasantia Tecnologica','Pasantia Investigativa','Pasantia Internacional','Publicacion de Articulo','Especializacion'}
+@attribute programa {'Tecnología en Saneamiento Ambiental','Ingeniería Civil','Ingeniería Forestal','Contaduría Publica','Gestion Contable','Obras Civiles','Tecnología en Gestión Empresarial y de la innovación','Administración de Empresas','Ingeniería de Sistemas','Desarrollo de Software'}
+@attribute modalidad {'Pasantia Tecnologica','Pasantia Investigativa','Pasantia Internacional','Tesis','Diplomado','Publicacion de Articulo','Especializacion'}
 @attribute facultad {'Ingeniería y Ciencias Básicas','Administración y Ciencias Contables'}
 @attribute tipo {'Aplicada','Teorica','Desarrollo Tecnológico o Experimental'}
 @data
-'Administración de Empresas','Diplomado','Administración y Ciencias Contables','Aplicada'
-'Obras Civiles','Diplomado','Ingeniería y Ciencias Básicas','Aplicada'
+'Tecnología en Saneamiento Ambiental','Tesis','Ingeniería y Ciencias Básicas','Aplicada'
+'Administración de Empresas','Tesis','Administración y Ciencias Contables','Aplicada'
+'Administración de Empresas','Pasantia Tecnologica','Administración y Ciencias Contables','Aplicada'
+'Administración de Empresas','Pasantia Tecnologica','Administración y Ciencias Contables','Aplicada'
+'Obras Civiles','Pasantia Tecnologica','Ingeniería y Ciencias Básicas','Aplicada'
+'Ingeniería Civil','Pasantia Tecnologica','Ingeniería y Ciencias Básicas','Aplicada'
+'Gestion Contable','Pasantia Tecnologica','Administración y Ciencias Contables','Aplicada'
+'Ingeniería Forestal','Pasantia Tecnologica','Ingeniería y Ciencias Básicas','Aplicada'
+'Gestion Contable','Pasantia Tecnologica','Administración y Ciencias Contables','Aplicada'
+'Tecnología en Gestión Empresarial y de la innovación','Pasantia Tecnologica','Administración y Ciencias Contables','Teorica'
+'Ingeniería de Sistemas','Tesis','Ingeniería y Ciencias Básicas','Teorica'
 'Administración de Empresas','Tesis','Administración y Ciencias Contables','Teorica'
 'Ingeniería de Sistemas','Tesis','Ingeniería y Ciencias Básicas','Aplicada'
 'Administración de Empresas','Tesis','Ingeniería y Ciencias Básicas','Aplicada'
 'Ingeniería de Sistemas','Tesis','Ingeniería y Ciencias Básicas','Aplicada'
 'Ingeniería de Sistemas','Tesis','Ingeniería y Ciencias Básicas','Aplicada'
-'Tecnología en Gestión Empresarial y de la innovación','Diplomado','Administración y Ciencias Contables','Teorica'
+'Desarrollo de Software','Diplomado','Ingeniería y Ciencias Básicas','Teorica'
+'null','Tesis','Ingeniería y Ciencias Básicas','null'
+'null','Tesis','Ingeniería y Ciencias Básicas','null'
+'null','Tesis','Ingeniería y Ciencias Básicas','null'
+'null','Tesis','Ingeniería y Ciencias Básicas','null'
+'null','Tesis','Ingeniería y Ciencias Básicas','null'
+'null','Tesis','Ingeniería y Ciencias Básicas','null'
+'null','Tesis','Ingeniería y Ciencias Básicas','null'
+'null','Tesis','Ingeniería y Ciencias Básicas','null'
+'null','Tesis','Ingeniería y Ciencias Básicas','null'
+'null','Tesis','Ingeniería y Ciencias Básicas','null'
+'null','Tesis','Ingeniería y Ciencias Básicas','null'
+'null','Tesis','Ingeniería y Ciencias Básicas','null'
+'null','Tesis','Ingeniería y Ciencias Básicas','null'
+'null','Tesis','Ingeniería y Ciencias Básicas','null'
+'null','Tesis','Ingeniería y Ciencias Básicas','null'
+'null','Tesis','Ingeniería y Ciencias Básicas','null'
+'null','Tesis','Ingeniería y Ciencias Básicas','null'
+'null','Tesis','Ingeniería y Ciencias Básicas','null'
+'Desarrollo de Software','Tesis','Ingeniería y Ciencias Básicas','Teorica'
+'null','Tesis','Ingeniería y Ciencias Básicas','null'

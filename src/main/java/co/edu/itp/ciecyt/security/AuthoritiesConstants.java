@@ -14,7 +14,6 @@ public final class AuthoritiesConstants {
     public static final String DOCENTE = "ROLE_DOCENTE";
     public static final String CIECYT = "ROLE_CIECYT";
     public static final String ESTUDIANTE = "ROLE_ESTUDIANTE";
-    public static final String VIABILIDAD = "ROLE_VIABILIDAD";
 
     public static final String ANONYMOUS = "ROLE_ANONYMOUS";
 

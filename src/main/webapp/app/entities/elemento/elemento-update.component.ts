@@ -89,13 +89,10 @@ export default class ElementoUpdate extends Vue {
     this.elemento.elementoModalidads = [];
     this.modalidadesAsignadas.forEach(element => {
       var pr: IElementoModalidad = new ElementoModalidad();
-      pr.elementoId = this.elementoId;
+      pr.elementoId = this.elemento.id;
       pr.modalidadId = element.id;
       this.elemento.elementoModalidads.push(pr);
-      // console.log(this.pregunta.preguntaModalidads);
     });
-
-    //4 No
 
     if (this.elemento.id) {
       this.elementoService()
@@ -105,6 +102,9 @@ export default class ElementoUpdate extends Vue {
           this.$router.go(-1);
           const message = this.$t('ciecytApp.elemento.updated', { param: param.id });
           this.alertService().showAlert(message, 'info');
+        })
+        .catch(() => {
+          this.isSaving = false;
         });
     } else {
       this.elementoService()
@@ -114,6 +114,9 @@ export default class ElementoUpdate extends Vue {
           this.$router.go(-1);
           const message = this.$t('ciecytApp.elemento.created', { param: param.id });
           this.alertService().showAlert(message, 'success');
+        })
+        .catch(() => {
+          this.isSaving = false;
         });
     }
   }

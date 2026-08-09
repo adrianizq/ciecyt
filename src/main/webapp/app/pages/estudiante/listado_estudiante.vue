@@ -34,18 +34,34 @@
               <th v-on:click="changeOrder('modalidad')">
                 <span v-text="$t('ciecytApp.proyecto.modalidad')">Modalidad</span> <font-awesome-icon icon="sort"></font-awesome-icon>
               </th>
+              <th><span>Estado</span></th>
               <th></th>
             </tr>
           </thead>
           <tbody>
             <tr v-for="proyecto in proyects" :key="proyecto.id">
-              <td>
-                <router-link :to="{ name: 'PropuestaEvaluarView', params: { proyectoId: proyecto.id } }">{{ proyecto.id }}</router-link>
-              </td>
+              <td>{{ proyecto.id }}</td>
 
               <td>{{ proyecto.titulo }}</td>
               <td>{{ proyecto.proyectoModalidadModalidad }}</td>
+              <td>{{ proyecto.estado }}</td>
               <td class="text-right">
+                <div class="btn-group">
+                  <router-link v-if="proyecto.estado==='EN_ELABORACION_PROPUESTA'"
+                    :to="{ name: 'EnviarPropuestaView', params: { proyectoId: proyecto.id } }"
+                  >
+                    <button type="submit" id="save-entity" class="btn btn-primary">
+                        <font-awesome-icon icon="paper-plane"></font-awesome-icon>&nbsp;<span>Enviar propuesta</span>
+                    </button>
+                  </router-link>
+                  <router-link v-if="proyecto.estado==='VIABLE'"
+                    :to="{ name: 'EnviarProyectoView', params: { proyectoId: proyecto.id } }"
+                  >
+                    <button type="submit" id="save-entity" class="btn btn-primary">
+                        <font-awesome-icon icon="paper-plane"></font-awesome-icon>&nbsp;<span>Enviar proyecto</span>
+                    </button>
+                  </router-link>
+                </div>
                 <!-- Tesis -->
                 <div class="btn-group" v-if="proyecto.proyectoModalidadModalidad=='Tesis'">
                   <router-link

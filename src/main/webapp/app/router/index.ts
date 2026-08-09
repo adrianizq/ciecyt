@@ -323,7 +323,6 @@ const PropuestaAdjuntarPropuesta = () => import('../pages/propuesta/adjuntar_pro
 
 const ProyectoAdjuntarProyecto = () => import('../pages/proyectos/adjuntar_proyecto.vue');
 
-const PropuestaListado = () => import('../pages/viabilidad_propuesta/listado.vue');
 const ProyectoListadoJurado = () => import('../pages/viabilidad_propuesta/listado_jurado.vue');
 const ProyectoListadoSustentacion = () => import('../pages/viabilidad_propuesta/listado_sustentacion.vue');
 const PropuestaListadoAsesor = () => import('../pages/viabilidad_propuesta/listado_asesor.vue');
@@ -338,7 +337,6 @@ const ProyectoEvaluar = () => import('../pages/viabilidad_propuesta/proyecto_eva
 const ProyectoEvaluarSustentacion = () => import('../pages/viabilidad_propuesta/proyecto_evaluar_sustentacion.vue');
 
 const AsignarJurado = () => import('../pages/ciecyt/asignar_jurado.vue');
-const AsignarJuradoViabilidad = () => import('../pages/ciecyt/asignar_jurado_viabilidad.vue');
 
 const AsignarAsesor = () => import('../pages/ciecyt/asignar_asesor.vue');
 
@@ -1240,21 +1238,14 @@ export default new Router({
       path: '/ciecyt/asignar-jurado/:proyectoId/view',
       name: 'AsignarJuradoView',
       component: AsignarJurado,
-      meta: { authorities: ['ROLE_ADMIN']['ROLE_CIECYT'] }
+      meta: { authorities: ['ROLE_ADMIN', 'ROLE_CIECYT'] }
     },
-    {
-      path: '/ciecyt/asignar-jurado-viabilidad/:proyectoId/view',
-      name: 'AsignarJuradoViabilidadView',
-      component: AsignarJuradoViabilidad,
-      meta: { authorities: ['ROLE_ADMIN']['ROLE_CIECYT'] }
-    },
-
 
     {
       path: '/ciecyt/asignar-asesor/:proyectoId/view',
       name: 'AsignarAsesorView',
       component: AsignarAsesor,
-      meta: { authorities: ['ROLE_ADMIN']['ROLE_CIECYT'] }
+      meta: { authorities: ['ROLE_ADMIN', 'ROLE_CIECYT'] }
     },
     /////////////////////////////////////////////////////
     {
@@ -1586,7 +1577,7 @@ export default new Router({
   path: '/propuesta-nueva/propuestas-investigador',
   name: 'PropuestasInvestigadorEditView',
   component: PropuestasInvestigador,
-  meta: { authorities: ['ROLE_USER'] }
+  meta: { authorities: ['ROLE_USER', 'ROLE_ESTUDIANTE'] }
 },
 
 
@@ -1594,7 +1585,7 @@ export default new Router({
     path: '/propuesta-nueva/informacion-general-nueva',
     name: 'PropuestaInformacionGenearalNuevaView',
     component: PropuestaInformacionGeneralNueva,
-    meta: { authorities: ['ROLE_USER'] }
+    meta: { authorities: ['ROLE_USER', 'ROLE_ESTUDIANTE'] }
   },
 
   
@@ -1602,7 +1593,7 @@ export default new Router({
     path: '/propuesta-nueva/informacion-general-nueva/:proyectoId',
     name: 'PropuestaInformacionGeneralNuevaEditView',
     component: PropuestaInformacionGeneralNueva,
-    meta: { authorities: ['ROLE_USER'] }
+    meta: { authorities: ['ROLE_USER', 'ROLE_ESTUDIANTE'] }
   },
 
   {
@@ -1611,7 +1602,7 @@ export default new Router({
     name: 'PropuestaIntegrantesNuevaEditView',
     component: PropuestaIntegrantesNueva,
     props: true,
-    meta: { authorities: ['ROLE_USER'] }
+    meta: { authorities: ['ROLE_USER', 'ROLE_ESTUDIANTE'] }
   },
 
   {
@@ -1620,7 +1611,7 @@ export default new Router({
     name: 'PropuestaAsesorNuevaEditView',
     component: PropuestaAsesorNueva,
     props: true,
-    meta: { authorities: ['ROLE_USER'] }
+    meta: { authorities: ['ROLE_USER', 'ROLE_ESTUDIANTE'] }
   },
 
   {
@@ -1629,7 +1620,7 @@ export default new Router({
     name: 'PropuestaJuradoNuevaEditView',
     component: PropuestaJuradoNueva,
     props: true,
-    meta: { authorities: ['ROLE_USER'] }
+    meta: { authorities: ['ROLE_USER', 'ROLE_ESTUDIANTE'] }
   },
 
   {
@@ -1638,7 +1629,7 @@ export default new Router({
     name: 'PropuestaInscripcionNuevaEditView',
     component: PropuestaInscripcionNueva,
     props: true,
-    meta: { authorities: ['ROLE_USER'] }
+    meta: { authorities: ['ROLE_USER', 'ROLE_ESTUDIANTE'] }
   },
 
     //Pasantia
@@ -1920,56 +1911,50 @@ export default new Router({
     },
 
     {
-      path: '/viabilidad-propuesta/listado',
-      name: 'PropuestaListadoView',
-      component: PropuestaListado,
-      meta: { authorities: ['ROLE_VIABILIDAD']['ROLE_ADMIN'] }
-    },
-    {
       path: '/viabilidad-propuesta/listado-jurado',
       name: 'PropuestaListadoJuradoView',
       component: ProyectoListadoJurado,
-      meta: { authorities: ['ROLE_JURADO']['ROLE_ADMIN'] }
+      meta: { authorities: ['ROLE_JURADO', 'ROLE_ADMIN'] }
     },
     {
       path: '/viabilidad-propuesta/listado-sustentacion',
       name: 'PropuestaListadoSustentacionView',
       component: ProyectoListadoSustentacion,
-      meta: { authorities: ['ROLE_JURADO']['ROLE_ADMIN'] }
+      meta: { authorities: ['ROLE_JURADO', 'ROLE_ADMIN'] }
     },
 
     {
       path: '/viabilidad-propuesta/listado-asesor',
       name: 'PropuestaListadoAsesorView',
       component: PropuestaListadoAsesor,
-      meta: { authorities: ['ROLE_ASESOR']['ROLE_ADMIN']  }
+      meta: { authorities: ['ROLE_ASESOR', 'ROLE_ADMIN']  }
     },
     {
       path: '/viabilidad-proyecto/listado-asesor-proyecto',
       name: 'ProyectoListadoAsesorView',
       component: ProyectoListadoAsesor,
-      meta: { authorities: ['ROLE_ASESOR']['ROLE_ADMIN']  }
+      meta: { authorities: ['ROLE_ASESOR', 'ROLE_ADMIN']  }
     },
 
     {
       path: '/ciecyt/listado-ciecyt',
       name: 'PropuestaListadoCiecytView',
       component: PropuestaListadoCiecyt,
-      meta: { authorities: ['ROLE_ADMIN']['ROLE_CIECYT']  }
+      meta: { authorities: ['ROLE_ADMIN', 'ROLE_CIECYT']  }
     },
 
     {
       path: '/estudiante/listado-estudiante',
       name: 'ListadoEstudianteView',
       component: ListadoEstudiante,
-      meta: { authorities: ['ROLE_ESTUDIANTE']['ROLE_ADMIN']  }
+      meta: { authorities: ['ROLE_ESTUDIANTE', 'ROLE_ADMIN']  }
     },
 
     {
       path: '/estudiante/listado-proyecto',
       name: 'ListadoProyectoView',
       component: ListadoProyecto,
-      meta: { authorities: ['ROLE_ESTUDIANTE']['ROLE_ADMIN']  }
+      meta: { authorities: ['ROLE_ESTUDIANTE', 'ROLE_ADMIN']  }
     },
 
 
@@ -1978,35 +1963,35 @@ export default new Router({
       path: '/viabilidad-propuesta/propuesta-evaluar/:proyectoId',
       name: 'PropuestaEvaluarView',
       component: PropuestaEvaluar,
-      meta: { authorities: ['ROLE_JURADO']['ROLE_ADMIN']  }
+      meta: { authorities: ['ROLE_JURADO', 'ROLE_ADMIN']  }
     },
 
    {
       path: '/proyectos/elementos/:proyectoId',
       name: 'ProyectoElementosEditlView',
       component: ProyectoElementos,
-      meta: { authorities: ['ROLE_ESTUDIANTE']['ROLE_ADMIN']  }
+      meta: { authorities: ['ROLE_ESTUDIANTE', 'ROLE_ADMIN']  }
     },
 /*
     {
       path: '/proyectos/elementos-sustentacion/:proyectoId',
       name: 'ElementosSustentacionEditlView',
       component: ElementosSustentacion,
-      meta: { authorities: ['ROLE_ESTUDIANTE']['ROLE_ADMIN']  }
+      meta: { authorities: ['ROLE_ESTUDIANTE', 'ROLE_ADMIN']  }
     },
 */
     {
       path: '/viabilidad-propuesta/asesoria-evaluar/:proyectoId',
       name: 'AsesoriaEvaluarView',
       component: AsesoriaEvaluar,
-      meta: { authorities: ['ROLE_ASESOR']['ROLE_ADMIN']  }
+      meta: { authorities: ['ROLE_ASESOR', 'ROLE_ADMIN']  }
     },
 
     {
       path: '/viabilidad-propuesta/asesoria-evaluar-proyecto/:proyectoId',
       name: 'AsesoriaEvaluarProyectoView',
       component: AsesoriaEvaluarProyecto,
-      meta: { authorities: ['ROLE_ASESOR']['ROLE_ADMIN']  }
+      meta: { authorities: ['ROLE_ASESOR', 'ROLE_ADMIN']  }
     },
 
 
@@ -2014,14 +1999,14 @@ export default new Router({
       path: '/viabilidad-propuesta/proyecto-evaluar/:proyectoId',
       name: 'ProyectoEvaluarView',
       component: ProyectoEvaluar,
-      meta: { authorities: ['ROLE_JURADO']['ROLE_ADMIN']  }
+      meta: { authorities: ['ROLE_JURADO', 'ROLE_ADMIN']  }
     },
     
     {
       path: '/viabilidad-propuesta/proyecto-evaluar-sustentacion/:proyectoId',
       name: 'ProyectoEvaluarSustentacionView',
       component: ProyectoEvaluarSustentacion,
-      meta: { authorities: ['ROLE_JURADO']['ROLE_ADMIN']  }
+      meta: { authorities: ['ROLE_JURADO', 'ROLE_ADMIN']  }
     },
     
 

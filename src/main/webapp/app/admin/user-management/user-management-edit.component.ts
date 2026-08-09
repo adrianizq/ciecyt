@@ -95,11 +95,6 @@ export default class JhiUserManagementEdit extends Vue {
           this.authorities.splice(index, 1);
         }
 
-        var index = this.authorities.indexOf('ROLE_VIABILIDAD');
-        if (index > -1) {
-          this.authorities.splice(index, 1);
-        }
-
         var index = this.authorities.indexOf('ROLE_ASESOR');
         if (index > -1) {
           this.authorities.splice(index, 1);
@@ -131,7 +126,6 @@ export default class JhiUserManagementEdit extends Vue {
     this.userAccount.userInfo = this.userInfo;
     this.userAccount.authorities.push('ROLE_USER');
     if (this.userAccount.authorities.includes('ROLE_JURADO')) {
-      this.userAccount.authorities.push('ROLE_VIABILIDAD');
       this.userAccount.authorities.push('ROLE_ASESOR');
     }
 

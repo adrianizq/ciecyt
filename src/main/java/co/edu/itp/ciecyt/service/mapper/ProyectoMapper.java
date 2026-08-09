@@ -2,6 +2,7 @@ package co.edu.itp.ciecyt.service.mapper;
 
 
 import co.edu.itp.ciecyt.domain.*;
+import co.edu.itp.ciecyt.domain.enumeration.EnumEstadoProyecto;
 import co.edu.itp.ciecyt.service.dto.ProyectoDTO;
 
 import org.mapstruct.*;
@@ -25,9 +26,19 @@ public interface ProyectoMapper extends EntityMapper<ProyectoDTO, Proyecto> {
     @Mapping(source = "proyectoPrograma.programa", target = "programa")
     @Mapping(source = "proyectoFase.id", target = "proyectoFaseId")
     @Mapping(source = "proyectoFase.fase", target = "fase")
+    @Mapping(source = "estado", target = "estado", qualifiedByName = "estadoToString")
     @Mapping(source = "proyectoCiclo.id", target = "proyectoCicloId")
-    @Mapping(source = "proyectoCiclo.ciclo", target = "ciclo")
     ProyectoDTO toDto(Proyecto proyecto);
+
+    @Named("estadoToString")
+    default String estadoToString(EnumEstadoProyecto estado) {
+        return estado == null ? null : estado.name();
+    }
+
+    @Named("stringToEstado")
+    default EnumEstadoProyecto stringToEstado(String estado) {
+        return estado == null ? null : EnumEstadoProyecto.valueOf(estado);
+    }
 
     @Mapping(source = "proyectoLineaInvestigacionId", target = "proyectoLineaInvestigacion")
     @Mapping(source = "proyectoGrupoSemilleroId", target = "proyectoGrupoSemillero")
@@ -36,6 +47,7 @@ public interface ProyectoMapper extends EntityMapper<ProyectoDTO, Proyecto> {
     @Mapping(source = "subLineaLineaInvestigacionId", target = "subLineaLineaInvestigacion")
     @Mapping(source = "proyectoProgramaId", target = "proyectoPrograma")
     @Mapping(source = "proyectoFaseId", target = "proyectoFase")
+    @Mapping(source = "estado", target = "estado", qualifiedByName = "stringToEstado")
     @Mapping(source = "proyectoCicloId", target = "proyectoCiclo")
     Proyecto toEntity(ProyectoDTO proyectoDTO);
 

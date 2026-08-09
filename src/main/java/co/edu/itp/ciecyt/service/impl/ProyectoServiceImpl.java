@@ -5,16 +5,23 @@ import co.edu.itp.ciecyt.domain.LineaInvestigacion;
 import co.edu.itp.ciecyt.domain.Modalidad;
 import co.edu.itp.ciecyt.domain.Programa;
 import co.edu.itp.ciecyt.domain.Proyecto;
+import co.edu.itp.ciecyt.domain.ProyectoHistorialEstado;
+import co.edu.itp.ciecyt.domain.enumeration.EnumEstadoProyecto;
 import co.edu.itp.ciecyt.repository.LineaInvestigacionRepository;
 import co.edu.itp.ciecyt.repository.ProgramaRepository;
+import co.edu.itp.ciecyt.repository.ProyectoHistorialEstadoRepository;
 import co.edu.itp.ciecyt.repository.ProyectoRepository;
+import co.edu.itp.ciecyt.security.SecurityUtils;
 import co.edu.itp.ciecyt.service.IntegranteProyectoService;
+import co.edu.itp.ciecyt.service.NotificacionService;
 import co.edu.itp.ciecyt.service.ProyectoService;
 import co.edu.itp.ciecyt.service.RolesModalidadService;
 import co.edu.itp.ciecyt.service.dto.IntegranteProyectoDTO;
 import co.edu.itp.ciecyt.service.dto.ProyectoDTO;
 import co.edu.itp.ciecyt.service.dto.RolesModalidadDTO;
 import co.edu.itp.ciecyt.service.mapper.ProyectoMapper;
+import co.edu.itp.ciecyt.config.Constants;
+import java.time.Instant;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -41,6 +48,8 @@ public class ProyectoServiceImpl implements ProyectoService {
     private final RolesModalidadService rolesModalidadService;
     private final LineaInvestigacionRepository lineaInvestigacionRepository;
     private final ProgramaRepository programaRepository;
+    private final ProyectoHistorialEstadoRepository proyectoHistorialEstadoRepository;
+    private final NotificacionService notificacionService;
 
     private final ProyectoMapper proyectoMapper;
 
@@ -50,7 +59,9 @@ public class ProyectoServiceImpl implements ProyectoService {
         IntegranteProyectoService integranteProyectoService,
         RolesModalidadService rolesModalidadService,
         LineaInvestigacionRepository lineaInvestigacionRepository,
-        ProgramaRepository programaRepository
+        ProgramaRepository programaRepository,
+        ProyectoHistorialEstadoRepository proyectoHistorialEstadoRepository,
+        NotificacionService notificacionService
     ) {
         this.proyectoRepository = proyectoRepository;
         this.proyectoMapper = proyectoMapper;
@@ -58,6 +69,8 @@ public class ProyectoServiceImpl implements ProyectoService {
         this.rolesModalidadService = rolesModalidadService;
         this.lineaInvestigacionRepository = lineaInvestigacionRepository;
         this.programaRepository = programaRepository;
+        this.proyectoHistorialEstadoRepository = proyectoHistorialEstadoRepository;
+        this.notificacionService = notificacionService;
     }
 
     /**
@@ -72,6 +85,10 @@ public class ProyectoServiceImpl implements ProyectoService {
         log.debug("proyectoLineaInvestigacionId: {}, subLineaLineaInvestigacionId: {}",
             proyectoDTO.getProyectoLineaInvestigacionId(), proyectoDTO.getSubLineaLineaInvestigacionId());
         Proyecto proyecto = proyectoMapper.toEntity(proyectoDTO);
+
+        if (proyecto.getId() == null && proyecto.getEstado() == null) {
+            proyecto.setEstado(EnumEstadoProyecto.EN_ELABORACION_PROPUESTA);
+        }
 
         // Asegurar que se persistan las relaciones provenientes del DTO
         if (proyectoDTO.getProyectoLineaInvestigacionId() != null && proyecto.getProyectoLineaInvestigacion() == null) {
@@ -89,6 +106,182 @@ public class ProyectoServiceImpl implements ProyectoService {
 
         proyecto = proyectoRepository.save(proyecto);
         return proyectoMapper.toDto(proyecto);
+    }
+
+    /**
+     * Cambia el estado de un proyecto registrando el historial.
+     *
+     * @param proyectoId id del proyecto.
+     * @param nuevoEstado estado destino.
+     * @param observacion observación opcional.
+     * @return el proyecto actualizado.
+     */
+    @Override
+    public ProyectoDTO cambiarEstado(Long proyectoId, EnumEstadoProyecto nuevoEstado, String observacion) {
+        log.debug("Request to cambiarEstado Proyecto : {}, nuevoEstado : {}", proyectoId, nuevoEstado);
+        Proyecto proyecto = proyectoRepository.findById(proyectoId)
+            .orElseThrow(() -> new IllegalArgumentException("Proyecto no encontrado: " + proyectoId));
+
+        EnumEstadoProyecto estadoAnterior = proyecto.getEstado();
+        if (estadoAnterior == nuevoEstado) {
+            return proyectoMapper.toDto(proyecto);
+        }
+
+        proyecto.setEstado(nuevoEstado);
+        sincronizarFlagsLegacy(proyecto, nuevoEstado);
+        proyecto = proyectoRepository.save(proyecto);
+
+        ProyectoHistorialEstado historial = new ProyectoHistorialEstado();
+        historial.setProyecto(proyecto);
+        historial.setEstadoAnterior(estadoAnterior);
+        historial.setEstadoNuevo(nuevoEstado);
+        historial.setObservacion(observacion);
+        historial.setUsuarioLogin(SecurityUtils.getCurrentUserLogin().orElse(Constants.SYSTEM_ACCOUNT));
+        historial.setFechaCambio(Instant.now());
+        proyectoHistorialEstadoRepository.save(historial);
+
+        notificarResponsables(proyecto, estadoAnterior, nuevoEstado);
+
+        return proyectoMapper.toDto(proyecto);
+    }
+
+    /**
+     * Notifica a los responsables del proyecto según el nuevo estado.
+     */
+    private void notificarResponsables(Proyecto proyecto, EnumEstadoProyecto estadoAnterior, EnumEstadoProyecto nuevoEstado) {
+        String rolResponsable = null;
+        switch (nuevoEstado) {
+            case EN_REVISION_ASESOR:
+                rolResponsable = "Asesor";
+                break;
+            case EN_REVISION_JURADO_PROPUESTA:
+            case EN_REVISION_JURADO_PROYECTO:
+            case EN_EVALUACION_SUSTENTACION:
+                rolResponsable = "Jurado";
+                break;
+            case CORRECCIONES_ASESOR:
+            case CORRECCIONES_JURADO_PROPUESTA:
+            case CORRECCIONES_JURADO_PROYECTO:
+            case VIABLE:
+            case EN_ELABORACION_PROYECTO:
+            case SUSTENTACION_PROGRAMADA:
+            case AJUSTES_SUSTENTACION:
+                rolResponsable = "Estudiante";
+                break;
+            case LISTO_PARA_SUSTENTAR:
+            case NOTA_DEFINITIVA:
+                rolResponsable = "CIECYT";
+                break;
+            default:
+                break;
+        }
+
+        if (rolResponsable == null) {
+            return;
+        }
+
+        try {
+            List<IntegranteProyectoDTO> integrantes = integranteProyectoService.findByIntegranteProyectoProyectoId(proyecto.getId());
+            if (integrantes == null) {
+                return;
+            }
+            for (IntegranteProyectoDTO integrante : integrantes) {
+                if (integrante.getIntegranteProyectoRolesModalidadRol() != null &&
+                    integrante.getIntegranteProyectoRolesModalidadRol().contains(rolResponsable)) {
+                    String titulo = "Nueva tarea pendiente: " + nuevoEstado.name();
+                    String mensaje = String.format(
+                        "El proyecto '%s' cambió de estado de %s a %s. Tiene una acción pendiente.",
+                        proyecto.getTitulo() != null ? proyecto.getTitulo() : "Sin título",
+                        estadoAnterior != null ? estadoAnterior.name() : "INICIAL",
+                        nuevoEstado.name()
+                    );
+                    notificacionService.crearNotificacion(
+                        integrante.getIntegranteProyectoUserId(),
+                        titulo,
+                        mensaje,
+                        proyecto.getId(),
+                        "CAMBIO_ESTADO"
+                    );
+                }
+            }
+        } catch (Exception e) {
+            log.warn("No se pudieron notificar responsables del proyecto {}: {}", proyecto.getId(), e.getMessage());
+        }
+    }
+
+    /**
+     * Sincroniza los booleanos legacy con el nuevo estado para mantener compatibilidad
+     * mientras el frontend transiciona a usar exclusivamente {@code estado}.
+     */
+    private void sincronizarFlagsLegacy(Proyecto proyecto, EnumEstadoProyecto estado) {
+        switch (estado) {
+            case PREINSCRITA:
+            case EN_ELABORACION_PROPUESTA:
+                proyecto.setPreEnviado(false);
+                proyecto.setEnviado(false);
+                break;
+            case EN_REVISION_ASESOR:
+            case CORRECCIONES_ASESOR:
+                proyecto.setPreEnviado(true);
+                proyecto.setEnviado(true);
+                break;
+            case APROBADA_POR_ASESOR:
+            case EN_REVISION_JURADO_PROPUESTA:
+            case CORRECCIONES_JURADO_PROPUESTA:
+                proyecto.setPreEnviado(true);
+                proyecto.setEnviado(true);
+                break;
+            case VIABLE:
+                proyecto.setPreEnviado(true);
+                proyecto.setEnviado(true);
+                proyecto.setViabilidad("VIABLE");
+                proyecto.setViable(true);
+                break;
+            case NO_VIABLE:
+                proyecto.setPreEnviado(true);
+                proyecto.setEnviado(true);
+                proyecto.setViabilidad("NO_VIABLE");
+                proyecto.setViable(false);
+                break;
+            case EN_ELABORACION_PROYECTO:
+                proyecto.setPreEnviado(true);
+                proyecto.setEnviado(true);
+                proyecto.setViabilidad("VIABLE");
+                proyecto.setViable(true);
+                proyecto.setProyectoEnviado(false);
+                break;
+            case EN_REVISION_JURADO_PROYECTO:
+            case CORRECCIONES_JURADO_PROYECTO:
+                proyecto.setPreEnviado(true);
+                proyecto.setEnviado(true);
+                proyecto.setViabilidad("VIABLE");
+                proyecto.setViable(true);
+                proyecto.setProyectoEnviado(true);
+                break;
+            case LISTO_PARA_SUSTENTAR:
+            case SUSTENTACION_PROGRAMADA:
+            case SUSTENTACION_REALIZADA:
+            case EN_EVALUACION_SUSTENTACION:
+            case AJUSTES_SUSTENTACION:
+                proyecto.setPreEnviado(true);
+                proyecto.setEnviado(true);
+                proyecto.setViabilidad("VIABLE");
+                proyecto.setViable(true);
+                proyecto.setProyectoEnviado(true);
+                proyecto.setSustentar(true);
+                break;
+            case NOTA_DEFINITIVA:
+            case FINALIZADO:
+                proyecto.setPreEnviado(true);
+                proyecto.setEnviado(true);
+                proyecto.setViabilidad("VIABLE");
+                proyecto.setViable(true);
+                proyecto.setProyectoEnviado(true);
+                proyecto.setSustentar(true);
+                break;
+            default:
+                break;
+        }
     }
 
     /**
@@ -166,16 +359,12 @@ public class ProyectoServiceImpl implements ProyectoService {
             ProyectoDTO dto;
             dto = proyectoMapper.toDto(proyecto);
             dto.setTieneJurado(false);
-            dto.setTieneJuradoViabilidad(false);
             dto.setTieneAsesor(false);
             List<IntegranteProyectoDTO> lIntegrantes = integranteProyectoService.findByIntegranteProyectoProyectoId(proyecto.getId());
             if (lIntegrantes != null && lIntegrantes.size() > 0) {
                 for (IntegranteProyectoDTO i : lIntegrantes) {
                     if (i.getIntegranteProyectoRolesModalidadRol().contains("Jurado")) {
                         dto.setTieneJurado(true);
-                    }
-                    if (i.getIntegranteProyectoRolesModalidadRol().contains("Viabilidad")) {
-                        dto.setTieneJuradoViabilidad(true);
                     }
                     if (i.getIntegranteProyectoRolesModalidadRol().contains("Asesor")) {
                         dto.setTieneAsesor(true);
@@ -210,16 +399,12 @@ public class ProyectoServiceImpl implements ProyectoService {
         Optional<ProyectoDTO> odto = proyectoRepository.findById(id).map(proyectoMapper::toDto);
         ProyectoDTO dto = odto.get();
         dto.setTieneJurado(false);
-        dto.setTieneJuradoViabilidad(false);
         dto.setTieneAsesor(false);
         List<IntegranteProyectoDTO> lIntegrantes = integranteProyectoService.findByIntegranteProyectoProyectoId(dto.getId());
         if (lIntegrantes != null && lIntegrantes.size() > 0) {
             for (IntegranteProyectoDTO i : lIntegrantes) {
                 if (i.getIntegranteProyectoRolesModalidadRol().contains("Jurado")) {
                     dto.setTieneJurado(true);
-                }
-                if (i.getIntegranteProyectoRolesModalidadRol().contains("Viabilidad")) {
-                    dto.setTieneJuradoViabilidad(true);
                 }
                 if (i.getIntegranteProyectoRolesModalidadRol().contains("Asesor")) {
                     dto.setTieneAsesor(true);

@@ -1,6 +1,7 @@
 package co.edu.itp.ciecyt.web.rest;
 
 import co.edu.itp.ciecyt.domain.Proyecto;
+import co.edu.itp.ciecyt.domain.enumeration.EnumEstadoProyecto;
 import co.edu.itp.ciecyt.repository.ProyectoRepository;
 import co.edu.itp.ciecyt.service.ProyectoService;
 //import co.edu.itp.ciecyt.service.ReportService;
@@ -11,6 +12,7 @@ import co.edu.itp.ciecyt.web.rest.errors.BadRequestAlertException;
 import io.github.jhipster.web.util.HeaderUtil;
 import io.github.jhipster.web.util.PaginationUtil;
 import io.github.jhipster.web.util.ResponseUtil;
+import java.util.Map;
 //import net.sf.jasperreports.engine.JRException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -149,6 +151,31 @@ public class ProyectoResource {
         log.debug("REST request to get Proyecto : {}", id);
         Optional<ProyectoDTO> proyectoDTO = proyectoService.findOne(id);
         return ResponseUtil.wrapOrNotFound(proyectoDTO);
+    }
+
+    /**
+     * {@code POST  /proyectos/:id/cambiar-estado} : Cambia el estado de un proyecto.
+     *
+     * @param id the id of the proyecto.
+     * @param payload map with {@code estado} and optional {@code observacion}.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the updated proyectoDTO.
+     */
+    @PostMapping("/proyectos/{id}/cambiar-estado")
+    public ResponseEntity<ProyectoDTO> cambiarEstadoProyecto(
+        @PathVariable Long id,
+        @RequestBody Map<String, String> payload
+    ) {
+        log.debug("REST request to cambiarEstado Proyecto : {}, payload : {}", id, payload);
+        String estadoStr = payload.get("estado");
+        String observacion = payload.getOrDefault("observacion", null);
+        if (estadoStr == null) {
+            throw new BadRequestAlertException("El estado es obligatorio", ENTITY_NAME, "estadorequired");
+        }
+        EnumEstadoProyecto nuevoEstado = EnumEstadoProyecto.valueOf(estadoStr);
+        ProyectoDTO result = proyectoService.cambiarEstado(id, nuevoEstado, observacion);
+        return ResponseEntity.ok()
+            .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, id.toString()))
+            .body(result);
     }
 
     @GetMapping("/proyectoIntegrantes/{id}")

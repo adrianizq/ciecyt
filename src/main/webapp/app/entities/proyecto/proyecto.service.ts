@@ -155,4 +155,17 @@ export default class ProyectoService {
         });
     });
   }
+
+  public cambiarEstado(id: number, estado: string, observacion?: string): Promise<IProyecto> {
+    return new Promise<IProyecto>((resolve, reject) => {
+      axios
+        .post(`${baseApiUrl}/${id}/cambiar-estado`, { estado, observacion })
+        .then(res => {
+          resolve(res.data);
+        })
+        .catch(err => {
+          reject(err);
+        });
+    });
+  }
 }

@@ -48,9 +48,6 @@ export default class JhiNavbar extends Vue {
         if (this.hasAnyAuthority('ROLE_ASESOR')) {
           this.roles += 'ASESOR,';
         }
-        if (this.hasAnyAuthority('ROLE_VIABILIDAD')) {
-          this.roles += 'VIABILIDAD,';
-        }
         if (this.hasAnyAuthority('ROLE_ESTUDIANTE')) {
           this.roles += 'ESTUDIANTE,';
         }

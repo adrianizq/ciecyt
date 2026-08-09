@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.9.xsd
+                        http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog-ext.xsd">
+
+    <!-- ================================================================== -->
+    <!-- ELIMINACION DEL ROL VIABILIDAD: la viabilidad ahora la evalua el jurado -->
+    <!-- Los cambios son especificos de datos reales y usan funciones de PostgreSQL -->
+    <!-- ================================================================== -->
+
+    <changeSet id="20260727000001-1" author="ciecyt" context="dev,prod">
+        <comment>Respaldar y reasignar los integrantes del rol Viabilidad al rol Jurado de la misma modalidad</comment>
+        <createTable tableName="viabilidad_backup">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="tipo" type="varchar(30)"/>
+            <column name="tabla" type="varchar(50)"/>
+            <column name="entidad_id" type="bigint"/>
+            <column name="referencia" type="bigint"/>
+            <column name="authority" type="varchar(255)"/>
+        </createTable>
+        <sql>
+            INSERT INTO viabilidad_backup (tipo, entidad_id, referencia)
+            SELECT 'INTEGRANTE', ip.id, ip.integrante_proyecto_roles_modalidad_id
+            FROM integrante_proyecto ip
+            JOIN roles_modalidad rm ON rm.id = ip.integrante_proyecto_roles_modalidad_id
+            WHERE rm.rol = 'Viabilidad';
+
+            INSERT INTO viabilidad_backup (tipo, entidad_id, authority)
+            SELECT 'USER_AUTH', user_id, authority_name
+            FROM jhi_user_authority
+            WHERE authority_name = 'ROLE_VIABILIDAD';
+
+            INSERT INTO viabilidad_backup (tipo, tabla, entidad_id, authority)
+            SELECT 'AUTHORITY', 'proyecto_respuestas', id, authority
+            FROM proyecto_respuestas
+            WHERE authority = 'ROLE_VIABILIDAD';
+
+            INSERT INTO viabilidad_backup (tipo, tabla, entidad_id, authority)
+            SELECT 'AUTHORITY', 'adjunto_retroalimentacion', id, authority
+            FROM adjunto_retroalimentacion
+            WHERE authority = 'ROLE_VIABILIDAD';
+
+            INSERT INTO viabilidad_backup (tipo, tabla, entidad_id, authority)
+            SELECT 'AUTHORITY', 'pregunta_authority', id, authority_name
+            FROM pregunta_authority
+            WHERE authority_name = 'ROLE_VIABILIDAD';
+        </sql>
+        <sql>
+            UPDATE integrante_proyecto ip
+            SET integrante_proyecto_roles_modalidad_id = (
+                SELECT j.id FROM roles_modalidad j
+                JOIN roles_modalidad v ON v.roles_modalidad_modalidad_id = j.roles_modalidad_modalidad_id
+                WHERE ip.integrante_proyecto_roles_modalidad_id = v.id
+                  AND v.rol = 'Viabilidad'
+                  AND j.roles_modalidad_authority_name = 'ROLE_JURADO'
+                ORDER BY CASE WHEN j.rol = 'Jurado' THEN 0 ELSE 1 END, j.id
+                LIMIT 1
+            )
+            WHERE ip.integrante_proyecto_roles_modalidad_id IN (SELECT id FROM roles_modalidad WHERE rol = 'Viabilidad')
+              AND EXISTS (
+                SELECT 1 FROM roles_modalidad j
+                JOIN roles_modalidad v ON v.roles_modalidad_modalidad_id = j.roles_modalidad_modalidad_id
+                WHERE ip.integrante_proyecto_roles_modalidad_id = v.id
+                  AND v.rol = 'Viabilidad'
+                  AND j.roles_modalidad_authority_name = 'ROLE_JURADO'
+              );
+        </sql>
+        <rollback>
+            UPDATE integrante_proyecto ip
+            SET integrante_proyecto_roles_modalidad_id = b.referencia
+            FROM viabilidad_backup b
+            WHERE b.tipo = 'INTEGRANTE' AND b.entidad_id = ip.id;
+
+            DROP TABLE viabilidad_backup;
+        </rollback>
+    </changeSet>
+
+    <changeSet id="20260727000001-2" author="ciecyt" context="dev,prod">
+        <comment>Migrar autoridades y respuestas de ROLE_VIABILIDAD a ROLE_JURADO</comment>
+        <sql>
+            DELETE FROM jhi_user_authority ua
+            WHERE ua.authority_name = 'ROLE_VIABILIDAD'
+              AND EXISTS (SELECT 1 FROM jhi_user_authority ua2
+                          WHERE ua2.user_id = ua.user_id AND ua2.authority_name = 'ROLE_JURADO');
+
+            UPDATE jhi_user_authority SET authority_name = 'ROLE_JURADO' WHERE authority_name = 'ROLE_VIABILIDAD';
+
+            UPDATE proyecto_respuestas SET authority = 'ROLE_JURADO' WHERE authority = 'ROLE_VIABILIDAD';
+
+            UPDATE adjunto_retroalimentacion SET authority = 'ROLE_JURADO' WHERE authority = 'ROLE_VIABILIDAD';
+
+            UPDATE pregunta_authority SET authority_name = 'ROLE_JURADO' WHERE authority_name = 'ROLE_VIABILIDAD';
+        </sql>
+        <rollback>
+            INSERT INTO jhi_user_authority (user_id, authority_name)
+            SELECT entidad_id, 'ROLE_VIABILIDAD' FROM viabilidad_backup WHERE tipo = 'USER_AUTH'
+            AND NOT EXISTS (SELECT 1 FROM jhi_user_authority ua WHERE ua.user_id = viabilidad_backup.entidad_id AND ua.authority_name = 'ROLE_VIABILIDAD');
+
+            UPDATE proyecto_respuestas pr
+            SET authority = b.authority
+            FROM viabilidad_backup b
+            WHERE b.tipo = 'AUTHORITY' AND b.tabla = 'proyecto_respuestas' AND b.entidad_id = pr.id;
+
+            UPDATE adjunto_retroalimentacion ar
+            SET authority = b.authority
+            FROM viabilidad_backup b
+            WHERE b.tipo = 'AUTHORITY' AND b.tabla = 'adjunto_retroalimentacion' AND b.entidad_id = ar.id;
+
+            UPDATE pregunta_authority pa
+            SET authority_name = b.authority
+            FROM viabilidad_backup b
+            WHERE b.tipo = 'AUTHORITY' AND b.tabla = 'pregunta_authority' AND b.entidad_id = pa.id;
+        </rollback>
+    </changeSet>
+
+    <changeSet id="20260727000001-3" author="ciecyt" context="dev,prod">
+        <comment>Eliminar el rol Viabilidad de roles_modalidad, el menu de Viabilidad y la autoridad ROLE_VIABILIDAD</comment>
+        <sql>
+            UPDATE menu SET rol = btrim(regexp_replace(rol, '\s*VIABILIDAD\s*', ' ')) WHERE rol LIKE '%VIABILIDAD%';
+
+            DELETE FROM menu WHERE id = 6516 AND url = '/viabilidad-propuesta/listado';
+
+            DELETE FROM roles_modalidad WHERE rol = 'Viabilidad';
+
+            DELETE FROM jhi_authority WHERE name = 'ROLE_VIABILIDAD';
+        </sql>
+        <rollback>
+            INSERT INTO jhi_authority (name) VALUES ('ROLE_VIABILIDAD');
+
+            INSERT INTO roles_modalidad (id, rol, cantidad, calificador, roles_modalidad_modalidad_id, roles_modalidad_authority_name) VALUES
+                (9103, 'Viabilidad', 1, true, 9001, 'ROLE_JURADO'),
+                (9113, 'Viabilidad', 1, true, 9002, 'ROLE_JURADO'),
+                (9125, 'Viabilidad', 1, true, 9003, 'ROLE_JURADO'),
+                (9134, 'Viabilidad', 1, true, 9004, 'ROLE_JURADO'),
+                (9153, 'Viabilidad', 1, true, 9006, 'ROLE_JURADO'),
+                (9163, 'Viabilidad', 1, true, 9007, 'ROLE_JURADO'),
+                (29051, 'Viabilidad', 1, false, 9005, 'ROLE_VIABILIDAD');
+
+            UPDATE menu SET rol = 'ADMIN CIECYT VIABILIDAD JURADO ASESOR USER ESTUDIANTE' WHERE id = 1051;
+            UPDATE menu SET rol = 'ADMIN CIECYT JURADO ASESOR VIABILIDAD ESTUDIANTE' WHERE id IN (1055, 1056, 1057, 1058, 6500);
+            INSERT INTO menu (id, nombre, url, activo, menu_padre_id, es_publico, rol) VALUES (6516, 'Viabilidad', '/viabilidad-propuesta/listado', true, 6500, false, 'VIABILIDAD JURADO');
+        </rollback>
+    </changeSet>
+
+    <changeSet id="20260727000001-4" author="ciecyt" context="dev,prod">
+        <comment>Eliminar la tabla de respaldo de la migracion de viabilidad</comment>
+        <dropTable tableName="viabilidad_backup"/>
+        <rollback>
+            <createTable tableName="viabilidad_backup">
+                <column name="id" type="bigint" autoIncrement="true">
+                    <constraints primaryKey="true" nullable="false"/>
+                </column>
+                <column name="tipo" type="varchar(30)"/>
+                <column name="tabla" type="varchar(50)"/>
+                <column name="entidad_id" type="bigint"/>
+                <column name="referencia" type="bigint"/>
+                <column name="authority" type="varchar(255)"/>
+            </createTable>
+        </rollback>
+    </changeSet>
+
+</databaseChangeLog>

@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.9.xsd
+                        http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog-ext/dbchangelog-3.9.xsd">
+
+    <changeSet id="20260808000002-1" author="flow" dbms="postgresql">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="notificacion"/>
+            </not>
+        </preConditions>
+        <createTable tableName="notificacion">
+            <column name="id" type="bigint">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="titulo" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="mensaje" type="varchar(255)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="tipo" type="varchar(255)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="leido" type="boolean">
+                <constraints nullable="false"/>
+            </column>
+            <column name="fecha_creacion" type="timestamp">
+                <constraints nullable="false"/>
+            </column>
+            <column name="fecha_lectura" type="timestamp">
+                <constraints nullable="true"/>
+            </column>
+            <column name="user_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="proyecto_id" type="bigint">
+                <constraints nullable="true"/>
+            </column>
+        </createTable>
+        <addForeignKeyConstraint
+            baseColumnNames="user_id"
+            baseTableName="notificacion"
+            constraintName="fk_notificacion_user"
+            referencedColumnNames="id"
+            referencedTableName="jhi_user"/>
+        <addForeignKeyConstraint
+            baseColumnNames="proyecto_id"
+            baseTableName="notificacion"
+            constraintName="fk_notificacion_proyecto"
+            referencedColumnNames="id"
+            referencedTableName="proyecto"/>
+        <rollback>
+            <dropForeignKeyConstraint baseTableName="notificacion" constraintName="fk_notificacion_user"/>
+            <dropForeignKeyConstraint baseTableName="notificacion" constraintName="fk_notificacion_proyecto"/>
+            <dropTable tableName="notificacion"/>
+        </rollback>
+    </changeSet>
+
+</databaseChangeLog>

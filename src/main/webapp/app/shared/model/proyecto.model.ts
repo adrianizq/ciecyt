@@ -1,4 +1,5 @@
 import { IIntegranteProyecto } from './integrante-proyecto.model';
+import { EnumEstadoProyecto } from './enumerations/enum-estado-proyecto.model';
 
 export interface IProyecto {
   id?: number;
@@ -33,11 +34,11 @@ export interface IProyecto {
   nota?: number;
   listaIntegrantesProyecto?: IIntegranteProyecto[];
   tieneJurado?: boolean;
-  tieneJuradoViabilidad?: boolean;
   tieneAsesor?: boolean;
   enviado?: boolean;
   preEnviado?: boolean;
   proyectoEnviado?: boolean;
+  estado?: EnumEstadoProyecto;
   fechaEnvioPropuesta?: Date;
   fechaEnvioProyecto?: Date;
   recomendaciones?: string;
@@ -47,6 +48,7 @@ export interface IProyecto {
   recomendacionesJuradoSustentacion?: string;
   viable?: boolean;
   viabilidad?: string;
+  sustentar?: boolean;
 }
 
 export class Proyecto implements IProyecto {
@@ -83,11 +85,11 @@ export class Proyecto implements IProyecto {
     public ciclo?: string,
     public listaIntegrantesProyecto?: IIntegranteProyecto[],
     public tieneJurado?: boolean,
-    public tieneJuradoViabilidad?: boolean,
     public tieneAsesor?: boolean,
     public enviado?: boolean,
     public preEnviado?: boolean,
     public proyectoEnviado?: boolean,
+    public estado?: EnumEstadoProyecto,
     public fechaEnvioPropuesta?: Date,
     public fechaEnvioProyecto?: Date,
     public recomendaciones?: string,
@@ -96,6 +98,7 @@ export class Proyecto implements IProyecto {
     public recomendacionesAsesorProyecto?: string,
     public recomendacionesJuradoSustentacion?: string,
     public viable?: boolean,
-    public viabilidad?: string
+    public viabilidad?: string,
+    public sustentar?: boolean
   ) {}
 }

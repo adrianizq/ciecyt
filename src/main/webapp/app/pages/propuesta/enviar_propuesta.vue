@@ -18,7 +18,7 @@
              <ol></ol>
             
         </ul>
-                Se va a enviar la Propuesta al Ciecyt, para ser revisada por su Asesor. <br />
+                Se va a enviar la Propuesta al Asesor asignado. <br />
                 Para realizar esta operación, debe haber diligenciado correctamente los datos de su propuesta
                 <br /> 
 
@@ -102,43 +102,22 @@ export default class EnviarPropuesta extends Vue {
 
   public save(): void {
     this.isSaving = true;
-    //calcular la fecha actual para guardarla en
-    //proyecto.fechaEnvioPropuesta
+    // El envío de la propuesta actualiza el estado y sincroniza los flags legacy.
+    const estado = 'EN_REVISION_ASESOR';
+    const observacion = 'Estudiante envió la propuesta al asesor';
 
-    this.proyecto.fechaEnvioPropuesta = new Date();
-    this.proyecto.preEnviado = true;
-
-    if (this.proyecto.id) {
-      this.proyectoService()
-        .updateProyecto(this.proyecto)
-        .then(param => {
-          this.isSaving = false;
-          //this.$router.push({ name: 'PropuestaIntegrantesView', params: { proyectoId: this.proyecto.id.toString() } });
-          (<any>this).$router.go(0);
-          const message = this.$t('ciecytApp.proyecto.updated', { param: param.id });
-          this.alertService().showAlert(message, 'info');
-        });
-    } else {
-      this.proyectoService()
-        .createProyecto(this.proyecto)
-        .then(param => {
-          this.isSaving = false;
-
-          this.proyId = String(param.id);
-
-          // this.$router.push({ name: 'PropuestaIntegrantesView', params: { proyectoId: this.proyId } });
-          (<any>this).$router.go(0);
-
-          const message = 'Se ha creado un nuevo proyecto';
-          this.alertService().showAlert(message, 'success');
-        });
-    }
-    //this.submitStatus = 'PENDING';
-    //setTimeout(() => {
-    //  this.submitStatus = 'OK';
-    //}, 500);
-    //}
-    // console.log(this.submitStatus);
+    this.proyectoService()
+      .cambiarEstado(this.proyecto.id, estado, observacion)
+      .then(param => {
+        this.isSaving = false;
+        (<any>this).$router.go(0);
+        const message = this.$t('ciecytApp.proyecto.updated', { param: param.id });
+        this.alertService().showAlert(message, 'info');
+      })
+      .catch(() => {
+        this.isSaving = false;
+        this.alertService().showAlert('Error al enviar la propuesta', 'danger');
+      });
   }
 
   retrieveProyecto() {

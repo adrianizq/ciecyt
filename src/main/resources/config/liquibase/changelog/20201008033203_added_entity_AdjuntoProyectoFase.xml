@@ -11,6 +11,7 @@
         Added the entity AdjuntoProyectoFase.
     -->
     <changeSet id="20201008033203-1" author="jhipster">
+        <validCheckSum>8:6b1675a9a7071580ee27a3878a92c790</validCheckSum>
         <createTable tableName="adjunto_proyecto_fase">
             <column name="id" type="bigint">
                 <constraints primaryKey="true" nullable="false"/>
@@ -40,9 +41,6 @@
                 <constraints nullable="true" />
             </column>
             <column name="archivo" type="longblob">
-                <constraints nullable="true" />
-            </column>
-            <column name="archivo_content_type" type="varchar(255)">
                 <constraints nullable="true" />
             </column>
             <column name="archivo_content_type" type="varchar(255)">
@@ -86,7 +84,6 @@
             <column name="fecha_inicio" type="date"/>
             <column name="fecha_fin" type="date"/>
             <column name="archivo" type="blob"/>
-            <column name="archivo_content_type" type="string"/>
             <column name="archivo_content_type" type="string"/>
             <!-- jhipster-needle-liquibase-add-loadcolumn - JHipster (and/or extensions) can add load columns here -->
         </loadData>

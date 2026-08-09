@@ -63,11 +63,11 @@ public class ProyectoDTO implements Serializable {
 
     private Boolean proyectoEnviado;
 
+    private String estado;
+
     private Long asesorId;
 
     private Boolean tieneJurado;
-
-    private Boolean tieneJuradoViabilidad;
 
     private Boolean tieneAsesor;
 
@@ -311,6 +311,14 @@ public class ProyectoDTO implements Serializable {
         this.proyectoEnviado = proyectoEnviado;
     }
 
+    public String getEstado() {
+        return estado;
+    }
+
+    public void setEstado(String estado) {
+        this.estado = estado;
+    }
+
     public Long getAsesorId() {
         return asesorId;
     }
@@ -325,14 +333,6 @@ public class ProyectoDTO implements Serializable {
 
     public void setTieneJurado(Boolean tieneJurado) {
         this.tieneJurado = tieneJurado;
-    }
-
-    public Boolean getTieneJuradoViabilidad() {
-        return tieneJuradoViabilidad;
-    }
-
-    public void setTieneJuradoViabilidad(Boolean tieneJuradoViabilidad) {
-        this.tieneJuradoViabilidad = tieneJuradoViabilidad;
     }
 
     public Boolean getTieneAsesor() {

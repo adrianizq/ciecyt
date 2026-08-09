@@ -483,12 +483,37 @@ export default class PropuestaEvaluar extends mixins(JhiDataUtils){
             }
 
             //actualizar el proyecto para que se guarde la viabilidad
-             try {
-                this.proyectoService().updateProyecto(this.proyecto);
-
-                  } catch (e) {
+            try {
+                this.proyectoService()
+                    .updateProyecto(this.proyecto)
+                    .then(() => {
+                        this.cambiarEstadoSegunAsesoria();
+                    });
+            } catch (e) {
                 //TODO: mostrar mensajes de error
             }
+        }
+
+        public cambiarEstadoSegunAsesoria(): void {
+            const enviado = this.proyecto.enviado;
+            let nuevoEstado: string | null = null;
+            let observacion = '';
+            if (enviado) {
+                nuevoEstado = 'EN_REVISION_JURADO_PROPUESTA';
+                observacion = 'Asesor aprueba y envía la propuesta al jurado';
+            } else {
+                nuevoEstado = 'CORRECCIONES_ASESOR';
+                observacion = 'Asesor solicita correcciones en la propuesta';
+            }
+            this.proyectoService()
+                .cambiarEstado(this.proyecto.id, nuevoEstado, observacion)
+                .then(() => {
+                    const message = this.$t('ciecytApp.proyecto.estadoActualizado', { estado: nuevoEstado });
+                    this.alertService().showAlert(message, 'success');
+                })
+                .catch(err => {
+                    this.alertService().showAlert('Error al actualizar estado: ' + err.message, 'danger');
+                });
         }
 
         async initRelationships() {
@@ -521,34 +546,45 @@ export default class PropuestaEvaluar extends mixins(JhiDataUtils){
                 
 
               //Obtenienedo los elementos de acuerdo a la modalidad
-              console.log("Antes de cargar las preguntas");
-                res = await  this.preguntaService()
-                 .retrievePreguntasModalidadyFaseyAuthority(this.modalidadId, this.fase.id, this.authority)
-                 .then(res => {
-                    this.pregunts = res.data;
-                    
-                  this.pregunts.forEach(e => {
-                  var proyResp: IProyectoRespuestas = new ProyectoRespuestas();
-                  proyResp.proyectoRespuestasPreguntaPregunta= e.pregunta;
-                  proyResp.proyectoRespuestasPreguntaId = e.id;
-                  proyResp.proyectoRespuestasProyectoId = this.proyId;
-                  //ubicar un elemento, no esta en proyectoRespuestas
-                  proyResp.elemento = e.preguntaElemento;
-                  proyResp.preguntaTipoPreguntaId = e.preguntaTipoPreguntaId;
-                  proyResp.preguntaTipoPreguntaTipoPregunta = e.preguntaTipoPreguntaTipoPregunta;
-                  proyResp.encabezado = e.encabezado;
-                  proyResp.puntajeMaximo = e.puntajeMaximo;
-                  this.elementoProyects.forEach(x => {
-                      console.log("Entra al ciclo elementoProyecto");
-                    if (x.elementoProyectoElementoId == e.preguntaElementoId){
-                         proyResp.dato = x.dato;    
-                    }
-                  });
-                  if (!this.proyectoRespuestasDatos){
-                   this.proyectoRespuests.push(proyResp);
+              res = await  this.preguntaService()
+               .retrievePreguntasModalidadyFaseyAuthority(this.modalidadId, this.fase.id, this.authority);
+
+              this.pregunts = res.data;
+              const elementosCubiertos: number[] = [];
+
+              this.pregunts.forEach(e => {
+                var proyResp: IProyectoRespuestas = new ProyectoRespuestas();
+                proyResp.proyectoRespuestasPreguntaPregunta = e.pregunta;
+                proyResp.proyectoRespuestasPreguntaId = e.id;
+                proyResp.proyectoRespuestasProyectoId = this.proyId;
+                //ubicar un elemento, no esta en proyectoRespuestas
+                proyResp.elemento = e.preguntaElemento;
+                proyResp.preguntaTipoPreguntaId = e.preguntaTipoPreguntaId;
+                proyResp.preguntaTipoPreguntaTipoPregunta = e.preguntaTipoPreguntaTipoPregunta;
+                proyResp.encabezado = e.encabezado;
+                proyResp.puntajeMaximo = e.puntajeMaximo;
+                this.elementoProyects.forEach(x => {
+                  if (x.elementoProyectoElementoId == e.preguntaElementoId){
+                     proyResp.dato = x.dato;
+                     elementosCubiertos.push(x.elementoProyectoElementoId);
                   }
-                  
-                }); //fin del foreach pregunts
+                });
+                if (!this.proyectoRespuestasDatos){
+                 this.proyectoRespuests.push(proyResp);
+                }
+              }); //fin del foreach pregunts
+
+              //Mostrar siempre los elementos que diligenció el estudiante
+              this.elementoProyects.forEach(x => {
+                if (!elementosCubiertos.includes(x.elementoProyectoElementoId)) {
+                  const proyRespElem: IProyectoRespuestas = new ProyectoRespuestas();
+                  proyRespElem.elemento = x.elementoProyectoElementoElemento;
+                  proyRespElem.proyectoRespuestasPreguntaPregunta = x.elementoProyectoProyectoDescripcion;
+                  proyRespElem.proyectoRespuestasProyectoId = this.proyId;
+                  proyRespElem.encabezado = x.elementoProyectoElementoElemento;
+                  proyRespElem.dato = x.dato;
+                  this.proyectoRespuests.push(proyRespElem);
+                }
               });
 
           

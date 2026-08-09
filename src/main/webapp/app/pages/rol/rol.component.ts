@@ -19,7 +19,6 @@ export default class Rol extends mixins(AlertMixin) {
     'ROLE_DOCENTE',
     'ROLE_CIECYT',
     'ROLE_ESTUDIANTE',
-    'ROLE_VIABILIDAD',
   ];
 
   public dismissCountDown: number = this.$store.getters.dismissCountDown;

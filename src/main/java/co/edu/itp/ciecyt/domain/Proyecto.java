@@ -1,5 +1,6 @@
 package co.edu.itp.ciecyt.domain;
 
+import co.edu.itp.ciecyt.domain.enumeration.EnumEstadoProyecto;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.ZonedDateTime;
@@ -108,6 +109,10 @@ public class Proyecto implements Serializable {
 
     @Column(name = "proyecto_enviado")
     private Boolean proyectoEnviado;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "estado")
+    private EnumEstadoProyecto estado;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "proyecto_linea_investigacion_id")
@@ -529,6 +534,19 @@ public class Proyecto implements Serializable {
 
     public void setProyectoEnviado(Boolean proyectoEnviado) {
         this.proyectoEnviado = proyectoEnviado;
+    }
+
+    public EnumEstadoProyecto getEstado() {
+        return estado;
+    }
+
+    public Proyecto estado(EnumEstadoProyecto estado) {
+        this.estado = estado;
+        return this;
+    }
+
+    public void setEstado(EnumEstadoProyecto estado) {
+        this.estado = estado;
     }
 
     public LineaInvestigacion getProyectoLineaInvestigacion() {

@@ -4,6 +4,7 @@ import co.edu.itp.ciecyt.domain.ElementoModalidad;
 
 import co.edu.itp.ciecyt.domain.PreguntaModalidad;
 import org.springframework.data.jpa.repository.*;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -17,4 +18,8 @@ public interface ElementoModalidadRepository extends JpaRepository<ElementoModal
     List<ElementoModalidad> findByModalidadId(Long idModalidad);
     List<ElementoModalidad> findByElementoId(Long idElemento);
     ElementoModalidad findByElementoIdAndModalidadId(Long idElemento,Long idModalidad);
+
+    @Modifying(clearAutomatically = true)
+    @Query("delete from ElementoModalidad em where em.elemento.id = :elementoId")
+    void deleteByElementoId(@Param("elementoId") Long elementoId);
 }
