@@ -1,223 +1,242 @@
 <template>
 
-    <div class="row">
+    <div class="asesoria-evaluar">
+        <form @submit.prevent="save()">
 
-        <div class="col-sm-8">
-           <form @submit.prevent="save()">
-                <div class="row">
-                   
-                 <div class="col-12">
-                    <b-card  
-                      border-variant="primary"
-                      header-bg-variant="light"
-                      body-bg-variant="light"
-                     header-text-variant="info">  
-                   
-                        <table> 
-               <tr><td><h2>Correcciones del Proyecto por el Asesor</h2></td></tr>
-               <tr><td>Título: {{proyecto.titulo}} </td></tr>
-               <tr><td>Programa: {{proyecto.programa}} </td></tr>
-                <tr><td> &nbsp; </td></tr>
-             </table>
-                  </b-card>
-                  <hr></hr>
-                </div> 
-
-                <div class="col-12">
-                    <b-card  
-                      border-variant="primary"
-                      header-bg-variant="light"
-                      body-bg-variant="light"
-                     header-text-variant="info">  
-                
-                    <!-------------------------DESCARGAR ------->
-                       <div class="form-group">
-                        <label class="form-control-label" v-text="$t('ciecytApp.adjuntoProyectoFase.archivo')" for="adjunto-proyecto-fase-archivo">Archivo</label>
-                        <div>
-                            <div v-if="adjuntoProyectoFase.id"  class="form-text text-danger clearfix">
-                            
-                            
-                                <!--<a class="pull-left" v-on:click="openFile(adjuntoProyectoFase.archivoContentType, adjuntoProyectoFase.file)" v-text="$t('entity.action.open')">open</a><br> -->
-                                <a class="pull-left" v-on:click="this.descargar" v-text="$t('entity.action.open')">open </a>
-                                <span class="pull-left">{{adjuntoProyectoFase.nombreArchivoOriginal }} <br /> {{adjuntoProyectoFase.archivoContentType}}, {{byteSize(adjuntoProyectoFase.file)}}</span>
-                                
-                            </div> 
-                           
-                           <!-- <input v-if="adjuntoProyectoFase.file==null" type="file" ref="file_archivo" id="file_archivo" v-on:change="asignarData($event, adjuntoProyectoFase, 'archivo', false)" v-text="$t('entity.action.addblob')"/>-->
-                            
+            <!-- Cabecera del proyecto -->
+            <div class="evaluacion-header mb-4">
+                <div class="d-flex align-items-center justify-content-between flex-wrap">
+                    <div class="d-flex align-items-center">
+                        <div class="header-icon">
+                            <font-awesome-icon icon="tasks" />
                         </div>
-                        
-                    </div> 
-                   </b-card>
-                  <hr></hr>
-                </div> 
-               
-                   
-           
-                    <div class="col-12" v-for="(ep, i) in proyectoRespuests" :key="i">
-                    <b-card  
-                      border-variant="primary"
-                      header-bg-variant="light"
-                      body-bg-variant="light"
-                     header-text-variant="info">
-                     <!--<div class="text-secondary"> Tipo de pregunta {{ep.preguntaTipoPreguntaTipoPregunta}} </div>-->
-                     <label  class="p-3 mb-2 bg-info text-white container-fluid">{{ep.encabezado}} </label>
-                     
-                     <b-form-group
-                            :label="ep.elemento"
-                            :label-for="`ep-${i}`" 
-                            :description="ep.proyectoRespuestasPreguntaPregunta"
-                                                   
-                       >
-                       <div class="form-group" >
-                           
-
-                            
-                            <b-form-textarea rows="2"  max-rows="10" class="form-control" :name="`ep-${i}`"
-                            :id="`ep-${i}`" v-if="ep.elemento"
-                                   v-model="ep.elemento"  disabled="true"  />
-                       </div>
-                       </b-form-group>
-
-                        
-                       <!--- dato  -->
-                          <b-form-group>
-                       <div class="form-group" >
-
-                            <b-form-textarea rows="2"  max-rows="10" class="form-control" :name="`ep-${i}`"
-                            :id="`ep-${i}` " 
-                                   v-model="ep.dato"  v-if="ep.dato!=null" readonly="true" />
+                        <div>
+                            <h2 class="mb-1">Correcciones del Proyecto — Asesor</h2>
+                            <div class="header-meta">
+                                <span class="meta-item" v-if="proyecto.titulo">
+                                    <font-awesome-icon icon="book" /> {{ proyecto.titulo }}
+                                </span>
+                                <span class="meta-item" v-if="proyecto.programa">
+                                    <font-awesome-icon icon="user" /> {{ proyecto.programa }}
+                                </span>
+                                <span class="meta-item" v-if="proyecto.proyectoModalidadModalidad">
+                                    <font-awesome-icon icon="th-list" /> {{ proyecto.proyectoModalidadModalidad }}
+                                </span>
                             </div>
-                       </b-form-group>
-
-                        <!-- TIPOS Pregunta--------------------------------------------->
-                        <div class="form-group">
-                        <label class="form-control-label" v-text="$t('ciecytApp.proyectoRespuestas.respuesta')" for="proyecto-respuestas-respuesta">Respuesta</label>
-                        <select class="form-control" c  v-model="ep.respuesta" 
-                          id="proyecto-respuestas-respuesta"
-                          v-if="ep.preguntaTipoPreguntaTipoPregunta==`Cumple NoCumple NoAplica`" >
-                            <option value="CUMPLE" v-bind:label="$t('ciecytApp.EnumRespuestas.CUMPLE')">CUMPLE</option>
-                            <option value="NO_CUMPLE" v-bind:label="$t('ciecytApp.EnumRespuestas.NO_CUMPLE')">NO_CUMPLE</option>
-                            <option value="NO_APLICA" v-bind:label="$t('ciecytApp.EnumRespuestas.NO_APLICA')">NO_APLICA</option>
-                        </select>
-                        
-                        <select class="form-control" name="respuesta"  v-model.bool="ep.siNo" 
-                          id="proyecto-respuestas-respuesta"
-                          v-if="ep.preguntaTipoPreguntaTipoPregunta==`Si o No`" >
-                            <option value="true" v-bind:label="$t('ciecytApp.EnumRespuestas.SI')">SI</option>
-                            <option value="false" v-bind:label="$t('ciecytApp.EnumRespuestas.NO')">NO</option>
-                        </select>
-
-                        <!--<b-form-input  type="range" min="0" v-bind:max="ep.puntajeMaximo" :step="0.1"
-                         v-if="ep.preguntaTipoPreguntaTipoPregunta==`Nota (con puntaje)`" 
-                         v-model="ep.respuestaNumero">
-                         </b-form-input>
-                          <div class="mt-2">Nota: {{ ep.respuestaNumero }}</div>
-                        -->
-                         <div class="mt-2">
-                            <input type="number" min="0" v-bind:max="ep.puntajeMaximo" :step="0.1"
-                            v-if="ep.preguntaTipoPreguntaTipoPregunta==`Nota (con puntaje)`" 
-                            v-model="ep.respuestaNumero">
-                         </div>     
-                         
-
-                        <b-form-textarea  
-                         v-if="ep.preguntaTipoPreguntaTipoPregunta==`Libre (sin puntaje ni viabilidad)`" 
-                         v-model="ep.respuestaTexto">
-                        </b-form-textarea>
-                  
                         </div>
-                       <!-------------observaciones ------------->
-                     <div class="form-group">
-                        <label class="form-control-label" v-text="$t('ciecytApp.proyectoRespuestas.observaciones')" for="proyecto-respuestas-respuesta">observaciones</label>
-                     <b-form-textarea  
-                         
-                         v-model="ep.observaciones">
-                        </b-form-textarea>
-                     </div>
-                     <!---------------------------        ---->
-
-                     </b-card>
-                     <hr>
-                          
-    
-                    </div> <!-- fin del for each -->
-                    <!-- ------------------------------------------->
-                    <div class="col-12" >
-                    <b-card  
-                      border-variant="primary"
-                      header-bg-variant="light"
-                      body-bg-variant="light"
-                     header-text-variant="info">
-                    <b-form-group 
-                    description="Si tiene comentarios o sugerencias adicionales sobre el proyecto, diligencie este apartado">
-                    <label class="form-control-label" 
-                    v-text="$t('ciecytApp.proyecto.recomendaciones')" for="proyecto-recomendaciones">Recomendaciones</label>
-                       
-                     <div class="form-group" >
-                       <b-form-textarea  class="form-control" name="proyecto-recomendaciones"
-                                   v-model="proyecto.recomendacionesAsesorProyecto"  />
-                        </div>
-                       </b-form-group>
-                       </b-card>
-                       </div>
-                    <!-- ------------------------------------------->
-                    
-                     
+                    </div>
+                    <b-badge pill :variant="estadoVariant(proyecto.estado)" class="estado-badge">
+                        {{ estadoLabel(proyecto.estado) }}
+                    </b-badge>
                 </div>
-              
-   <hr></hr>
+            </div>
 
- <!-------------------------DESCARGAR ------->
-                       <div class="form-group">
-                        <label class="form-control-label" v-text="$t('ciecytApp.adjuntoRetroalimentacion.archivo')" for="adjunto-retroalimentacion-archivo">Archivo</label>
-                        <div>
-                            <div v-if="adjuntoRetroalimentacion.id"  class="form-text text-danger clearfix">
-                            
-                            
-                                <!--<a class="pull-left" v-on:click="openFile(adjuntoProyectoFase.archivoContentType, adjuntoProyectoFase.file)" v-text="$t('entity.action.open')">open</a><br> -->
-                                <a class="pull-left" v-on:click="this.descargarRetro" v-text="$t('entity.action.open')">open</a>
-                                <span class="pull-left">{{adjuntoRetroalimentacion.nombreArchivoOriginal }} <br /> {{adjuntoRetroalimentacion.archivoContentType}}, {{byteSize(adjuntoRetroalimentacion.file)}}</span>
-                                <button type="button" v-on:click="this.eliminarRetro" v-text="$t('entity.action.delete')">
-                                        class="btn btn-secondary btn-xs pull-right">
-                                    <font-awesome-icon icon="times"></font-awesome-icon>
-                                </button> 
-                            </div> 
-                            <input v-if="adjuntoRetroalimentacion.file==null" type="file" ref="file_archivo" id="file_archivo" v-on:change="asignarDataRetro($event, adjuntoRetroalimentacion, 'archivo', false)" v-text="$t('entity.action.addblob')"/>
-                            <span  v-if="adjuntoRetroalimentacion.file!=null">Si desea subir otro adjunto, deberá eliminar el archivo actual</span>
+            <div class="row">
+                <div class="col-12">
+
+                    <!-- Documento adjunto -->
+                    <div class="evaluacion-card mb-3" v-if="adjuntoProyectoFase.id">
+                        <div class="card-head">
+                            <div class="head-title">
+                                <font-awesome-icon icon="paperclip" class="head-icon" />
+                                Documento adjunto
+                            </div>
                         </div>
-                        <input type="hidden" class="form-control" name="archivo" id="adjunto-retroalimentacion-archivo"
-                            :class="{'valid': !$v.adjuntoRetroalimentacion.archivo.$invalid, 'invalid': $v.adjuntoRetroalimentacion.archivo.$invalid }" v-model="$v.adjuntoRetroalimentacion.archivo.$model" />
-                        <input type="hidden" class="form-control" name="archivoContentType" id="adjunto-retroalimentacion-archivoContentType"
-                            v-model="adjuntoRetroalimentacion.archivoContentType" />
-                         <input type="hidden" class="form-control" name="fileName" id="adjunto-retroalimentacion-fileName"
-                            v-model="adjuntoRetroalimentacion.nombreArchivoOriginal" />
-                    </div> 
+                        <div class="card-body-custom d-flex align-items-center justify-content-between flex-wrap">
+                            <div class="d-flex align-items-center">
+                                <div class="file-icon">
+                                    <font-awesome-icon icon="file-alt" />
+                                </div>
+                                <div>
+                                    <div class="file-name">{{ adjuntoProyectoFase.nombreArchivoOriginal }}</div>
+                                    <div class="file-meta">{{ adjuntoProyectoFase.archivoContentType }} · {{ byteSize(adjuntoProyectoFase.file) }}</div>
+                                </div>
+                            </div>
+                            <button type="button" class="btn btn-outline-primary btn-sm" v-on:click="descargar()">
+                                <font-awesome-icon icon="download" /> Descargar
+                            </button>
+                        </div>
+                    </div>
 
+                    <!-- Elementos / Preguntas -->
+                    <div class="elemento-item mb-3" v-for="(ep, i) in proyectoRespuests" :key="i">
+                        <div class="evaluacion-card">
+                            <div class="card-head">
+                                <div class="head-title">
+                                    <span class="head-index">{{ i + 1 }}</span>
+                                    <span v-if="ep.encabezado">{{ ep.encabezado }}</span>
+                                    <span v-else>Elemento</span>
+                                </div>
+                                <span v-if="ep.preguntaTipoPreguntaTipoPregunta" class="tipo-badge">
+                                    {{ ep.preguntaTipoPreguntaTipoPregunta }}
+                                </span>
+                            </div>
+                            <div class="card-body-custom">
+                                <div class="elemento-nombre">{{ ep.elemento }}</div>
+                                <div class="elemento-descripcion" v-if="ep.proyectoRespuestasPreguntaPregunta">
+                                    {{ ep.proyectoRespuestasPreguntaPregunta }}
+                                </div>
 
- 
-<hr></hr>
-                <div>
+                                <!-- Contenido diligenciado por el estudiante -->
+                                <div class="contenido-estudiante" v-if="ep.dato">
+                                    <div class="contenido-label">
+                                        <font-awesome-icon icon="eye" /> Contenido del proyecto
+                                    </div>
+                                    <div class="contenido-texto">{{ ep.dato }}</div>
+                                </div>
 
-                    <button type="button" id="cancel-save" class="btn btn-secondary" v-on:click="previousState()">
-                        <font-awesome-icon icon="ban"></font-awesome-icon>&nbsp;<span v-text="$t('entity.action.cancel')">Cancel</span>
-                    </button>
+                                <!-- Evaluación del asesor -->
+                                <div class="respuesta-section" v-if="ep.preguntaTipoPreguntaTipoPregunta">
+                                    <label class="respuesta-label">Evaluación del asesor</label>
 
+                                    <div v-if="ep.preguntaTipoPreguntaTipoPregunta === 'Cumple NoCumple NoAplica'">
+                                        <b-form-radio-group
+                                          v-model="ep.respuesta"
+                                          buttons
+                                          button-variant="outline-success"
+                                          size="sm"
+                                          :name="`respuesta-${i}`"
+                                        >
+                                            <b-form-radio value="CUMPLE">Cumple</b-form-radio>
+                                            <b-form-radio value="NO_CUMPLE">No cumple</b-form-radio>
+                                            <b-form-radio value="NO_APLICA">No aplica</b-form-radio>
+                                        </b-form-radio-group>
+                                    </div>
 
+                                    <div v-else-if="ep.preguntaTipoPreguntaTipoPregunta === 'Si o No'">
+                                        <b-form-radio-group
+                                          v-model="ep.siNo"
+                                          buttons
+                                          button-variant="outline-primary"
+                                          size="sm"
+                                          :name="`sinorespuesta-${i}`"
+                                        >
+                                            <b-form-radio :value="true">Sí</b-form-radio>
+                                            <b-form-radio :value="false">No</b-form-radio>
+                                        </b-form-radio-group>
+                                    </div>
 
-                    <button type="submit" id="save-entity" class="btn btn-primary">
-                        <font-awesome-icon icon="save"></font-awesome-icon>&nbsp;<span v-text="$t('entity.action.save')">Save</span>
-                    </button>
+                                    <div v-else-if="ep.preguntaTipoPreguntaTipoPregunta === 'Nota (con puntaje)'" class="d-flex align-items-center">
+                                        <input
+                                          type="number"
+                                          class="form-control nota-input"
+                                          min="0"
+                                          :max="ep.puntajeMaximo"
+                                          step="0.1"
+                                          v-model="ep.respuestaNumero"
+                                        />
+                                        <small class="text-muted ml-2" v-if="ep.puntajeMaximo">Máximo: {{ ep.puntajeMaximo }}</small>
+                                    </div>
 
-                    <button type="submit" id="save-entity" class="btn btn-primary"  v-on:click="saveAndPreviousState()">
-                        <font-awesome-icon icon="save"></font-awesome-icon>&nbsp;<span v-text="$t('entity.action.saveandback')">Save</span>
-                    </button>
+                                    <b-form-textarea
+                                      v-else-if="ep.preguntaTipoPreguntaTipoPregunta === 'Libre (sin puntaje ni viabilidad)'"
+                                      v-model="ep.respuestaTexto"
+                                      rows="3"
+                                      max-rows="6"
+                                      placeholder="Escriba aquí su respuesta..."
+                                    />
+                                </div>
 
+                                <!-- Observaciones -->
+                                <div class="observaciones-section">
+                                    <label class="respuesta-label">
+                                        <font-awesome-icon icon="comment-dots" /> Observaciones
+                                    </label>
+                                    <b-form-textarea
+                                      v-model="ep.observaciones"
+                                      rows="2"
+                                      max-rows="5"
+                                      placeholder="Escriba aquí sus observaciones..."
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Recomendaciones -->
+                    <div class="evaluacion-card mb-3">
+                        <div class="card-head">
+                            <div class="head-title">
+                                <font-awesome-icon icon="info-circle" class="head-icon" />
+                                Recomendaciones
+                            </div>
+                        </div>
+                        <div class="card-body-custom">
+                            <small class="text-muted d-block mb-2">
+                                Si tiene comentarios o sugerencias adicionales sobre el proyecto, diligencie este apartado.
+                            </small>
+                            <b-form-textarea
+                              class="form-control"
+                              name="proyecto-recomendaciones"
+                              v-model="proyecto.recomendacionesAsesorProyecto"
+                              rows="3"
+                              max-rows="6"
+                              placeholder="Escriba aquí sus recomendaciones..."
+                            />
+                        </div>
+                    </div>
+
+                    <!-- Adjunto de retroalimentación -->
+                    <div class="evaluacion-card mb-3">
+                        <div class="card-head">
+                            <div class="head-title">
+                                <font-awesome-icon icon="paperclip" class="head-icon" />
+                                Documento de retroalimentación
+                            </div>
+                        </div>
+                        <div class="card-body-custom">
+                            <div v-if="adjuntoRetroalimentacion.id" class="d-flex align-items-center justify-content-between flex-wrap">
+                                <div class="d-flex align-items-center">
+                                    <div class="file-icon">
+                                        <font-awesome-icon icon="file-alt" />
+                                    </div>
+                                    <div>
+                                        <div class="file-name">{{ adjuntoRetroalimentacion.nombreArchivoOriginal }}</div>
+                                        <div class="file-meta">{{ adjuntoRetroalimentacion.archivoContentType }} · {{ byteSize(adjuntoRetroalimentacion.file) }}</div>
+                                    </div>
+                                </div>
+                                <div class="d-flex">
+                                    <button type="button" class="btn btn-outline-primary btn-sm mr-2" v-on:click="descargarRetro()">
+                                        <font-awesome-icon icon="download" /> Descargar
+                                    </button>
+                                    <button type="button" class="btn btn-outline-danger btn-sm" v-on:click="eliminarRetro()">
+                                        <font-awesome-icon icon="times" /> Eliminar
+                                    </button>
+                                </div>
+                            </div>
+                            <div v-if="adjuntoRetroalimentacion.file == null" class="upload-zone">
+                                <input type="file" ref="file_archivo" id="file_archivo" v-on:change="asignarDataRetro($event, adjuntoRetroalimentacion, 'archivo', false)" />
+                                <div class="upload-zone-text">
+                                    <font-awesome-icon icon="paperclip" class="mr-2" />
+                                    Seleccione un archivo para adjuntar
+                                </div>
+                            </div>
+                            <small v-else class="text-muted">Si desea subir otro adjunto, deberá eliminar el archivo actual</small>
+                            <input type="hidden" class="form-control" name="archivo" id="adjunto-retroalimentacion-archivo"
+                                :class="{ 'valid': !$v.adjuntoRetroalimentacion.archivo.$invalid, 'invalid': $v.adjuntoRetroalimentacion.archivo.$invalid }" v-model="$v.adjuntoRetroalimentacion.archivo.$model" />
+                            <input type="hidden" class="form-control" name="archivoContentType" id="adjunto-retroalimentacion-archivoContentType"
+                                v-model="adjuntoRetroalimentacion.archivoContentType" />
+                            <input type="hidden" class="form-control" name="fileName" id="adjunto-retroalimentacion-fileName"
+                                v-model="adjuntoRetroalimentacion.nombreArchivoOriginal" />
+                        </div>
+                    </div>
+
+                    <!-- Acciones -->
+                    <div class="acciones-footer">
+                        <button type="button" id="cancel-save" class="btn btn-light" v-on:click="previousState()">
+                            <font-awesome-icon icon="undo" />&nbsp;<span>Cancelar</span>
+                        </button>
+                        <button type="submit" id="save-entity" class="btn btn-primary">
+                            <font-awesome-icon icon="save" />&nbsp;<span>Guardar evaluación</span>
+                        </button>
+                        <button type="submit" id="save-entity" class="btn btn-outline-primary" v-on:click="saveAndPreviousState()">
+                            <font-awesome-icon icon="save" />&nbsp;<span>Guardar y volver</span>
+                        </button>
+                    </div>
 
                 </div>
-
-            </form>
-        </div>
+            </div>
+        </form>
     </div>
 </template>
 
@@ -320,6 +339,44 @@ export default class PropuestaEvaluar extends mixins(JhiDataUtils){
     public  authority: any="ROLE_ASESOR";
      public nombreFase: any = "Proyecto";
     public mounted(): void {
+    }
+
+    public estadoLabel(estado: string | undefined): string {
+        const estados: any = {
+            EN_ELABORACION_PROPUESTA: 'En elaboración de propuesta',
+            EN_ELABORACION_PROYECTO: 'En elaboración de proyecto',
+            EN_REVISION_ASESOR: 'En revisión del asesor',
+            EN_REVISION_JURADO_PROPUESTA: 'En revisión del jurado (propuesta)',
+            CORRECCIONES_ASESOR: 'Correcciones del asesor',
+            CORRECCIONES_JURADO_PROPUESTA: 'Correcciones del jurado (propuesta)',
+            EN_REVISION_JURADO_PROYECTO: 'En revisión del jurado (proyecto)',
+            CORRECCIONES_JURADO_PROYECTO: 'Correcciones del jurado (proyecto)',
+            VIABLE: 'Propuesta viable',
+            NO_VIABLE: 'Propuesta no viable',
+            LISTO_PARA_SUSTENTAR: 'Listo para sustentar',
+            EN_SUSTENTACION: 'En sustentación',
+            NOTA_DEFINITIVA: 'Nota definitiva'
+        };
+        return estado ? (estados[estado] || estado) : '';
+    }
+
+    public estadoVariant(estado: string | undefined): string {
+        const variants: any = {
+            EN_ELABORACION_PROPUESTA: 'secondary',
+            EN_ELABORACION_PROYECTO: 'secondary',
+            EN_REVISION_ASESOR: 'info',
+            EN_REVISION_JURADO_PROPUESTA: 'info',
+            CORRECCIONES_ASESOR: 'warning',
+            CORRECCIONES_JURADO_PROPUESTA: 'warning',
+            EN_REVISION_JURADO_PROYECTO: 'info',
+            CORRECCIONES_JURADO_PROYECTO: 'warning',
+            VIABLE: 'success',
+            NO_VIABLE: 'danger',
+            LISTO_PARA_SUSTENTAR: 'success',
+            EN_SUSTENTACION: 'primary',
+            NOTA_DEFINITIVA: 'success'
+        };
+        return estado ? (variants[estado] || 'secondary') : 'secondary';
     }
 
         beforeRouteEnter(to, from, next) {
@@ -559,4 +616,212 @@ public saveAndPreviousState() {
 </script>
 
 <style scoped>
+.asesoria-evaluar {
+  font-family: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+}
+
+/* Cabecera */
+.evaluacion-header {
+  background: linear-gradient(135deg, #003366 0%, #004488 100%);
+  color: #fff;
+  border-radius: 0.75rem;
+  padding: 1.5rem 2rem;
+  box-shadow: 0 8px 24px rgba(0, 51, 102, 0.25);
+}
+.evaluacion-header h2 {
+  color: #fff;
+  font-weight: 600;
+  font-size: 1.35rem;
+}
+.header-icon {
+  width: 52px;
+  height: 52px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.3rem;
+  margin-right: 1rem;
+}
+.header-meta {
+  margin-top: 0.4rem;
+  font-size: 0.9rem;
+}
+.meta-item {
+  margin-right: 1.2rem;
+  opacity: 0.92;
+}
+.meta-item svg {
+  margin-right: 0.3rem;
+}
+.estado-badge {
+  font-size: 0.78rem;
+  padding: 0.55em 1.1em;
+  font-weight: 600;
+}
+
+/* Tarjetas */
+.evaluacion-card {
+  background: #fff;
+  border-radius: 0.75rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+}
+.card-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.85rem 1.25rem;
+  border-bottom: 1px solid #eef1f5;
+  background: #fafbfc;
+}
+.head-title {
+  font-weight: 600;
+  color: #1a2332;
+  display: flex;
+  align-items: center;
+}
+.head-icon {
+  color: #003366;
+  margin-right: 0.55rem;
+}
+.head-index {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: #003366;
+  color: #fff;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.78rem;
+  font-weight: 600;
+  margin-right: 0.6rem;
+  flex-shrink: 0;
+}
+.tipo-badge {
+  font-size: 0.7rem;
+  background: #eef4fb;
+  color: #003366;
+  border-radius: 2rem;
+  padding: 0.3em 0.85em;
+  font-weight: 600;
+  white-space: nowrap;
+}
+.card-body-custom {
+  padding: 1.25rem;
+}
+
+/* Archivos */
+.file-icon {
+  width: 46px;
+  height: 46px;
+  border-radius: 10px;
+  background: #eef4fb;
+  color: #003366;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  margin-right: 1rem;
+  flex-shrink: 0;
+}
+.file-name {
+  font-weight: 600;
+  color: #1a2332;
+}
+.file-meta {
+  font-size: 0.8rem;
+  color: #6b7280;
+}
+.upload-zone {
+  position: relative;
+  border: 2px dashed #cbd5e1;
+  border-radius: 0.6rem;
+  padding: 1.25rem;
+  text-align: center;
+  color: #6b7280;
+  background: #fafbfc;
+  cursor: pointer;
+}
+.upload-zone input[type='file'] {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  cursor: pointer;
+  width: 100%;
+  height: 100%;
+}
+.upload-zone-text {
+  font-size: 0.9rem;
+}
+
+/* Elementos */
+.elemento-nombre {
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: #1a2332;
+}
+.elemento-descripcion {
+  color: #6b7280;
+  font-size: 0.88rem;
+  margin-top: 0.25rem;
+  line-height: 1.5;
+}
+.contenido-estudiante {
+  margin-top: 1rem;
+  background: #f7f9fc;
+  border: 1px solid #e5eaf0;
+  border-left: 4px solid #17a2b8;
+  border-radius: 0.5rem;
+  padding: 1rem 1.1rem;
+}
+.contenido-label {
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #17a2b8;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+.contenido-label svg {
+  margin-right: 0.3rem;
+}
+.contenido-texto {
+  white-space: pre-wrap;
+  color: #374151;
+  line-height: 1.6;
+  font-size: 0.92rem;
+}
+.respuesta-section,
+.observaciones-section {
+  margin-top: 1.1rem;
+}
+.respuesta-label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #003366;
+  display: block;
+  margin-bottom: 0.5rem;
+}
+.respuesta-label svg {
+  margin-right: 0.3rem;
+}
+.nota-input {
+  max-width: 160px;
+}
+
+/* Acciones */
+.acciones-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  padding: 0.5rem 0 1rem;
+}
+.acciones-footer .btn {
+  min-width: 140px;
+  border-radius: 0.5rem;
+  font-weight: 500;
+}
 </style>

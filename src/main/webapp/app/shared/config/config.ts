@@ -36,6 +36,17 @@ import { faRoad } from '@fortawesome/free-solid-svg-icons/faRoad';
 import { faCloud } from '@fortawesome/free-solid-svg-icons/faCloud';
 import { faBars } from '@fortawesome/free-solid-svg-icons/faBars';
 import { faTimes } from '@fortawesome/free-solid-svg-icons/faTimes';
+import { faPaperclip } from '@fortawesome/free-solid-svg-icons/faPaperclip';
+import { faFileAlt } from '@fortawesome/free-solid-svg-icons/faFileAlt';
+import { faDownload } from '@fortawesome/free-solid-svg-icons/faDownload';
+import { faCommentDots } from '@fortawesome/free-solid-svg-icons/faCommentDots';
+import { faPaperPlane } from '@fortawesome/free-solid-svg-icons/faPaperPlane';
+import { faCalendarAlt } from '@fortawesome/free-solid-svg-icons/faCalendarAlt';
+import { faUndo } from '@fortawesome/free-solid-svg-icons/faUndo';
+import { faCheckCircle } from '@fortawesome/free-solid-svg-icons/faCheckCircle';
+import { faInfoCircle } from '@fortawesome/free-solid-svg-icons/faInfoCircle';
+import { faClipboardList } from '@fortawesome/free-solid-svg-icons/faClipboardList';
+import { faArrowRight } from '@fortawesome/free-solid-svg-icons/faArrowRight';
 
 import VueCookie from 'vue-cookie';
 import Vuelidate from 'vuelidate';
@@ -84,7 +95,18 @@ export function initFortAwesome(vue) {
     faTimesCircle,
     faSearch,
     faBars,
-    faTimes
+    faTimes,
+    faPaperclip,
+    faFileAlt,
+    faDownload,
+    faCommentDots,
+    faPaperPlane,
+    faCalendarAlt,
+    faUndo,
+    faCheckCircle,
+    faInfoCircle,
+    faClipboardList,
+    faArrowRight
   );
 }
 
