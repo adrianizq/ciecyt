@@ -4,7 +4,7 @@
       <menu-lateral-pasantia :proyectoId="$route.params.proyectoId"></menu-lateral-pasantia>
     </div>
     <div class="col-sm-8">
-      <form @submit.prevent="save()">
+      <form @submit.prevent="save('continuar')">
         <div class="row">
           <div class="col-12">
             <div class="form-group">
@@ -639,8 +639,12 @@
             <font-awesome-icon icon="ban"></font-awesome-icon>&nbsp;<span v-text="$t('entity.action.cancel')">Cancel</span>
           </button>
 
+          <button type="button" id="save-borrador" class="btn btn-outline-secondary" v-on:click="save('borrador')">
+            <font-awesome-icon icon="save"></font-awesome-icon>&nbsp;<span>Guardar borrador</span>
+          </button>
+
           <button type="submit" id="save-entity" class="btn btn-primary">
-            <font-awesome-icon icon="save"></font-awesome-icon>&nbsp;<span v-text="$t('entity.action.save')">Save</span>
+            <font-awesome-icon icon="save"></font-awesome-icon>&nbsp;<span>Guardar y continuar</span>
           </button>
         </div>
       </form>
@@ -749,22 +753,25 @@ export default class PasantiaInformacionEmpresa extends Vue {
       //vm.initRelationships();
     });
   }
-  public save(): void {
+  public save(accion: 'borrador' | 'continuar' = 'continuar'): void {
     this.isSaving = true;
 
     this.$v.$touch();
-    if (this.$v.$invalid) {
-      //  this.submitStatus = 'ERROR';
-    } else {
-     
+    if (this.$v.$invalid && accion === 'continuar') {
+      this.isSaving = false;
+      return;
+    }
+
       if (this.informacionPasantia.id) {
         this.informacionPasantiaService()
           .update(this.informacionPasantia)
           .then(param => {
             this.isSaving = false;
-
+            if (accion === 'borrador') {
+              this.alertService().showAlert('Borrador guardado. Aún puedes continuar más tarde.', 'info');
+              return;
+            }
             this.$router.push({ name: 'PropuestaPasantiaElementosView', params: { proyectoId: this.proyId } });
-           //  (<any>this).$router.go(0);
             const message = this.$t('ciecytApp.proyecto.updated', { param: param.id });
             this.alertService().showAlert(message, 'info');
           });
@@ -774,21 +781,21 @@ export default class PasantiaInformacionEmpresa extends Vue {
           .create(this.informacionPasantia)
           .then(param => {
             this.isSaving = false;
-
-           this.$router.push({ name: 'PropuestaPasantiaElementosView', params: { proyectoId: this.proyId } });
-             // (<any>this).$router.go(0);
-
+            this.informacionPasantia.id = param.id;
+            if (accion === 'borrador') {
+              this.alertService().showAlert('Borrador guardado. Aún puedes continuar más tarde.', 'info');
+              return;
+            }
+            this.$router.push({ name: 'PropuestaPasantiaElementosView', params: { proyectoId: this.proyId } });
             const message = 'Se ha creado un nuevo elemento de pasantia';
             this.alertService().showAlert(message, 'success');
           });
-          //this.retrieveInformacionPasantia(); //estaba activo
       }
       this.submitStatus = 'PENDING';
       setTimeout(() => {
         this.submitStatus = 'OK';
       }, 500);
-       
-    }
+
   }
 
  async initRelationships() {

@@ -4,7 +4,7 @@
             <menu-lateral-nueva :proyectoId='$route.params.proyectoId'></menu-lateral-nueva>
         </div>
         <div class="col-sm-8">
-            <form @submit.prevent="save()">
+            <form @submit.prevent="save('continuar')">
                 <div class="row">
                     <div class="col-12">
                         <b-form-group
@@ -26,8 +26,11 @@
                         <button type="button" id="cancel" class="btn btn-secondary" v-on:click="back">
                             <font-awesome-icon icon="arrow-left"></font-awesome-icon>&nbsp;Volver
                         </button>
-                        <button type="button" id="save" class="btn btn-primary" v-on:click="save()" :disabled="isSaving || !integranteProyecto.integranteProyectoUserId">
-                            <font-awesome-icon icon="save"></font-awesome-icon>&nbsp;<span v-text="$t('entity.action.save')">Guardar</span>
+                        <button type="button" id="save-borrador" class="btn btn-outline-secondary" v-on:click="save('borrador')" :disabled="isSaving || !integranteProyecto.integranteProyectoUserId">
+                            <font-awesome-icon icon="save"></font-awesome-icon>&nbsp;<span>Guardar borrador</span>
+                        </button>
+                        <button type="button" id="save" class="btn btn-primary" v-on:click="save('continuar')" :disabled="isSaving || !integranteProyecto.integranteProyectoUserId">
+                            <font-awesome-icon icon="save"></font-awesome-icon>&nbsp;<span>Guardar y continuar</span>
                         </button>
                     </div>
                 </div>
@@ -92,7 +95,7 @@
             this.$router.push({ name: 'PropuestaIntegrantesNuevaEditView', params: { proyectoId: this.proyId } });
         }
 
-        public async save(): Promise<void> {
+        public async save(accion: 'borrador' | 'continuar' = 'continuar'): Promise<void> {
             if (!this.integranteProyecto.integranteProyectoUserId) {
                 this.alertService().showAlert('Debe seleccionar un asesor', 'danger');
                 return;
@@ -103,11 +106,20 @@
                 if (this.integranteProyecto.id) {
                     const param = await this.integranteProyectoService().update(this.integranteProyecto);
                     this.integranteProyecto = param;
-                    this.alertService().showAlert('Asesor actualizado correctamente', 'success');
+                    if (accion === 'continuar') {
+                        this.alertService().showAlert('Asesor actualizado correctamente', 'success');
+                    }
                 } else {
                     const param = await this.integranteProyectoService().create(this.integranteProyecto);
                     this.integranteProyecto = param;
-                    this.alertService().showAlert('Asesor guardado correctamente', 'success');
+                    if (accion === 'continuar') {
+                        this.alertService().showAlert('Asesor guardado correctamente', 'success');
+                    }
+                }
+                if (accion === 'borrador') {
+                    this.isSaving = false;
+                    this.alertService().showAlert('Borrador guardado. Aún puedes continuar más tarde.', 'info');
+                    return;
                 }
                 this.$router.push({ name: 'PropuestaJuradoNuevaEditView', params: { proyectoId: String(this.proyId) } });
             } catch (err) {

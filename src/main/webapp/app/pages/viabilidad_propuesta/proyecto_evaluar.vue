@@ -1,7 +1,7 @@
 <template>
 
     <div class="asesoria-evaluar">
-        <form @submit.prevent="save()">
+        <form @submit.prevent="save('enviar')">
 
             <!-- Cabecera del proyecto -->
             <div class="evaluacion-header mb-4">
@@ -256,16 +256,34 @@
                     </div>
 
                     <!-- Acciones -->
-                    <div class="acciones-footer">
-                        <button type="button" id="cancel-save" class="btn btn-light" v-on:click="previousState()">
-                            <font-awesome-icon icon="undo" />&nbsp;<span>Cancelar</span>
-                        </button>
-                        <button type="submit" id="save-entity" class="btn btn-primary">
-                            <font-awesome-icon icon="save" />&nbsp;<span>Guardar evaluación</span>
-                        </button>
-                        <button type="submit" id="save-entity" class="btn btn-outline-primary" v-on:click="saveAndPreviousState()">
-                            <font-awesome-icon icon="save" />&nbsp;<span>Guardar y volver</span>
-                        </button>
+                    <div class="evaluacion-card mb-3">
+                        <div class="card-head">
+                            <div class="head-title">
+                                <font-awesome-icon icon="clipboard-list" class="head-icon" />
+                                Finalizar evaluación
+                            </div>
+                        </div>
+                        <div class="card-body-custom">
+                            <ul class="mb-3 acciones-ayuda">
+                                <li>
+                                    <strong>Guardar borrador:</strong> guarda el avance de la evaluación sin que el estudiante pueda verla todavía.
+                                </li>
+                                <li>
+                                    <strong>Enviar evaluación:</strong> publica la decisión de sustentación y la retroalimentación para el estudiante.
+                                </li>
+                            </ul>
+                            <div class="acciones-footer">
+                                <button type="button" id="cancel-save" class="btn btn-light" v-on:click="previousState()">
+                                    <font-awesome-icon icon="undo" />&nbsp;<span>Cancelar</span>
+                                </button>
+                                <button type="button" id="save-borrador" class="btn btn-outline-secondary" v-on:click="save('borrador')">
+                                    <font-awesome-icon icon="save" />&nbsp;<span>Guardar borrador</span>
+                                </button>
+                                <button type="button" id="save-enviar" class="btn btn-primary" v-on:click="save('enviar')">
+                                    <font-awesome-icon icon="paper-plane" />&nbsp;<span>Enviar evaluación</span>
+                                </button>
+                            </div>
+                        </div>
                     </div>
 
                 </div>
@@ -457,82 +475,88 @@ export default class PropuestaEvaluar extends mixins(JhiDataUtils){
   }
 
  
-        public save(): void {//debo guardar un elemento proyecto
-            try {
-                //this.pregunts[0].preguntaTipoPreguntaTipoPregunta
-                //this.enumRespuestas.
-                this.isSaving = true;
+        public save(accion: 'borrador' | 'enviar'): void {
+            this.isSaving = true;
 
-                /////////////////////////////////////////////////
-                this.adjuntoRetroalimentacion.adjuntoRetroalimentacionProyectoId = this.proyecto.id;
-    this.adjuntoRetroalimentacion.adjuntoRetroalimentacionFaseId = this.fase.id;
-    this.adjuntoRetroalimentacion.authority = this.authority;
-     this.adjuntoRetroalimentacion.fechaCreacion = new Date();
-     //this.adjuntoRetroalimentacion.proyectoFaseProyectoTitulo =  this.proyecto.titulo;
-
-    
-    if(this.adjuntoRetroalimentacion.id) {
-     console.log("Existe el adjunto");
-      this.adjuntoRetroalimentacionService()
-        .update(this.adjuntoRetroalimentacion)
-        .then(param => {
-            this.isSaving = false;
-            //(<any>this).$router.go(0);
-          const message = this.$t('ciecytApp.adjuntoRetroalimentacion.updated', { param: param.id });
-          this.alertService().showAlert(message, 'info');
-        });
-    } else {
-      console.log("NO Existe el adjunto");
-      this.adjuntoRetroalimentacionService()
-        .create(this.adjuntoRetroalimentacion)
-        .then(param => {
-          this.isSaving = false;
-           //(<any>this).$router.go(0);
-          const message = this.$t('ciecytApp.adjuntoRetroalimentacion.created', { param: param.id });
-          this.alertService().showAlert(message, 'success');
-        });
-    }
-   /////////////////////////////////////////////////
-                for (let e of this.proyectoRespuests) {
-                       e.faseId=this.fase.id;
-                        e.authority=this.authority;
-                    if (e.id) {
-                        
-                        this.proyectoRespuestasService().update(e)
-                        .then(param => {
-                           // //this.$router.push({ name: 'PropuestaPresupuestoView',params:{ proyectoId: this.proyId}});
-                            (<any>this).$router.go(0);
-                        });
-                      
-                    } else {
-                        
-                        this.proyectoRespuestasService().create(e)
-                        .then(param => {
-                           // //this.$router.push({ name: 'PropuestaPresupuestoView',params:{ proyectoId: this.proyId}});
-                            (<any>this).$router.go(0);
-                        });
-                        
-                    }
-                }
-                
-
-            } catch (e) {
-                //TODO: mostrar mensajes de error
+            if (accion === 'enviar' && this.proyecto.sustentar == null) {
+                this.isSaving = false;
+                this.alertService().showAlert('Seleccione una decisión de sustentación antes de enviar la evaluación.', 'danger');
+                return;
             }
 
-            //actualizar el proyecto para que se guarde la viabilidad
             try {
-                this.proyectoService()
-                    .updateProyecto(this.proyecto)
+                const operaciones: Promise<any>[] = [];
+
+                // Adjunto: solo se guarda si ya existe uno o el usuario seleccionó un archivo
+                const tieneAdjunto: boolean =
+                    !!this.adjuntoRetroalimentacion.id ||
+                    (this.adjuntoRetroalimentacion.archivo != null && this.adjuntoRetroalimentacion.archivo.length > 0);
+
+                if (tieneAdjunto) {
+                    this.adjuntoRetroalimentacion.adjuntoRetroalimentacionProyectoId = this.proyecto.id;
+                    this.adjuntoRetroalimentacion.adjuntoRetroalimentacionFaseId = this.fase.id;
+                    this.adjuntoRetroalimentacion.authority = this.authority;
+                    this.adjuntoRetroalimentacion.fechaCreacion = new Date();
+
+                    operaciones.push(
+                        this.adjuntoRetroalimentacion.id
+                            ? this.adjuntoRetroalimentacionService().update(this.adjuntoRetroalimentacion)
+                            : this.adjuntoRetroalimentacionService()
+                                .create(this.adjuntoRetroalimentacion)
+                                .then(param => {
+                                    this.adjuntoRetroalimentacion.id = param.id;
+                                })
+                    );
+                }
+
+                // Respuestas: se omiten las filas de solo visualización (elementos del estudiante sin pregunta)
+                this.proyectoRespuests.forEach(e => {
+                    if (!e.id && !e.proyectoRespuestasPreguntaId) {
+                        return;
+                    }
+                    e.faseId = this.fase.id;
+                    e.authority = this.authority;
+                    if (e.id) {
+                        operaciones.push(this.proyectoRespuestasService().update(e));
+                    } else {
+                        operaciones.push(
+                            this.proyectoRespuestasService()
+                                .create(e)
+                                .then(param => {
+                                    e.id = param.id;
+                                })
+                        );
+                    }
+                });
+
+                // El proyecto siempre se actualiza (decisión, recomendaciones, etc.)
+                operaciones.push(this.proyectoService().updateProyecto(this.proyecto));
+
+                Promise.all(operaciones)
                     .then(() => {
-                        this.cambiarEstadoSegunSustentacion();
+                        if (accion === 'borrador') {
+                            this.isSaving = false;
+                            this.alertService().showAlert('Borrador guardado. El estudiante aún no puede ver la evaluación.', 'info');
+                            return null;
+                        }
+                        this.isSaving = false;
+                        return this.cambiarEstadoSegunSustentacion();
+                    })
+                    .then(() => {
+                        if (accion !== 'borrador') {
+                            this.previousState();
+                        }
+                    })
+                    .catch(err => {
+                        this.isSaving = false;
+                        this.alertService().showAlert('Error al guardar la evaluación: ' + (err && err.message ? err.message : err), 'danger');
                     });
             } catch (e) {
-                //TODO: mostrar mensajes de error
+                this.isSaving = false;
             }
         }
 
-        public cambiarEstadoSegunSustentacion(): void {
+        public cambiarEstadoSegunSustentacion(): Promise<any> {
             const sustentar = this.proyecto.sustentar;
             let nuevoEstado: string | null = null;
             let observacion = '';
@@ -543,14 +567,11 @@ export default class PropuestaEvaluar extends mixins(JhiDataUtils){
                 nuevoEstado = 'CORRECCIONES_JURADO_PROYECTO';
                 observacion = 'Proyecto requiere correcciones antes de la sustentación';
             }
-            this.proyectoService()
+            return this.proyectoService()
                 .cambiarEstado(this.proyecto.id, nuevoEstado, observacion)
                 .then(() => {
                     const message = this.$t('ciecytApp.proyecto.estadoActualizado', { estado: nuevoEstado });
                     this.alertService().showAlert(message, 'success');
-                })
-                .catch(err => {
-                    this.alertService().showAlert('Error al actualizar estado: ' + err.message, 'danger');
                 });
         }
 
@@ -572,7 +593,7 @@ export default class PropuestaEvaluar extends mixins(JhiDataUtils){
 
                 res= await this.proyectoRespuestasService()
                 .retrieveProyectoRespuestas(this.proyId, this.fase.id, this.authority)   //recup los proyresp con un idproy
-                this.proyectoRespuests = res.data;
+                this.proyectoRespuests = res.data.filter(r => r.proyectoRespuestasPreguntaId != null);
                 if (this.proyectoRespuests.length>0){
                         this.proyectoRespuestasDatos=true;
                     }
@@ -930,10 +951,21 @@ public saveAndPreviousState() {
   justify-content: flex-end;
   gap: 0.75rem;
   padding: 0.5rem 0 1rem;
+  flex-wrap: wrap;
 }
 .acciones-footer .btn {
   min-width: 140px;
   border-radius: 0.5rem;
   font-weight: 500;
+}
+.acciones-ayuda {
+  list-style: none;
+  padding-left: 0;
+  margin-left: 0;
+  color: #495057;
+  font-size: 0.9rem;
+}
+.acciones-ayuda li {
+  padding: 0.15rem 0;
 }
 </style>

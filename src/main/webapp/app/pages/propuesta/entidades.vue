@@ -53,11 +53,17 @@
         </b-card>
         <hr>
       </div>
-      <button type="submit" id="save-entity"
-              class="btn btn-primary float-right"
-               @click="save()" >
+      <button type="button" id="save-borrador"
+              class="btn btn-outline-secondary float-right"
+               @click="save('borrador')" >
               <font-awesome-icon icon="save"></font-awesome-icon>&nbsp;
-              <span>Guardar</span>
+              <span>Guardar borrador</span>
+            </button>
+            <button type="submit" id="save-entity"
+              class="btn btn-primary float-right"
+               @click="save('continuar')" >
+              <font-awesome-icon icon="save"></font-awesome-icon>&nbsp;
+              <span>Guardar y continuar</span>
             </button>
             <button type="submit" id="save-entity" class="btn btn-primary float-right" @click="nuevo_entidad()">
               <font-awesome-icon :icon="['fas', 'plus']"></font-awesome-icon>&nbsp;
@@ -72,6 +78,7 @@ import { Component, Inject, Vue } from 'vue-property-decorator';
 import MenuLateral from '@/components/propuesta/menu_lateral.vue';
 import { IEntidadFinanciadora, EntidadFinanciadora } from '@/shared/model/entidad-financiadora.model';
 import EntidadFinanciadoraService from '@/entities/entidad-financiadora/entidad-financiadora.service';
+import AlertService from '@/shared/alert/alert.service';
 import EntidadService from '@/entities/entidad/entidad.service';
 import { IEntidad, Entidad } from '@/shared/model/entidad.model';
 import { IProyecto, Proyecto } from '@/shared/model/proyecto.model';
@@ -88,6 +95,7 @@ export default class Entidades extends Vue {
   @Inject('proyectoService') private proyectoService: () => ProyectoService;
   @Inject('entidadFinanciadoraService') private entidadFinanciadoraService: () => EntidadFinanciadoraService;
   @Inject('entidadService') private entidadService: () => EntidadService;
+  @Inject('alertService') private alertService: () => AlertService;
   
   
 
@@ -114,7 +122,7 @@ export default class Entidades extends Vue {
             });
     }
 
-             public save(): void {//debo guardar un elemento proyecto
+             public save(accion: 'borrador' | 'continuar' = 'continuar'): void {//debo guardar un elemento proyecto
             try {
                 this.isSaving = true;
                 
@@ -122,21 +130,31 @@ export default class Entidades extends Vue {
                     //Actualizando el impacto
                      var resultado = new EntidadFinanciadora();
                      e.entidadFinanciadoraProyectoId = this.proyId;
-                       
+                        
 
-                       
+                        
             
                     if (e.id) {
                         this.entidadFinanciadoraService().update(e); //envio un elemento
-                        this.$router.push({ name: 'PropuestaCronogramaView',params:{ proyectoId: this.proyId}});
+                        if (accion === 'continuar') {
+                            this.$router.push({ name: 'PropuestaCronogramaView',params:{ proyectoId: this.proyId}});
+                        }
 
                     } else {
                         
                         this.entidadFinanciadoraService().create(e)
                         .then(param => {
-                            this.$router.push({ name: 'PropuestaCronogramaView',params:{ proyectoId: this.proyId}});
+                            e.id = param.id;
+                            if (accion === 'continuar') {
+                                this.$router.push({ name: 'PropuestaCronogramaView',params:{ proyectoId: this.proyId}});
+                            }
                         });
                     }
+                }
+
+                if (accion === 'borrador') {
+                    this.isSaving = false;
+                    this.alertService().showAlert('Borrador guardado. Aún puedes continuar más tarde.', 'info');
                 }
 
             } catch (e) {

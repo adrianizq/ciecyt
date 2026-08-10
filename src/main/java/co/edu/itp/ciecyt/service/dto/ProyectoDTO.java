@@ -55,6 +55,14 @@ public class ProyectoDTO implements Serializable {
 
     private String recomendaciones;
 
+    private String recomendacionesAsesorPropuesta;
+
+    private String recomendacionesAsesorProyecto;
+
+    private String recomendacionesJuradoProyecto;
+
+    private String recomendacionesJuradoSustentacion;
+
     private String viabilidad;
 
     private Boolean preEnviado;
@@ -62,6 +70,8 @@ public class ProyectoDTO implements Serializable {
     private Boolean sustentar;
 
     private Boolean proyectoEnviado;
+
+    private Boolean retroalimentacionAsesorEnviada;
 
     private String estado;
 
@@ -279,6 +289,38 @@ public class ProyectoDTO implements Serializable {
         this.recomendaciones = recomendaciones;
     }
 
+    public String getRecomendacionesAsesorPropuesta() {
+        return recomendacionesAsesorPropuesta;
+    }
+
+    public void setRecomendacionesAsesorPropuesta(String recomendacionesAsesorPropuesta) {
+        this.recomendacionesAsesorPropuesta = recomendacionesAsesorPropuesta;
+    }
+
+    public String getRecomendacionesAsesorProyecto() {
+        return recomendacionesAsesorProyecto;
+    }
+
+    public void setRecomendacionesAsesorProyecto(String recomendacionesAsesorProyecto) {
+        this.recomendacionesAsesorProyecto = recomendacionesAsesorProyecto;
+    }
+
+    public String getRecomendacionesJuradoProyecto() {
+        return recomendacionesJuradoProyecto;
+    }
+
+    public void setRecomendacionesJuradoProyecto(String recomendacionesJuradoProyecto) {
+        this.recomendacionesJuradoProyecto = recomendacionesJuradoProyecto;
+    }
+
+    public String getRecomendacionesJuradoSustentacion() {
+        return recomendacionesJuradoSustentacion;
+    }
+
+    public void setRecomendacionesJuradoSustentacion(String recomendacionesJuradoSustentacion) {
+        this.recomendacionesJuradoSustentacion = recomendacionesJuradoSustentacion;
+    }
+
     public String getViabilidad() {
         return viabilidad;
     }
@@ -309,6 +351,14 @@ public class ProyectoDTO implements Serializable {
 
     public void setProyectoEnviado(Boolean proyectoEnviado) {
         this.proyectoEnviado = proyectoEnviado;
+    }
+
+    public Boolean getRetroalimentacionAsesorEnviada() {
+        return retroalimentacionAsesorEnviada;
+    }
+
+    public void setRetroalimentacionAsesorEnviada(Boolean retroalimentacionAsesorEnviada) {
+        this.retroalimentacionAsesorEnviada = retroalimentacionAsesorEnviada;
     }
 
     public String getEstado() {

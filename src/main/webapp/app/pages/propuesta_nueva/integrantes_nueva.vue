@@ -4,7 +4,7 @@
             <menu-lateral-nueva :proyectoId='$route.params.proyectoId'></menu-lateral-nueva>
         </div>
         <div class="col-sm-8">
-            <form @submit.prevent="save()">
+            <form @submit.prevent="save('continuar')">
                <!-- https://github.com/moreta/vue-search-select -->
                 <div class="row">
                     <div class="col-12" v-for="(integrante, i) in integrantesProyecto" :key="i">
@@ -28,8 +28,11 @@
                         <button type="button" id="cancel" class="btn btn-secondary" v-on:click="back">
                             <font-awesome-icon icon="arrow-left"></font-awesome-icon>&nbsp;Volver
                         </button>
-                        <button type="button" id="save" class="btn btn-primary" v-on:click="save()">
-                            <font-awesome-icon icon="save"></font-awesome-icon>&nbsp;<span v-text="$t('entity.action.save')">Guardar</span>
+                        <button type="button" id="save-borrador" class="btn btn-outline-secondary" v-on:click="save('borrador')">
+                            <font-awesome-icon icon="save"></font-awesome-icon>&nbsp;<span>Guardar borrador</span>
+                        </button>
+                        <button type="button" id="save" class="btn btn-primary" v-on:click="save('continuar')">
+                            <font-awesome-icon icon="save"></font-awesome-icon>&nbsp;<span>Guardar y continuar</span>
                         </button>
                     </div>
                 </div>
@@ -114,7 +117,7 @@ import { userInfo } from 'os';
             this.$router.push({ name: 'PropuestaInformacionGenearalNuevaEditView', params: { proyectoId: this.proyId } });
         }
 
-        public save(): void {
+        public save(accion: 'borrador' | 'continuar' = 'continuar'): void {
             try {
                 this.isSaving = true;
                 let i=0;
@@ -125,18 +128,28 @@ import { userInfo } from 'os';
                     //Actualizando el integrante
                     if (integrante.id) {
                         this.integranteProyectoService().update(integrante);
-                        this.$router.push({ name: 'PropuestaAsesorNuevaEditView', params: { proyectoId: this.proyId } });
+                        if (accion === 'continuar') {
+                            this.$router.push({ name: 'PropuestaAsesorNuevaEditView', params: { proyectoId: this.proyId } });
+                        }
 
                     } else {
                         //Creando un nuevo integrante
                         this.integranteProyectoService().create(integrante)
                             .then(param => {
-                                this.$router.push({ name: 'PropuestaAsesorNuevaEditView', params: { proyectoId: this.proyId } });
+                                integrante.id = param.id;
+                                if (accion === 'continuar') {
+                                    this.$router.push({ name: 'PropuestaAsesorNuevaEditView', params: { proyectoId: this.proyId } });
+                                }
                             });
                     }
                      var proyId: string = String(this.proyId);
                      //this.$router.push({ name: 'PropuestaElementosView', params: { proyectoId: proyId } });
 
+                }
+
+                if (accion === 'borrador') {
+                    this.isSaving = false;
+                    this.alertService().showAlert('Borrador guardado. Aún puedes continuar más tarde.', 'info');
                 }
 
             } catch (e) {

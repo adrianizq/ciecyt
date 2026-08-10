@@ -47,6 +47,7 @@ import { faCheckCircle } from '@fortawesome/free-solid-svg-icons/faCheckCircle';
 import { faInfoCircle } from '@fortawesome/free-solid-svg-icons/faInfoCircle';
 import { faClipboardList } from '@fortawesome/free-solid-svg-icons/faClipboardList';
 import { faArrowRight } from '@fortawesome/free-solid-svg-icons/faArrowRight';
+import { faEnvelope } from '@fortawesome/free-solid-svg-icons/faEnvelope';
 
 import VueCookie from 'vue-cookie';
 import Vuelidate from 'vuelidate';
@@ -106,7 +107,8 @@ export function initFortAwesome(vue) {
     faCheckCircle,
     faInfoCircle,
     faClipboardList,
-    faArrowRight
+    faArrowRight,
+    faEnvelope
   );
 }
 

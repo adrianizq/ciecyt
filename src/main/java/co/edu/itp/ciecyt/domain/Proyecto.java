@@ -86,6 +86,18 @@ public class Proyecto implements Serializable {
     @Column(name = "recomendaciones", columnDefinition = "text")
     private String recomendaciones;
 
+    @Column(name = "recomendaciones_asesor_propuesta", columnDefinition = "text")
+    private String recomendacionesAsesorPropuesta;
+
+    @Column(name = "recomendaciones_asesor_proyecto", columnDefinition = "text")
+    private String recomendacionesAsesorProyecto;
+
+    @Column(name = "recomendaciones_jurado_proyecto", columnDefinition = "text")
+    private String recomendacionesJuradoProyecto;
+
+    @Column(name = "recomendaciones_jurado_sustentacion", columnDefinition = "text")
+    private String recomendacionesJuradoSustentacion;
+
     @Column(name = "viabilidad", columnDefinition = "text")
     private String viabilidad;
 
@@ -109,6 +121,9 @@ public class Proyecto implements Serializable {
 
     @Column(name = "proyecto_enviado")
     private Boolean proyectoEnviado;
+
+    @Column(name = "retroalimentacion_asesor_enviada")
+    private Boolean retroalimentacionAsesorEnviada;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "estado")
@@ -432,6 +447,58 @@ public class Proyecto implements Serializable {
         this.recomendaciones = recomendaciones;
     }
 
+    public String getRecomendacionesAsesorPropuesta() {
+        return recomendacionesAsesorPropuesta;
+    }
+
+    public Proyecto recomendacionesAsesorPropuesta(String recomendacionesAsesorPropuesta) {
+        this.recomendacionesAsesorPropuesta = recomendacionesAsesorPropuesta;
+        return this;
+    }
+
+    public void setRecomendacionesAsesorPropuesta(String recomendacionesAsesorPropuesta) {
+        this.recomendacionesAsesorPropuesta = recomendacionesAsesorPropuesta;
+    }
+
+    public String getRecomendacionesAsesorProyecto() {
+        return recomendacionesAsesorProyecto;
+    }
+
+    public Proyecto recomendacionesAsesorProyecto(String recomendacionesAsesorProyecto) {
+        this.recomendacionesAsesorProyecto = recomendacionesAsesorProyecto;
+        return this;
+    }
+
+    public void setRecomendacionesAsesorProyecto(String recomendacionesAsesorProyecto) {
+        this.recomendacionesAsesorProyecto = recomendacionesAsesorProyecto;
+    }
+
+    public String getRecomendacionesJuradoProyecto() {
+        return recomendacionesJuradoProyecto;
+    }
+
+    public Proyecto recomendacionesJuradoProyecto(String recomendacionesJuradoProyecto) {
+        this.recomendacionesJuradoProyecto = recomendacionesJuradoProyecto;
+        return this;
+    }
+
+    public void setRecomendacionesJuradoProyecto(String recomendacionesJuradoProyecto) {
+        this.recomendacionesJuradoProyecto = recomendacionesJuradoProyecto;
+    }
+
+    public String getRecomendacionesJuradoSustentacion() {
+        return recomendacionesJuradoSustentacion;
+    }
+
+    public Proyecto recomendacionesJuradoSustentacion(String recomendacionesJuradoSustentacion) {
+        this.recomendacionesJuradoSustentacion = recomendacionesJuradoSustentacion;
+        return this;
+    }
+
+    public void setRecomendacionesJuradoSustentacion(String recomendacionesJuradoSustentacion) {
+        this.recomendacionesJuradoSustentacion = recomendacionesJuradoSustentacion;
+    }
+
     public String getViabilidad() {
         return viabilidad;
     }
@@ -534,6 +601,19 @@ public class Proyecto implements Serializable {
 
     public void setProyectoEnviado(Boolean proyectoEnviado) {
         this.proyectoEnviado = proyectoEnviado;
+    }
+
+    public Boolean isRetroalimentacionAsesorEnviada() {
+        return retroalimentacionAsesorEnviada;
+    }
+
+    public Proyecto retroalimentacionAsesorEnviada(Boolean retroalimentacionAsesorEnviada) {
+        this.retroalimentacionAsesorEnviada = retroalimentacionAsesorEnviada;
+        return this;
+    }
+
+    public void setRetroalimentacionAsesorEnviada(Boolean retroalimentacionAsesorEnviada) {
+        this.retroalimentacionAsesorEnviada = retroalimentacionAsesorEnviada;
     }
 
     public EnumEstadoProyecto getEstado() {

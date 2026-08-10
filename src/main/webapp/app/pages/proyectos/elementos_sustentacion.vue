@@ -59,8 +59,8 @@
 
 
 
-                    <button type="submit" id="save-entity" class="btn btn-primary">
-                        <font-awesome-icon icon="save"></font-awesome-icon>&nbsp;<span v-text="$t('entity.action.save')">Save</span>
+                    <button type="submit" id="save-entity" class="btn btn-outline-secondary">
+                        <font-awesome-icon icon="save"></font-awesome-icon>&nbsp;<span>Guardar borrador</span>
                     </button>
 
 
@@ -128,20 +128,24 @@ export default class Elementos extends Vue {
             try {
                 this.isSaving = true;
 
+                const operaciones: Promise<any>[] = [];
                 for (let e of this.elementosProyecto) {
                     //Actualizando el integrante
                     e.elementoFasesId = this.fase.id;
                     if (e.id) {
-                        this.elementoProyectoService().update(e); //envio un elemento
-                        //this.$router.push({ name: 'PropuestaPresupuestoView',params:{ proyectoId: this.proyId}});
+                        operaciones.push(this.elementoProyectoService().update(e));
                     } else {
                         //Creando un nuevo integrante
-                        this.elementoProyectoService().create(e)
-                        //.then(param => {
-                        //    this.$router.push({ name: 'PropuestaPresupuestoView',params:{ proyectoId: this.proyId}});
-                        //});
+                        operaciones.push(this.elementoProyectoService().create(e).then(param => { e.id = param.id; }));
                     }
                 }
+
+                Promise.all(operaciones).then(() => {
+                    this.isSaving = false;
+                    this.alertService().showAlert('Borrador guardado. Aún puedes continuar más tarde.', 'info');
+                }).catch(() => {
+                    this.isSaving = false;
+                });
 
             } catch (e) {
                 //TODO: mostrar mensajes de error

@@ -32,18 +32,34 @@ export default class AdjuntoRetroalimentacionService {
   }
 
   public create(entity: IAdjuntoRetroalimentacion): Promise<IAdjuntoRetroalimentacion> {
-    return new Promise<IAdjuntoRetroalimentacion>(resolve => {
-      axios.post(`${baseApiUrl}`, entity).then(function (res) {
-        resolve(res.data);
-      });
+    return new Promise<IAdjuntoRetroalimentacion>((resolve, reject) => {
+      axios
+        .post(`${baseApiUrl}`, entity)
+        .then(function (res) {
+          resolve(res.data);
+        })
+        .catch(err => {
+          if (err.response) {
+            console.error('Backend error:', err.response.status, err.response.data);
+          }
+          reject(err);
+        });
     });
   }
 
   public update(entity: IAdjuntoRetroalimentacion): Promise<IAdjuntoRetroalimentacion> {
-    return new Promise<IAdjuntoRetroalimentacion>(resolve => {
-      axios.put(`${baseApiUrl}`, entity).then(function (res) {
-        resolve(res.data);
-      });
+    return new Promise<IAdjuntoRetroalimentacion>((resolve, reject) => {
+      axios
+        .put(`${baseApiUrl}`, entity)
+        .then(function (res) {
+          resolve(res.data);
+        })
+        .catch(err => {
+          if (err.response) {
+            console.error('Backend error:', err.response.status, err.response.data);
+          }
+          reject(err);
+        });
     });
   }
 

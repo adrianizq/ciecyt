@@ -51,11 +51,17 @@
         <hr />
       </div>
       <div class="col-12 text-left">
+        <button type="button" id="save-borrador"
+         class="btn btn-outline-secondary float-right"
+         @click="save('borrador')">
+          <font-awesome-icon :icon="['fas', 'save']"></font-awesome-icon>&nbsp;
+          <span>Guardar borrador</span>
+        </button>
         <button type="submit" id="save-entity" 
          class="btn btn-primary float-right"
-         @click="save()">
+         @click="save('continuar')">
           <font-awesome-icon :icon="['fas', 'save']"></font-awesome-icon>&nbsp;
-          <span>Guardar</span>
+          <span>Guardar y continuar</span>
         </button>
         <button
           type="submit"
@@ -76,6 +82,7 @@ import { Component, Inject, Vue } from 'vue-property-decorator';
 import MenuLateral from '@/components/propuesta/menu_lateral.vue';
 import { IResultadosEsperados, ResultadosEsperados } from '@/shared/model/resultados-esperados.model';
 import ResultadosEsperadosService from '@/entities/resultados-esperados/resultados-esperados.service';
+import AlertService from '@/shared/alert/alert.service';
 import { IProyecto, Proyecto } from '@/shared/model/proyecto.model';
 import ProyectoService from '@/entities/proyecto/proyecto.service';
 
@@ -89,6 +96,7 @@ export default class Resultados_esperados extends Vue {
 
    @Inject('resultadosEsperadosService') private resultadosEsperadosService: () => ResultadosEsperadosService;
    @Inject('proyectoService') private proyectoService: () => ProyectoService;
+   @Inject('alertService') private alertService: () => AlertService;
 
  public resultadosEsperads: IResultadosEsperados[] = [];
   nuevo_resultado() {
@@ -114,7 +122,7 @@ export default class Resultados_esperados extends Vue {
             });
     }
 
-      public save(): void {//debo guardar un elemento proyecto
+      public save(accion: 'borrador' | 'continuar' = 'continuar'): void {//debo guardar un elemento proyecto
             try {
                 this.isSaving = true;
                   var i=this.resultadosEsperads.length;
@@ -128,15 +136,25 @@ export default class Resultados_esperados extends Vue {
             
                     if (e.id) {
                         this.resultadosEsperadosService().update(e); //envio un elemento
-                        this.$router.push({ name: 'PropuestaImpactosEsperadoView',params:{ proyectoId: this.proyId}});
+                        if (accion === 'continuar') {
+                            this.$router.push({ name: 'PropuestaImpactosEsperadoView',params:{ proyectoId: this.proyId}});
+                        }
 
                     } else {
                         
                         this.resultadosEsperadosService().create(e)
                         .then(param => {
-                            this.$router.push({ name: 'PropuestaImpactosEsperadoView',params:{ proyectoId: this.proyId}});
+                            e.id = param.id;
+                            if (accion === 'continuar') {
+                                this.$router.push({ name: 'PropuestaImpactosEsperadoView',params:{ proyectoId: this.proyId}});
+                            }
                         });
                     }
+                }
+
+                if (accion === 'borrador') {
+                    this.isSaving = false;
+                    this.alertService().showAlert('Borrador guardado. Aún puedes continuar más tarde.', 'info');
                 }
 
             } catch (e) {

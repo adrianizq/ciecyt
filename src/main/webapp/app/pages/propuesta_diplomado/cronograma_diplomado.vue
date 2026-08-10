@@ -65,11 +65,17 @@
         <hr />
       </div>
 
+      <button type="button" id="save-borrador"
+       class="btn btn-outline-secondary float-right"
+         @click="save('borrador')" > 
+        <font-awesome-icon :icon="['fas', 'save']"></font-awesome-icon>&nbsp;
+        <span>Guardar borrador</span>
+      </button>
       <button type="submit" id="save-entity" 
        class="btn btn-primary float-right"
-         @click="save()" > 
+         @click="save('continuar')" > 
         <font-awesome-icon :icon="['fas', 'save']"></font-awesome-icon>&nbsp;
-        <span>Guardar</span>
+        <span>Guardar y continuar</span>
       </button>
       <button
         type="submit"
@@ -142,7 +148,7 @@ public cronograms: ICronograma[] = [];
             });
     }
 
-             public save(): void {//debo guardar un elemento proyecto
+             public save(accion: 'borrador' | 'continuar' = 'continuar'): void {//debo guardar un elemento proyecto
             try {
                 this.isSaving = true;
                 var i=this.cronograms.length;
@@ -153,21 +159,31 @@ public cronograms: ICronograma[] = [];
                      e.cronogramaProyectoId = this.proyId;
                      e.ordenVista = i++;  
 
-                       
+                        
             
                     if (e.id) {
                         this.cronogramaService().update(e); //envio un elemento
-                        this.$router.push({ name: 'PropuestaAdjuntarPropuestaDiplomadoView',params:{ proyectoId: this.proyId}});
+                        if (accion === 'continuar') {
+                            this.$router.push({ name: 'PropuestaAdjuntarPropuestaDiplomadoView',params:{ proyectoId: this.proyId}});
+                        }
                     } else {
                         
                         this.cronogramaService().create(e)
                         .then(param => {
-                            this.$router.push({ name: 'PropuestaAdjuntarPropuestaDiplomadoView',params:{ proyectoId: this.proyId}});
-                            //const message = this.$t('ciecytApp.cronograma.created', { param: param.id });
-                            const message = "Se ha creado un nuevo cronograma" + { param: param.id };
-                            this.alertService().showAlert(message, 'success');
+                            e.id = param.id;
+                            if (accion === 'continuar') {
+                                this.$router.push({ name: 'PropuestaAdjuntarPropuestaDiplomadoView',params:{ proyectoId: this.proyId}});
+                                //const message = this.$t('ciecytApp.cronograma.created', { param: param.id });
+                                const message = "Se ha creado un nuevo cronograma" + { param: param.id };
+                                this.alertService().showAlert(message, 'success');
+                            }
                         });
                     }
+                }
+
+                if (accion === 'borrador') {
+                    this.isSaving = false;
+                    this.alertService().showAlert('Borrador guardado. Aún puedes continuar más tarde.', 'info');
                 }
 
             } catch (e) {

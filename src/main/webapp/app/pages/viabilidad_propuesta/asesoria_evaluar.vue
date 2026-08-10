@@ -1,7 +1,14 @@
 <template>
 
     <div class="asesoria-evaluar">
-        <form @submit.prevent="save()">
+        <b-alert :show="dismissCountDown"
+            dismissible
+            :variant="alertType"
+            @dismissed="dismissCountDown=0"
+            @dismiss-count-down="countDownChanged">
+            {{alertMessage}}
+        </b-alert>
+        <form @submit.prevent="save('borrador')">
 
             <!-- Cabecera del proyecto -->
             <div class="evaluacion-header mb-4">
@@ -256,48 +263,41 @@
                         </div>
                     </div>
 
-                    <!-- Decisión de la evaluación -->
+                    <!-- Acciones -->
                     <div class="evaluacion-card mb-3">
                         <div class="card-head">
                             <div class="head-title">
-                                <font-awesome-icon icon="check-circle" class="head-icon" />
-                                Evaluación
+                                <font-awesome-icon icon="clipboard-list" class="head-icon" />
+                                Finalizar evaluación
                             </div>
                         </div>
                         <div class="card-body-custom">
-                            <p class="text-muted mb-3">
-                                Marque <strong>Enviar</strong> si la propuesta cumple con los requisitos establecidos por el Ciecyt.
-                                Si la propuesta no cumple o está incompleta, marque <strong>No Enviar</strong>.
-                            </p>
-                            <div class="row">
-                                <div class="col-md-6 mb-3 mb-md-0">
-                                    <label :class="['decision-card', 'success', { 'active': proyecto.enviado === true }]">
-                                        <input type="radio" :value="true" v-model="proyecto.enviado" class="d-none" />
-                                        <font-awesome-icon icon="paper-plane" class="decision-icon" />
-                                        <div class="decision-title">Enviar la Propuesta</div>
-                                        <div class="decision-text">La propuesta cumple con los requisitos del Ciecyt</div>
-                                    </label>
-                                </div>
-                                <div class="col-md-6">
-                                    <label :class="['decision-card', 'danger', { 'active': proyecto.enviado === false }]">
-                                        <input type="radio" :value="false" v-model="proyecto.enviado" class="d-none" />
-                                        <font-awesome-icon icon="times-circle" class="decision-icon" />
-                                        <div class="decision-title">No Enviar la Propuesta</div>
-                                        <div class="decision-text">La propuesta no cumple o está incompleta</div>
-                                    </label>
-                                </div>
+                            <ul class="mb-3 acciones-ayuda">
+                                <li>
+                                    <strong>Guardar borrador:</strong> guarda el avance de la evaluación sin que el estudiante pueda verla todavía.
+                                </li>
+                                <li>
+                                    <strong>Enviar correcciones al estudiante:</strong> publica las observaciones y recomendaciones para que el estudiante las corrija.
+                                </li>
+                                <li>
+                                    <strong>Enviar al jurado:</strong> publica la evaluación y continúa el flujo hacia el jurado de la propuesta.
+                                </li>
+                            </ul>
+                            <div class="acciones-footer">
+                                <button type="button" id="cancel-save" class="btn btn-light" v-on:click="previousState()">
+                                    <font-awesome-icon icon="undo" />&nbsp;<span>Cancelar</span>
+                                </button>
+                                <button type="button" id="save-borrador" class="btn btn-outline-secondary" v-on:click="save('borrador')">
+                                    <font-awesome-icon icon="save" />&nbsp;<span>Guardar borrador</span>
+                                </button>
+                                <button type="button" id="save-correcciones" class="btn btn-warning" v-on:click="save('correcciones')">
+                                    <font-awesome-icon icon="envelope" />&nbsp;<span>Enviar correcciones al estudiante</span>
+                                </button>
+                                <button type="button" id="save-jurado" class="btn btn-primary" v-on:click="save('jurado')">
+                                    <font-awesome-icon icon="paper-plane" />&nbsp;<span>Enviar al jurado</span>
+                                </button>
                             </div>
                         </div>
-                    </div>
-
-                    <!-- Acciones -->
-                    <div class="acciones-footer">
-                        <button type="button" id="cancel-save" class="btn btn-light" v-on:click="previousState()">
-                            <font-awesome-icon icon="undo" />&nbsp;<span>Cancelar</span>
-                        </button>
-                        <button type="submit" id="save-entity" class="btn btn-primary">
-                            <font-awesome-icon icon="save" />&nbsp;<span>Guardar evaluación</span>
-                        </button>
                     </div>
 
                 </div>
@@ -409,6 +409,23 @@ export default class PropuestaEvaluar extends mixins(JhiDataUtils){
      public nombreFase: any = "Propuesta";
     public cronograms: ICronograma[]=[];
 
+    public dismissCountDown: number = this.$store.getters.dismissCountDown;
+    public dismissSecs: number = this.$store.getters.dismissSecs;
+    public alertType: string = this.$store.getters.alertType;
+    public alertMessage: any = this.$store.getters.alertMessage;
+
+    public getAlertFromStore() {
+        this.dismissCountDown = this.$store.getters.dismissCountDown;
+        this.dismissSecs = this.$store.getters.dismissSecs;
+        this.alertType = this.$store.getters.alertType;
+        this.alertMessage = this.$store.getters.alertMessage;
+    }
+
+    public countDownChanged(dismissCountDown: number) {
+        this.alertService().countDownChanged(dismissCountDown);
+        this.getAlertFromStore();
+    }
+
     public mounted(): void {
     }
 
@@ -495,100 +512,105 @@ export default class PropuestaEvaluar extends mixins(JhiDataUtils){
     this.setFileData(event, entity, field, isImage)
     
   }
-        public save(): void {//debo guardar un elemento proyecto
+        public save(accion: 'borrador' | 'correcciones' | 'jurado'): void {
+            this.isSaving = true;
+
             try {
-                //this.pregunts[0].preguntaTipoPreguntaTipoPregunta
-                //this.enumRespuestas.
-                this.isSaving = true;
+                const operaciones: Promise<any>[] = [];
 
-                /////////////////////////////////////////////////
-                this.adjuntoRetroalimentacion.adjuntoRetroalimentacionProyectoId = this.proyecto.id;
-    this.adjuntoRetroalimentacion.adjuntoRetroalimentacionFaseId = this.fase.id;
-    this.adjuntoRetroalimentacion.authority = this.authority;
-     this.adjuntoRetroalimentacion.fechaCreacion = new Date();
-     //this.adjuntoRetroalimentacion.proyectoFaseProyectoTitulo =  this.proyecto.titulo;
+                // Adjunto: solo se guarda si ya existe uno o el usuario seleccionó un archivo
+                const tieneAdjunto: boolean =
+                    !!this.adjuntoRetroalimentacion.id ||
+                    (this.adjuntoRetroalimentacion.archivo != null && this.adjuntoRetroalimentacion.archivo.length > 0);
 
-    
-    if(this.adjuntoRetroalimentacion.id) {
-     //console.log("Existe el adjunto");
-      this.adjuntoRetroalimentacionService()
-        .update(this.adjuntoRetroalimentacion)
-        .then(param => {
-            this.isSaving = false;
-            //(<any>this).$router.go(0);
-          const message = this.$t('ciecytApp.adjuntoRetroalimentacion.updated', { param: param.id });
-          this.alertService().showAlert(message, 'info');
-        });
-    } else {
-      //console.log("NO Existe el adjunto");
-      this.adjuntoRetroalimentacionService()
-        .create(this.adjuntoRetroalimentacion)
-        .then(param => {
-          this.isSaving = false;
-           //(<any>this).$router.go(0);
-          const message = this.$t('ciecytApp.adjuntoRetroalimentacion.created', { param: param.id });
-          this.alertService().showAlert(message, 'success');
-        });
-    }
-   /////////////////////////////////////////////////
-                for (let e of this.proyectoRespuests) {
-                       e.faseId=this.fase.id;
-                        e.authority=this.authority;
-                    if (e.id) {
-                        
-                        this.proyectoRespuestasService().update(e)
-                        .then(param => {
-                           // //this.$router.push({ name: 'PropuestaPresupuestoView',params:{ proyectoId: this.proyId}});
-                            (<any>this).$router.go(0);
-                        });
-                      
-                    } else {
-                        
-                        this.proyectoRespuestasService().create(e)
-                        .then(param => {
-                           // //this.$router.push({ name: 'PropuestaPresupuestoView',params:{ proyectoId: this.proyId}});
-                            (<any>this).$router.go(0);
-                        });
-                        
-                    }
+                if (tieneAdjunto) {
+                    this.adjuntoRetroalimentacion.adjuntoRetroalimentacionProyectoId = this.proyecto.id;
+                    this.adjuntoRetroalimentacion.adjuntoRetroalimentacionFaseId = this.fase.id;
+                    this.adjuntoRetroalimentacion.authority = this.authority;
+                    this.adjuntoRetroalimentacion.fechaCreacion = new Date();
+
+                    operaciones.push(
+                        this.adjuntoRetroalimentacion.id
+                            ? this.adjuntoRetroalimentacionService().update(this.adjuntoRetroalimentacion)
+                            : this.adjuntoRetroalimentacionService()
+                                .create(this.adjuntoRetroalimentacion)
+                                .then(param => {
+                                    this.adjuntoRetroalimentacion.id = param.id;
+                                })
+                    );
                 }
-                
 
-            } catch (e) {
-                //TODO: mostrar mensajes de error
-            }
+                // Respuestas: se omiten las filas de solo visualización (elementos del estudiante sin pregunta)
+                this.proyectoRespuests.forEach(e => {
+                    if (!e.id && !e.proyectoRespuestasPreguntaId) {
+                        return;
+                    }
+                    e.faseId = this.fase.id;
+                    e.authority = this.authority;
+                    if (e.id) {
+                        operaciones.push(this.proyectoRespuestasService().update(e));
+                    } else {
+                        operaciones.push(
+                            this.proyectoRespuestasService()
+                                .create(e)
+                                .then(param => {
+                                    e.id = param.id;
+                                })
+                        );
+                    }
+                });
 
-            //actualizar el proyecto para que se guarde la viabilidad
-            try {
-                this.proyectoService()
-                    .updateProyecto(this.proyecto)
+                // El proyecto siempre se actualiza (recomendaciones, decisiones, etc.)
+                operaciones.push(this.proyectoService().updateProyecto(this.proyecto));
+
+                Promise.all(operaciones)
                     .then(() => {
-                        this.cambiarEstadoSegunAsesoria();
+                        if (accion === 'borrador') {
+                            this.isSaving = false;
+                            this.alertService().showAlert('Borrador guardado. El estudiante aún no puede ver la evaluación.', 'info');
+                            this.getAlertFromStore();
+                            return null;
+                        }
+                        if (accion === 'correcciones') {
+                            this.proyecto.enviado = false;
+                        } else {
+                            this.proyecto.enviado = true;
+                        }
+                        return this.cambiarEstadoSegunAsesoria(accion);
+                    })
+                    .then(() => {
+                        if (accion !== 'borrador') {
+                            this.previousState();
+                        }
+                    })
+                    .catch(err => {
+                        this.isSaving = false;
+                        this.alertService().showAlert('Error al guardar la evaluación: ' + (err && err.message ? err.message : err), 'danger');
+                        this.getAlertFromStore();
                     });
             } catch (e) {
-                //TODO: mostrar mensajes de error
+                this.isSaving = false;
             }
         }
 
-        public cambiarEstadoSegunAsesoria(): void {
+        public cambiarEstadoSegunAsesoria(accion: 'correcciones' | 'jurado'): Promise<any> {
             const enviado = this.proyecto.enviado;
-            let nuevoEstado: string | null = null;
-            let observacion = '';
-            if (enviado) {
-                nuevoEstado = 'EN_REVISION_JURADO_PROPUESTA';
-                observacion = 'Asesor aprueba y envía la propuesta al jurado';
-            } else {
-                nuevoEstado = 'CORRECCIONES_ASESOR';
-                observacion = 'Asesor solicita correcciones en la propuesta';
-            }
-            this.proyectoService()
+            const nuevoEstado = enviado ? 'EN_REVISION_JURADO_PROPUESTA' : 'CORRECCIONES_ASESOR';
+            const observacion = enviado ? 'Asesor aprueba y envía la propuesta al jurado' : 'Asesor solicita correcciones en la propuesta';
+            return this.proyectoService()
                 .cambiarEstado(this.proyecto.id, nuevoEstado, observacion)
                 .then(() => {
-                    const message = this.$t('ciecytApp.proyecto.estadoActualizado', { estado: nuevoEstado });
+                    this.isSaving = false;
+                    const message = accion === 'correcciones'
+                        ? 'Correcciones enviadas al estudiante.'
+                        : 'Propuesta enviada al jurado.';
                     this.alertService().showAlert(message, 'success');
+                    this.getAlertFromStore();
                 })
                 .catch(err => {
+                    this.isSaving = false;
                     this.alertService().showAlert('Error al actualizar estado: ' + err.message, 'danger');
+                    this.getAlertFromStore();
                 });
         }
 
@@ -610,7 +632,7 @@ export default class PropuestaEvaluar extends mixins(JhiDataUtils){
 
                 res= await this.proyectoRespuestasService()
                 .retrieveProyectoRespuestas(this.proyId, this.fase.id, this.authority)   //recup los proyresp con un idproy
-                this.proyectoRespuests = res.data;
+                this.proyectoRespuests = res.data.filter(r => r.proyectoRespuestasPreguntaId != null);
                 if (this.proyectoRespuests.length>0){
                         this.proyectoRespuestasDatos=true;
                     }
@@ -975,10 +997,21 @@ public saveAndPreviousState() {
   justify-content: flex-end;
   gap: 0.75rem;
   padding: 0.5rem 0 1rem;
+  flex-wrap: wrap;
 }
 .acciones-footer .btn {
   min-width: 140px;
   border-radius: 0.5rem;
   font-weight: 500;
+}
+.acciones-ayuda {
+  list-style: none;
+  padding-left: 0;
+  margin-left: 0;
+  color: #495057;
+  font-size: 0.9rem;
+}
+.acciones-ayuda li {
+  padding: 0.15rem 0;
 }
 </style>

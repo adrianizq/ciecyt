@@ -4,7 +4,7 @@
       <menu-lateral-pasantia :proyectoId="$route.params.proyectoId"></menu-lateral-pasantia>
     </div>
     <div class="col-sm-8">
-      <form @submit.prevent="save()">
+      <form @submit.prevent="save('continuar')">
         <div class="row">
           <div class="col-12">
             <div class="form-group">
@@ -287,8 +287,12 @@
             <font-awesome-icon icon="ban"></font-awesome-icon>&nbsp;<span v-text="$t('entity.action.cancel')">Cancel</span>
           </button>
 
+          <button type="button" id="save-borrador" class="btn btn-outline-secondary" v-on:click="save('borrador')">
+            <font-awesome-icon icon="save"></font-awesome-icon>&nbsp;<span>Guardar borrador</span>
+          </button>
+
           <button type="submit" id="save-entity" class="btn btn-primary" >
-            <font-awesome-icon icon="save"></font-awesome-icon>&nbsp;<span v-text="$t('entity.action.save')">Save</span>
+            <font-awesome-icon icon="save"></font-awesome-icon>&nbsp;<span>Guardar y continuar</span>
           </button>
 
         <!--<p class="typo__p" v-if="this.submitStatus === 'ERROR'">¡Existen campos sin llenar!.</p>-->
@@ -400,7 +404,7 @@ export default class PasantiaInformacionGeneral extends Vue {
   }
 
 
-  public save(): void {
+  public save(accion: 'borrador' | 'continuar' = 'continuar'): void {
     this.isSaving = true;
 /*
     this.$v.$touch();
@@ -430,6 +434,10 @@ export default class PasantiaInformacionGeneral extends Vue {
           .updateProyecto(this.proyecto)
           .then(param => {
             this.isSaving = false;
+            if (accion === 'borrador') {
+              this.alertService().showAlert('Borrador guardado. Aún puedes continuar más tarde.', 'info');
+              return;
+            }
             this.$router.push({ name: 'PropuestaPasantiaInformacionEmpresaView', params: { proyectoId: this.proyecto.id.toString() } });
             const message = this.$t('ciecytApp.proyecto.updated', { param: param.id });
             this.alertService().showAlert(message, 'info');
@@ -441,6 +449,12 @@ export default class PasantiaInformacionGeneral extends Vue {
             this.isSaving = false;
 
             this.proyId = String(param.id);
+            this.proyecto.id = param.id;
+
+            if (accion === 'borrador') {
+              this.alertService().showAlert('Borrador guardado. Aún puedes continuar más tarde.', 'info');
+              return;
+            }
 
             this.$router.push({ name: 'PropuestaPasantiaInformacionEmpresaView', params: { proyectoId: this.proyId } });
 

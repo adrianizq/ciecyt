@@ -65,6 +65,7 @@
     <include file="config/liquibase/changelog/20260727000001_eliminar_rol_viabilidad.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20260808000001_estado_proyecto_historial.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20260808000002_notificacion.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20260809000000_proyecto_retroalimentacion_asesor.xml" relativeToChangelogFile="false"/>
     <!-- jhipster-needle-liquibase-add-changelog - JHipster will add liquibase changelogs here -->
     <include file="config/liquibase/changelog/20201008033203_added_entity_constraints_AdjuntoProyectoFase.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20201008033303_added_entity_constraints_AdjuntoRetroalimentacion.xml" relativeToChangelogFile="false"/>

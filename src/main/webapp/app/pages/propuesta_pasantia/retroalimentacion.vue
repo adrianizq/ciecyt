@@ -4,9 +4,8 @@
       <menu-lateral-pasantia :proyectoId="$route.params.proyectoId"></menu-lateral-pasantia>
     </div>
     
-   <!-- <div class="col-sm-8"  v-if="!proyecto.preEnviado"> -->
-    <div class="col-sm-8">
-      <form @submit.prevent="save()">
+    <div class="col-sm-8" v-if="retroalimentacionVisible">
+      <form @submit.prevent>
         <div class="row">
           <div class="col-12">
             
@@ -187,8 +186,12 @@
         
         </div>
       </form>
-    </div> 
-   
+    </div>
+    <div class="col-sm-8" v-else>
+      <div class="alert alert-warning mt-3">
+        <strong>El asesor aún no ha enviado la retroalimentación de su propuesta.</strong>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -346,7 +349,7 @@ export default class Retroalimentacion extends mixins(JhiDataUtils){
      /////////////////// Respuestas Asesor
       res= await this.proyectoRespuestasService()
                 .retrieveProyectoRespuestas(this.proyId, this.fase.id, this.authorityAsesor)   //recup los proyresp con un idproy
-                this.proyectoRespuestsAsesor = res.data;
+                this.proyectoRespuestsAsesor = res.data.filter(r => r.proyectoRespuestasPreguntaId != null);
 
 
       
@@ -371,6 +374,16 @@ export default class Retroalimentacion extends mixins(JhiDataUtils){
   get isDisabled(){
     	return !this.terms;
     }
+
+  get retroalimentacionVisible(): boolean {
+    const estado = this.proyecto.estado;
+    return (
+      !!estado &&
+      estado !== 'PREINSCRITA' &&
+      estado !== 'EN_ELABORACION_PROPUESTA' &&
+      estado !== 'EN_REVISION_ASESOR'
+    );
+  }
 }
 </script>
 

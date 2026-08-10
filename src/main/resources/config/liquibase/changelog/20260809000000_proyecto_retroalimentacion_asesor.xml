@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.9.xsd
+                        http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog-ext/dbchangelog-3.9.xsd">
+
+    <changeSet id="20260809000000-1" author="adr" dbms="postgresql">
+        <preConditions onFail="MARK_RAN">
+            <and>
+                <tableExists tableName="proyecto"/>
+                <not>
+                    <columnExists tableName="proyecto" columnName="retroalimentacion_asesor_enviada"/>
+                </not>
+            </and>
+        </preConditions>
+        <addColumn tableName="proyecto">
+            <column name="retroalimentacion_asesor_enviada" type="boolean"/>
+        </addColumn>
+    </changeSet>
+</databaseChangeLog>

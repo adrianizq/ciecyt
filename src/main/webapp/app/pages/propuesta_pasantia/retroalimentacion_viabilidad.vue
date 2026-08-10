@@ -342,7 +342,7 @@ export default class Retroalimentacion extends mixins(JhiDataUtils){
      /////////////////// Respuestas Viabilidad
       res= await this.proyectoRespuestasService()
                 .retrieveProyectoRespuestas(this.proyId, this.fase.id, this.authority)   //recup los proyresp con un idproy
-                this.proyectoRespuests = res.data;
+                this.proyectoRespuests = res.data.filter(r => r.proyectoRespuestasPreguntaId != null);
 
 
       res=  await this.adjuntoRetroalimentacionService()

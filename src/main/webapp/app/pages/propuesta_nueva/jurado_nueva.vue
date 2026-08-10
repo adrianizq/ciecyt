@@ -35,8 +35,11 @@
                         <button type="button" id="cancel" class="btn btn-secondary" v-on:click="back">
                             <font-awesome-icon icon="arrow-left"></font-awesome-icon>&nbsp;Volver
                         </button>
-                        <button type="button" id="save" class="btn btn-primary" v-on:click="save($event)" :disabled="isSaving || !juradosCompletos">
-                            <font-awesome-icon icon="save"></font-awesome-icon>&nbsp;<span v-text="$t('entity.action.save')">Guardar</span>
+                        <button type="button" id="save-borrador" class="btn btn-outline-secondary" v-on:click="save($event, 'borrador')" :disabled="isSaving || !integrantesProyecto.length">
+                            <font-awesome-icon icon="save"></font-awesome-icon>&nbsp;<span>Guardar borrador</span>
+                        </button>
+                        <button type="button" id="save" class="btn btn-primary" v-on:click="save($event, 'continuar')" :disabled="isSaving || !juradosCompletos">
+                            <font-awesome-icon icon="save"></font-awesome-icon>&nbsp;<span>Guardar y continuar</span>
                         </button>
                     </div>
                 </div>
@@ -112,7 +115,7 @@
             this.$router.push({ name: 'PropuestaAsesorNuevaEditView', params: { proyectoId: String(this.proyId) } });
         }
 
-        public async save(event?: Event): Promise<void> {
+        public async save(event?: Event, accion: 'borrador' | 'continuar' = 'continuar'): Promise<void> {
             if (event) {
                 event.preventDefault();
                 event.stopPropagation();
@@ -124,7 +127,7 @@
             }
 
             const sinSeleccionar = this.integrantesProyecto.some(i => !i.integranteProyectoUserId);
-            if (sinSeleccionar) {
+            if (sinSeleccionar && accion === 'continuar') {
                 this.alertService().showAlert('Debe seleccionar un jurado para cada campo', 'danger');
                 return;
             }
@@ -151,6 +154,10 @@
                     }
                 }
                 this.isSaving = false;
+                if (accion === 'borrador') {
+                    this.alertService().showAlert('Borrador guardado. Aún puedes continuar más tarde.', 'info');
+                    return;
+                }
                 this.alertService().showAlert('Jurados guardados correctamente', 'success');
                 this.$router.push({ name: 'PropuestaInscripcionNuevaEditView', params: { proyectoId: String(this.proyId) } });
             } catch (e) {

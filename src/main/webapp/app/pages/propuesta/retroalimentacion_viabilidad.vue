@@ -5,7 +5,7 @@
     </div>
     
    <!-- <div class="col-sm-8"  v-if="!proyecto.preEnviado"> -->
-    <div class="col-sm-8">
+    <div class="col-sm-8" v-if="retroalimentacionVisible">
       <form @submit.prevent="save()">
         <div class="row">
           <div class="col-12">
@@ -173,6 +173,12 @@
         </div>
       </form>
     </div> 
+
+    <div class="col-sm-8" v-else>
+      <div class="alert alert-warning mt-4">
+        La evaluación del jurado aún no ha sido publicada. Consulte más tarde.
+      </div>
+    </div>
    
   </div>
 </template>
@@ -344,7 +350,7 @@ export default class Retroalimentacion extends mixins(JhiDataUtils){
      /////////////////// Respuestas Viabilidad
       res= await this.proyectoRespuestasService()
                 .retrieveProyectoRespuestas(this.proyId, this.fase.id, this.authority)   //recup los proyresp con un idproy
-                this.proyectoRespuests = res.data;
+                this.proyectoRespuests = res.data.filter(r => r.proyectoRespuestasPreguntaId != null);
 
 
       res=  await this.adjuntoRetroalimentacionService()
@@ -362,6 +368,14 @@ export default class Retroalimentacion extends mixins(JhiDataUtils){
 /////////////////////////
         
      
+  }
+
+  get retroalimentacionVisible(): boolean {
+    return (
+      this.proyecto.estado === 'VIABLE' ||
+      this.proyecto.estado === 'NO_VIABLE' ||
+      this.proyecto.estado === 'CORRECCIONES_JURADO_PROPUESTA'
+    );
   }
 
   get isDisabled(){

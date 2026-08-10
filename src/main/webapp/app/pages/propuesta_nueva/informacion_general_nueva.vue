@@ -10,7 +10,7 @@
         </h4>
         <p class="text-muted mb-0" style="font-size:0.85rem;">Complete los datos básicos de su propuesta de grado</p>
       </div>
-      <form @submit.prevent="save()">
+      <form @submit.prevent="save('continuar')">
         <div class="row">
           <div class="col-12">
             <div class="form-group" v-if="proyecto.id">
@@ -214,8 +214,12 @@
             <font-awesome-icon icon="ban"></font-awesome-icon>&nbsp;<span v-text="$t('entity.action.cancel')">Cancel</span>
           </button>
 
+          <button type="button" id="save-borrador" class="btn btn-outline-secondary" v-on:click="save('borrador')">
+            <font-awesome-icon icon="save"></font-awesome-icon>&nbsp;<span>Guardar borrador</span>
+          </button>
+
           <button type="submit" id="save-entity" class="btn btn-primary">
-            <font-awesome-icon icon="save"></font-awesome-icon>&nbsp;<span v-text="$t('entity.action.save')">Save</span>
+            <font-awesome-icon icon="save"></font-awesome-icon>&nbsp;<span>Guardar y continuar</span>
           </button>
 
           <p class="typo__p text-danger" v-if="this.submitStatus === 'ERROR'">¡Existen campos sin llenar!.</p>
@@ -313,7 +317,7 @@ export default class PropuestaInformacionGeneral extends Vue {
     });
   }
 
-  public save(): void {
+  public save(accion: 'borrador' | 'continuar' = 'continuar'): void {
     this.isSaving = true;
     console.log('Guardando proyecto:', JSON.stringify(this.proyecto));
 
@@ -355,6 +359,10 @@ export default class PropuestaInformacionGeneral extends Vue {
         .updateProyecto(this.proyecto)
         .then(param => {
           this.isSaving = false;
+          if (accion === 'borrador') {
+            this.alertService().showAlert('Borrador guardado. Aún puedes continuar más tarde.', 'info');
+            return;
+          }
           if (this.esSinFlujo) {
             this.$router.push({ name: 'PropuestasInvestigadorEditView' });
           } else {
@@ -375,6 +383,12 @@ export default class PropuestaInformacionGeneral extends Vue {
           this.isSaving = false;
 
           this.proyId = String(param.id);
+          this.proyecto.id = param.id;
+
+          if (accion === 'borrador') {
+            this.alertService().showAlert('Borrador guardado. Aún puedes continuar más tarde.', 'info');
+            return;
+          }
 
           if (this.esSinFlujo) {
             this.$router.push({ name: 'PropuestasInvestigadorEditView' });

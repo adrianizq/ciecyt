@@ -32,18 +32,34 @@ export default class ProyectoRespuestasService {
   }
 
   public create(entity: IProyectoRespuestas): Promise<IProyectoRespuestas> {
-    return new Promise<IProyectoRespuestas>(resolve => {
-      axios.post(`${baseApiUrl}`, entity).then(function (res) {
-        resolve(res.data);
-      });
+    return new Promise<IProyectoRespuestas>((resolve, reject) => {
+      axios
+        .post(`${baseApiUrl}`, entity)
+        .then(function (res) {
+          resolve(res.data);
+        })
+        .catch(err => {
+          if (err.response) {
+            console.error('Backend error:', err.response.status, err.response.data);
+          }
+          reject(err);
+        });
     });
   }
 
   public update(entity: IProyectoRespuestas): Promise<IProyectoRespuestas> {
-    return new Promise<IProyectoRespuestas>(resolve => {
-      axios.put(`${baseApiUrl}`, entity).then(function (res) {
-        resolve(res.data);
-      });
+    return new Promise<IProyectoRespuestas>((resolve, reject) => {
+      axios
+        .put(`${baseApiUrl}`, entity)
+        .then(function (res) {
+          resolve(res.data);
+        })
+        .catch(err => {
+          if (err.response) {
+            console.error('Backend error:', err.response.status, err.response.data);
+          }
+          reject(err);
+        });
     });
   }
 
