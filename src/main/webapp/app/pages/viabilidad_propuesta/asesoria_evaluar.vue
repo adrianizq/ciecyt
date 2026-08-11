@@ -650,13 +650,18 @@ export default class PropuestaEvaluar extends mixins(JhiDataUtils){
               this.pregunts = res.data;
               const elementosCubiertos: number[] = [];
 
+              const preguntasPorId: any = {};
+              this.pregunts.forEach(e => {
+                preguntasPorId[e.id] = e;
+              });
+
               this.pregunts.forEach(e => {
                 var proyResp: IProyectoRespuestas = new ProyectoRespuestas();
                 proyResp.proyectoRespuestasPreguntaPregunta = e.pregunta;
                 proyResp.proyectoRespuestasPreguntaId = e.id;
                 proyResp.proyectoRespuestasProyectoId = this.proyId;
                 //ubicar un elemento, no esta en proyectoRespuestas
-                proyResp.elemento = e.preguntaElemento;
+                proyResp.elemento = (e as any).preguntaElementoElemento;
                 proyResp.preguntaTipoPreguntaId = e.preguntaTipoPreguntaId;
                 proyResp.preguntaTipoPreguntaTipoPregunta = e.preguntaTipoPreguntaTipoPregunta;
                 proyResp.encabezado = e.encabezado;
@@ -671,6 +676,24 @@ export default class PropuestaEvaluar extends mixins(JhiDataUtils){
                  this.proyectoRespuests.push(proyResp);
                 }
               }); //fin del foreach pregunts
+
+              // Refrescar los datos vivos de la pregunta en las respuestas ya guardadas.
+              // El tipo de pregunta, encabezado y puntaje no deben depender de la columna
+              // desnormalizada de proyecto_respuestas (puede estar vacía o desactualizada,
+              // lo que rompía el radio de evaluación de la fila).
+              if (this.proyectoRespuestasDatos) {
+                this.proyectoRespuests.forEach(r => {
+                  const p = preguntasPorId[r.proyectoRespuestasPreguntaId];
+                  if (p) {
+                    r.preguntaTipoPreguntaId = p.preguntaTipoPreguntaId;
+                    r.preguntaTipoPreguntaTipoPregunta = p.preguntaTipoPreguntaTipoPregunta;
+                    r.encabezado = p.encabezado;
+                    r.puntajeMaximo = p.puntajeMaximo;
+                    r.proyectoRespuestasPreguntaPregunta = p.pregunta;
+                    r.elemento = (p as any).preguntaElementoElemento;
+                  }
+                });
+              }
 
               //Mostrar siempre los elementos que diligenció el estudiante
               this.elementoProyects.forEach(x => {

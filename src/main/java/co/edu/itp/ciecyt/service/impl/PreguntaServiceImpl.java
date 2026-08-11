@@ -1,8 +1,11 @@
 package co.edu.itp.ciecyt.service.impl;
 
 import co.edu.itp.ciecyt.domain.Elemento;
+import co.edu.itp.ciecyt.domain.ElementoModalidad;
 import co.edu.itp.ciecyt.domain.PreguntaAuthority;
 import co.edu.itp.ciecyt.domain.PreguntaModalidad;
+import co.edu.itp.ciecyt.repository.ElementoModalidadRepository;
+import co.edu.itp.ciecyt.repository.ElementoRepository;
 import co.edu.itp.ciecyt.repository.PreguntaAuthorityRepository;
 import co.edu.itp.ciecyt.repository.PreguntaModalidadRepository;
 import co.edu.itp.ciecyt.service.PreguntaAuthorityService;
@@ -17,6 +20,7 @@ import co.edu.itp.ciecyt.service.dto.PreguntaModalidadDTO;
 import co.edu.itp.ciecyt.service.mapper.PreguntaAuthorityMapper;
 import co.edu.itp.ciecyt.service.mapper.PreguntaMapper;
 import co.edu.itp.ciecyt.service.mapper.PreguntaModalidadMapper;
+import co.edu.itp.ciecyt.web.rest.errors.BadRequestAlertException;
 import org.ehcache.xml.model.TimeUnit;
 import org.hibernate.annotations.Synchronize;
 import org.slf4j.Logger;
@@ -40,9 +44,13 @@ public class PreguntaServiceImpl implements PreguntaService {
 
     private final Logger log = LoggerFactory.getLogger(PreguntaServiceImpl.class);
 
+    private static final String ENTITY_NAME = "pregunta";
+
     private final PreguntaRepository preguntaRepository;
     private final PreguntaModalidadRepository preguntaModalidadRepository;
     private final PreguntaAuthorityRepository preguntaAuthorityRepository;
+    private final ElementoRepository elementoRepository;
+    private final ElementoModalidadRepository elementoModalidadRepository;
 
 
 
@@ -58,6 +66,8 @@ public class PreguntaServiceImpl implements PreguntaService {
     public PreguntaServiceImpl(PreguntaRepository preguntaRepository,
                                PreguntaModalidadRepository preguntaModalidadRepository,
                                PreguntaAuthorityRepository preguntaAuthorityRepository,
+                               ElementoRepository elementoRepository,
+                               ElementoModalidadRepository elementoModalidadRepository,
                                PreguntaMapper preguntaMapper,
                                PreguntaModalidadMapper preguntaModalidadMapper,
                                PreguntaAuthorityService preguntaAuthorityService,
@@ -71,6 +81,8 @@ public class PreguntaServiceImpl implements PreguntaService {
         this.preguntaModalidadRepository = preguntaModalidadRepository;
         this.preguntaAuthorityRepository = preguntaAuthorityRepository;
         this.preguntaAuthorityMapper = preguntaAuthorityMapper;
+        this.elementoRepository = elementoRepository;
+        this.elementoModalidadRepository = elementoModalidadRepository;
     }
 
     @Override
@@ -84,6 +96,32 @@ public class PreguntaServiceImpl implements PreguntaService {
     @Transactional(readOnly = false)
     public PreguntaDTO saveModalidadAuthority(PreguntaDTO preguntaDTO) {
         log.debug("Request to save Pregunta : {}", preguntaDTO);
+
+        // Regla "elemento manda" (modelo aprobado): si la pregunta tiene elemento,
+        // la fase y las modalidades se derivan del elemento, ignorando lo enviado.
+        if (preguntaDTO.getPreguntaElementoId() != null) {
+            Optional<Elemento> optElemento = elementoRepository.findById(preguntaDTO.getPreguntaElementoId());
+            if (optElemento.isPresent()) {
+                Elemento elemento = optElemento.get();
+                if (elemento.getElementoFases() != null) {
+                    preguntaDTO.setPreguntaFaseId(elemento.getElementoFases().getId());
+                }
+                List<PreguntaModalidadDTO> modsDerivadas = new ArrayList<>();
+                List<ElementoModalidad> emL = elementoModalidadRepository.findByElementoId(elemento.getId());
+                for (ElementoModalidad em : emL) {
+                    if (em.getModalidad() != null) {
+                        PreguntaModalidadDTO pmDto = new PreguntaModalidadDTO();
+                        pmDto.setModalidad2Id(em.getModalidad().getId());
+                        modsDerivadas.add(pmDto);
+                    }
+                }
+                preguntaDTO.setPreguntaModalidads(modsDerivadas);
+            }
+        } else if (preguntaDTO.getPreguntaFaseId() == null) {
+            // Pregunta transversal sin elemento: la fase es obligatoria
+            throw new BadRequestAlertException("La fase es obligatoria para preguntas sin elemento", ENTITY_NAME, "faseobligatoria");
+        }
+
         Pregunta pregunta = preguntaMapper.toEntity(preguntaDTO);
         preguntaRepository.save(pregunta);
 

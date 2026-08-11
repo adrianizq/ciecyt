@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.9.xsd
+                        http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog-ext/dbchangelog-3.9.xsd">
+
+    <!-- 1. Add pregunta_ciclo_id column to pregunta (Ciclo opcional para el banco de preguntas) -->
+    <changeSet id="20260810000001-1" author="opencode" dbms="postgresql">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists tableName="pregunta" columnName="pregunta_ciclo_id"/>
+            </not>
+        </preConditions>
+        <addColumn tableName="pregunta">
+            <column name="pregunta_ciclo_id" type="bigint">
+                <constraints nullable="true"/>
+            </column>
+        </addColumn>
+        <addForeignKeyConstraint
+            baseColumnNames="pregunta_ciclo_id"
+            baseTableName="pregunta"
+            constraintName="fk_pregunta_pregunta_ciclo_id"
+            referencedColumnNames="id"
+            referencedTableName="ciclo"/>
+        <rollback>
+            <dropForeignKeyConstraint baseTableName="pregunta" constraintName="fk_pregunta_pregunta_ciclo_id"/>
+            <dropColumn tableName="pregunta" columnName="pregunta_ciclo_id"/>
+        </rollback>
+    </changeSet>
+
+</databaseChangeLog>

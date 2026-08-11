@@ -14,6 +14,9 @@ import { IElementoModalidad } from '@/shared/model/elemento-modalidad.model';
 import FasesService from '../fases/fases.service';
 import { IFases } from '@/shared/model/fases.model';
 
+import CicloService from '../ciclo/ciclo.service';
+import { ICiclo } from '@/shared/model/ciclo.model';
+
 import ElementoService from '../elemento/elemento.service';
 import { IElemento, Elemento } from '@/shared/model/elemento.model';
 
@@ -72,6 +75,10 @@ export default class PreguntaUpdate extends Vue {
   @Inject('fasesService') private fasesService: () => FasesService;
 
   public fass: IFases[] = [];
+
+  @Inject('cicloService') private cicloService: () => CicloService;
+
+  public ciclos: ICiclo[] = [];
 
   @Inject('elementoService') private elementoService: () => ElementoService;
 
@@ -208,6 +215,11 @@ export default class PreguntaUpdate extends Vue {
     var seleccionadaId = event;
     if (seleccionadaId) {
       this.existeElemento = true;
+      // Regla "elemento manda": la fase se deriva del elemento seleccionado
+      const elem = this.elements.find(e => e.id == seleccionadaId);
+      if (elem) {
+        this.pregunta.preguntaFaseId = elem.elementoFasesId;
+      }
       let res = this.elementoModalidadService()
         .retrieveModalidadElemento(seleccionadaId)
         .then(res => {
@@ -218,6 +230,18 @@ export default class PreguntaUpdate extends Vue {
       this.existeElemento = false;
     }
     console.log(this.existeElemento);
+  }
+
+  setFase(event) {
+    // Al cambiar la fase se descarta el elemento seleccionado si no pertenece a la nueva fase
+    const faseId = event;
+    if (faseId && this.pregunta.preguntaElementoId) {
+      const elem = this.elements.find(e => e.id == this.pregunta.preguntaElementoId);
+      if (!elem || elem.elementoFasesId != faseId) {
+        this.pregunta.preguntaElementoId = null;
+        this.existeElemento = false;
+      }
+    }
   }
 
   get Fases() {
@@ -312,6 +336,12 @@ export default class PreguntaUpdate extends Vue {
       .retrieve()
       .then(res => {
         this.fass = res.data;
+      });
+
+    this.cicloService()
+      .retrieveAll()
+      .then(res => {
+        this.ciclos = res;
       });
 
     this.elementoService()

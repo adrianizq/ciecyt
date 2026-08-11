@@ -40,6 +40,10 @@ public class PreguntaDTO implements Serializable {
 
     private String preguntaFaseFase;
 
+    private Long preguntaCicloId;
+
+    private String preguntaCicloCiclo;
+
     private List<PreguntaAuthorityDTO> authorities;
 
     private List<PreguntaModalidadDTO> preguntaModalidads;
@@ -166,6 +170,22 @@ public class PreguntaDTO implements Serializable {
         this.preguntaFaseFase = fasesFase;
     }
 
+    public Long getPreguntaCicloId() {
+        return preguntaCicloId;
+    }
+
+    public void setPreguntaCicloId(Long cicloId) {
+        this.preguntaCicloId = cicloId;
+    }
+
+    public String getPreguntaCicloCiclo() {
+        return preguntaCicloCiclo;
+    }
+
+    public void setPreguntaCicloCiclo(String cicloCiclo) {
+        this.preguntaCicloCiclo = cicloCiclo;
+    }
+
     /*public List<PreguntaAuthorityDTO> getListPreguntaAuthorityDTO() {
         return ListPreguntaAuthorityDTO;
     }
@@ -217,6 +237,8 @@ public class PreguntaDTO implements Serializable {
             ", preguntaElementoElemento='" + getPreguntaElementoElemento() + "'" +
             ", preguntaFaseId=" + getPreguntaFaseId() +
             ", preguntaFaseFase='" + getPreguntaFaseFase() + "'" +
+            ", preguntaCicloId=" + getPreguntaCicloId() +
+            ", preguntaCicloCiclo='" + getPreguntaCicloCiclo() + "'" +
             ", orden='" + getOrden() + "'" +
             "}";
     }

@@ -9,7 +9,7 @@ import org.mapstruct.*;
 /**
  * Mapper for the entity {@link Pregunta} and its DTO {@link PreguntaDTO}.
  */
-@Mapper(componentModel = "spring", uses = {TipoPreguntaMapper.class, ElementoMapper.class, FasesMapper.class})
+@Mapper(componentModel = "spring", uses = {TipoPreguntaMapper.class, ElementoMapper.class, FasesMapper.class, CicloMapper.class})
 public interface PreguntaMapper extends EntityMapper<PreguntaDTO, Pregunta> {
 
     @Mapping(source = "preguntaTipoPregunta.id", target = "preguntaTipoPreguntaId")
@@ -18,11 +18,14 @@ public interface PreguntaMapper extends EntityMapper<PreguntaDTO, Pregunta> {
     @Mapping(source = "preguntaElemento.elemento", target = "preguntaElementoElemento")
     @Mapping(source = "preguntaFase.id", target = "preguntaFaseId")
     @Mapping(source = "preguntaFase.fase", target = "preguntaFaseFase")
+    @Mapping(source = "preguntaCiclo.id", target = "preguntaCicloId")
+    @Mapping(source = "preguntaCiclo.ciclo", target = "preguntaCicloCiclo")
     PreguntaDTO toDto(Pregunta pregunta);
 
     @Mapping(source = "preguntaTipoPreguntaId", target = "preguntaTipoPregunta")
     @Mapping(source = "preguntaElementoId", target = "preguntaElemento")
     @Mapping(source = "preguntaFaseId", target = "preguntaFase")
+    @Mapping(source = "preguntaCicloId", target = "preguntaCiclo")
     Pregunta toEntity(PreguntaDTO preguntaDTO);
 
     default Pregunta fromId(Long id) {

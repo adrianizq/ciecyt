@@ -58,6 +58,10 @@ public class Pregunta implements Serializable {
     @JsonIgnoreProperties(value = "preguntas", allowSetters = true)
     private Fases preguntaFase;
 
+    @ManyToOne
+    @JsonIgnoreProperties(value = "preguntas", allowSetters = true)
+    private Ciclo preguntaCiclo;
+
 
     public Pregunta orden(Long orden) {
         this.orden = orden;
@@ -182,6 +186,19 @@ public class Pregunta implements Serializable {
 
     public void setPreguntaFase(Fases fases) {
         this.preguntaFase = fases;
+    }
+
+    public Ciclo getPreguntaCiclo() {
+        return preguntaCiclo;
+    }
+
+    public Pregunta preguntaCiclo(Ciclo ciclo) {
+        this.preguntaCiclo = ciclo;
+        return this;
+    }
+
+    public void setPreguntaCiclo(Ciclo ciclo) {
+        this.preguntaCiclo = ciclo;
     }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 

@@ -8,6 +8,7 @@ export interface IPregunta {
   orden?: number;
   preguntaElemento?: string;
   preguntaElementoId?: number;
+  preguntaElementoElemento?: string;
   pregunta?: string;
   preguntaTipoPreguntaTipoPregunta?: string;
   preguntaTipoPreguntaId?: number;
@@ -17,6 +18,8 @@ export interface IPregunta {
   preguntaRolesModalidadId?: number;
   preguntaFase?: string;
   preguntaFaseId?: number;
+  preguntaCiclo?: string;
+  preguntaCicloId?: number;
   puntajeMaximo?: number;
   preguntaModalidads?: IPreguntaModalidad[];
   authorities?: any[];
@@ -30,6 +33,7 @@ export class Pregunta implements IPregunta {
     public orden?: number,
     public preguntaElemento?: string,
     public preguntaElementoId?: number,
+    public preguntaElementoElemento?: string,
     public pregunta?: string,
     public preguntaTipoPreguntaTipoPregunta?: string,
     public preguntaTipoPreguntaId?: number,
@@ -39,6 +43,8 @@ export class Pregunta implements IPregunta {
     //public preguntaRolesModalidadId?: number,
     public preguntaFase?: string,
     public preguntaFaseId?: number,
+    public preguntaCiclo?: string,
+    public preguntaCicloId?: number,
     public puntajeMaximo?: number,
     public preguntaModalidads?: IPreguntaModalidad[],
     public authorities?: any[]

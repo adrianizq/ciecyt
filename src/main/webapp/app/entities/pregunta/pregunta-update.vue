@@ -44,13 +44,30 @@
                        
                         <b-form-select text-field="pregunta-fase" value-field="id" id="fase"
                             v-model="pregunta.preguntaFaseId"
-                            
+                            :disabled="existeElemento"
+                            @change="setFase($event)"
                              >
                             <option v-for="(selectOption, indexOpt) in Fases"
                                         :key="indexOpt"
                                         :value="selectOption.id"
                                 >
                                     ({{ selectOption.id }}) {{ selectOption.fase }}
+                                </option>
+                        </b-form-select>
+                        <small class="form-text text-muted" v-if="existeElemento">La fase se deriva del elemento seleccionado.</small>
+                    </div>
+                    <!-- ciclos -->
+                    <div class="form-group">
+                        <label class="form-control-label" for="pregunta-preguntaCiclo">Ciclo (opcional)</label>
+                        <b-form-select text-field="pregunta-ciclo" value-field="id" id="ciclo"
+                            v-model="pregunta.preguntaCicloId"
+                             >
+                            <option v-bind:value="null"></option>
+                            <option v-for="(selectOption, indexOpt) in ciclos"
+                                        :key="indexOpt"
+                                        :value="selectOption.id"
+                                >
+                                    ({{ selectOption.id }}) {{ selectOption.ciclo }}
                                 </option>
                         </b-form-select>
                     </div>
