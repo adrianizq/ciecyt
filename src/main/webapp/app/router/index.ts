@@ -80,12 +80,6 @@ const CicloPropedeuticoUpdate = () => import('../entities/ciclo-propedeutico/cic
 // prettier-ignore
 const CicloPropedeuticoDetails = () => import('../entities/ciclo-propedeutico/ciclo-propedeutico-details.vue');
 // prettier-ignore
-const ResultadosEsperados = () => import('../entities/resultados-esperados/resultados-esperados.vue');
-// prettier-ignore
-const ResultadosEsperadosUpdate = () => import('../entities/resultados-esperados/resultados-esperados-update.vue');
-// prettier-ignore
-const ResultadosEsperadosDetails = () => import('../entities/resultados-esperados/resultados-esperados-details.vue');
-// prettier-ignore
 const Producto = () => import('../entities/producto/producto.vue');
 // prettier-ignore
 const ProductoUpdate = () => import('../entities/producto/producto-update.vue');
@@ -116,29 +110,11 @@ const RubroUpdate = () => import('../entities/rubro/rubro-update.vue');
 // prettier-ignore
 const RubroDetails = () => import('../entities/rubro/rubro-details.vue');
 // prettier-ignore
-const PresupuestoValor = () => import('../entities/presupuesto-valor/presupuesto-valor.vue');
-// prettier-ignore
-const PresupuestoValorUpdate = () => import('../entities/presupuesto-valor/presupuesto-valor-update.vue');
-// prettier-ignore
-const PresupuestoValorDetails = () => import('../entities/presupuesto-valor/presupuesto-valor-details.vue');
-// prettier-ignore
 const Entidad = () => import('../entities/entidad/entidad.vue');
 // prettier-ignore
 const EntidadUpdate = () => import('../entities/entidad/entidad-update.vue');
 // prettier-ignore
 const EntidadDetails = () => import('../entities/entidad/entidad-details.vue');
-// prettier-ignore
-const EntidadFinanciadora = () => import('../entities/entidad-financiadora/entidad-financiadora.vue');
-// prettier-ignore
-const EntidadFinanciadoraUpdate = () => import('../entities/entidad-financiadora/entidad-financiadora-update.vue');
-// prettier-ignore
-const EntidadFinanciadoraDetails = () => import('../entities/entidad-financiadora/entidad-financiadora-details.vue');
-// prettier-ignore
-const Elemento = () => import('../entities/elemento/elemento.vue');
-// prettier-ignore
-const ElementoUpdate = () => import('../entities/elemento/elemento-update.vue');
-// prettier-ignore
-const ElementoDetails = () => import('../entities/elemento/elemento-details.vue');
 // prettier-ignore
 const ElementoProyecto = () => import('../entities/elemento-proyecto/elemento-proyecto.vue');
 // prettier-ignore
@@ -305,12 +281,7 @@ const PropuestaRetroalimentacionViabilidadDiplomado = () => import('../pages/pro
 ////7
 //const PropuestaRetroalimentacionViabilidadDiplomado = () => import('../pages/propuesta_diplomado/retroalimentacion_viabilidad.vue');
 const PropuestaIntegrantes = () => import('../pages/propuesta/integrantes.vue');
-const PropuestaElementos = () => import('../pages/propuesta/elementos.vue');
-const PropuestaPresupuesto = () => import('../pages/propuesta/presupuesto.vue');
-const PropuestaResultadosEsperados = () => import('../pages/propuesta/resultados_esperados.vue');
-const PropuestaImpactosEsperado = () => import('../pages/propuesta/impactos_esperados.vue');
-const PropuestaEntidades = () => import('../pages/propuesta/entidades.vue');
-const PropuestaCronograma = () => import('../pages/propuesta/cronograma.vue');
+const PropuestaDocumento = () => import('../pages/propuesta/documento.vue');
 const PropuestaEnviarPropuesta = () => import('../pages/propuesta/enviar_propuesta.vue');
 const ProyectoEnviarProyecto = () => import('../pages/proyectos/enviar_proyecto.vue');
 const PropuestaRetroalimentacion = () => import('../pages/propuesta/retroalimentacion.vue');
@@ -682,31 +653,6 @@ export default new Router({
     }
     ,
     {
-      path: '/entity/resultados-esperados',
-      name: 'ResultadosEsperados',
-      component: ResultadosEsperados,
-      meta: { authorities: ['ROLE_USER'] }
-    },
-    {
-      path: '/entity/resultados-esperados/new',
-      name: 'ResultadosEsperadosCreate',
-      component: ResultadosEsperadosUpdate,
-      meta: { authorities: ['ROLE_USER'] }
-    },
-    {
-      path: '/entity/resultados-esperados/:resultadosEsperadosId/edit',
-      name: 'ResultadosEsperadosEdit',
-      component: ResultadosEsperadosUpdate,
-      meta: { authorities: ['ROLE_USER'] }
-    },
-    {
-      path: '/entity/resultados-esperados/:resultadosEsperadosId/view',
-      name: 'ResultadosEsperadosView',
-      component: ResultadosEsperadosDetails,
-      meta: { authorities: ['ROLE_USER'] }
-    }
-    ,
-    {
       path: '/entity/producto',
       name: 'Producto',
       component: Producto,
@@ -832,31 +778,6 @@ export default new Router({
     }
     ,
     {
-      path: '/entity/presupuesto-valor',
-      name: 'PresupuestoValor',
-      component: PresupuestoValor,
-      meta: { authorities: ['ROLE_USER'] }
-    },
-    {
-      path: '/entity/presupuesto-valor/new',
-      name: 'PresupuestoValorCreate',
-      component: PresupuestoValorUpdate,
-      meta: { authorities: ['ROLE_USER'] }
-    },
-    {
-      path: '/entity/presupuesto-valor/:presupuestoValorId/edit',
-      name: 'PresupuestoValorEdit',
-      component: PresupuestoValorUpdate,
-      meta: { authorities: ['ROLE_USER'] }
-    },
-    {
-      path: '/entity/presupuesto-valor/:presupuestoValorId/view',
-      name: 'PresupuestoValorView',
-      component: PresupuestoValorDetails,
-      meta: { authorities: ['ROLE_USER'] }
-    }
-    ,
-    {
       path: '/entity/entidad',
       name: 'Entidad',
       component: Entidad,
@@ -878,31 +799,6 @@ export default new Router({
       path: '/entity/entidad/:entidadId/view',
       name: 'EntidadView',
       component: EntidadDetails,
-      meta: { authorities: ['ROLE_USER'] }
-    }
-    ,
-    {
-      path: '/entity/entidad-financiadora',
-      name: 'EntidadFinanciadora',
-      component: EntidadFinanciadora,
-      meta: { authorities: ['ROLE_USER'] }
-    },
-    {
-      path: '/entity/entidad-financiadora/new',
-      name: 'EntidadFinanciadoraCreate',
-      component: EntidadFinanciadoraUpdate,
-      meta: { authorities: ['ROLE_USER'] }
-    },
-    {
-      path: '/entity/entidad-financiadora/:entidadFinanciadoraId/edit',
-      name: 'EntidadFinanciadoraEdit',
-      component: EntidadFinanciadoraUpdate,
-      meta: { authorities: ['ROLE_USER'] }
-    },
-    {
-      path: '/entity/entidad-financiadora/:entidadFinanciadoraId/view',
-      name: 'EntidadFinanciadoraView',
-      component: EntidadFinanciadoraDetails,
       meta: { authorities: ['ROLE_USER'] }
     }
     ,
@@ -1530,9 +1426,9 @@ export default new Router({
       meta: { authorities: ['ROLE_USER'] }
     },
     {
-      path: '/propuesta/elementos/:proyectoId',
-      name: 'PropuestaElementosView',
-      component: PropuestaElementos,
+      path: '/propuesta/integrantes/:proyectoId',
+      name: 'PropuestaIntegrantesView',
+      component: PropuestaIntegrantes,
       props: true,
       meta: { authorities: ['ROLE_USER'] }
     },
@@ -1817,16 +1713,27 @@ export default new Router({
       meta: { authorities: ['ROLE_USER'] }
     },
     {
-      path: '/propuesta/elementos/:proyectoId',
-      name: 'PropuestaElementosView',
-      component: PropuestaElementos,
-      props: true,
+      path: '/propuesta/documento/certificado-estudiante/:proyectoId',
+      name: 'PropuestaDocumentoCertificadoView',
+      component: PropuestaDocumento,
       meta: { authorities: ['ROLE_USER'] }
     },
     {
-      path: '/propuesta/cronograma/:proyectoId',
-      name: 'PropuestaCronogramaView',
-      component: PropuestaCronograma,
+      path: '/propuesta/documento/recibo-pago/:proyectoId',
+      name: 'PropuestaDocumentoReciboView',
+      component: PropuestaDocumento,
+      meta: { authorities: ['ROLE_USER'] }
+    },
+    {
+      path: '/propuesta/documento/record-academico/:proyectoId',
+      name: 'PropuestaDocumentoRecordView',
+      component: PropuestaDocumento,
+      meta: { authorities: ['ROLE_USER'] }
+    },
+    {
+      path: '/propuesta/documento/formato-inscripcion/:proyectoId',
+      name: 'PropuestaDocumentoFormatoView',
+      component: PropuestaDocumento,
       meta: { authorities: ['ROLE_USER'] }
     },
     {
@@ -1885,31 +1792,6 @@ export default new Router({
     },
 
     
-    {
-      path: '/propuesta/entidades/:proyectoId',
-      name: 'PropuestaEntidadesView',
-      component: PropuestaEntidades,
-      meta: { authorities: ['ROLE_USER'] }
-    },
-    {
-      path: '/propuesta/resultados_esperados/:proyectoId',
-      name: 'PropuestaResultadosEsperadosView',
-      component: PropuestaResultadosEsperados,
-      meta: { authorities: ['ROLE_USER'] }
-    },
-    {
-      path: '/propuesta/presupuesto/:proyectoId',
-      name: 'PropuestaPresupuestoView',
-      component: PropuestaPresupuesto,
-      meta: { authorities: ['ROLE_USER'] }
-    },
-    {
-      path: '/propuesta/impactos_esperados/:proyectoId',
-      name: 'PropuestaImpactosEsperadoView',
-      component: PropuestaImpactosEsperado,
-      meta: { authorities: ['ROLE_USER'] }
-    },
-
     {
       path: '/viabilidad-propuesta/listado-jurado',
       name: 'PropuestaListadoJuradoView',
@@ -2011,31 +1893,6 @@ export default new Router({
     
 
    
-    {
-      path: '/entity/elemento',
-      name: 'Elemento',
-      component: Elemento,
-      meta: { authorities: ['ROLE_USER'] }
-    },
-    {
-      path: '/entity/elemento/new',
-      name: 'ElementoCreate',
-      component: ElementoUpdate,
-      meta: { authorities: ['ROLE_USER'] }
-    },
-    {
-      path: '/entity/elemento/:elementoId/edit',
-      name: 'ElementoEdit',
-      component: ElementoUpdate,
-      meta: { authorities: ['ROLE_USER'] }
-    },
-    {
-      path: '/entity/elemento/:elementoId/view',
-      name: 'ElementoView',
-      component: ElementoDetails,
-      meta: { authorities: ['ROLE_USER'] }
-    }
-    ,
     {
       path: '/entity/proyecto',
       name: 'Proyecto',

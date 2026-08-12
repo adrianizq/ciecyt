@@ -32,10 +32,6 @@ public class PreguntaDTO implements Serializable {
 
     private String preguntaTipoPreguntaTipoPregunta;
 
-    private Long preguntaElementoId;
-
-    private String preguntaElementoElemento;
-
     private Long preguntaFaseId;
 
     private String preguntaFaseFase;
@@ -138,22 +134,6 @@ public class PreguntaDTO implements Serializable {
         this.preguntaTipoPreguntaTipoPregunta = tipoPreguntaTipoPregunta;
     }
 
-    public Long getPreguntaElementoId() {
-        return preguntaElementoId;
-    }
-
-    public void setPreguntaElementoId(Long elementoId) {
-        this.preguntaElementoId = elementoId;
-    }
-
-    public String getPreguntaElementoElemento() {
-        return preguntaElementoElemento;
-    }
-
-    public void setPreguntaElementoElemento(String elementoElemento) {
-        this.preguntaElementoElemento = elementoElemento;
-    }
-
     public Long getPreguntaFaseId() {
         return preguntaFaseId;
     }
@@ -233,8 +213,6 @@ public class PreguntaDTO implements Serializable {
             ", puntajeMaximo=" + getPuntajeMaximo() +
             ", preguntaTipoPreguntaId=" + getPreguntaTipoPreguntaId() +
             ", preguntaTipoPreguntaTipoPregunta='" + getPreguntaTipoPreguntaTipoPregunta() + "'" +
-            ", preguntaElementoId=" + getPreguntaElementoId() +
-            ", preguntaElementoElemento='" + getPreguntaElementoElemento() + "'" +
             ", preguntaFaseId=" + getPreguntaFaseId() +
             ", preguntaFaseFase='" + getPreguntaFaseFase() + "'" +
             ", preguntaCicloId=" + getPreguntaCicloId() +

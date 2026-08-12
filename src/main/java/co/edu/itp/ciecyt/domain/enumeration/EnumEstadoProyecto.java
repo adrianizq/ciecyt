@@ -5,6 +5,9 @@ package co.edu.itp.ciecyt.domain.enumeration;
  */
 public enum EnumEstadoProyecto {
     PREINSCRITA,
+    EN_VALIDACION_DOCUMENTAL,
+    OBSERVACIONES_DOCUMENTACION,
+    HABILITADO,
     EN_ELABORACION_PROPUESTA,
     EN_REVISION_ASESOR,
     CORRECCIONES_ASESOR,

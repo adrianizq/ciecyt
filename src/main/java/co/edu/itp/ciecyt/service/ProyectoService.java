@@ -4,6 +4,8 @@ import co.edu.itp.ciecyt.domain.IntegranteProyecto;
 import co.edu.itp.ciecyt.domain.Proyecto;
 import co.edu.itp.ciecyt.domain.enumeration.EnumEstadoProyecto;
 import co.edu.itp.ciecyt.service.dto.ProyectoDTO;
+import co.edu.itp.ciecyt.service.dto.RequisitoProyectoDTO;
+import co.edu.itp.ciecyt.service.dto.TransicionEstadoDTO;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
@@ -33,6 +35,40 @@ public interface ProyectoService {
      * @return el proyecto actualizado.
      */
     ProyectoDTO cambiarEstado(Long proyectoId, EnumEstadoProyecto nuevoEstado, String observacion);
+
+    /**
+     * Solicita la validación documental del proyecto ante CIECYT (Acuerdo 29).
+     *
+     * @param proyectoId id del proyecto.
+     * @return el proyecto actualizado.
+     */
+    ProyectoDTO solicitarValidacionDocumental(Long proyectoId);
+
+    /**
+     * CIECYT aprueba u observa la documentación del proyecto.
+     *
+     * @param proyectoId id del proyecto.
+     * @param aprobado true para habilitar, false para observar.
+     * @param observacion observación de la validación.
+     * @return el proyecto actualizado.
+     */
+    ProyectoDTO validarDocumentacion(Long proyectoId, boolean aprobado, String observacion);
+
+    /**
+     * Obtiene (generando si faltan) los requisitos del proyecto.
+     *
+     * @param proyectoId id del proyecto.
+     * @return lista de requisitos del proyecto.
+     */
+    List<RequisitoProyectoDTO> getRequisitosProyecto(Long proyectoId);
+
+    /**
+     * Obtiene las transiciones de estado permitidas para el proyecto desde su estado actual.
+     *
+     * @param proyectoId id del proyecto.
+     * @return lista de transiciones permitidas.
+     */
+    List<TransicionEstadoDTO> getTransicionesPermitidas(Long proyectoId);
 
     /**
      * Get all the proyectos.

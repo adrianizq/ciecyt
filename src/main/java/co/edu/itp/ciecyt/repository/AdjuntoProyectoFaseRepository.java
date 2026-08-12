@@ -2,7 +2,6 @@ package co.edu.itp.ciecyt.repository;
 
 import co.edu.itp.ciecyt.domain.AdjuntoProyectoFase;
 
-import co.edu.itp.ciecyt.domain.Elemento;
 import org.springframework.data.jpa.repository.*;
 import org.springframework.stereotype.Repository;
 

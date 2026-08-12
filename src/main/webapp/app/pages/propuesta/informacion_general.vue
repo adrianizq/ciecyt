@@ -454,7 +454,7 @@ export default class PropuestaInformacionGeneral extends Vue {
               this.alertService().showAlert('Borrador guardado. Aún puedes continuar más tarde.', 'info');
               return;
             }
-            this.$router.push({ name: 'PropuestaElementosView', params: { proyectoId: this.proyecto.id.toString() } });
+            this.$router.push({ name: 'PropuestaIntegrantesView', params: { proyectoId: this.proyecto.id.toString() } });
             const message = this.$t('ciecytApp.proyecto.updated', { param: param.id });
             this.alertService().showAlert(message, 'info');
           });
@@ -472,7 +472,7 @@ export default class PropuestaInformacionGeneral extends Vue {
               return;
             }
 
-            this.$router.push({ name: 'PropuestaElementosView', params: { proyectoId: this.proyId } });
+            this.$router.push({ name: 'PropuestaIntegrantesView', params: { proyectoId: this.proyId } });
 
             const message = 'Se ha creado un nuevo proyecto';
             this.alertService().showAlert(message, 'success');

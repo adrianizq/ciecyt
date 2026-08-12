@@ -20,13 +20,6 @@
                             :class="{'valid': !$v.elementoProyecto.elementoProyectoProyectoDescripcion.$invalid, 'invalid': $v.elementoProyecto.elementoProyectoProyectoDescripcion.$invalid }" v-model="$v.elementoProyecto.elementoProyectoProyectoDescripcion.$model" />
                     </div>
                     <div class="form-group">
-                        <label class="form-control-label" v-bind:value="$t('ciecytApp.elementoProyecto.elementoProyectoElemento')" for="elemento-proyecto-elementoProyectoElemento">Elemento Proyecto Elemento</label>
-                        <select class="form-control" id="elemento-proyecto-elementoProyectoElemento" name="elementoProyectoElemento" v-model="elementoProyecto.elementoProyectoElementoId">
-                            <option v-bind:value="null"></option>
-                            <option v-bind:value="elementoOption.id" v-for="elementoOption in elementos" :key="elementoOption.id">{{elementoOption.elemento}}</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
                         <label class="form-control-label" v-bind:value="$t('ciecytApp.elementoProyecto.elementoProyectoProyecto')" for="elemento-proyecto-elementoProyectoProyecto">Elemento Proyecto Proyecto</label>
                         <select class="form-control" id="elemento-proyecto-elementoProyectoProyecto" name="elementoProyectoProyecto" v-model="elementoProyecto.elementoProyectoProyectoId">
                             <option v-bind:value="null"></option>

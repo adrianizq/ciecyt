@@ -6,19 +6,28 @@ import co.edu.itp.ciecyt.domain.Modalidad;
 import co.edu.itp.ciecyt.domain.Programa;
 import co.edu.itp.ciecyt.domain.Proyecto;
 import co.edu.itp.ciecyt.domain.ProyectoHistorialEstado;
+import co.edu.itp.ciecyt.domain.TransicionEstado;
+import co.edu.itp.ciecyt.domain.User;
 import co.edu.itp.ciecyt.domain.enumeration.EnumEstadoProyecto;
+import co.edu.itp.ciecyt.domain.enumeration.EnumEstadoRequisito;
 import co.edu.itp.ciecyt.repository.LineaInvestigacionRepository;
 import co.edu.itp.ciecyt.repository.ProgramaRepository;
 import co.edu.itp.ciecyt.repository.ProyectoHistorialEstadoRepository;
 import co.edu.itp.ciecyt.repository.ProyectoRepository;
+import co.edu.itp.ciecyt.repository.TransicionEstadoRepository;
+import co.edu.itp.ciecyt.repository.UserRepository;
 import co.edu.itp.ciecyt.security.SecurityUtils;
+import co.edu.itp.ciecyt.security.AuthoritiesConstants;
 import co.edu.itp.ciecyt.service.IntegranteProyectoService;
 import co.edu.itp.ciecyt.service.NotificacionService;
 import co.edu.itp.ciecyt.service.ProyectoService;
+import co.edu.itp.ciecyt.service.RequisitoProyectoService;
 import co.edu.itp.ciecyt.service.RolesModalidadService;
 import co.edu.itp.ciecyt.service.dto.IntegranteProyectoDTO;
 import co.edu.itp.ciecyt.service.dto.ProyectoDTO;
+import co.edu.itp.ciecyt.service.dto.RequisitoProyectoDTO;
 import co.edu.itp.ciecyt.service.dto.RolesModalidadDTO;
+import co.edu.itp.ciecyt.service.dto.TransicionEstadoDTO;
 import co.edu.itp.ciecyt.service.mapper.ProyectoMapper;
 import co.edu.itp.ciecyt.config.Constants;
 import java.time.Instant;
@@ -32,6 +41,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * Service Implementation for managing {@link Proyecto}.
@@ -50,6 +60,9 @@ public class ProyectoServiceImpl implements ProyectoService {
     private final ProgramaRepository programaRepository;
     private final ProyectoHistorialEstadoRepository proyectoHistorialEstadoRepository;
     private final NotificacionService notificacionService;
+    private final TransicionEstadoRepository transicionEstadoRepository;
+    private final UserRepository userRepository;
+    private final RequisitoProyectoService requisitoProyectoService;
 
     private final ProyectoMapper proyectoMapper;
 
@@ -61,7 +74,10 @@ public class ProyectoServiceImpl implements ProyectoService {
         LineaInvestigacionRepository lineaInvestigacionRepository,
         ProgramaRepository programaRepository,
         ProyectoHistorialEstadoRepository proyectoHistorialEstadoRepository,
-        NotificacionService notificacionService
+        NotificacionService notificacionService,
+        TransicionEstadoRepository transicionEstadoRepository,
+        UserRepository userRepository,
+        RequisitoProyectoService requisitoProyectoService
     ) {
         this.proyectoRepository = proyectoRepository;
         this.proyectoMapper = proyectoMapper;
@@ -71,6 +87,9 @@ public class ProyectoServiceImpl implements ProyectoService {
         this.programaRepository = programaRepository;
         this.proyectoHistorialEstadoRepository = proyectoHistorialEstadoRepository;
         this.notificacionService = notificacionService;
+        this.transicionEstadoRepository = transicionEstadoRepository;
+        this.userRepository = userRepository;
+        this.requisitoProyectoService = requisitoProyectoService;
     }
 
     /**
@@ -127,6 +146,8 @@ public class ProyectoServiceImpl implements ProyectoService {
             return proyectoMapper.toDto(proyecto);
         }
 
+        validarTransicionPermitida(proyecto, estadoAnterior, nuevoEstado);
+
         proyecto.setEstado(nuevoEstado);
         sincronizarFlagsLegacy(proyecto, nuevoEstado);
         proyecto = proyectoRepository.save(proyecto);
@@ -146,11 +167,79 @@ public class ProyectoServiceImpl implements ProyectoService {
     }
 
     /**
+     * Valida que la transición de estado sea permitida para la modalidad del proyecto
+     * y que el usuario autenticado tenga el rol requerido. Si la modalidad no tiene
+     * transiciones configuradas (Acuerdo 29), se mantiene el comportamiento permisivo.
+     */
+    private void validarTransicionPermitida(Proyecto proyecto, EnumEstadoProyecto estadoAnterior, EnumEstadoProyecto nuevoEstado) {
+        Long modalidadId = proyecto.getProyectoModalidad() != null ? proyecto.getProyectoModalidad().getId() : null;
+        if (modalidadId == null) {
+            return;
+        }
+
+        List<TransicionEstado> transiciones = transicionEstadoRepository
+            .findByTransicionEstadoModalidadIdAndActivoTrueAndEstadoOrigen(modalidadId, estadoAnterior);
+
+        if (transiciones.isEmpty()) {
+            return;
+        }
+
+        boolean permitida = transiciones.stream()
+            .anyMatch(t -> t.getEstadoDestino() == nuevoEstado && rolPermiteTransicion(t));
+
+        if (!permitida) {
+            String login = SecurityUtils.getCurrentUserLogin().orElse("anonimo");
+            throw new IllegalArgumentException(
+                String.format(
+                    "Transición de estado no permitida: %s -> %s para la modalidad '%s'. Usuario: %s.",
+                    estadoAnterior != null ? estadoAnterior.name() : "INICIAL",
+                    nuevoEstado.name(),
+                    proyecto.getProyectoModalidad().getModalidad(),
+                    login
+                )
+            );
+        }
+    }
+
+    private boolean rolPermiteTransicion(TransicionEstado transicion) {
+        String rolRequerido = transicion.getRolRequerido();
+        if (rolRequerido == null || rolRequerido.trim().isEmpty() || rolRequerido.trim().equals("*")) {
+            return true;
+        }
+        List<String> roles = java.util.Arrays.stream(rolRequerido.split(","))
+            .map(String::trim)
+            .filter(r -> !r.isEmpty())
+            .collect(Collectors.toList());
+        for (String rol : roles) {
+            if (SecurityUtils.isCurrentUserInRole(rol)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
      * Notifica a los responsables del proyecto según el nuevo estado.
      */
     private void notificarResponsables(Proyecto proyecto, EnumEstadoProyecto estadoAnterior, EnumEstadoProyecto nuevoEstado) {
         String rolResponsable = null;
+        boolean notificarCiecyt = false;
         switch (nuevoEstado) {
+            case EN_VALIDACION_DOCUMENTAL:
+                notificarCiecyt = true;
+                break;
+            case OBSERVACIONES_DOCUMENTACION:
+            case HABILITADO:
+            case CORRECCIONES_ASESOR:
+            case CORRECCIONES_JURADO_PROPUESTA:
+            case CORRECCIONES_JURADO_PROYECTO:
+            case VIABLE:
+            case NO_VIABLE:
+            case EN_ELABORACION_PROYECTO:
+            case SUSTENTACION_PROGRAMADA:
+            case AJUSTES_SUSTENTACION:
+                rolResponsable = "Estudiante";
+                break;
             case EN_REVISION_ASESOR:
                 rolResponsable = "Asesor";
                 break;
@@ -159,21 +248,39 @@ public class ProyectoServiceImpl implements ProyectoService {
             case EN_EVALUACION_SUSTENTACION:
                 rolResponsable = "Jurado";
                 break;
-            case CORRECCIONES_ASESOR:
-            case CORRECCIONES_JURADO_PROPUESTA:
-            case CORRECCIONES_JURADO_PROYECTO:
-            case VIABLE:
-            case EN_ELABORACION_PROYECTO:
-            case SUSTENTACION_PROGRAMADA:
-            case AJUSTES_SUSTENTACION:
-                rolResponsable = "Estudiante";
-                break;
             case LISTO_PARA_SUSTENTAR:
             case NOTA_DEFINITIVA:
-                rolResponsable = "CIECYT";
+            case FINALIZADO:
+                notificarCiecyt = true;
                 break;
             default:
                 break;
+        }
+
+        String titulo = "Nueva tarea pendiente: " + nuevoEstado.name();
+        String mensaje = String.format(
+            "El proyecto '%s' cambió de estado de %s a %s. Tiene una acción pendiente.",
+            proyecto.getTitulo() != null ? proyecto.getTitulo() : "Sin título",
+            estadoAnterior != null ? estadoAnterior.name() : "INICIAL",
+            nuevoEstado.name()
+        );
+
+        if (notificarCiecyt) {
+            try {
+                List<User> usuariosCiecyt = userRepository.findAllByAuthoritiesName(AuthoritiesConstants.CIECYT);
+                for (User user : usuariosCiecyt) {
+                    notificacionService.crearNotificacion(
+                        user,
+                        titulo,
+                        mensaje,
+                        proyecto,
+                        "CAMBIO_ESTADO"
+                    );
+                }
+            } catch (Exception e) {
+                log.warn("No se pudieron notificar a CIECYT del proyecto {}: {}", proyecto.getId(), e.getMessage());
+            }
+            return;
         }
 
         if (rolResponsable == null) {
@@ -188,13 +295,6 @@ public class ProyectoServiceImpl implements ProyectoService {
             for (IntegranteProyectoDTO integrante : integrantes) {
                 if (integrante.getIntegranteProyectoRolesModalidadRol() != null &&
                     integrante.getIntegranteProyectoRolesModalidadRol().contains(rolResponsable)) {
-                    String titulo = "Nueva tarea pendiente: " + nuevoEstado.name();
-                    String mensaje = String.format(
-                        "El proyecto '%s' cambió de estado de %s a %s. Tiene una acción pendiente.",
-                        proyecto.getTitulo() != null ? proyecto.getTitulo() : "Sin título",
-                        estadoAnterior != null ? estadoAnterior.name() : "INICIAL",
-                        nuevoEstado.name()
-                    );
                     notificacionService.crearNotificacion(
                         integrante.getIntegranteProyectoUserId(),
                         titulo,
@@ -207,6 +307,88 @@ public class ProyectoServiceImpl implements ProyectoService {
         } catch (Exception e) {
             log.warn("No se pudieron notificar responsables del proyecto {}: {}", proyecto.getId(), e.getMessage());
         }
+    }
+
+    /**
+     * Solicita la validación documental del proyecto ante CIECYT.
+     * Genera los requisitos habilitantes pendientes y mueve el proyecto al estado
+     * {@code EN_VALIDACION_DOCUMENTAL}.
+     */
+    @Override
+    public ProyectoDTO solicitarValidacionDocumental(Long proyectoId) {
+        log.debug("Solicitando validacion documental del proyecto : {}", proyectoId);
+        requisitoProyectoService.generarParaProyecto(proyectoId);
+        return cambiarEstado(proyectoId, EnumEstadoProyecto.EN_VALIDACION_DOCUMENTAL, "Solicitud de validación documental");
+    }
+
+    /**
+     * CIECYT aprueba u observa la documentación de un proyecto.
+     * Si {@code aprobado} es {@code true}, verifica que todos los requisitos obligatorios
+     * del estado actual estén aprobados antes de habilitar el proyecto.
+     */
+    @Override
+    public ProyectoDTO validarDocumentacion(Long proyectoId, boolean aprobado, String observacion) {
+        log.debug("Validando documentacion del proyecto : {} aprobado={}", proyectoId, aprobado);
+        Proyecto proyecto = proyectoRepository.findById(proyectoId)
+            .orElseThrow(() -> new IllegalArgumentException("Proyecto no encontrado: " + proyectoId));
+
+        if (aprobado) {
+            List<RequisitoProyectoDTO> requisitos = requisitoProyectoService.findByProyectoId(proyectoId);
+            List<String> pendientes = requisitos.stream()
+                .filter(r -> Boolean.TRUE.equals(r.getRequisitoProyectoRequisitoObligatorio()))
+                .filter(r -> r.getRequisitoProyectoRequisitoEstado() == null
+                    || r.getRequisitoProyectoRequisitoEstado() == EnumEstadoProyecto.EN_VALIDACION_DOCUMENTAL)
+                .filter(r -> r.getEstado() != EnumEstadoRequisito.APROBADO)
+                .map(r -> r.getRequisitoProyectoRequisitoNombre() != null
+                    ? r.getRequisitoProyectoRequisitoNombre()
+                    : "Requisito #" + r.getRequisitoProyectoRequisitoId())
+                .collect(Collectors.toList());
+
+            if (!pendientes.isEmpty()) {
+                throw new IllegalArgumentException(
+                    "No se puede habilitar el proyecto: hay requisitos obligatorios sin aprobar: " + String.join(", ", pendientes)
+                );
+            }
+            return cambiarEstado(proyectoId, EnumEstadoProyecto.HABILITADO, observacion);
+        }
+
+        return cambiarEstado(proyectoId, EnumEstadoProyecto.OBSERVACIONES_DOCUMENTACION, observacion);
+    }
+
+    /**
+     * Obtiene (generando si faltan) los requisitos del proyecto.
+     */
+    @Override
+    public List<RequisitoProyectoDTO> getRequisitosProyecto(Long proyectoId) {
+        log.debug("Obteniendo requisitos del proyecto : {}", proyectoId);
+        return requisitoProyectoService.generarParaProyecto(proyectoId);
+    }
+
+    /**
+     * Obtiene las transiciones de estado permitidas para el proyecto desde su estado actual.
+     */
+    @Override
+    public List<TransicionEstadoDTO> getTransicionesPermitidas(Long proyectoId) {
+        log.debug("Obteniendo transiciones permitidas del proyecto : {}", proyectoId);
+        Proyecto proyecto = proyectoRepository.findById(proyectoId)
+            .orElseThrow(() -> new IllegalArgumentException("Proyecto no encontrado: " + proyectoId));
+        Long modalidadId = proyecto.getProyectoModalidad() != null ? proyecto.getProyectoModalidad().getId() : null;
+        if (modalidadId == null || proyecto.getEstado() == null) {
+            return new ArrayList<>();
+        }
+        return transicionEstadoRepository
+            .findByTransicionEstadoModalidadIdAndActivoTrueAndEstadoOrigen(modalidadId, proyecto.getEstado()).stream()
+            .map(t -> {
+                TransicionEstadoDTO dto = new TransicionEstadoDTO();
+                dto.setId(t.getId());
+                dto.setEstadoOrigen(t.getEstadoOrigen());
+                dto.setEstadoDestino(t.getEstadoDestino());
+                dto.setRolRequerido(t.getRolRequerido());
+                dto.setActivo(t.getActivo());
+                dto.setTransicionEstadoModalidadId(modalidadId);
+                return dto;
+            })
+            .collect(Collectors.toList());
     }
 
     /**

@@ -56,10 +56,8 @@ public class CacheConfiguration {
             createCache(cm, co.edu.itp.ciecyt.domain.Cronograma.class.getName());
             createCache(cm, co.edu.itp.ciecyt.domain.CronogramaCiecyt.class.getName());
             createCache(cm, co.edu.itp.ciecyt.domain.CronogramaCiecytFases.class.getName());
-            createCache(cm, co.edu.itp.ciecyt.domain.Elemento.class.getName());
             createCache(cm, co.edu.itp.ciecyt.domain.ElementoProyecto.class.getName());
             createCache(cm, co.edu.itp.ciecyt.domain.Entidad.class.getName());
-            createCache(cm, co.edu.itp.ciecyt.domain.EntidadFinanciadora.class.getName());
             createCache(cm, co.edu.itp.ciecyt.domain.Facultad.class.getName());
             createCache(cm, co.edu.itp.ciecyt.domain.Facultad.class.getName() + ".facultadProyectos");
             createCache(cm, co.edu.itp.ciecyt.domain.Fases.class.getName());
@@ -75,13 +73,11 @@ public class CacheConfiguration {
             createCache(cm, co.edu.itp.ciecyt.domain.Modalidad.class.getName());
             createCache(cm, co.edu.itp.ciecyt.domain.Modalidad.class.getName() + ".modalidadCicloPropedeuticos");
             createCache(cm, co.edu.itp.ciecyt.domain.Pregunta.class.getName());
-            createCache(cm, co.edu.itp.ciecyt.domain.PresupuestoValor.class.getName());
             createCache(cm, co.edu.itp.ciecyt.domain.Producto.class.getName());
             createCache(cm, co.edu.itp.ciecyt.domain.ProductoProyecto.class.getName());
             createCache(cm, co.edu.itp.ciecyt.domain.Proyecto.class.getName());
             createCache(cm, co.edu.itp.ciecyt.domain.ProyectoFase.class.getName());
             createCache(cm, co.edu.itp.ciecyt.domain.ProyectoRespuestas.class.getName());
-            createCache(cm, co.edu.itp.ciecyt.domain.ResultadosEsperados.class.getName());
             createCache(cm, co.edu.itp.ciecyt.domain.Retroalimentacion.class.getName());
             createCache(cm, co.edu.itp.ciecyt.domain.RolesModalidad.class.getName());
             createCache(cm, co.edu.itp.ciecyt.domain.RolMenu.class.getName());
@@ -93,7 +89,6 @@ public class CacheConfiguration {
             createCache(cm, co.edu.itp.ciecyt.domain.UserInfo.class.getName());
             createCache(cm, co.edu.itp.ciecyt.domain.PreguntaModalidad.class.getName());
             createCache(cm, co.edu.itp.ciecyt.domain.PreguntaAuthority.class.getName());
-            createCache(cm, co.edu.itp.ciecyt.domain.ElementoModalidad.class.getName());
             createCache(cm, co.edu.itp.ciecyt.domain.AdjuntoRetroalimentacion.class.getName());
             createCache(cm, co.edu.itp.ciecyt.domain.Municipio.class.getName());
             createCache(cm, co.edu.itp.ciecyt.domain.Departamento.class.getName());

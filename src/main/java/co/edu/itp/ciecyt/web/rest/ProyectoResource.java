@@ -6,6 +6,8 @@ import co.edu.itp.ciecyt.repository.ProyectoRepository;
 import co.edu.itp.ciecyt.service.ProyectoService;
 //import co.edu.itp.ciecyt.service.ReportService;
 import co.edu.itp.ciecyt.service.dto.ProyectoDTO;
+import co.edu.itp.ciecyt.service.dto.RequisitoProyectoDTO;
+import co.edu.itp.ciecyt.service.dto.TransicionEstadoDTO;
 import co.edu.itp.ciecyt.service.mapper.AdjuntoProyectoFaseMapper;
 import co.edu.itp.ciecyt.service.mapper.ProyectoMapper;
 import co.edu.itp.ciecyt.web.rest.errors.BadRequestAlertException;
@@ -176,6 +178,57 @@ public class ProyectoResource {
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, id.toString()))
             .body(result);
+    }
+
+    /**
+     * {@code POST  /proyectos/:id/solicitar-validacion-documental} :
+     * El estudiante solicita la validación documental del proyecto ante CIECYT.
+     */
+    @PostMapping("/proyectos/{id}/solicitar-validacion-documental")
+    public ResponseEntity<ProyectoDTO> solicitarValidacionDocumental(@PathVariable Long id) {
+        log.debug("REST request to solicitarValidacionDocumental Proyecto : {}", id);
+        ProyectoDTO result = proyectoService.solicitarValidacionDocumental(id);
+        return ResponseEntity.ok()
+            .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, id.toString()))
+            .body(result);
+    }
+
+    /**
+     * {@code POST  /proyectos/:id/validar-documentacion} :
+     * CIECYT aprueba u observa la documentación del proyecto.
+     */
+    @PostMapping("/proyectos/{id}/validar-documentacion")
+    public ResponseEntity<ProyectoDTO> validarDocumentacion(
+        @PathVariable Long id,
+        @RequestBody Map<String, Object> payload
+    ) {
+        log.debug("REST request to validarDocumentacion Proyecto : {}, payload : {}", id, payload);
+        boolean aprobado = Boolean.TRUE.equals(payload.get("aprobado"));
+        String observacion = payload.get("observacion") != null ? payload.get("observacion").toString() : null;
+        ProyectoDTO result = proyectoService.validarDocumentacion(id, aprobado, observacion);
+        return ResponseEntity.ok()
+            .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, id.toString()))
+            .body(result);
+    }
+
+    /**
+     * {@code GET  /proyectos/:id/requisitos} : obtiene los requisitos del proyecto.
+     */
+    @GetMapping("/proyectos/{id}/requisitos")
+    public ResponseEntity<List<RequisitoProyectoDTO>> getRequisitosProyecto(@PathVariable Long id) {
+        log.debug("REST request to get requisitos del Proyecto : {}", id);
+        List<RequisitoProyectoDTO> list = proyectoService.getRequisitosProyecto(id);
+        return ResponseEntity.ok().body(list);
+    }
+
+    /**
+     * {@code GET  /proyectos/:id/transiciones} : obtiene las transiciones de estado permitidas.
+     */
+    @GetMapping("/proyectos/{id}/transiciones")
+    public ResponseEntity<List<TransicionEstadoDTO>> getTransicionesPermitidas(@PathVariable Long id) {
+        log.debug("REST request to get transiciones permitidas del Proyecto : {}", id);
+        List<TransicionEstadoDTO> list = proyectoService.getTransicionesPermitidas(id);
+        return ResponseEntity.ok().body(list);
     }
 
     @GetMapping("/proyectoIntegrantes/{id}")

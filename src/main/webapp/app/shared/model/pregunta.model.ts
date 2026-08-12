@@ -6,9 +6,6 @@ export interface IPregunta {
   encabezado?: string;
   descripcion?: string;
   orden?: number;
-  preguntaElemento?: string;
-  preguntaElementoId?: number;
-  preguntaElementoElemento?: string;
   pregunta?: string;
   preguntaTipoPreguntaTipoPregunta?: string;
   preguntaTipoPreguntaId?: number;
@@ -31,9 +28,6 @@ export class Pregunta implements IPregunta {
     public encabezado?: string,
     public descripcion?: string,
     public orden?: number,
-    public preguntaElemento?: string,
-    public preguntaElementoId?: number,
-    public preguntaElementoElemento?: string,
     public pregunta?: string,
     public preguntaTipoPreguntaTipoPregunta?: string,
     public preguntaTipoPreguntaId?: number,

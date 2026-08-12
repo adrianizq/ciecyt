@@ -67,6 +67,8 @@
     <include file="config/liquibase/changelog/20260808000002_notificacion.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20260809000000_proyecto_retroalimentacion_asesor.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20260810000001_add_pregunta_ciclo.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20260811000001_acuerdo29_flujo_grado.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20260811000003_add_fase_documentos.xml" relativeToChangelogFile="false"/>
     <!-- jhipster-needle-liquibase-add-changelog - JHipster will add liquibase changelogs here -->
     <include file="config/liquibase/changelog/20201008033203_added_entity_constraints_AdjuntoProyectoFase.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20201008033303_added_entity_constraints_AdjuntoRetroalimentacion.xml" relativeToChangelogFile="false"/>
@@ -102,6 +104,7 @@
     <include file="config/liquibase/changelog/20210227181719_added_entity_constraints_PreguntaModalidad.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20210227182807_added_entity_constraints_PreguntaAuthority.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20210501223720_added_entity_constraints_ElementoModalidad.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20260811000002_drop_acuerdo29_flujo_grado.xml" relativeToChangelogFile="false"/>
     <!-- jhipster-needle-liquibase-add-constraints-changelog - JHipster will add liquibase constraints changelogs here -->
     <!-- jhipster-needle-liquibase-add-incremental-changelog - JHipster will add incremental liquibase changelogs here -->
 </databaseChangeLog>

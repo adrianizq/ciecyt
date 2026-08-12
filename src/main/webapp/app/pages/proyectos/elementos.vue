@@ -15,7 +15,7 @@
                          <div class="form-group">
                         </div>
                        <b-form-group
-                            :label="ep.elementoProyectoElementoElemento"
+                            :label="'Elemento #' + (ep.elementoProyectoElementoId || e)"
                             :label-for="`ep-${i}`" 
                             :description="ep.elementoProyectoProyectoDescripcion"
                        >
@@ -55,8 +55,6 @@
 import { Component, Inject, Vue } from 'vue-property-decorator';
 import MenuLateralProyecto from '@/components/proyecto/menu_lateral_proyecto.vue';
 import AlertService from '@/shared/alert/alert.service';
-import ElementoService from '@/entities/elemento/elemento.service';
-import { IElemento, Elemento } from '@/shared/model/elemento.model';
 import ElementoProyectoService from '@/entities/elemento-proyecto/elemento-proyecto.service';
 import { IElementoProyecto, ElementoProyecto } from '@/shared/model/elemento-proyecto.model';
 import { IProyecto, Proyecto } from '@/shared/model/proyecto.model';
@@ -79,14 +77,12 @@ export default class Elementos extends Vue {
 
 
    @Inject('proyectoService') private proyectoService: () => ProyectoService;
-   @Inject('elementoService') private elementoService: () => ElementoService;
    @Inject('elementoProyectoService') private elementoProyectoService: () => ElementoProyectoService;
    @Inject('fasesService') private fasesService: () => FasesService;
    @Inject('formatoService') private formatoService: () => FormatoService;
    @Inject('alertService') private alertService: () => AlertService;
 
 
-    public elements: IElemento[] = [];
     public elementosProyecto: IElementoProyecto[] =[];
     //public elemProy: ElementoProyecto;
     public proyecto: IProyecto = new Proyecto();
@@ -164,45 +160,13 @@ export default class Elementos extends Vue {
                         this.formato = res;
                     });
 
-            ///////////////////////////////////////////////////////7
-                var  elementosProyectoTemp: IElementoProyecto[] =[];
+///////////////////////////////////////////////////////7
                 await this.elementoProyectoService()
                 .retrieveElementoProyecto(this.proyId, this.fase.id)
                 .then(res=> {
-                     //this.elementosProyecto = res.data;
-                     elementosProyectoTemp = res.data;
+                     this.elementosProyecto = res.data;
                 });
-            ////////////////////////////////////////////////////77    
-
-                await this.elementoService()
-                //.retrieveElementosModalidad( this.modalidadId)
-                //.retrieveElementosFase(this.fase.id)
-                //.retrieveElementosFaseFormato(this.fase.id, this.formato.id)
-                .retrieveElementosFaseModalidad(this.fase.id, this.modalidadId)
-                .then(res => {
-                    this.elements = res.data;
-                  //copiar los datos de elementos a elemento-proyecto
-                  this.elements.forEach(e => {
-                       var existe= false;
-                         elementosProyectoTemp.forEach(ep => {
-                             if(e.id==ep.elementoProyectoElementoId){
-                               
-                                this.elementosProyecto.push(ep);
-                    
-                                 existe=true;
-                             }
-                         });
-                  
-                    if(existe==false){
-                    var elemProy: IElementoProyecto = new ElementoProyecto();
-                    elemProy.elementoProyectoElementoElemento= e.elemento;
-                    elemProy.elementoProyectoProyectoDescripcion = e.descripcion;
-                    elemProy.elementoProyectoElementoId = e.id;
-                    elemProy.elementoProyectoProyectoId = this.proyId;
-                    this.elementosProyecto.push(elemProy);
-                    }
-                   }); 
-                 });
+            ////////////////////////////////////////////////////77
             }
             catch(e){
               console.log("error al recuperar la informacion de elemento ");

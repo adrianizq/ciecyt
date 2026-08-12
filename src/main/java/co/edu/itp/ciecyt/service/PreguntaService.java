@@ -1,7 +1,6 @@
 package co.edu.itp.ciecyt.service;
 
 import co.edu.itp.ciecyt.domain.Pregunta;
-import co.edu.itp.ciecyt.service.dto.ElementoDTO;
 import co.edu.itp.ciecyt.service.dto.PreguntaDTO;
 
 import org.springframework.data.domain.Page;

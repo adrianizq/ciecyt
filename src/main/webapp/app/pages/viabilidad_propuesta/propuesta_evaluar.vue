@@ -429,9 +429,6 @@ import AdjuntoRetroalimentacionService from '@/entities/adjunto-retroalimentacio
 import { IImpactosEsperados, ImpactosEsperados } from '@/shared/model/impactos-esperados.model';
 import ImpactosEsperadosService from '@/entities/impactos-esperados/impactos-esperados.service';
 
-import { IResultadosEsperados, ResultadosEsperados } from '@/shared/model/resultados-esperados.model';
-import ResultadosEsperadosService from '@/entities/resultados-esperados/resultados-esperados.service';
-
 
 import JhiDataUtils from '@/shared/data/data-utils.service';
 
@@ -484,7 +481,6 @@ export default class PropuestaEvaluar extends mixins(JhiDataUtils){
    @Inject('adjuntoProyectoFaseService') private adjuntoProyectoFaseService: () => AdjuntoProyectoFaseService;
    @Inject('adjuntoRetroalimentacionService') private adjuntoRetroalimentacionService: () => AdjuntoRetroalimentacionService;
    @Inject('impactosEsperadosService') private impactosEsperadosService: () => ImpactosEsperadosService;
-   @Inject('resultadosEsperadosService') private resultadosEsperadosService: () => ResultadosEsperadosService;
 
 
    @Inject('alertService') private alertService: () => AlertService;
@@ -508,7 +504,7 @@ export default class PropuestaEvaluar extends mixins(JhiDataUtils){
     public enumRespuestas: EnumRespuestas;
     public cronograms: ICronograma[]=[];
     public impacts: IImpactosEsperados[]=[];
-    public results: IResultadosEsperados[]=[];
+    public results: any[]=[];
 
     
 
@@ -813,11 +809,9 @@ export default class PropuestaEvaluar extends mixins(JhiDataUtils){
 
          res= await this.impactosEsperadosService()
        .retrieveImpactosEsperados(this.proyId)   //recup los ElementosProyecto con un idproy
-        this.impacts = res.data;
+         this.impacts = res.data;
 
-         res= await this.resultadosEsperadosService()
-       .retrieveResultadosEsperados(this.proyId)   //recup los ElementosProyecto con un idproy
-        this.results = res.data;
+        this.results = [];
      
      }
             catch(e){

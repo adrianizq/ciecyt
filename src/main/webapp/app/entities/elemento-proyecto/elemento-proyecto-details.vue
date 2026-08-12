@@ -17,14 +17,6 @@
                         <span>{{elementoProyecto.elementoProyectoProyectoDescripcion}}</span>
                     </dd>
                     <dt>
-                        <span v-text="$t('ciecytApp.elementoProyecto.elementoProyectoElemento')">Elemento Proyecto Elemento</span>
-                    </dt>
-                    <dd>
-                        <div v-if="elementoProyecto.elementoProyectoElementoId">
-                            <router-link :to="{name: 'ElementoView', params: {elementoProyectoElementoId: elementoProyecto.elementoProyectoElementoId}}">{{elementoProyecto.elementoProyectoElementoElemento}}</router-link>
-                        </div>
-                    </dd>
-                    <dt>
                         <span v-text="$t('ciecytApp.elementoProyecto.elementoProyectoProyecto')">Elemento Proyecto Proyecto</span>
                     </dt>
                     <dd>

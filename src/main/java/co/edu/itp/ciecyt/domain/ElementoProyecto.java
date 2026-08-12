@@ -32,9 +32,8 @@ public class ElementoProyecto implements Serializable {
     @Column(name = "elemento_fases_id")
     private Long elementoFasesId;
 
-    @ManyToOne
-    @JsonIgnoreProperties(value = "elementoProyectos", allowSetters = true)
-    private Elemento elementoProyectoElemento;
+    @Column(name = "elemento_proyecto_elemento_id")
+    private Long elementoProyectoElementoId;
 
     @ManyToOne
     @JsonIgnoreProperties(value = "elementoProyectos", allowSetters = true)
@@ -88,17 +87,17 @@ public class ElementoProyecto implements Serializable {
         this.elementoFasesId = elementoFasesId;
     }
 
-    public Elemento getElementoProyectoElemento() {
-        return elementoProyectoElemento;
+    public Long getElementoProyectoElementoId() {
+        return elementoProyectoElementoId;
     }
 
-    public ElementoProyecto elementoProyectoElemento(Elemento elemento) {
-        this.elementoProyectoElemento = elemento;
+    public ElementoProyecto elementoProyectoElementoId(Long elementoProyectoElementoId) {
+        this.elementoProyectoElementoId = elementoProyectoElementoId;
         return this;
     }
 
-    public void setElementoProyectoElemento(Elemento elemento) {
-        this.elementoProyectoElemento = elemento;
+    public void setElementoProyectoElementoId(Long elementoProyectoElementoId) {
+        this.elementoProyectoElementoId = elementoProyectoElementoId;
     }
 
     public Proyecto getElementoProyectoProyecto() {
@@ -139,6 +138,7 @@ public class ElementoProyecto implements Serializable {
             ", dato='" + getDato() + "'" +
             ", elementoProyectoProyectoDescripcion='" + getElementoProyectoProyectoDescripcion() + "'" +
             ", elementoFasesId=" + getElementoFasesId() +
+            ", elementoProyectoElementoId=" + getElementoProyectoElementoId() +
             "}";
     }
 }

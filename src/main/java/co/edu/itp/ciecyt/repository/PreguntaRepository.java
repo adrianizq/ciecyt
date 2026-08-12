@@ -1,6 +1,5 @@
 package co.edu.itp.ciecyt.repository;
 
-import co.edu.itp.ciecyt.domain.Elemento;
 import co.edu.itp.ciecyt.domain.Pregunta;
 import java.util.List;
 

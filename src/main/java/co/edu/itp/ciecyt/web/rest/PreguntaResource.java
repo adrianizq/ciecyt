@@ -4,7 +4,6 @@ import co.edu.itp.ciecyt.domain.Pregunta;
 import co.edu.itp.ciecyt.repository.PreguntaRepository;
 import co.edu.itp.ciecyt.service.PreguntaModalidadService;
 import co.edu.itp.ciecyt.service.PreguntaService;
-import co.edu.itp.ciecyt.service.dto.ElementoDTO;
 import co.edu.itp.ciecyt.service.mapper.PreguntaMapper;
 import co.edu.itp.ciecyt.web.rest.errors.BadRequestAlertException;
 import co.edu.itp.ciecyt.service.dto.PreguntaDTO;
@@ -202,8 +201,8 @@ public class PreguntaResource {
 
 
     @GetMapping("/preguntas/{idFase}/searchfase")
-    public ResponseEntity<List<ElementoDTO>> searchPreguntasFase(@PathVariable Long idFase,
-                                                                @org.springdoc.api.annotations.ParameterObject Pageable pageable
+    public ResponseEntity<List<PreguntaDTO>> searchPreguntasFase(@PathVariable Long idFase,
+                                                                 @org.springdoc.api.annotations.ParameterObject Pageable pageable
     ) {
         log.debug("REST request to get Pregunta by search idFase: {}", idFase);
 
@@ -214,14 +213,12 @@ public class PreguntaResource {
         try {
             List<PreguntaDTO> licenseDTOList = new ArrayList<>();
             licenseList = preguntaRepository.findByPreguntaFaseId (idFase);
-            //HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
-            //return ResponseEntity.ok().headers(headers).body(page.getContent());
             for (Pregunta l:licenseList
             ) {
                 licenseDTOList.add(preguntaMapper.toDto(l));
             }
 
-            Page<ElementoDTO> page = (Page<ElementoDTO>) toPage(licenseDTOList,pageable);
+            Page<PreguntaDTO> page = (Page<PreguntaDTO>) toPage(licenseDTOList,pageable);
             HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
             return ResponseEntity.ok().headers(headers).body(page.getContent());
         } catch (Exception e) {

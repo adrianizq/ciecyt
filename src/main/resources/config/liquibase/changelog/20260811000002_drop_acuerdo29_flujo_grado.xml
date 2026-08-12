@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.9.xsd">
+
+    <changeSet id="20260811000002-1a" author="ciecyt">
+        <preConditions onFail="MARK_RAN">
+            <tableExists tableName="rol_menu"/>
+        </preConditions>
+        <comment>Eliminar rol_menu asociado a menu id=4201 (Elemento)</comment>
+        <delete tableName="rol_menu">
+            <where>rol_menu_menu_id=4201</where>
+        </delete>
+    </changeSet>
+
+    <changeSet id="20260811000002-1b" author="ciecyt">
+        <preConditions onFail="MARK_RAN">
+            <tableExists tableName="menu"/>
+        </preConditions>
+        <comment>Eliminar menu de admin para Elemento (CRUD retirado)</comment>
+        <delete tableName="menu">
+            <where>id=4201 OR url='/entity/elemento'</where>
+        </delete>
+    </changeSet>
+
+    <changeSet id="20260811000002-2" author="ciecyt" failOnError="false">
+        <comment>Eliminar FKs hacia tablas que se van a eliminar (entidad, rubro, proyecto)</comment>
+        <dropForeignKeyConstraint baseTableName="elemento_modalidad" constraintName="fk_elemento_modalidad_elemento_id"/>
+        <dropForeignKeyConstraint baseTableName="elemento_modalidad" constraintName="fk_elemento_modalidad_modalidad_id"/>
+        <dropForeignKeyConstraint baseTableName="elemento_proyecto" constraintName="fk_elemento_proyecto_elemento_proyecto_elemento_id"/>
+        <dropForeignKeyConstraint baseTableName="elemento_proyecto" constraintName="fk_elemento_proyecto_elemento_proyecto_proyecto_id"/>
+        <dropForeignKeyConstraint baseTableName="presupuesto_valor" constraintName="fk_presupuesto_valor_presupuesto_valor_rubro_id"/>
+        <dropForeignKeyConstraint baseTableName="presupuesto_valor" constraintName="fk_presupuesto_valor_presupuesto_valor_proyecto_id"/>
+        <dropForeignKeyConstraint baseTableName="presupuesto_valor" constraintName="fk_presupuesto_valor_presupuesto_valor_entidad_id"/>
+        <dropForeignKeyConstraint baseTableName="resultados_esperados" constraintName="fk_resultados_esperados_resultados_esperados_proyecto_id"/>
+        <dropForeignKeyConstraint baseTableName="entidad_financiadora" constraintName="fk_entidad_financiadora_entidad_financiadora_entidad_id"/>
+        <dropForeignKeyConstraint baseTableName="entidad_financiadora" constraintName="fk_entidad_financiadora_entidad_financiadora_proyecto_id"/>
+        <dropForeignKeyConstraint baseTableName="pregunta" constraintName="fk_pregunta_pregunta_elemento_id"/>
+    </changeSet>
+
+    <changeSet id="20260811000002-3" author="ciecyt">
+        <preConditions onFail="MARK_RAN">
+            <tableExists tableName="elemento_modalidad"/>
+        </preConditions>
+        <comment>Eliminar tablas del Acuerdo 29 (flujo en archivo adjunto)</comment>
+        <dropTable tableName="elemento_modalidad"/>
+    </changeSet>
+
+    <changeSet id="20260811000002-4" author="ciecyt">
+        <preConditions onFail="MARK_RAN">
+            <tableExists tableName="elemento_proyecto"/>
+        </preConditions>
+        <comment>Eliminar tabla elemento_proyecto</comment>
+        <dropTable tableName="elemento_proyecto"/>
+    </changeSet>
+
+    <changeSet id="20260811000002-5" author="ciecyt">
+        <preConditions onFail="MARK_RAN">
+            <tableExists tableName="elemento"/>
+        </preConditions>
+        <comment>Eliminar tabla elemento</comment>
+        <dropTable tableName="elemento"/>
+    </changeSet>
+
+    <changeSet id="20260811000002-6" author="ciecyt">
+        <preConditions onFail="MARK_RAN">
+            <tableExists tableName="presupuesto_valor"/>
+        </preConditions>
+        <comment>Eliminar tabla presupuesto_valor</comment>
+        <dropTable tableName="presupuesto_valor"/>
+    </changeSet>
+
+    <changeSet id="20260811000002-7" author="ciecyt">
+        <preConditions onFail="MARK_RAN">
+            <tableExists tableName="resultados_esperados"/>
+        </preConditions>
+        <comment>Eliminar tabla resultados_esperados</comment>
+        <dropTable tableName="resultados_esperados"/>
+    </changeSet>
+
+    <changeSet id="20260811000002-8" author="ciecyt">
+        <preConditions onFail="MARK_RAN">
+            <tableExists tableName="entidad_financiadora"/>
+        </preConditions>
+        <comment>Eliminar tabla entidad_financiadora</comment>
+        <dropTable tableName="entidad_financiadora"/>
+    </changeSet>
+
+    <changeSet id="20260811000002-9" author="ciecyt" failOnError="false">
+        <comment>Limpiar columnas residuales en pregunta</comment>
+        <dropColumn tableName="pregunta" columnName="pregunta_elemento_id"/>
+        <dropColumn tableName="pregunta" columnName="pregunta_elemento"/>
+    </changeSet>
+
+</databaseChangeLog>

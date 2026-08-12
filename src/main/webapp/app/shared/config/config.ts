@@ -152,35 +152,24 @@ export function initVueXStore(vue) {
           to: '/propuesta/integrantes',
         },
         {
-          title: 'Elementos',
-          description:
-            'En este apartado diligencie: Resumen, Problema, Pregunta de Investigación, Objetivos, Marco de Referencia y Metodología esta sección ingrese los integrantes de la propuesta Nota: Cada modalidad tiene un maximo de integrantes',
-          to: '/propuesta/elementos',
+          title: 'Certificado de Estudiante Activo',
+          description: 'Expedido por Registro y Control',
+          to: '/propuesta/documento/certificado-estudiante',
         },
         {
-          title: 'Presupuesto',
-          description: 'Presupuesto',
-          to: '/propuesta/presupuesto',
+          title: 'Recibo de Pago de la Opción de Grado',
+          description: 'Validado por Tesorería',
+          to: '/propuesta/documento/recibo-pago',
         },
         {
-          title: 'Resultados Esperados',
-          description: 'Resultados o Productos Esperados del Proyecto',
-          to: '/propuesta/resultados_esperados',
+          title: 'Récord Académico',
+          description: 'Expedido por Registro y Control',
+          to: '/propuesta/documento/record-academico',
         },
         {
-          title: 'Impactos Esperados',
-          description: 'Impactos Esperados del Proyecto',
-          to: '/propuesta/impactos_esperados',
-        },
-        {
-          title: 'Entidades Financiadoras',
-          description: 'Entidades Financiadoras',
-          to: '/propuesta/entidades',
-        },
-        {
-          title: 'Cronograma',
-          description: 'Cronograma de Actividades',
-          to: '/propuesta/cronograma',
+          title: 'Formato de Inscripción de la Opción de Grado',
+          description: 'Formato de inscripción de la opción de grado',
+          to: '/propuesta/documento/formato-inscripcion',
         },
         {
           title: 'Adjuntar Propuesta',
@@ -221,16 +210,6 @@ export function initVueXStore(vue) {
           to: '/propuesta-pasantia/informacion-empresa',
         },
         {
-          title: 'Elementos de la Pasantía',
-          description: 'Elementos de Pasantía, estos elementos son calificables por los jurados',
-          to: '/propuesta-pasantia/elementos-pasantia',
-        },
-        {
-          title: 'Cronograma',
-          description: 'En el cronograma se deben crear items para: avance del 50%, informe final 100% y sustentacion',
-          to: '/propuesta-pasantia/cronograma-pasantia',
-        },
-        {
           title: 'Adjuntar Propuesta',
           description: 'Envíe el archivo con su propuesta',
           to: '/propuesta-pasantia/adjuntar-propuesta-pasantia',
@@ -264,16 +243,6 @@ export function initVueXStore(vue) {
           description: 'En esta sección ingrese los integrantes de la propuesta Nota: Cada modalidad tiene un maximo de integrantes',
           to: '/propuesta-diplomado/integrantes-diplomado',
         },
-        {
-          title: 'Elementos de la propuesta',
-          description: 'Elementos de la propuesta, estos elementos son calificables por los jurados',
-          to: '/propuesta-diplomado/elementos-diplomado',
-        },
-        {
-          title: 'Cronograma',
-          description: 'En el cronograma se deben crear items para: avance del 50%, informe final 100% y sustentacion',
-          to: '/propuesta-diplomado/cronograma-diplomado',
-        },
 
         {
           title: 'Adjuntar Propuesta',
@@ -300,13 +269,6 @@ export function initVueXStore(vue) {
       ////////////////////////////7
       /*Menu Lateral*/
       menu_lateral_proyecto: [
-        {
-          title: 'Elementos',
-          description:
-            'En este apartado diligencie: Resumen, Problema, Pregunta de Investigación, Objetivos, Marco de Referencia y Metodología esta sección ingrese los integrantes de la propuesta Nota: Cada modalidad tiene un maximo de integrantes',
-          to: '/proyectos/elementos',
-        },
-
         {
           title: 'Adjuntar Proyecto',
           description: 'Envíe el archivo con su proyecto',

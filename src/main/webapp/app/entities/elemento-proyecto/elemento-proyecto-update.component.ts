@@ -2,9 +2,6 @@ import { Component, Vue, Inject } from 'vue-property-decorator';
 
 import { numeric, required, minLength, maxLength } from 'vuelidate/lib/validators';
 
-import ElementoService from '../elemento/elemento.service';
-import { IElemento } from '@/shared/model/elemento.model';
-
 import ProyectoService from '../proyecto/proyecto.service';
 import { IProyecto } from '@/shared/model/proyecto.model';
 
@@ -26,12 +23,6 @@ export default class ElementoProyectoUpdate extends Vue {
   @Inject('alertService') private alertService: () => AlertService;
   @Inject('elementoProyectoService') private elementoProyectoService: () => ElementoProyectoService;
   public elementoProyecto: IElementoProyecto = new ElementoProyecto();
-
-  @Inject('elementoService') private elementoService: () => ElementoService;
-
-  public elementos: IElemento[] = [];
-
-  @Inject('proyectoService') private proyectoService: () => ProyectoService;
 
   public proyectos: IProyecto[] = [];
   public isSaving = false;
@@ -81,11 +72,6 @@ export default class ElementoProyectoUpdate extends Vue {
   }
 
   public initRelationships(): void {
-    this.elementoService()
-      .retrieve()
-      .then(res => {
-        this.elementos = res.data;
-      });
     this.proyectoService()
       .retrieve()
       .then(res => {

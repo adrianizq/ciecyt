@@ -1,0 +1,1627 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.9.xsd">
+
+    <!-- ================================================================== -->
+    <!-- FLUJO DE TRABAJO DE GRADO - ACUERDO 29 -->
+    <!-- EstadoModalidad: estados permitidos por modalidad (visualizacion/stepper) -->
+    <!-- TransicionEstado: transiciones validas por modalidad y rol (solo TESIS) -->
+    <!-- Requisito/RequisitoProyecto: requisitos habilitantes por modalidad/estado -->
+    <!-- ================================================================== -->
+
+    <changeSet id="20260811000001-1" author="ciecyt">
+        <comment>Crear tablas del flujo Acuerdo 29</comment>
+
+        <createTable tableName="requisito">
+            <column name="id" type="bigint">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="codigo" type="varchar(100)"/>
+            <column name="nombre" type="varchar(255)"/>
+            <column name="descripcion" type="varchar(2000)"/>
+            <column name="tipo" type="varchar(50)"/>
+            <column name="obligatorio" type="boolean"/>
+            <column name="activo" type="boolean"/>
+            <column name="requisito_modalidad_id" type="bigint"/>
+            <column name="requisito_estado" type="varchar(100)"/>
+        </createTable>
+
+        <createTable tableName="estado_modalidad">
+            <column name="id" type="bigint">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="estado" type="varchar(100)"/>
+            <column name="nombre" type="varchar(255)"/>
+            <column name="orden" type="int"/>
+            <column name="activo" type="boolean"/>
+            <column name="estado_modalidad_modalidad_id" type="bigint"/>
+        </createTable>
+
+        <createTable tableName="transicion_estado">
+            <column name="id" type="bigint">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="estado_origen" type="varchar(100)"/>
+            <column name="estado_destino" type="varchar(100)"/>
+            <column name="rol_requerido" type="varchar(255)"/>
+            <column name="activo" type="boolean"/>
+            <column name="transicion_estado_modalidad_id" type="bigint"/>
+        </createTable>
+
+        <createTable tableName="requisito_proyecto">
+            <column name="id" type="bigint">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="estado" type="varchar(50)"/>
+            <column name="fecha_entrega" type="datetime"/>
+            <column name="fecha_validacion" type="datetime"/>
+            <column name="observacion" type="varchar(2000)"/>
+            <column name="archivo" type="varchar(255)"/>
+            <column name="validado_por" type="varchar(50)"/>
+            <column name="requisito_proyecto_requisito_id" type="bigint"/>
+            <column name="requisito_proyecto_proyecto_id" type="bigint"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="20260811000001-2" author="ciecyt">
+        <comment>Constraints de las tablas del flujo Acuerdo 29</comment>
+        <addForeignKeyConstraint baseColumnNames="requisito_modalidad_id" baseTableName="requisito"
+                                 constraintName="fk_requisito_modalidad" referencedColumnNames="id" referencedTableName="modalidad"/>
+        <addForeignKeyConstraint baseColumnNames="estado_modalidad_modalidad_id" baseTableName="estado_modalidad"
+                                 constraintName="fk_estado_modalidad_modalidad" referencedColumnNames="id" referencedTableName="modalidad"/>
+        <addForeignKeyConstraint baseColumnNames="transicion_estado_modalidad_id" baseTableName="transicion_estado"
+                                 constraintName="fk_transicion_estado_modalidad" referencedColumnNames="id" referencedTableName="modalidad"/>
+        <addForeignKeyConstraint baseColumnNames="requisito_proyecto_requisito_id" baseTableName="requisito_proyecto"
+                                 constraintName="fk_requisito_proyecto_requisito" referencedColumnNames="id" referencedTableName="requisito"/>
+        <addForeignKeyConstraint baseColumnNames="requisito_proyecto_proyecto_id" baseTableName="requisito_proyecto"
+                                 constraintName="fk_requisito_proyecto_proyecto" referencedColumnNames="id" referencedTableName="proyecto"/>
+        <addUniqueConstraint tableName="requisito_proyecto" columnNames="requisito_proyecto_requisito_id, requisito_proyecto_proyecto_id" constraintName="uq_requisito_proyecto"/>
+    </changeSet>
+
+    <changeSet id="20260811000001-3" author="ciecyt">
+        <comment>Requisitos habilitantes del Acuerdo 29</comment>
+        <insert tableName="requisito">
+            <column name="id" valueNumeric="95000"/>
+            <column name="codigo" value="REQ_FORM_INSCRIPCION"/>
+            <column name="nombre" value="Formulario de inscripcion diligenciado"/>
+            <column name="descripcion" value="Formulario oficial de inscripcion al programa de trabajo de grado"/>
+            <column name="tipo" value="DOCUMENTO"/>
+            <column name="obligatorio" valueBoolean="true"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="requisito_modalidad_id" valueNumeric="9004"/>
+            <column name="requisito_estado" value="EN_VALIDACION_DOCUMENTAL"/>
+        </insert>
+        <insert tableName="requisito">
+            <column name="id" valueNumeric="95001"/>
+            <column name="codigo" value="REQ_DOC_IDENTIDAD"/>
+            <column name="nombre" value="Copia del documento de identidad"/>
+            <column name="descripcion" value="Copia legible del documento de identidad del estudiante"/>
+            <column name="tipo" value="DOCUMENTO"/>
+            <column name="obligatorio" valueBoolean="true"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="requisito_modalidad_id" valueNumeric="9004"/>
+            <column name="requisito_estado" value="EN_VALIDACION_DOCUMENTAL"/>
+        </insert>
+        <insert tableName="requisito">
+            <column name="id" valueNumeric="95002"/>
+            <column name="codigo" value="REQ_CERT_NOTAS"/>
+            <column name="nombre" value="Certificado de notas o historial academico"/>
+            <column name="descripcion" value="Certificado de notas emitido por registro academico"/>
+            <column name="tipo" value="DOCUMENTO"/>
+            <column name="obligatorio" valueBoolean="true"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="requisito_modalidad_id" valueNumeric="9004"/>
+            <column name="requisito_estado" value="EN_VALIDACION_DOCUMENTAL"/>
+        </insert>
+        <insert tableName="requisito">
+            <column name="id" valueNumeric="95003"/>
+            <column name="codigo" value="REQ_SEG_SOCIAL"/>
+            <column name="nombre" value="Certificado de afiliacion a seguridad social"/>
+            <column name="descripcion" value="Certificado vigente de afiliacion al sistema de seguridad social"/>
+            <column name="tipo" value="DOCUMENTO"/>
+            <column name="obligatorio" valueBoolean="true"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="requisito_modalidad_id" valueNumeric="9004"/>
+            <column name="requisito_estado" value="EN_VALIDACION_DOCUMENTAL"/>
+        </insert>
+        <insert tableName="requisito">
+            <column name="id" valueNumeric="95004"/>
+            <column name="codigo" value="REQ_ANTEPROYECTO"/>
+            <column name="nombre" value="Anteproyecto en formato institucional"/>
+            <column name="descripcion" value="Anteproyecto ajustado al formato institucional establecido"/>
+            <column name="tipo" value="DOCUMENTO"/>
+            <column name="obligatorio" valueBoolean="true"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="requisito_modalidad_id" valueNumeric="9004"/>
+            <column name="requisito_estado" value="EN_VALIDACION_DOCUMENTAL"/>
+        </insert>
+        <insert tableName="requisito">
+            <column name="id" valueNumeric="95005"/>
+            <column name="codigo" value="REQ_PROP_ASESOR"/>
+            <column name="nombre" value="Propuesta avalada por el asesor"/>
+            <column name="descripcion" value="Propuesta de trabajo de grado con visto bueno del asesor"/>
+            <column name="tipo" value="DOCUMENTO"/>
+            <column name="obligatorio" valueBoolean="false"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="requisito_modalidad_id" valueNumeric="9004"/>
+            <column name="requisito_estado" value="EN_VALIDACION_DOCUMENTAL"/>
+        </insert>
+        <insert tableName="requisito">
+            <column name="id" valueNumeric="95006"/>
+            <column name="codigo" value="REQ_CARTA_COMPROMISO"/>
+            <column name="nombre" value="Carta de compromiso y autorizacion"/>
+            <column name="descripcion" value="Carta de compromiso y autorizacion de uso de datos"/>
+            <column name="tipo" value="DOCUMENTO"/>
+            <column name="obligatorio" valueBoolean="true"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="requisito_modalidad_id" valueNumeric="9004"/>
+            <column name="requisito_estado" value="EN_VALIDACION_DOCUMENTAL"/>
+        </insert>
+    </changeSet>
+
+    <changeSet id="20260811000001-4" author="ciecyt">
+        <comment>Estados del flujo por modalidad</comment>
+        <!-- === Estados Pasantia Tecnologica (9001) === -->
+        <insert tableName="estado_modalidad">
+            <column name="id" valueNumeric="95100"/>
+            <column name="estado" value="PREINSCRITA"/>
+            <column name="nombre" value="Inscripcion"/>
+            <column name="orden" valueNumeric="1"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="estado_modalidad_modalidad_id" valueNumeric="9001"/>
+        </insert>
+        <insert tableName="estado_modalidad">
+            <column name="id" valueNumeric="95101"/>
+            <column name="estado" value="EN_VALIDACION_DOCUMENTAL"/>
+            <column name="nombre" value="Validacion documental"/>
+            <column name="orden" valueNumeric="2"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="estado_modalidad_modalidad_id" valueNumeric="9001"/>
+        </insert>
+        <insert tableName="estado_modalidad">
+            <column name="id" valueNumeric="95102"/>
+            <column name="estado" value="OBSERVACIONES_DOCUMENTACION"/>
+            <column name="nombre" value="Documentacion observada"/>
+            <column name="orden" valueNumeric="3"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="estado_modalidad_modalidad_id" valueNumeric="9001"/>
+        </insert>
+        <insert tableName="estado_modalidad">
+            <column name="id" valueNumeric="95103"/>
+            <column name="estado" value="HABILITADO"/>
+            <column name="nombre" value="Habilitado"/>
+            <column name="orden" valueNumeric="4"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="estado_modalidad_modalidad_id" valueNumeric="9001"/>
+        </insert>
+        <insert tableName="estado_modalidad">
+            <column name="id" valueNumeric="95104"/>
+            <column name="estado" value="EN_ELABORACION_PROPUESTA"/>
+            <column name="nombre" value="Elaboracion de propuesta"/>
+            <column name="orden" valueNumeric="5"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="estado_modalidad_modalidad_id" valueNumeric="9001"/>
+        </insert>
+        <insert tableName="estado_modalidad">
+            <column name="id" valueNumeric="95105"/>
+            <column name="estado" value="EN_REVISION_ASESOR"/>
+            <column name="nombre" value="Revision del asesor"/>
+            <column name="orden" valueNumeric="6"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="estado_modalidad_modalidad_id" valueNumeric="9001"/>
+        </insert>
+        <insert tableName="estado_modalidad">
+            <column name="id" valueNumeric="95106"/>
+            <column name="estado" value="CORRECCIONES_ASESOR"/>
+            <column name="nombre" value="Correcciones del asesor"/>
+            <column name="orden" valueNumeric="7"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="estado_modalidad_modalidad_id" valueNumeric="9001"/>
+        </insert>
+        <insert tableName="estado_modalidad">
+            <column name="id" valueNumeric="95107"/>
+            <column name="estado" value="APROBADA_POR_ASESOR"/>
+            <column name="nombre" value="Aprobada por asesor"/>
+            <column name="orden" valueNumeric="8"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="estado_modalidad_modalidad_id" valueNumeric="9001"/>
+        </insert>
+        <insert tableName="estado_modalidad">
+            <column name="id" valueNumeric="95108"/>
+            <column name="estado" value="EN_REVISION_JURADO_PROPUESTA"/>
+            <column name="nombre" value="Revision jurado de propuesta"/>
+            <column name="orden" valueNumeric="9"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="estado_modalidad_modalidad_id" valueNumeric="9001"/>
+        </insert>
+        <insert tableName="estado_modalidad">
+            <column name="id" valueNumeric="95109"/>
+            <column name="estado" value="CORRECCIONES_JURADO_PROPUESTA"/>
+            <column name="nombre" value="Correcciones jurado de propuesta"/>
+            <column name="orden" valueNumeric="10"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="estado_modalidad_modalidad_id" valueNumeric="9001"/>
+        </insert>
+        <insert tableName="estado_modalidad">
+            <column name="id" valueNumeric="95110"/>
+            <column name="estado" value="VIABLE"/>
+            <column name="nombre" value="Viable"/>
+            <column name="orden" valueNumeric="12"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="estado_modalidad_modalidad_id" valueNumeric="9001"/>
+        </insert>
+        <insert tableName="estado_modalidad">
+            <column name="id" valueNumeric="95111"/>
+            <column name="estado" value="EN_ELABORACION_PROYECTO"/>
+            <column name="nombre" value="Elaboracion de proyecto"/>
+            <column name="orden" valueNumeric="13"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="estado_modalidad_modalidad_id" valueNumeric="9001"/>
+        </insert>
+        <insert tableName="estado_modalidad">
+            <column name="id" valueNumeric="95112"/>
+            <column name="estado" value="EN_REVISION_JURADO_PROYECTO"/>
+            <column name="nombre" value="Revision jurado de proyecto"/>
+            <column name="orden" valueNumeric="14"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="estado_modalidad_modalidad_id" valueNumeric="9001"/>
+        </insert>
+        <insert tableName="estado_modalidad">
+            <column name="id" valueNumeric="95113"/>
+            <column name="estado" value="CORRECCIONES_JURADO_PROYECTO"/>
+            <column name="nombre" value="Correcciones jurado de proyecto"/>
+            <column name="orden" valueNumeric="15"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="estado_modalidad_modalidad_id" valueNumeric="9001"/>
+        </insert>
+        <insert tableName="estado_modalidad">
+            <column name="id" valueNumeric="95114"/>
+            <column name="estado" value="LISTO_PARA_SUSTENTAR"/>
+            <column name="nombre" value="Listo para sustentar"/>
+            <column name="orden" valueNumeric="16"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="estado_modalidad_modalidad_id" valueNumeric="9001"/>
+        </insert>
+        <insert tableName="estado_modalidad">
+            <column name="id" valueNumeric="95115"/>
+            <column name="estado" value="SUSTENTACION_PROGRAMADA"/>
+            <column name="nombre" value="Sustentacion programada"/>
+            <column name="orden" valueNumeric="17"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="estado_modalidad_modalidad_id" valueNumeric="9001"/>
+        </insert>
+        <insert tableName="estado_modalidad">
+            <column name="id" valueNumeric="95116"/>
+            <column name="estado" value="SUSTENTACION_REALIZADA"/>
+            <column name="nombre" value="Sustentacion realizada"/>
+            <column name="orden" valueNumeric="18"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="estado_modalidad_modalidad_id" valueNumeric="9001"/>
+        </insert>
+        <insert tableName="estado_modalidad">
+            <column name="id" valueNumeric="95117"/>
+            <column name="estado" value="EN_EVALUACION_SUSTENTACION"/>
+            <column name="nombre" value="Evaluacion de sustentacion"/>
+            <column name="orden" valueNumeric="19"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="estado_modalidad_modalidad_id" valueNumeric="9001"/>
+        </insert>
+        <insert tableName="estado_modalidad">
+            <column name="id" valueNumeric="95118"/>
+            <column name="estado" value="AJUSTES_SUSTENTACION"/>
+            <column name="nombre" value="Ajustes de sustentacion"/>
+            <column name="orden" valueNumeric="20"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="estado_modalidad_modalidad_id" valueNumeric="9001"/>
+        </insert>
+        <insert tableName="estado_modalidad">
+            <column name="id" valueNumeric="95119"/>
+            <column name="estado" value="NOTA_DEFINITIVA"/>
+            <column name="nombre" value="Nota definitiva"/>
+            <column name="orden" valueNumeric="21"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="estado_modalidad_modalidad_id" valueNumeric="9001"/>
+        </insert>
+        <insert tableName="estado_modalidad">
+            <column name="id" valueNumeric="95120"/>
+            <column name="estado" value="FINALIZADO"/>
+            <column name="nombre" value="Finalizado"/>
+            <column name="orden" valueNumeric="22"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="estado_modalidad_modalidad_id" valueNumeric="9001"/>
+        </insert>
+        <!-- === Estados Pasantia Investigativa (9002) === -->
+        <insert tableName="estado_modalidad">
+            <column name="id" valueNumeric="95121"/>
+            <column name="estado" value="PREINSCRITA"/>
+            <column name="nombre" value="Inscripcion"/>
+            <column name="orden" valueNumeric="1"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="estado_modalidad_modalidad_id" valueNumeric="9002"/>
+        </insert>
+        <insert tableName="estado_modalidad">
+            <column name="id" valueNumeric="95122"/>
+            <column name="estado" value="EN_VALIDACION_DOCUMENTAL"/>
+            <column name="nombre" value="Validacion documental"/>
+            <column name="orden" valueNumeric="2"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="estado_modalidad_modalidad_id" valueNumeric="9002"/>
+        </insert>
+        <insert tableName="estado_modalidad">
+            <column name="id" valueNumeric="95123"/>
+            <column name="estado" value="OBSERVACIONES_DOCUMENTACION"/>
+            <column name="nombre" value="Documentacion observada"/>
+            <column name="orden" valueNumeric="3"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="estado_modalidad_modalidad_id" valueNumeric="9002"/>
+        </insert>
+        <insert tableName="estado_modalidad">
+            <column name="id" valueNumeric="95124"/>
+            <column name="estado" value="HABILITADO"/>
+            <column name="nombre" value="Habilitado"/>
+            <column name="orden" valueNumeric="4"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="estado_modalidad_modalidad_id" valueNumeric="9002"/>
+        </insert>
+        <insert tableName="estado_modalidad">
+            <column name="id" valueNumeric="95125"/>
+            <column name="estado" value="EN_ELABORACION_PROPUESTA"/>
+            <column name="nombre" value="Elaboracion de propuesta"/>
+            <column name="orden" valueNumeric="5"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="estado_modalidad_modalidad_id" valueNumeric="9002"/>
+        </insert>
+        <insert tableName="estado_modalidad">
+            <column name="id" valueNumeric="95126"/>
+            <column name="estado" value="EN_REVISION_ASESOR"/>
+            <column name="nombre" value="Revision del asesor"/>
+            <column name="orden" valueNumeric="6"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="estado_modalidad_modalidad_id" valueNumeric="9002"/>
+        </insert>
+        <insert tableName="estado_modalidad">
+            <column name="id" valueNumeric="95127"/>
+            <column name="estado" value="CORRECCIONES_ASESOR"/>
+            <column name="nombre" value="Correcciones del asesor"/>
+            <column name="orden" valueNumeric="7"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="estado_modalidad_modalidad_id" valueNumeric="9002"/>
+        </insert>
+        <insert tableName="estado_modalidad">
+            <column name="id" valueNumeric="95128"/>
+            <column name="estado" value="APROBADA_POR_ASESOR"/>
+            <column name="nombre" value="Aprobada por asesor"/>
+            <column name="orden" valueNumeric="8"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="estado_modalidad_modalidad_id" valueNumeric="9002"/>
+        </insert>
+        <insert tableName="estado_modalidad">
+            <column name="id" valueNumeric="95129"/>
+            <column name="estado" value="EN_REVISION_JURADO_PROPUESTA"/>
+            <column name="nombre" value="Revision jurado de propuesta"/>
+            <column name="orden" valueNumeric="9"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="estado_modalidad_modalidad_id" valueNumeric="9002"/>
+        </insert>
+        <insert tableName="estado_modalidad">
+            <column name="id" valueNumeric="95130"/>
+            <column name="estado" value="CORRECCIONES_JURADO_PROPUESTA"/>
+            <column name="nombre" value="Correcciones jurado de propuesta"/>
+            <column name="orden" valueNumeric="10"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="estado_modalidad_modalidad_id" valueNumeric="9002"/>
+        </insert>
+        <insert tableName="estado_modalidad">
+            <column name="id" valueNumeric="95131"/>
+            <column name="estado" value="VIABLE"/>
+            <column name="nombre" value="Viable"/>
+            <column name="orden" valueNumeric="12"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="estado_modalidad_modalidad_id" valueNumeric="9002"/>
+        </insert>
+        <insert tableName="estado_modalidad">
+            <column name="id" valueNumeric="95132"/>
+            <column name="estado" value="EN_ELABORACION_PROYECTO"/>
+            <column name="nombre" value="Elaboracion de proyecto"/>
+            <column name="orden" valueNumeric="13"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="estado_modalidad_modalidad_id" valueNumeric="9002"/>
+        </insert>
+        <insert tableName="estado_modalidad">
+            <column name="id" valueNumeric="95133"/>
+            <column name="estado" value="EN_REVISION_JURADO_PROYECTO"/>
+            <column name="nombre" value="Revision jurado de proyecto"/>
+            <column name="orden" valueNumeric="14"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="estado_modalidad_modalidad_id" valueNumeric="9002"/>
+        </insert>
+        <insert tableName="estado_modalidad">
+            <column name="id" valueNumeric="95134"/>
+            <column name="estado" value="CORRECCIONES_JURADO_PROYECTO"/>
+            <column name="nombre" value="Correcciones jurado de proyecto"/>
+            <column name="orden" valueNumeric="15"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="estado_modalidad_modalidad_id" valueNumeric="9002"/>
+        </insert>
+        <insert tableName="estado_modalidad">
+            <column name="id" valueNumeric="95135"/>
+            <column name="estado" value="LISTO_PARA_SUSTENTAR"/>
+            <column name="nombre" value="Listo para sustentar"/>
+            <column name="orden" valueNumeric="16"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="estado_modalidad_modalidad_id" valueNumeric="9002"/>
+        </insert>
+        <insert tableName="estado_modalidad">
+            <column name="id" valueNumeric="95136"/>
+            <column name="estado" value="SUSTENTACION_PROGRAMADA"/>
+            <column name="nombre" value="Sustentacion programada"/>
+            <column name="orden" valueNumeric="17"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="estado_modalidad_modalidad_id" valueNumeric="9002"/>
+        </insert>
+        <insert tableName="estado_modalidad">
+            <column name="id" valueNumeric="95137"/>
+            <column name="estado" value="SUSTENTACION_REALIZADA"/>
+            <column name="nombre" value="Sustentacion realizada"/>
+            <column name="orden" valueNumeric="18"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="estado_modalidad_modalidad_id" valueNumeric="9002"/>
+        </insert>
+        <insert tableName="estado_modalidad">
+            <column name="id" valueNumeric="95138"/>
+            <column name="estado" value="EN_EVALUACION_SUSTENTACION"/>
+            <column name="nombre" value="Evaluacion de sustentacion"/>
+            <column name="orden" valueNumeric="19"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="estado_modalidad_modalidad_id" valueNumeric="9002"/>
+        </insert>
+        <insert tableName="estado_modalidad">
+            <column name="id" valueNumeric="95139"/>
+            <column name="estado" value="AJUSTES_SUSTENTACION"/>
+            <column name="nombre" value="Ajustes de sustentacion"/>
+            <column name="orden" valueNumeric="20"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="estado_modalidad_modalidad_id" valueNumeric="9002"/>
+        </insert>
+        <insert tableName="estado_modalidad">
+            <column name="id" valueNumeric="95140"/>
+            <column name="estado" value="NOTA_DEFINITIVA"/>
+            <column name="nombre" value="Nota definitiva"/>
+            <column name="orden" valueNumeric="21"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="estado_modalidad_modalidad_id" valueNumeric="9002"/>
+        </insert>
+        <insert tableName="estado_modalidad">
+            <column name="id" valueNumeric="95141"/>
+            <column name="estado" value="FINALIZADO"/>
+            <column name="nombre" value="Finalizado"/>
+            <column name="orden" valueNumeric="22"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="estado_modalidad_modalidad_id" valueNumeric="9002"/>
+        </insert>
+        <!-- === Estados Pasantia Internacional (9003) === -->
+        <insert tableName="estado_modalidad">
+            <column name="id" valueNumeric="95142"/>
+            <column name="estado" value="PREINSCRITA"/>
+            <column name="nombre" value="Inscripcion"/>
+            <column name="orden" valueNumeric="1"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="estado_modalidad_modalidad_id" valueNumeric="9003"/>
+        </insert>
+        <insert tableName="estado_modalidad">
+            <column name="id" valueNumeric="95143"/>
+            <column name="estado" value="EN_VALIDACION_DOCUMENTAL"/>
+            <column name="nombre" value="Validacion documental"/>
+            <column name="orden" valueNumeric="2"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="estado_modalidad_modalidad_id" valueNumeric="9003"/>
+        </insert>
+        <insert tableName="estado_modalidad">
+            <column name="id" valueNumeric="95144"/>
+            <column name="estado" value="OBSERVACIONES_DOCUMENTACION"/>
+            <column name="nombre" value="Documentacion observada"/>
+            <column name="orden" valueNumeric="3"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="estado_modalidad_modalidad_id" valueNumeric="9003"/>
+        </insert>
+        <insert tableName="estado_modalidad">
+            <column name="id" valueNumeric="95145"/>
+            <column name="estado" value="HABILITADO"/>
+            <column name="nombre" value="Habilitado"/>
+            <column name="orden" valueNumeric="4"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="estado_modalidad_modalidad_id" valueNumeric="9003"/>
+        </insert>
+        <insert tableName="estado_modalidad">
+            <column name="id" valueNumeric="95146"/>
+            <column name="estado" value="EN_ELABORACION_PROPUESTA"/>
+            <column name="nombre" value="Elaboracion de propuesta"/>
+            <column name="orden" valueNumeric="5"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="estado_modalidad_modalidad_id" valueNumeric="9003"/>
+        </insert>
+        <insert tableName="estado_modalidad">
+            <column name="id" valueNumeric="95147"/>
+            <column name="estado" value="EN_REVISION_ASESOR"/>
+            <column name="nombre" value="Revision del asesor"/>
+            <column name="orden" valueNumeric="6"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="estado_modalidad_modalidad_id" valueNumeric="9003"/>
+        </insert>
+        <insert tableName="estado_modalidad">
+            <column name="id" valueNumeric="95148"/>
+            <column name="estado" value="CORRECCIONES_ASESOR"/>
+            <column name="nombre" value="Correcciones del asesor"/>
+            <column name="orden" valueNumeric="7"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="estado_modalidad_modalidad_id" valueNumeric="9003"/>
+        </insert>
+        <insert tableName="estado_modalidad">
+            <column name="id" valueNumeric="95149"/>
+            <column name="estado" value="APROBADA_POR_ASESOR"/>
+            <column name="nombre" value="Aprobada por asesor"/>
+            <column name="orden" valueNumeric="8"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="estado_modalidad_modalidad_id" valueNumeric="9003"/>
+        </insert>
+        <insert tableName="estado_modalidad">
+            <column name="id" valueNumeric="95150"/>
+            <column name="estado" value="EN_REVISION_JURADO_PROPUESTA"/>
+            <column name="nombre" value="Revision jurado de propuesta"/>
+            <column name="orden" valueNumeric="9"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="estado_modalidad_modalidad_id" valueNumeric="9003"/>
+        </insert>
+        <insert tableName="estado_modalidad">
+            <column name="id" valueNumeric="95151"/>
+            <column name="estado" value="CORRECCIONES_JURADO_PROPUESTA"/>
+            <column name="nombre" value="Correcciones jurado de propuesta"/>
+            <column name="orden" valueNumeric="10"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="estado_modalidad_modalidad_id" valueNumeric="9003"/>
+        </insert>
+        <insert tableName="estado_modalidad">
+            <column name="id" valueNumeric="95152"/>
+            <column name="estado" value="VIABLE"/>
+            <column name="nombre" value="Viable"/>
+            <column name="orden" valueNumeric="12"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="estado_modalidad_modalidad_id" valueNumeric="9003"/>
+        </insert>
+        <insert tableName="estado_modalidad">
+            <column name="id" valueNumeric="95153"/>
+            <column name="estado" value="EN_ELABORACION_PROYECTO"/>
+            <column name="nombre" value="Elaboracion de proyecto"/>
+            <column name="orden" valueNumeric="13"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="estado_modalidad_modalidad_id" valueNumeric="9003"/>
+        </insert>
+        <insert tableName="estado_modalidad">
+            <column name="id" valueNumeric="95154"/>
+            <column name="estado" value="EN_REVISION_JURADO_PROYECTO"/>
+            <column name="nombre" value="Revision jurado de proyecto"/>
+            <column name="orden" valueNumeric="14"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="estado_modalidad_modalidad_id" valueNumeric="9003"/>
+        </insert>
+        <insert tableName="estado_modalidad">
+            <column name="id" valueNumeric="95155"/>
+            <column name="estado" value="CORRECCIONES_JURADO_PROYECTO"/>
+            <column name="nombre" value="Correcciones jurado de proyecto"/>
+            <column name="orden" valueNumeric="15"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="estado_modalidad_modalidad_id" valueNumeric="9003"/>
+        </insert>
+        <insert tableName="estado_modalidad">
+            <column name="id" valueNumeric="95156"/>
+            <column name="estado" value="LISTO_PARA_SUSTENTAR"/>
+            <column name="nombre" value="Listo para sustentar"/>
+            <column name="orden" valueNumeric="16"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="estado_modalidad_modalidad_id" valueNumeric="9003"/>
+        </insert>
+        <insert tableName="estado_modalidad">
+            <column name="id" valueNumeric="95157"/>
+            <column name="estado" value="SUSTENTACION_PROGRAMADA"/>
+            <column name="nombre" value="Sustentacion programada"/>
+            <column name="orden" valueNumeric="17"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="estado_modalidad_modalidad_id" valueNumeric="9003"/>
+        </insert>
+        <insert tableName="estado_modalidad">
+            <column name="id" valueNumeric="95158"/>
+            <column name="estado" value="SUSTENTACION_REALIZADA"/>
+            <column name="nombre" value="Sustentacion realizada"/>
+            <column name="orden" valueNumeric="18"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="estado_modalidad_modalidad_id" valueNumeric="9003"/>
+        </insert>
+        <insert tableName="estado_modalidad">
+            <column name="id" valueNumeric="95159"/>
+            <column name="estado" value="EN_EVALUACION_SUSTENTACION"/>
+            <column name="nombre" value="Evaluacion de sustentacion"/>
+            <column name="orden" valueNumeric="19"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="estado_modalidad_modalidad_id" valueNumeric="9003"/>
+        </insert>
+        <insert tableName="estado_modalidad">
+            <column name="id" valueNumeric="95160"/>
+            <column name="estado" value="AJUSTES_SUSTENTACION"/>
+            <column name="nombre" value="Ajustes de sustentacion"/>
+            <column name="orden" valueNumeric="20"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="estado_modalidad_modalidad_id" valueNumeric="9003"/>
+        </insert>
+        <insert tableName="estado_modalidad">
+            <column name="id" valueNumeric="95161"/>
+            <column name="estado" value="NOTA_DEFINITIVA"/>
+            <column name="nombre" value="Nota definitiva"/>
+            <column name="orden" valueNumeric="21"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="estado_modalidad_modalidad_id" valueNumeric="9003"/>
+        </insert>
+        <insert tableName="estado_modalidad">
+            <column name="id" valueNumeric="95162"/>
+            <column name="estado" value="FINALIZADO"/>
+            <column name="nombre" value="Finalizado"/>
+            <column name="orden" valueNumeric="22"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="estado_modalidad_modalidad_id" valueNumeric="9003"/>
+        </insert>
+        <!-- === Estados Tesis (9004) === -->
+        <insert tableName="estado_modalidad">
+            <column name="id" valueNumeric="95163"/>
+            <column name="estado" value="PREINSCRITA"/>
+            <column name="nombre" value="Inscripcion"/>
+            <column name="orden" valueNumeric="1"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="estado_modalidad_modalidad_id" valueNumeric="9004"/>
+        </insert>
+        <insert tableName="estado_modalidad">
+            <column name="id" valueNumeric="95164"/>
+            <column name="estado" value="EN_VALIDACION_DOCUMENTAL"/>
+            <column name="nombre" value="Validacion documental"/>
+            <column name="orden" valueNumeric="2"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="estado_modalidad_modalidad_id" valueNumeric="9004"/>
+        </insert>
+        <insert tableName="estado_modalidad">
+            <column name="id" valueNumeric="95165"/>
+            <column name="estado" value="OBSERVACIONES_DOCUMENTACION"/>
+            <column name="nombre" value="Documentacion observada"/>
+            <column name="orden" valueNumeric="3"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="estado_modalidad_modalidad_id" valueNumeric="9004"/>
+        </insert>
+        <insert tableName="estado_modalidad">
+            <column name="id" valueNumeric="95166"/>
+            <column name="estado" value="HABILITADO"/>
+            <column name="nombre" value="Habilitado"/>
+            <column name="orden" valueNumeric="4"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="estado_modalidad_modalidad_id" valueNumeric="9004"/>
+        </insert>
+        <insert tableName="estado_modalidad">
+            <column name="id" valueNumeric="95167"/>
+            <column name="estado" value="EN_ELABORACION_PROPUESTA"/>
+            <column name="nombre" value="Elaboracion de propuesta"/>
+            <column name="orden" valueNumeric="5"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="estado_modalidad_modalidad_id" valueNumeric="9004"/>
+        </insert>
+        <insert tableName="estado_modalidad">
+            <column name="id" valueNumeric="95168"/>
+            <column name="estado" value="EN_REVISION_ASESOR"/>
+            <column name="nombre" value="Revision del asesor"/>
+            <column name="orden" valueNumeric="6"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="estado_modalidad_modalidad_id" valueNumeric="9004"/>
+        </insert>
+        <insert tableName="estado_modalidad">
+            <column name="id" valueNumeric="95169"/>
+            <column name="estado" value="CORRECCIONES_ASESOR"/>
+            <column name="nombre" value="Correcciones del asesor"/>
+            <column name="orden" valueNumeric="7"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="estado_modalidad_modalidad_id" valueNumeric="9004"/>
+        </insert>
+        <insert tableName="estado_modalidad">
+            <column name="id" valueNumeric="95170"/>
+            <column name="estado" value="APROBADA_POR_ASESOR"/>
+            <column name="nombre" value="Aprobada por asesor"/>
+            <column name="orden" valueNumeric="8"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="estado_modalidad_modalidad_id" valueNumeric="9004"/>
+        </insert>
+        <insert tableName="estado_modalidad">
+            <column name="id" valueNumeric="95171"/>
+            <column name="estado" value="EN_REVISION_JURADO_PROPUESTA"/>
+            <column name="nombre" value="Revision jurado de propuesta"/>
+            <column name="orden" valueNumeric="9"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="estado_modalidad_modalidad_id" valueNumeric="9004"/>
+        </insert>
+        <insert tableName="estado_modalidad">
+            <column name="id" valueNumeric="95172"/>
+            <column name="estado" value="CORRECCIONES_JURADO_PROPUESTA"/>
+            <column name="nombre" value="Correcciones jurado de propuesta"/>
+            <column name="orden" valueNumeric="10"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="estado_modalidad_modalidad_id" valueNumeric="9004"/>
+        </insert>
+        <insert tableName="estado_modalidad">
+            <column name="id" valueNumeric="95173"/>
+            <column name="estado" value="NO_VIABLE"/>
+            <column name="nombre" value="No viable"/>
+            <column name="orden" valueNumeric="11"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="estado_modalidad_modalidad_id" valueNumeric="9004"/>
+        </insert>
+        <insert tableName="estado_modalidad">
+            <column name="id" valueNumeric="95174"/>
+            <column name="estado" value="VIABLE"/>
+            <column name="nombre" value="Viable"/>
+            <column name="orden" valueNumeric="12"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="estado_modalidad_modalidad_id" valueNumeric="9004"/>
+        </insert>
+        <insert tableName="estado_modalidad">
+            <column name="id" valueNumeric="95175"/>
+            <column name="estado" value="EN_ELABORACION_PROYECTO"/>
+            <column name="nombre" value="Elaboracion de proyecto"/>
+            <column name="orden" valueNumeric="13"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="estado_modalidad_modalidad_id" valueNumeric="9004"/>
+        </insert>
+        <insert tableName="estado_modalidad">
+            <column name="id" valueNumeric="95176"/>
+            <column name="estado" value="EN_REVISION_JURADO_PROYECTO"/>
+            <column name="nombre" value="Revision jurado de proyecto"/>
+            <column name="orden" valueNumeric="14"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="estado_modalidad_modalidad_id" valueNumeric="9004"/>
+        </insert>
+        <insert tableName="estado_modalidad">
+            <column name="id" valueNumeric="95177"/>
+            <column name="estado" value="CORRECCIONES_JURADO_PROYECTO"/>
+            <column name="nombre" value="Correcciones jurado de proyecto"/>
+            <column name="orden" valueNumeric="15"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="estado_modalidad_modalidad_id" valueNumeric="9004"/>
+        </insert>
+        <insert tableName="estado_modalidad">
+            <column name="id" valueNumeric="95178"/>
+            <column name="estado" value="LISTO_PARA_SUSTENTAR"/>
+            <column name="nombre" value="Listo para sustentar"/>
+            <column name="orden" valueNumeric="16"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="estado_modalidad_modalidad_id" valueNumeric="9004"/>
+        </insert>
+        <insert tableName="estado_modalidad">
+            <column name="id" valueNumeric="95179"/>
+            <column name="estado" value="SUSTENTACION_PROGRAMADA"/>
+            <column name="nombre" value="Sustentacion programada"/>
+            <column name="orden" valueNumeric="17"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="estado_modalidad_modalidad_id" valueNumeric="9004"/>
+        </insert>
+        <insert tableName="estado_modalidad">
+            <column name="id" valueNumeric="95180"/>
+            <column name="estado" value="SUSTENTACION_REALIZADA"/>
+            <column name="nombre" value="Sustentacion realizada"/>
+            <column name="orden" valueNumeric="18"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="estado_modalidad_modalidad_id" valueNumeric="9004"/>
+        </insert>
+        <insert tableName="estado_modalidad">
+            <column name="id" valueNumeric="95181"/>
+            <column name="estado" value="EN_EVALUACION_SUSTENTACION"/>
+            <column name="nombre" value="Evaluacion de sustentacion"/>
+            <column name="orden" valueNumeric="19"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="estado_modalidad_modalidad_id" valueNumeric="9004"/>
+        </insert>
+        <insert tableName="estado_modalidad">
+            <column name="id" valueNumeric="95182"/>
+            <column name="estado" value="AJUSTES_SUSTENTACION"/>
+            <column name="nombre" value="Ajustes de sustentacion"/>
+            <column name="orden" valueNumeric="20"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="estado_modalidad_modalidad_id" valueNumeric="9004"/>
+        </insert>
+        <insert tableName="estado_modalidad">
+            <column name="id" valueNumeric="95183"/>
+            <column name="estado" value="NOTA_DEFINITIVA"/>
+            <column name="nombre" value="Nota definitiva"/>
+            <column name="orden" valueNumeric="21"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="estado_modalidad_modalidad_id" valueNumeric="9004"/>
+        </insert>
+        <insert tableName="estado_modalidad">
+            <column name="id" valueNumeric="95184"/>
+            <column name="estado" value="FINALIZADO"/>
+            <column name="nombre" value="Finalizado"/>
+            <column name="orden" valueNumeric="22"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="estado_modalidad_modalidad_id" valueNumeric="9004"/>
+        </insert>
+        <!-- === Estados Diplomado (9005) === -->
+        <insert tableName="estado_modalidad">
+            <column name="id" valueNumeric="95185"/>
+            <column name="estado" value="PREINSCRITA"/>
+            <column name="nombre" value="Inscripcion"/>
+            <column name="orden" valueNumeric="1"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="estado_modalidad_modalidad_id" valueNumeric="9005"/>
+        </insert>
+        <insert tableName="estado_modalidad">
+            <column name="id" valueNumeric="95186"/>
+            <column name="estado" value="EN_VALIDACION_DOCUMENTAL"/>
+            <column name="nombre" value="Validacion documental"/>
+            <column name="orden" valueNumeric="2"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="estado_modalidad_modalidad_id" valueNumeric="9005"/>
+        </insert>
+        <insert tableName="estado_modalidad">
+            <column name="id" valueNumeric="95187"/>
+            <column name="estado" value="OBSERVACIONES_DOCUMENTACION"/>
+            <column name="nombre" value="Documentacion observada"/>
+            <column name="orden" valueNumeric="3"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="estado_modalidad_modalidad_id" valueNumeric="9005"/>
+        </insert>
+        <insert tableName="estado_modalidad">
+            <column name="id" valueNumeric="95188"/>
+            <column name="estado" value="HABILITADO"/>
+            <column name="nombre" value="Habilitado"/>
+            <column name="orden" valueNumeric="4"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="estado_modalidad_modalidad_id" valueNumeric="9005"/>
+        </insert>
+        <insert tableName="estado_modalidad">
+            <column name="id" valueNumeric="95189"/>
+            <column name="estado" value="EN_ELABORACION_PROPUESTA"/>
+            <column name="nombre" value="Elaboracion de propuesta"/>
+            <column name="orden" valueNumeric="5"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="estado_modalidad_modalidad_id" valueNumeric="9005"/>
+        </insert>
+        <insert tableName="estado_modalidad">
+            <column name="id" valueNumeric="95190"/>
+            <column name="estado" value="EN_REVISION_ASESOR"/>
+            <column name="nombre" value="Revision del asesor"/>
+            <column name="orden" valueNumeric="6"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="estado_modalidad_modalidad_id" valueNumeric="9005"/>
+        </insert>
+        <insert tableName="estado_modalidad">
+            <column name="id" valueNumeric="95191"/>
+            <column name="estado" value="CORRECCIONES_ASESOR"/>
+            <column name="nombre" value="Correcciones del asesor"/>
+            <column name="orden" valueNumeric="7"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="estado_modalidad_modalidad_id" valueNumeric="9005"/>
+        </insert>
+        <insert tableName="estado_modalidad">
+            <column name="id" valueNumeric="95192"/>
+            <column name="estado" value="APROBADA_POR_ASESOR"/>
+            <column name="nombre" value="Aprobada por asesor"/>
+            <column name="orden" valueNumeric="8"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="estado_modalidad_modalidad_id" valueNumeric="9005"/>
+        </insert>
+        <insert tableName="estado_modalidad">
+            <column name="id" valueNumeric="95193"/>
+            <column name="estado" value="EN_REVISION_JURADO_PROPUESTA"/>
+            <column name="nombre" value="Revision jurado de propuesta"/>
+            <column name="orden" valueNumeric="9"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="estado_modalidad_modalidad_id" valueNumeric="9005"/>
+        </insert>
+        <insert tableName="estado_modalidad">
+            <column name="id" valueNumeric="95194"/>
+            <column name="estado" value="CORRECCIONES_JURADO_PROPUESTA"/>
+            <column name="nombre" value="Correcciones jurado de propuesta"/>
+            <column name="orden" valueNumeric="10"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="estado_modalidad_modalidad_id" valueNumeric="9005"/>
+        </insert>
+        <insert tableName="estado_modalidad">
+            <column name="id" valueNumeric="95195"/>
+            <column name="estado" value="VIABLE"/>
+            <column name="nombre" value="Viable"/>
+            <column name="orden" valueNumeric="12"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="estado_modalidad_modalidad_id" valueNumeric="9005"/>
+        </insert>
+        <insert tableName="estado_modalidad">
+            <column name="id" valueNumeric="95196"/>
+            <column name="estado" value="EN_ELABORACION_PROYECTO"/>
+            <column name="nombre" value="Elaboracion de proyecto"/>
+            <column name="orden" valueNumeric="13"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="estado_modalidad_modalidad_id" valueNumeric="9005"/>
+        </insert>
+        <insert tableName="estado_modalidad">
+            <column name="id" valueNumeric="95197"/>
+            <column name="estado" value="EN_REVISION_JURADO_PROYECTO"/>
+            <column name="nombre" value="Revision jurado de proyecto"/>
+            <column name="orden" valueNumeric="14"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="estado_modalidad_modalidad_id" valueNumeric="9005"/>
+        </insert>
+        <insert tableName="estado_modalidad">
+            <column name="id" valueNumeric="95198"/>
+            <column name="estado" value="CORRECCIONES_JURADO_PROYECTO"/>
+            <column name="nombre" value="Correcciones jurado de proyecto"/>
+            <column name="orden" valueNumeric="15"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="estado_modalidad_modalidad_id" valueNumeric="9005"/>
+        </insert>
+        <insert tableName="estado_modalidad">
+            <column name="id" valueNumeric="95199"/>
+            <column name="estado" value="LISTO_PARA_SUSTENTAR"/>
+            <column name="nombre" value="Listo para sustentar"/>
+            <column name="orden" valueNumeric="16"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="estado_modalidad_modalidad_id" valueNumeric="9005"/>
+        </insert>
+        <insert tableName="estado_modalidad">
+            <column name="id" valueNumeric="95200"/>
+            <column name="estado" value="SUSTENTACION_PROGRAMADA"/>
+            <column name="nombre" value="Sustentacion programada"/>
+            <column name="orden" valueNumeric="17"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="estado_modalidad_modalidad_id" valueNumeric="9005"/>
+        </insert>
+        <insert tableName="estado_modalidad">
+            <column name="id" valueNumeric="95201"/>
+            <column name="estado" value="SUSTENTACION_REALIZADA"/>
+            <column name="nombre" value="Sustentacion realizada"/>
+            <column name="orden" valueNumeric="18"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="estado_modalidad_modalidad_id" valueNumeric="9005"/>
+        </insert>
+        <insert tableName="estado_modalidad">
+            <column name="id" valueNumeric="95202"/>
+            <column name="estado" value="EN_EVALUACION_SUSTENTACION"/>
+            <column name="nombre" value="Evaluacion de sustentacion"/>
+            <column name="orden" valueNumeric="19"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="estado_modalidad_modalidad_id" valueNumeric="9005"/>
+        </insert>
+        <insert tableName="estado_modalidad">
+            <column name="id" valueNumeric="95203"/>
+            <column name="estado" value="AJUSTES_SUSTENTACION"/>
+            <column name="nombre" value="Ajustes de sustentacion"/>
+            <column name="orden" valueNumeric="20"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="estado_modalidad_modalidad_id" valueNumeric="9005"/>
+        </insert>
+        <insert tableName="estado_modalidad">
+            <column name="id" valueNumeric="95204"/>
+            <column name="estado" value="NOTA_DEFINITIVA"/>
+            <column name="nombre" value="Nota definitiva"/>
+            <column name="orden" valueNumeric="21"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="estado_modalidad_modalidad_id" valueNumeric="9005"/>
+        </insert>
+        <insert tableName="estado_modalidad">
+            <column name="id" valueNumeric="95205"/>
+            <column name="estado" value="FINALIZADO"/>
+            <column name="nombre" value="Finalizado"/>
+            <column name="orden" valueNumeric="22"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="estado_modalidad_modalidad_id" valueNumeric="9005"/>
+        </insert>
+        <!-- === Estados Publicacion de Articulo (9006) === -->
+        <insert tableName="estado_modalidad">
+            <column name="id" valueNumeric="95206"/>
+            <column name="estado" value="PREINSCRITA"/>
+            <column name="nombre" value="Inscripcion"/>
+            <column name="orden" valueNumeric="1"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="estado_modalidad_modalidad_id" valueNumeric="9006"/>
+        </insert>
+        <insert tableName="estado_modalidad">
+            <column name="id" valueNumeric="95207"/>
+            <column name="estado" value="EN_VALIDACION_DOCUMENTAL"/>
+            <column name="nombre" value="Validacion documental"/>
+            <column name="orden" valueNumeric="2"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="estado_modalidad_modalidad_id" valueNumeric="9006"/>
+        </insert>
+        <insert tableName="estado_modalidad">
+            <column name="id" valueNumeric="95208"/>
+            <column name="estado" value="OBSERVACIONES_DOCUMENTACION"/>
+            <column name="nombre" value="Documentacion observada"/>
+            <column name="orden" valueNumeric="3"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="estado_modalidad_modalidad_id" valueNumeric="9006"/>
+        </insert>
+        <insert tableName="estado_modalidad">
+            <column name="id" valueNumeric="95209"/>
+            <column name="estado" value="HABILITADO"/>
+            <column name="nombre" value="Habilitado"/>
+            <column name="orden" valueNumeric="4"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="estado_modalidad_modalidad_id" valueNumeric="9006"/>
+        </insert>
+        <insert tableName="estado_modalidad">
+            <column name="id" valueNumeric="95210"/>
+            <column name="estado" value="EN_ELABORACION_PROPUESTA"/>
+            <column name="nombre" value="Elaboracion de propuesta"/>
+            <column name="orden" valueNumeric="5"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="estado_modalidad_modalidad_id" valueNumeric="9006"/>
+        </insert>
+        <insert tableName="estado_modalidad">
+            <column name="id" valueNumeric="95211"/>
+            <column name="estado" value="EN_REVISION_ASESOR"/>
+            <column name="nombre" value="Revision del asesor"/>
+            <column name="orden" valueNumeric="6"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="estado_modalidad_modalidad_id" valueNumeric="9006"/>
+        </insert>
+        <insert tableName="estado_modalidad">
+            <column name="id" valueNumeric="95212"/>
+            <column name="estado" value="CORRECCIONES_ASESOR"/>
+            <column name="nombre" value="Correcciones del asesor"/>
+            <column name="orden" valueNumeric="7"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="estado_modalidad_modalidad_id" valueNumeric="9006"/>
+        </insert>
+        <insert tableName="estado_modalidad">
+            <column name="id" valueNumeric="95213"/>
+            <column name="estado" value="APROBADA_POR_ASESOR"/>
+            <column name="nombre" value="Aprobada por asesor"/>
+            <column name="orden" valueNumeric="8"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="estado_modalidad_modalidad_id" valueNumeric="9006"/>
+        </insert>
+        <insert tableName="estado_modalidad">
+            <column name="id" valueNumeric="95214"/>
+            <column name="estado" value="EN_REVISION_JURADO_PROPUESTA"/>
+            <column name="nombre" value="Revision jurado de propuesta"/>
+            <column name="orden" valueNumeric="9"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="estado_modalidad_modalidad_id" valueNumeric="9006"/>
+        </insert>
+        <insert tableName="estado_modalidad">
+            <column name="id" valueNumeric="95215"/>
+            <column name="estado" value="CORRECCIONES_JURADO_PROPUESTA"/>
+            <column name="nombre" value="Correcciones jurado de propuesta"/>
+            <column name="orden" valueNumeric="10"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="estado_modalidad_modalidad_id" valueNumeric="9006"/>
+        </insert>
+        <insert tableName="estado_modalidad">
+            <column name="id" valueNumeric="95216"/>
+            <column name="estado" value="VIABLE"/>
+            <column name="nombre" value="Viable"/>
+            <column name="orden" valueNumeric="12"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="estado_modalidad_modalidad_id" valueNumeric="9006"/>
+        </insert>
+        <insert tableName="estado_modalidad">
+            <column name="id" valueNumeric="95217"/>
+            <column name="estado" value="EN_ELABORACION_PROYECTO"/>
+            <column name="nombre" value="Elaboracion de proyecto"/>
+            <column name="orden" valueNumeric="13"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="estado_modalidad_modalidad_id" valueNumeric="9006"/>
+        </insert>
+        <insert tableName="estado_modalidad">
+            <column name="id" valueNumeric="95218"/>
+            <column name="estado" value="EN_REVISION_JURADO_PROYECTO"/>
+            <column name="nombre" value="Revision jurado de proyecto"/>
+            <column name="orden" valueNumeric="14"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="estado_modalidad_modalidad_id" valueNumeric="9006"/>
+        </insert>
+        <insert tableName="estado_modalidad">
+            <column name="id" valueNumeric="95219"/>
+            <column name="estado" value="CORRECCIONES_JURADO_PROYECTO"/>
+            <column name="nombre" value="Correcciones jurado de proyecto"/>
+            <column name="orden" valueNumeric="15"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="estado_modalidad_modalidad_id" valueNumeric="9006"/>
+        </insert>
+        <insert tableName="estado_modalidad">
+            <column name="id" valueNumeric="95220"/>
+            <column name="estado" value="LISTO_PARA_SUSTENTAR"/>
+            <column name="nombre" value="Listo para sustentar"/>
+            <column name="orden" valueNumeric="16"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="estado_modalidad_modalidad_id" valueNumeric="9006"/>
+        </insert>
+        <insert tableName="estado_modalidad">
+            <column name="id" valueNumeric="95221"/>
+            <column name="estado" value="SUSTENTACION_PROGRAMADA"/>
+            <column name="nombre" value="Sustentacion programada"/>
+            <column name="orden" valueNumeric="17"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="estado_modalidad_modalidad_id" valueNumeric="9006"/>
+        </insert>
+        <insert tableName="estado_modalidad">
+            <column name="id" valueNumeric="95222"/>
+            <column name="estado" value="SUSTENTACION_REALIZADA"/>
+            <column name="nombre" value="Sustentacion realizada"/>
+            <column name="orden" valueNumeric="18"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="estado_modalidad_modalidad_id" valueNumeric="9006"/>
+        </insert>
+        <insert tableName="estado_modalidad">
+            <column name="id" valueNumeric="95223"/>
+            <column name="estado" value="EN_EVALUACION_SUSTENTACION"/>
+            <column name="nombre" value="Evaluacion de sustentacion"/>
+            <column name="orden" valueNumeric="19"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="estado_modalidad_modalidad_id" valueNumeric="9006"/>
+        </insert>
+        <insert tableName="estado_modalidad">
+            <column name="id" valueNumeric="95224"/>
+            <column name="estado" value="AJUSTES_SUSTENTACION"/>
+            <column name="nombre" value="Ajustes de sustentacion"/>
+            <column name="orden" valueNumeric="20"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="estado_modalidad_modalidad_id" valueNumeric="9006"/>
+        </insert>
+        <insert tableName="estado_modalidad">
+            <column name="id" valueNumeric="95225"/>
+            <column name="estado" value="NOTA_DEFINITIVA"/>
+            <column name="nombre" value="Nota definitiva"/>
+            <column name="orden" valueNumeric="21"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="estado_modalidad_modalidad_id" valueNumeric="9006"/>
+        </insert>
+        <insert tableName="estado_modalidad">
+            <column name="id" valueNumeric="95226"/>
+            <column name="estado" value="FINALIZADO"/>
+            <column name="nombre" value="Finalizado"/>
+            <column name="orden" valueNumeric="22"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="estado_modalidad_modalidad_id" valueNumeric="9006"/>
+        </insert>
+        <!-- === Estados Especializacion (9007) === -->
+        <insert tableName="estado_modalidad">
+            <column name="id" valueNumeric="95227"/>
+            <column name="estado" value="PREINSCRITA"/>
+            <column name="nombre" value="Inscripcion"/>
+            <column name="orden" valueNumeric="1"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="estado_modalidad_modalidad_id" valueNumeric="9007"/>
+        </insert>
+        <insert tableName="estado_modalidad">
+            <column name="id" valueNumeric="95228"/>
+            <column name="estado" value="EN_VALIDACION_DOCUMENTAL"/>
+            <column name="nombre" value="Validacion documental"/>
+            <column name="orden" valueNumeric="2"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="estado_modalidad_modalidad_id" valueNumeric="9007"/>
+        </insert>
+        <insert tableName="estado_modalidad">
+            <column name="id" valueNumeric="95229"/>
+            <column name="estado" value="OBSERVACIONES_DOCUMENTACION"/>
+            <column name="nombre" value="Documentacion observada"/>
+            <column name="orden" valueNumeric="3"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="estado_modalidad_modalidad_id" valueNumeric="9007"/>
+        </insert>
+        <insert tableName="estado_modalidad">
+            <column name="id" valueNumeric="95230"/>
+            <column name="estado" value="HABILITADO"/>
+            <column name="nombre" value="Habilitado"/>
+            <column name="orden" valueNumeric="4"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="estado_modalidad_modalidad_id" valueNumeric="9007"/>
+        </insert>
+        <insert tableName="estado_modalidad">
+            <column name="id" valueNumeric="95231"/>
+            <column name="estado" value="EN_ELABORACION_PROPUESTA"/>
+            <column name="nombre" value="Elaboracion de propuesta"/>
+            <column name="orden" valueNumeric="5"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="estado_modalidad_modalidad_id" valueNumeric="9007"/>
+        </insert>
+        <insert tableName="estado_modalidad">
+            <column name="id" valueNumeric="95232"/>
+            <column name="estado" value="EN_REVISION_ASESOR"/>
+            <column name="nombre" value="Revision del asesor"/>
+            <column name="orden" valueNumeric="6"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="estado_modalidad_modalidad_id" valueNumeric="9007"/>
+        </insert>
+        <insert tableName="estado_modalidad">
+            <column name="id" valueNumeric="95233"/>
+            <column name="estado" value="CORRECCIONES_ASESOR"/>
+            <column name="nombre" value="Correcciones del asesor"/>
+            <column name="orden" valueNumeric="7"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="estado_modalidad_modalidad_id" valueNumeric="9007"/>
+        </insert>
+        <insert tableName="estado_modalidad">
+            <column name="id" valueNumeric="95234"/>
+            <column name="estado" value="APROBADA_POR_ASESOR"/>
+            <column name="nombre" value="Aprobada por asesor"/>
+            <column name="orden" valueNumeric="8"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="estado_modalidad_modalidad_id" valueNumeric="9007"/>
+        </insert>
+        <insert tableName="estado_modalidad">
+            <column name="id" valueNumeric="95235"/>
+            <column name="estado" value="EN_REVISION_JURADO_PROPUESTA"/>
+            <column name="nombre" value="Revision jurado de propuesta"/>
+            <column name="orden" valueNumeric="9"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="estado_modalidad_modalidad_id" valueNumeric="9007"/>
+        </insert>
+        <insert tableName="estado_modalidad">
+            <column name="id" valueNumeric="95236"/>
+            <column name="estado" value="CORRECCIONES_JURADO_PROPUESTA"/>
+            <column name="nombre" value="Correcciones jurado de propuesta"/>
+            <column name="orden" valueNumeric="10"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="estado_modalidad_modalidad_id" valueNumeric="9007"/>
+        </insert>
+        <insert tableName="estado_modalidad">
+            <column name="id" valueNumeric="95237"/>
+            <column name="estado" value="NO_VIABLE"/>
+            <column name="nombre" value="No viable"/>
+            <column name="orden" valueNumeric="11"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="estado_modalidad_modalidad_id" valueNumeric="9007"/>
+        </insert>
+        <insert tableName="estado_modalidad">
+            <column name="id" valueNumeric="95238"/>
+            <column name="estado" value="VIABLE"/>
+            <column name="nombre" value="Viable"/>
+            <column name="orden" valueNumeric="12"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="estado_modalidad_modalidad_id" valueNumeric="9007"/>
+        </insert>
+        <insert tableName="estado_modalidad">
+            <column name="id" valueNumeric="95239"/>
+            <column name="estado" value="EN_ELABORACION_PROYECTO"/>
+            <column name="nombre" value="Elaboracion de proyecto"/>
+            <column name="orden" valueNumeric="13"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="estado_modalidad_modalidad_id" valueNumeric="9007"/>
+        </insert>
+        <insert tableName="estado_modalidad">
+            <column name="id" valueNumeric="95240"/>
+            <column name="estado" value="EN_REVISION_JURADO_PROYECTO"/>
+            <column name="nombre" value="Revision jurado de proyecto"/>
+            <column name="orden" valueNumeric="14"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="estado_modalidad_modalidad_id" valueNumeric="9007"/>
+        </insert>
+        <insert tableName="estado_modalidad">
+            <column name="id" valueNumeric="95241"/>
+            <column name="estado" value="CORRECCIONES_JURADO_PROYECTO"/>
+            <column name="nombre" value="Correcciones jurado de proyecto"/>
+            <column name="orden" valueNumeric="15"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="estado_modalidad_modalidad_id" valueNumeric="9007"/>
+        </insert>
+        <insert tableName="estado_modalidad">
+            <column name="id" valueNumeric="95242"/>
+            <column name="estado" value="LISTO_PARA_SUSTENTAR"/>
+            <column name="nombre" value="Listo para sustentar"/>
+            <column name="orden" valueNumeric="16"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="estado_modalidad_modalidad_id" valueNumeric="9007"/>
+        </insert>
+        <insert tableName="estado_modalidad">
+            <column name="id" valueNumeric="95243"/>
+            <column name="estado" value="SUSTENTACION_PROGRAMADA"/>
+            <column name="nombre" value="Sustentacion programada"/>
+            <column name="orden" valueNumeric="17"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="estado_modalidad_modalidad_id" valueNumeric="9007"/>
+        </insert>
+        <insert tableName="estado_modalidad">
+            <column name="id" valueNumeric="95244"/>
+            <column name="estado" value="SUSTENTACION_REALIZADA"/>
+            <column name="nombre" value="Sustentacion realizada"/>
+            <column name="orden" valueNumeric="18"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="estado_modalidad_modalidad_id" valueNumeric="9007"/>
+        </insert>
+        <insert tableName="estado_modalidad">
+            <column name="id" valueNumeric="95245"/>
+            <column name="estado" value="EN_EVALUACION_SUSTENTACION"/>
+            <column name="nombre" value="Evaluacion de sustentacion"/>
+            <column name="orden" valueNumeric="19"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="estado_modalidad_modalidad_id" valueNumeric="9007"/>
+        </insert>
+        <insert tableName="estado_modalidad">
+            <column name="id" valueNumeric="95246"/>
+            <column name="estado" value="AJUSTES_SUSTENTACION"/>
+            <column name="nombre" value="Ajustes de sustentacion"/>
+            <column name="orden" valueNumeric="20"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="estado_modalidad_modalidad_id" valueNumeric="9007"/>
+        </insert>
+        <insert tableName="estado_modalidad">
+            <column name="id" valueNumeric="95247"/>
+            <column name="estado" value="NOTA_DEFINITIVA"/>
+            <column name="nombre" value="Nota definitiva"/>
+            <column name="orden" valueNumeric="21"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="estado_modalidad_modalidad_id" valueNumeric="9007"/>
+        </insert>
+        <insert tableName="estado_modalidad">
+            <column name="id" valueNumeric="95248"/>
+            <column name="estado" value="FINALIZADO"/>
+            <column name="nombre" value="Finalizado"/>
+            <column name="orden" valueNumeric="22"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="estado_modalidad_modalidad_id" valueNumeric="9007"/>
+        </insert>
+    </changeSet>
+
+    <changeSet id="20260811000001-5" author="ciecyt">
+        <comment>Transiciones validas del flujo TESIS (modalidad 9004)</comment>
+        <insert tableName="transicion_estado">
+            <column name="id" valueNumeric="95200"/>
+            <column name="estado_origen" value="PREINSCRITA"/>
+            <column name="estado_destino" value="EN_VALIDACION_DOCUMENTAL"/>
+            <column name="rol_requerido" value="ROLE_ESTUDIANTE"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="transicion_estado_modalidad_id" valueNumeric="9004"/>
+        </insert>
+        <insert tableName="transicion_estado">
+            <column name="id" valueNumeric="95201"/>
+            <column name="estado_origen" value="EN_VALIDACION_DOCUMENTAL"/>
+            <column name="estado_destino" value="OBSERVACIONES_DOCUMENTACION"/>
+            <column name="rol_requerido" value="ROLE_CIECYT"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="transicion_estado_modalidad_id" valueNumeric="9004"/>
+        </insert>
+        <insert tableName="transicion_estado">
+            <column name="id" valueNumeric="95202"/>
+            <column name="estado_origen" value="EN_VALIDACION_DOCUMENTAL"/>
+            <column name="estado_destino" value="HABILITADO"/>
+            <column name="rol_requerido" value="ROLE_CIECYT"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="transicion_estado_modalidad_id" valueNumeric="9004"/>
+        </insert>
+        <insert tableName="transicion_estado">
+            <column name="id" valueNumeric="95203"/>
+            <column name="estado_origen" value="OBSERVACIONES_DOCUMENTACION"/>
+            <column name="estado_destino" value="EN_VALIDACION_DOCUMENTAL"/>
+            <column name="rol_requerido" value="ROLE_ESTUDIANTE"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="transicion_estado_modalidad_id" valueNumeric="9004"/>
+        </insert>
+        <insert tableName="transicion_estado">
+            <column name="id" valueNumeric="95204"/>
+            <column name="estado_origen" value="HABILITADO"/>
+            <column name="estado_destino" value="EN_ELABORACION_PROPUESTA"/>
+            <column name="rol_requerido" value="ROLE_ESTUDIANTE"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="transicion_estado_modalidad_id" valueNumeric="9004"/>
+        </insert>
+        <insert tableName="transicion_estado">
+            <column name="id" valueNumeric="95205"/>
+            <column name="estado_origen" value="HABILITADO"/>
+            <column name="estado_destino" value="EN_REVISION_ASESOR"/>
+            <column name="rol_requerido" value="ROLE_ESTUDIANTE"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="transicion_estado_modalidad_id" valueNumeric="9004"/>
+        </insert>
+        <insert tableName="transicion_estado">
+            <column name="id" valueNumeric="95206"/>
+            <column name="estado_origen" value="EN_ELABORACION_PROPUESTA"/>
+            <column name="estado_destino" value="EN_VALIDACION_DOCUMENTAL"/>
+            <column name="rol_requerido" value="ROLE_ESTUDIANTE"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="transicion_estado_modalidad_id" valueNumeric="9004"/>
+        </insert>
+        <insert tableName="transicion_estado">
+            <column name="id" valueNumeric="95207"/>
+            <column name="estado_origen" value="EN_REVISION_ASESOR"/>
+            <column name="estado_destino" value="CORRECCIONES_ASESOR"/>
+            <column name="rol_requerido" value="ROLE_ASESOR"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="transicion_estado_modalidad_id" valueNumeric="9004"/>
+        </insert>
+        <insert tableName="transicion_estado">
+            <column name="id" valueNumeric="95208"/>
+            <column name="estado_origen" value="EN_REVISION_ASESOR"/>
+            <column name="estado_destino" value="APROBADA_POR_ASESOR"/>
+            <column name="rol_requerido" value="ROLE_ASESOR"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="transicion_estado_modalidad_id" valueNumeric="9004"/>
+        </insert>
+        <insert tableName="transicion_estado">
+            <column name="id" valueNumeric="95209"/>
+            <column name="estado_origen" value="CORRECCIONES_ASESOR"/>
+            <column name="estado_destino" value="EN_REVISION_ASESOR"/>
+            <column name="rol_requerido" value="ROLE_ESTUDIANTE"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="transicion_estado_modalidad_id" valueNumeric="9004"/>
+        </insert>
+        <insert tableName="transicion_estado">
+            <column name="id" valueNumeric="95210"/>
+            <column name="estado_origen" value="APROBADA_POR_ASESOR"/>
+            <column name="estado_destino" value="EN_REVISION_JURADO_PROPUESTA"/>
+            <column name="rol_requerido" value="*"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="transicion_estado_modalidad_id" valueNumeric="9004"/>
+        </insert>
+        <insert tableName="transicion_estado">
+            <column name="id" valueNumeric="95211"/>
+            <column name="estado_origen" value="EN_REVISION_JURADO_PROPUESTA"/>
+            <column name="estado_destino" value="CORRECCIONES_JURADO_PROPUESTA"/>
+            <column name="rol_requerido" value="ROLE_JURADO"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="transicion_estado_modalidad_id" valueNumeric="9004"/>
+        </insert>
+        <insert tableName="transicion_estado">
+            <column name="id" valueNumeric="95212"/>
+            <column name="estado_origen" value="EN_REVISION_JURADO_PROPUESTA"/>
+            <column name="estado_destino" value="NO_VIABLE"/>
+            <column name="rol_requerido" value="ROLE_JURADO"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="transicion_estado_modalidad_id" valueNumeric="9004"/>
+        </insert>
+        <insert tableName="transicion_estado">
+            <column name="id" valueNumeric="95213"/>
+            <column name="estado_origen" value="EN_REVISION_JURADO_PROPUESTA"/>
+            <column name="estado_destino" value="VIABLE"/>
+            <column name="rol_requerido" value="ROLE_JURADO"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="transicion_estado_modalidad_id" valueNumeric="9004"/>
+        </insert>
+        <insert tableName="transicion_estado">
+            <column name="id" valueNumeric="95214"/>
+            <column name="estado_origen" value="CORRECCIONES_JURADO_PROPUESTA"/>
+            <column name="estado_destino" value="EN_REVISION_JURADO_PROPUESTA"/>
+            <column name="rol_requerido" value="ROLE_ESTUDIANTE"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="transicion_estado_modalidad_id" valueNumeric="9004"/>
+        </insert>
+        <insert tableName="transicion_estado">
+            <column name="id" valueNumeric="95215"/>
+            <column name="estado_origen" value="NO_VIABLE"/>
+            <column name="estado_destino" value="CORRECCIONES_JURADO_PROPUESTA"/>
+            <column name="rol_requerido" value="ROLE_JURADO"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="transicion_estado_modalidad_id" valueNumeric="9004"/>
+        </insert>
+        <insert tableName="transicion_estado">
+            <column name="id" valueNumeric="95216"/>
+            <column name="estado_origen" value="NO_VIABLE"/>
+            <column name="estado_destino" value="FINALIZADO"/>
+            <column name="rol_requerido" value="ROLE_CIECYT"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="transicion_estado_modalidad_id" valueNumeric="9004"/>
+        </insert>
+        <insert tableName="transicion_estado">
+            <column name="id" valueNumeric="95217"/>
+            <column name="estado_origen" value="VIABLE"/>
+            <column name="estado_destino" value="EN_ELABORACION_PROYECTO"/>
+            <column name="rol_requerido" value="ROLE_ESTUDIANTE"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="transicion_estado_modalidad_id" valueNumeric="9004"/>
+        </insert>
+        <insert tableName="transicion_estado">
+            <column name="id" valueNumeric="95218"/>
+            <column name="estado_origen" value="EN_ELABORACION_PROYECTO"/>
+            <column name="estado_destino" value="EN_REVISION_JURADO_PROYECTO"/>
+            <column name="rol_requerido" value="ROLE_ESTUDIANTE"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="transicion_estado_modalidad_id" valueNumeric="9004"/>
+        </insert>
+        <insert tableName="transicion_estado">
+            <column name="id" valueNumeric="95219"/>
+            <column name="estado_origen" value="EN_REVISION_JURADO_PROYECTO"/>
+            <column name="estado_destino" value="CORRECCIONES_JURADO_PROYECTO"/>
+            <column name="rol_requerido" value="ROLE_JURADO"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="transicion_estado_modalidad_id" valueNumeric="9004"/>
+        </insert>
+        <insert tableName="transicion_estado">
+            <column name="id" valueNumeric="95220"/>
+            <column name="estado_origen" value="EN_REVISION_JURADO_PROYECTO"/>
+            <column name="estado_destino" value="LISTO_PARA_SUSTENTAR"/>
+            <column name="rol_requerido" value="ROLE_JURADO"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="transicion_estado_modalidad_id" valueNumeric="9004"/>
+        </insert>
+        <insert tableName="transicion_estado">
+            <column name="id" valueNumeric="95221"/>
+            <column name="estado_origen" value="CORRECCIONES_JURADO_PROYECTO"/>
+            <column name="estado_destino" value="EN_REVISION_JURADO_PROYECTO"/>
+            <column name="rol_requerido" value="ROLE_ESTUDIANTE"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="transicion_estado_modalidad_id" valueNumeric="9004"/>
+        </insert>
+        <insert tableName="transicion_estado">
+            <column name="id" valueNumeric="95222"/>
+            <column name="estado_origen" value="LISTO_PARA_SUSTENTAR"/>
+            <column name="estado_destino" value="SUSTENTACION_PROGRAMADA"/>
+            <column name="rol_requerido" value="ROLE_CIECYT"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="transicion_estado_modalidad_id" valueNumeric="9004"/>
+        </insert>
+        <insert tableName="transicion_estado">
+            <column name="id" valueNumeric="95223"/>
+            <column name="estado_origen" value="SUSTENTACION_PROGRAMADA"/>
+            <column name="estado_destino" value="SUSTENTACION_REALIZADA"/>
+            <column name="rol_requerido" value="ROLE_CIECYT"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="transicion_estado_modalidad_id" valueNumeric="9004"/>
+        </insert>
+        <insert tableName="transicion_estado">
+            <column name="id" valueNumeric="95224"/>
+            <column name="estado_origen" value="SUSTENTACION_REALIZADA"/>
+            <column name="estado_destino" value="EN_EVALUACION_SUSTENTACION"/>
+            <column name="rol_requerido" value="ROLE_JURADO"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="transicion_estado_modalidad_id" valueNumeric="9004"/>
+        </insert>
+        <insert tableName="transicion_estado">
+            <column name="id" valueNumeric="95225"/>
+            <column name="estado_origen" value="EN_EVALUACION_SUSTENTACION"/>
+            <column name="estado_destino" value="AJUSTES_SUSTENTACION"/>
+            <column name="rol_requerido" value="ROLE_JURADO"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="transicion_estado_modalidad_id" valueNumeric="9004"/>
+        </insert>
+        <insert tableName="transicion_estado">
+            <column name="id" valueNumeric="95226"/>
+            <column name="estado_origen" value="EN_EVALUACION_SUSTENTACION"/>
+            <column name="estado_destino" value="NOTA_DEFINITIVA"/>
+            <column name="rol_requerido" value="ROLE_JURADO"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="transicion_estado_modalidad_id" valueNumeric="9004"/>
+        </insert>
+        <insert tableName="transicion_estado">
+            <column name="id" valueNumeric="95227"/>
+            <column name="estado_origen" value="AJUSTES_SUSTENTACION"/>
+            <column name="estado_destino" value="EN_EVALUACION_SUSTENTACION"/>
+            <column name="rol_requerido" value="ROLE_ESTUDIANTE"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="transicion_estado_modalidad_id" valueNumeric="9004"/>
+        </insert>
+        <insert tableName="transicion_estado">
+            <column name="id" valueNumeric="95228"/>
+            <column name="estado_origen" value="NOTA_DEFINITIVA"/>
+            <column name="estado_destino" value="FINALIZADO"/>
+            <column name="rol_requerido" value="ROLE_CIECYT"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="transicion_estado_modalidad_id" valueNumeric="9004"/>
+        </insert>
+        <insert tableName="transicion_estado">
+            <column name="id" valueNumeric="95229"/>
+            <column name="estado_origen" value="PREINSCRITA"/>
+            <column name="estado_destino" value="EN_ELABORACION_PROPUESTA"/>
+            <column name="rol_requerido" value="ROLE_ESTUDIANTE"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="transicion_estado_modalidad_id" valueNumeric="9004"/>
+        </insert>
+        <insert tableName="transicion_estado">
+            <column name="id" valueNumeric="95230"/>
+            <column name="estado_origen" value="EN_ELABORACION_PROPUESTA"/>
+            <column name="estado_destino" value="EN_REVISION_ASESOR"/>
+            <column name="rol_requerido" value="ROLE_ESTUDIANTE"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="transicion_estado_modalidad_id" valueNumeric="9004"/>
+        </insert>
+        <insert tableName="transicion_estado">
+            <column name="id" valueNumeric="95231"/>
+            <column name="estado_origen" value="EN_REVISION_ASESOR"/>
+            <column name="estado_destino" value="EN_REVISION_JURADO_PROPUESTA"/>
+            <column name="rol_requerido" value="ROLE_ASESOR"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="transicion_estado_modalidad_id" valueNumeric="9004"/>
+        </insert>
+    </changeSet>
+
+</databaseChangeLog>

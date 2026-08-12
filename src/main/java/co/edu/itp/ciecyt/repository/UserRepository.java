@@ -64,7 +64,13 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
       findAll(Specification<User> where); //Lo tenia asi
 
-
+    /**
+     * Obtiene los usuarios que tienen asignada una autoridad (rol) específica.
+     *
+     * @param authorityName nombre de la autoridad, ej: ROLE_CIECYT.
+     * @return lista de usuarios con esa autoridad.
+     */
+    List<User> findAllByAuthoritiesName(String authorityName);
 
 
 }

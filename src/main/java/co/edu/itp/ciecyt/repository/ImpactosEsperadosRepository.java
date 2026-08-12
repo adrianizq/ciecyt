@@ -1,6 +1,5 @@
 package co.edu.itp.ciecyt.repository;
 import co.edu.itp.ciecyt.domain.ImpactosEsperados;
-import co.edu.itp.ciecyt.domain.ResultadosEsperados;
 import org.springframework.data.jpa.repository.*;
 import org.springframework.stereotype.Repository;
 

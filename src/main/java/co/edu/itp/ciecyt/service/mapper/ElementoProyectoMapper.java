@@ -8,16 +8,13 @@ import org.mapstruct.*;
 /**
  * Mapper for the entity {@link ElementoProyecto} and its DTO {@link ElementoProyectoDTO}.
  */
-@Mapper(componentModel = "spring", uses = {ElementoMapper.class, ProyectoMapper.class})
+@Mapper(componentModel = "spring", uses = {ProyectoMapper.class})
 public interface ElementoProyectoMapper extends EntityMapper<ElementoProyectoDTO, ElementoProyecto> {
 
-    @Mapping(source = "elementoProyectoElemento.id", target = "elementoProyectoElementoId")
-    @Mapping(source = "elementoProyectoElemento.elemento", target = "elementoProyectoElementoElemento")
     @Mapping(source = "elementoProyectoProyecto.id", target = "elementoProyectoProyectoId")
     @Mapping(source = "elementoProyectoProyecto.titulo", target = "elementoProyectoProyectoTitulo")
     ElementoProyectoDTO toDto(ElementoProyecto elementoProyecto);
 
-    @Mapping(source = "elementoProyectoElementoId", target = "elementoProyectoElemento")
     @Mapping(source = "elementoProyectoProyectoId", target = "elementoProyectoProyecto")
     ElementoProyecto toEntity(ElementoProyectoDTO elementoProyectoDTO);
 

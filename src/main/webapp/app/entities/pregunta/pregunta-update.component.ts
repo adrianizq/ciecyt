@@ -8,17 +8,11 @@ import { ITipoPregunta } from '@/shared/model/tipo-pregunta.model';
 import ModalidadService from '../modalidad/modalidad.service';
 import { IModalidad } from '@/shared/model/modalidad.model';
 
-import ElementoModalidadService from '../elemento-modalidad/elemento-modalidad.service';
-import { IElementoModalidad } from '@/shared/model/elemento-modalidad.model';
-
 import FasesService from '../fases/fases.service';
 import { IFases } from '@/shared/model/fases.model';
 
 import CicloService from '../ciclo/ciclo.service';
 import { ICiclo } from '@/shared/model/ciclo.model';
-
-import ElementoService from '../elemento/elemento.service';
-import { IElemento, Elemento } from '@/shared/model/elemento.model';
 
 import AlertService from '@/shared/alert/alert.service';
 import { IPregunta, Pregunta } from '@/shared/model/pregunta.model';
@@ -61,11 +55,8 @@ export default class PreguntaUpdate extends Vue {
   public tipoPreguntas: ITipoPregunta[] = [];
 
   @Inject('modalidadService') private modalidadService: () => ModalidadService;
-  @Inject('elementoModalidadService') private elementoModalidadService: () => ElementoModalidadService;
 
   public modalidads: IModalidad[] = [];
-
-  //public elementoModalidads: IElementoModalidad[] = [];
 
   public authorities: any[] = [];
   public tmpAuthorities: any[] = [];
@@ -80,22 +71,18 @@ export default class PreguntaUpdate extends Vue {
 
   public ciclos: ICiclo[] = [];
 
-  @Inject('elementoService') private elementoService: () => ElementoService;
-
   @Inject('preguntaModalidadService') private preguntaModalidadService: () => PreguntaModalidadService;
   @Inject('preguntaAuthorityService') private preguntaAuthorityService: () => PreguntaAuthorityService;
 
   @Inject('userService') private userManagementService: () => UserManagementService;
 
-  public elements: IElemento[] = [];
+  public elements: any[] = [];
 
   public preguntasModalidsPreguntaId: IPreguntaModalidad[] = [];
 
   public preguntasAuthoritsPreguntaId: IPreguntaAuthority[] = [];
 
   public authoritiesPreguntaId: IPreguntaModalidad[] = [];
-
-  public elemento: IElemento = new Elemento();
 
   public tipoNota: boolean = false;
 
@@ -127,23 +114,11 @@ export default class PreguntaUpdate extends Vue {
   public save(): void {
     this.isSaving = true;
 
-    //console.log(this.pregunta.elementoId); //si reporta
     //1
-    if (this.pregunta.preguntaElementoId) {
-      this.elements.forEach(item => {
-        if (item.id == this.pregunta.preguntaElementoId) {
-          //this.elemento = item;
-          this.pregunta.preguntaElemento = item.elemento; //error al guardar
-        }
-      });
-    }
-
-    //2
     if (this.pregunta.preguntaFaseId) {
       this.fass.forEach(item => {
         if (item.id == this.pregunta.preguntaFaseId) {
-          //this.elemento = item;
-          this.pregunta.preguntaFase = item.fase; //error al guardar
+          this.pregunta.preguntaFase = item.fase;
         }
       });
     }
@@ -194,9 +169,7 @@ export default class PreguntaUpdate extends Vue {
   }
 
   get Elementos() {
-    return this.elements.filter(elemento => {
-      return elemento.elementoFasesId == this.pregunta.preguntaFaseId;
-    });
+    return this.elements;
   }
 
   setTipoPregunta(event) {
@@ -208,40 +181,13 @@ export default class PreguntaUpdate extends Vue {
         return;
       }
     });
-    //console.log(event.target.value);
   }
 
   setModalidades(event) {
-    var seleccionadaId = event;
-    if (seleccionadaId) {
-      this.existeElemento = true;
-      // Regla "elemento manda": la fase se deriva del elemento seleccionado
-      const elem = this.elements.find(e => e.id == seleccionadaId);
-      if (elem) {
-        this.pregunta.preguntaFaseId = elem.elementoFasesId;
-      }
-      let res = this.elementoModalidadService()
-        .retrieveModalidadElemento(seleccionadaId)
-        .then(res => {
-          //this.elementoModalidads = res.data;
-          this.modalidadesAsignadas = res.data;
-        });
-    } else {
-      this.existeElemento = false;
-    }
-    console.log(this.existeElemento);
+    this.existeElemento = false;
   }
 
   setFase(event) {
-    // Al cambiar la fase se descarta el elemento seleccionado si no pertenece a la nueva fase
-    const faseId = event;
-    if (faseId && this.pregunta.preguntaElementoId) {
-      const elem = this.elements.find(e => e.id == this.pregunta.preguntaElementoId);
-      if (!elem || elem.elementoFasesId != faseId) {
-        this.pregunta.preguntaElementoId = null;
-        this.existeElemento = false;
-      }
-    }
   }
 
   get Fases() {
@@ -253,26 +199,19 @@ export default class PreguntaUpdate extends Vue {
   }
 
   async initRelationships(preguntaId) {
-    console.log(preguntaId);
     if (preguntaId) {
-      let res = await this.preguntaService()
+      await this.preguntaService()
         .find(preguntaId)
         .then(res => {
           this.pregunta = res;
           this.preguntaId = res.id;
-          if (res.preguntaElementoId != null) {
-            this.existeElemento = true;
-          } else {
-            this.existeElemento = false;
-          }
-          console.log(this.existeElemento);
+          this.existeElemento = false;
         });
     }
-    let res = await this.tipoPreguntaService()
+    await this.tipoPreguntaService()
       .retrieve()
       .then(res => {
         this.tipoPreguntas = res.data;
-        /////////////////////77
         if (this.preguntaId) {
           var seleccionadaId = this.pregunta.preguntaTipoPreguntaId;
           this.tipoNota = false;
@@ -283,23 +222,22 @@ export default class PreguntaUpdate extends Vue {
             }
           });
         }
-        /////////////////////////////777
       });
-    res = await this.modalidadService()
+    await this.modalidadService()
       .retrieve()
       .then(res => {
         this.modalidads = res.data;
       });
 
     if (this.preguntaId) {
-      res = await this.modalidadService()
+      await this.modalidadService()
         .retrieveModalidadPregunta(parseInt(preguntaId))
         .then(res => {
           this.modalidadesAsignadas = res.data;
         });
     }
 
-    res = await this.userManagementService()
+    await this.userManagementService()
       .retrieveAuthorities()
       .then(_res => {
         this.tmpAuthorities = _res.data;
@@ -317,7 +255,7 @@ export default class PreguntaUpdate extends Vue {
       });
 
     if (this.preguntaId) {
-      res = await this.preguntaAuthorityService()
+      await this.preguntaAuthorityService()
         .retrievePreguntasAuthority(parseInt(preguntaId))
         .then(res => {
           this.authoritiesAsignadas = res.data;
@@ -325,7 +263,7 @@ export default class PreguntaUpdate extends Vue {
     }
 
     if (this.preguntaId) {
-      res = await this.preguntaAuthorityService()
+      await this.preguntaAuthorityService()
         .retrievePreguntaAuthorityIdPregunta(parseInt(preguntaId))
         .then(res => {
           this.preguntasAuthoritsPreguntaId = res.data;
@@ -342,13 +280,6 @@ export default class PreguntaUpdate extends Vue {
       .retrieveAll()
       .then(res => {
         this.ciclos = res;
-      });
-
-    this.elementoService()
-      .retrieveNoPage()
-      //.retrieve()
-      .then(res => {
-        this.elements = res.data;
       });
   }
 }

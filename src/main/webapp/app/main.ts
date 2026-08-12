@@ -41,16 +41,12 @@ import AcuerdoService from '@/entities/acuerdo/acuerdo.service';
 import MunicipioService from '@/entities/municipio/municipio.service';
 import DepartamentoService from '@/entities/departamento/departamento.service';
 import CicloPropedeuticoService from '@/entities/ciclo-propedeutico/ciclo-propedeutico.service';
-import ResultadosEsperadosService from '@/entities/resultados-esperados/resultados-esperados.service';
 import ProductoService from '@/entities/producto/producto.service';
 import ProductoProyectoService from '@/entities/producto-proyecto/producto-proyecto.service';
 import ImpactosEsperadosService from '@/entities/impactos-esperados/impactos-esperados.service';
 import CronogramaService from '@/entities/cronograma/cronograma.service';
 import RubroService from '@/entities/rubro/rubro.service';
-import PresupuestoValorService from '@/entities/presupuesto-valor/presupuesto-valor.service';
 import EntidadService from '@/entities/entidad/entidad.service';
-import EntidadFinanciadoraService from '@/entities/entidad-financiadora/entidad-financiadora.service';
-import ElementoService from '@/entities/elemento/elemento.service';
 import ElementoProyectoService from '@/entities/elemento-proyecto/elemento-proyecto.service';
 import FormatoService from '@/entities/formato/formato.service';
 import TipoPreguntaService from '@/entities/tipo-pregunta/tipo-pregunta.service';
@@ -81,7 +77,6 @@ import CicloService from '@/entities/ciclo/ciclo.service';
 //Complement model select
 import 'vue-search-select/dist/VueSearchSelect.css';
 import PreguntaModalidadService from '@/entities/pregunta-modalidad/pregunta-modalidad.service';
-import ElementoModalidadService from '@/entities/elemento-modalidad/elemento-modalidad.service';
 
 import PreguntaAuthorityService from '@/entities/pregunta-authority/pregunta-authority.service';
 
@@ -154,16 +149,12 @@ new Vue({
     municipioService: () => new MunicipioService(),
     departamentoService: () => new DepartamentoService(),
     cicloPropedeuticoService: () => new CicloPropedeuticoService(),
-    resultadosEsperadosService: () => new ResultadosEsperadosService(),
     productoService: () => new ProductoService(),
     productoProyectoService: () => new ProductoProyectoService(),
     impactosEsperadosService: () => new ImpactosEsperadosService(),
     cronogramaService: () => new CronogramaService(),
     rubroService: () => new RubroService(),
-    presupuestoValorService: () => new PresupuestoValorService(),
     entidadService: () => new EntidadService(),
-    entidadFinanciadoraService: () => new EntidadFinanciadoraService(),
-    elementoService: () => new ElementoService(),
     elementoProyectoService: () => new ElementoProyectoService(),
     formatoService: () => new FormatoService(),
     tipoPreguntaService: () => new TipoPreguntaService(),
@@ -188,7 +179,6 @@ new Vue({
     rolMenuService: () => new RolMenuService(),
     investigacionTipoService: () => new InvestigacionTipoService(),
     preguntaModalidadService: () => new PreguntaModalidadService(),
-    elementoModalidadService: () => new ElementoModalidadService(),
     preguntaAuthorityService: () => new PreguntaAuthorityService(),
 
     programaService: () => new ProgramaService(),

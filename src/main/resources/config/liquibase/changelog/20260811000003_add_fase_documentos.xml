@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.9.xsd
+                        http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog-ext.xsd">
+
+    <!-- ================================================================== -->
+    <!-- FASE PARA LOS DOCUMENTOS DE LA OPCION DE GRADO (TESIS)             -->
+    <!-- Adjuntos de la fase "Documentos" no compiten con la propuesta      -->
+    <!-- ================================================================== -->
+    <changeSet id="20260811000003-1" author="ciecyt">
+        <comment>Crear fase global para los documentos de la opcion de grado</comment>
+        <insert tableName="fases">
+            <column name="id" valueNumeric="912"/>
+            <column name="fase" value="Documentos"/>
+            <column name="notificable" valueBoolean="false"/>
+        </insert>
+    </changeSet>
+</databaseChangeLog>

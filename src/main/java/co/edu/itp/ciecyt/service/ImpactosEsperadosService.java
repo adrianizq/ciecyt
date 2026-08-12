@@ -2,7 +2,6 @@ package co.edu.itp.ciecyt.service;
 
 import co.edu.itp.ciecyt.service.dto.ImpactosEsperadosDTO;
 
-import co.edu.itp.ciecyt.service.dto.ResultadosEsperadosDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
