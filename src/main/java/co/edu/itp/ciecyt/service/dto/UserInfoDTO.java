@@ -1,7 +1,7 @@
 package co.edu.itp.ciecyt.service.dto;
 
 import java.io.Serializable;
-import javax.persistence.Lob;
+import jakarta.persistence.Lob;
 import co.edu.itp.ciecyt.domain.enumeration.EnumGenero;
 
 /**

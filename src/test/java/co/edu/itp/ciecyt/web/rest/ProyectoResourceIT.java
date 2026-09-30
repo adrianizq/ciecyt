@@ -19,7 +19,7 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.transaction.annotation.Transactional;
-import javax.persistence.EntityManager;
+import jakarta.persistence.EntityManager;
 import java.time.LocalDate;
 import java.time.Instant;
 import java.time.ZonedDateTime;

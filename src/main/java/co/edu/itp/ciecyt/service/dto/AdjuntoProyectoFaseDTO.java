@@ -5,7 +5,7 @@ package co.edu.itp.ciecyt.service.dto;
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.io.Serializable;
-import javax.persistence.Lob;
+import jakarta.persistence.Lob;
 
 
 /**

@@ -3,7 +3,7 @@ package co.edu.itp.ciecyt.service.dto;
 import co.edu.itp.ciecyt.domain.ProyectoRespuestas;
 import co.edu.itp.ciecyt.domain.enumeration.EnumRespuestas;
 
-import javax.persistence.Column;
+import jakarta.persistence.Column;
 import java.io.Serializable;
 
 /**

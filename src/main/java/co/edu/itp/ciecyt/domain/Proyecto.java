@@ -5,7 +5,7 @@ import co.edu.itp.ciecyt.domain.enumeration.EnumEstadoContinuidad;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.ZonedDateTime;
-import javax.persistence.*;
+import jakarta.persistence.*;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 

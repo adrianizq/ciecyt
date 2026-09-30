@@ -12,7 +12,7 @@ import co.edu.itp.ciecyt.service.dto.UserDTO;
 import co.edu.itp.ciecyt.service.dto.UserInfoDTO;
 import co.edu.itp.ciecyt.service.mapper.UserMapper;
 
-import io.github.jhipster.security.RandomUtil;
+import tech.jhipster.security.RandomUtil;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

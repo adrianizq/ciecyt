@@ -6,7 +6,7 @@ import co.edu.itp.ciecyt.domain.User;
 import co.edu.itp.ciecyt.repository.UserRepository;
 import co.edu.itp.ciecyt.service.dto.UserDTO;
 
-import io.github.jhipster.security.RandomUtil;
+import tech.jhipster.security.RandomUtil;
 
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.jupiter.api.BeforeEach;

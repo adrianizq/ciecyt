@@ -1,7 +1,7 @@
 package co.edu.itp.ciecyt.config;
 
-import io.github.jhipster.config.JHipsterConstants;
-import io.github.jhipster.config.JHipsterProperties;
+import tech.jhipster.config.JHipsterConstants;
+import tech.jhipster.config.JHipsterProperties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.web.server.*;
@@ -16,7 +16,7 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 
-import javax.servlet.*;
+import jakarta.servlet.*;
 import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
@@ -63,7 +63,7 @@ public class WebConfigurer implements ServletContextInitializer, WebServerFactor
 
     private void setMimeMappings(WebServerFactory server) {
         if (server instanceof ConfigurableServletWebServerFactory) {
-            MimeMappings mappings = new MimeMappings(MimeMappings.DEFAULT);
+            MimeMappings mappings = MimeMappings.lazyCopy(MimeMappings.DEFAULT);
             // IE issue, see https://github.com/jhipster/generator-jhipster/pull/711
             mappings.add("html", MediaType.TEXT_HTML_VALUE + ";charset=" + StandardCharsets.UTF_8.name().toLowerCase());
             // CloudFoundry issue, see https://github.com/cloudfoundry/gorouter/issues/64

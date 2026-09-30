@@ -97,7 +97,7 @@ public class NotificacionServiceImpl implements NotificacionService {
     @Override
     public boolean marcarLeida(Long id, String login) {
         log.debug("Request to marcarLeida Notificacion : {}, login : {}", id, login);
-        return notificacionRepository.marcarLeida(id, login) > 0;
+        return notificacionRepository.marcarLeida(id, login, Instant.now()) > 0;
     }
 
     @Override

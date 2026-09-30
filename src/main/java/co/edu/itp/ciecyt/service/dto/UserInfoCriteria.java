@@ -2,16 +2,16 @@ package co.edu.itp.ciecyt.service.dto;
 
 import java.io.Serializable;
 import java.util.Objects;
-import io.github.jhipster.service.Criteria;
+import tech.jhipster.service.Criteria;
 import co.edu.itp.ciecyt.domain.enumeration.EnumGenero;
-import io.github.jhipster.service.filter.BooleanFilter;
-import io.github.jhipster.service.filter.DoubleFilter;
-import io.github.jhipster.service.filter.Filter;
-import io.github.jhipster.service.filter.FloatFilter;
-import io.github.jhipster.service.filter.IntegerFilter;
-import io.github.jhipster.service.filter.LongFilter;
-import io.github.jhipster.service.filter.StringFilter;
-import io.github.jhipster.service.filter.LocalDateFilter;
+import tech.jhipster.service.filter.BooleanFilter;
+import tech.jhipster.service.filter.DoubleFilter;
+import tech.jhipster.service.filter.Filter;
+import tech.jhipster.service.filter.FloatFilter;
+import tech.jhipster.service.filter.IntegerFilter;
+import tech.jhipster.service.filter.LongFilter;
+import tech.jhipster.service.filter.StringFilter;
+import tech.jhipster.service.filter.LocalDateFilter;
 
 /**
  * Criteria class for the {@link co.edu.itp.ciecyt.domain.UserInfo} entity. This class is used

@@ -1,7 +1,7 @@
 package co.edu.itp.ciecyt.domain;
 
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 import java.io.Serializable;
 

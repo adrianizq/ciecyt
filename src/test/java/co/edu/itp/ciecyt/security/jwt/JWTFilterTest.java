@@ -1,7 +1,7 @@
 package co.edu.itp.ciecyt.security.jwt;
 
 import co.edu.itp.ciecyt.security.AuthoritiesConstants;
-import io.github.jhipster.config.JHipsterProperties;
+import tech.jhipster.config.JHipsterProperties;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 

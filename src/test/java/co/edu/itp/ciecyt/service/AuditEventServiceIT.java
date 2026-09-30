@@ -3,7 +3,7 @@ package co.edu.itp.ciecyt.service;
 import co.edu.itp.ciecyt.domain.PersistentAuditEvent;
 import co.edu.itp.ciecyt.repository.PersistenceAuditEventRepository;
 import co.edu.itp.ciecyt.CiecytApp;
-import io.github.jhipster.config.JHipsterProperties;
+import tech.jhipster.config.JHipsterProperties;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

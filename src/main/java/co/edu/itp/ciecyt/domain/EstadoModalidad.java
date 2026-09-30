@@ -1,7 +1,7 @@
 package co.edu.itp.ciecyt.domain;
 
 import co.edu.itp.ciecyt.domain.enumeration.EnumEstadoProyecto;
-import javax.persistence.*;
+import jakarta.persistence.*;
 import java.io.Serializable;
 
 /**

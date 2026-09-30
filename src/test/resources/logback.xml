@@ -6,7 +6,7 @@
 
     <logger name="co.edu.itp.ciecyt" level="INFO"/>
 
-    <logger name="io.github.jhipster" level="WARN"/>
+    <logger name="tech.jhipster" level="WARN"/>
 
     <logger name="javax.activation" level="WARN"/>
     <logger name="javax.mail" level="WARN"/>
@@ -40,8 +40,7 @@
     <logger name="sun.rmi.transport" level="WARN"/>
     <logger name="com.tngtech.archunit.core.importer" level="ERROR"/>
 
-    <root>
-        <level>WARN</level>
+    <root level="WARN">
         <appender-ref ref="CONSOLE"/>
     </root>
 

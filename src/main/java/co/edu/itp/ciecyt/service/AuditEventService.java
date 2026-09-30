@@ -1,6 +1,6 @@
 package co.edu.itp.ciecyt.service;
 
-import io.github.jhipster.config.JHipsterProperties;
+import tech.jhipster.config.JHipsterProperties;
 import co.edu.itp.ciecyt.config.audit.AuditEventConverter;
 import co.edu.itp.ciecyt.repository.PersistenceAuditEventRepository;
 import org.slf4j.Logger;

@@ -1,6 +1,6 @@
 package co.edu.itp.ciecyt;
 
-import io.github.jhipster.config.DefaultProfileUtil;
+import tech.jhipster.config.DefaultProfileUtil;
 
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;

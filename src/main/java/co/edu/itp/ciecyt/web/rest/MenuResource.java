@@ -35,9 +35,9 @@ import co.edu.itp.ciecyt.service.UserService;
 import co.edu.itp.ciecyt.service.dto.MenuDTO;
 import co.edu.itp.ciecyt.errors.BadRequestAlertException;
 import co.edu.itp.ciecyt.web.rest.model.ApiMessage;
-import io.github.jhipster.web.util.HeaderUtil;
-import io.github.jhipster.web.util.PaginationUtil;
-import io.github.jhipster.web.util.ResponseUtil;
+import tech.jhipster.web.util.HeaderUtil;
+import tech.jhipster.web.util.PaginationUtil;
+import tech.jhipster.web.util.ResponseUtil;
 
 /**
  * REST controller for managing {@link co.edu.itp.ciecyt.domain.Menu}.

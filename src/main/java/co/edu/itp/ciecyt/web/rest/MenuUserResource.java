@@ -25,7 +25,7 @@ import co.edu.itp.ciecyt.service.MenuService;
 import co.edu.itp.ciecyt.service.UserService;
 import co.edu.itp.ciecyt.service.dto.MenuDTO;
 import co.edu.itp.ciecyt.web.rest.model.ApiMessage;
-import io.github.jhipster.web.util.PaginationUtil;
+import tech.jhipster.web.util.PaginationUtil;
 
 /**
  * REST controller for managing {@link co.edu.itp.ciecyt.domain.Menu}.

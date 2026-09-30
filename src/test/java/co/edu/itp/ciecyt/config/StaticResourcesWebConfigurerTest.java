@@ -1,7 +1,7 @@
 package co.edu.itp.ciecyt.config;
 
-import io.github.jhipster.config.JHipsterDefaults;
-import io.github.jhipster.config.JHipsterProperties;
+import tech.jhipster.config.JHipsterDefaults;
+import tech.jhipster.config.JHipsterProperties;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.CacheControl;

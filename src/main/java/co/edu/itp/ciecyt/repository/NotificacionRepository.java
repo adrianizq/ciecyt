@@ -1,6 +1,7 @@
 package co.edu.itp.ciecyt.repository;
 
 import co.edu.itp.ciecyt.domain.Notificacion;
+import java.time.Instant;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -22,6 +23,6 @@ public interface NotificacionRepository extends JpaRepository<Notificacion, Long
     List<Notificacion> findByUserIdOrderByFechaCreacionDesc(@Param("userId") Long userId);
 
     @Modifying
-    @Query("UPDATE Notificacion n SET n.leido = true, n.fechaLectura = CURRENT_TIMESTAMP WHERE n.id = :id AND n.user.login = :login")
-    int marcarLeida(@Param("id") Long id, @Param("login") String login);
+    @Query("UPDATE Notificacion n SET n.leido = true, n.fechaLectura = :now WHERE n.id = :id AND n.user.login = :login")
+    int marcarLeida(@Param("id") Long id, @Param("login") String login, @Param("now") Instant now);
 }

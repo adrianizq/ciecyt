@@ -1,8 +1,8 @@
 package co.edu.itp.ciecyt.config;
 
-import io.github.jhipster.config.JHipsterConstants;
-import io.github.jhipster.config.JHipsterProperties;
-import io.github.jhipster.web.filter.CachingHttpHeadersFilter;
+import tech.jhipster.config.JHipsterConstants;
+import tech.jhipster.config.JHipsterProperties;
+import tech.jhipster.web.filter.CachingHttpHeadersFilter;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.web.embedded.undertow.UndertowServletWebServerFactory;
@@ -12,7 +12,7 @@ import org.springframework.mock.web.MockServletContext;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import javax.servlet.*;
+import jakarta.servlet.*;
 import java.io.File;
 import java.util.*;
 

@@ -15,7 +15,7 @@ import org.springframework.mock.web.MockHttpSession;
 import org.springframework.security.web.authentication.WebAuthenticationDetails;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.servlet.http.HttpSession;
+import jakarta.servlet.http.HttpSession;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.HashMap;

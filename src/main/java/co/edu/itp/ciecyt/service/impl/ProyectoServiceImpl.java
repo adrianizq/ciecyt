@@ -37,7 +37,7 @@ import co.edu.itp.ciecyt.config.Constants;
 import co.edu.itp.ciecyt.errors.BadRequestAlertException;
 import java.time.Instant;
 import java.time.LocalDate;
-import javax.persistence.EntityNotFoundException;
+import jakarta.persistence.EntityNotFoundException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.EnumSet;

@@ -11,9 +11,9 @@ import co.edu.itp.ciecyt.service.dto.TransicionEstadoDTO;
 import co.edu.itp.ciecyt.service.mapper.AdjuntoProyectoFaseMapper;
 import co.edu.itp.ciecyt.service.mapper.ProyectoMapper;
 import co.edu.itp.ciecyt.errors.BadRequestAlertException;
-import io.github.jhipster.web.util.HeaderUtil;
-import io.github.jhipster.web.util.PaginationUtil;
-import io.github.jhipster.web.util.ResponseUtil;
+import tech.jhipster.web.util.HeaderUtil;
+import tech.jhipster.web.util.PaginationUtil;
+import tech.jhipster.web.util.ResponseUtil;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 import java.util.Map;
@@ -35,7 +35,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.io.FileNotFoundException;
 import java.net.URI;
-import javax.persistence.EntityNotFoundException;
+import jakarta.persistence.EntityNotFoundException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
@@ -549,7 +549,7 @@ public class ProyectoResource {
 
     @GetMapping("/proyectos/{cadBusq}/searchtitulo")
     public ResponseEntity<List<ProyectoDTO>> searchProyectosTitulo(@PathVariable String cadBusq,
-                                                               @org.springdoc.api.annotations.ParameterObject Pageable pageable
+                                                               @org.springdoc.core.annotations.ParameterObject Pageable pageable
     ) {
         log.debug("REST request to get Proyectos by search titulo: {}", cadBusq);
 
@@ -577,7 +577,7 @@ public class ProyectoResource {
 
     @GetMapping("/proyectos/{idPrograma}/searchprograma")
     public ResponseEntity<List<ProyectoDTO>> searchProyectosPrograma(@PathVariable Long idPrograma,
-                                                                   @org.springdoc.api.annotations.ParameterObject Pageable pageable
+                                                                   @org.springdoc.core.annotations.ParameterObject Pageable pageable
     ) {
         log.debug("REST request to get Proyectos by search programa: {}", idPrograma);
 

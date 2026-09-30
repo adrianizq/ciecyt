@@ -4,7 +4,7 @@ package co.edu.itp.ciecyt.service;
 
 import java.util.List;
 
-import javax.persistence.criteria.JoinType;
+import jakarta.persistence.criteria.JoinType;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,7 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 
-import io.github.jhipster.service.QueryService;
+import tech.jhipster.service.QueryService;
 
 
 import co.edu.itp.ciecyt.domain.User;

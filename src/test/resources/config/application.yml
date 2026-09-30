@@ -31,14 +31,14 @@ spring:
     serialization:
       write-durations-as-timestamps: false
   jpa:
-    database-platform: io.github.jhipster.domain.util.FixedH2Dialect
+    database-platform: org.hibernate.dialect.H2Dialect
     open-in-view: false
     show-sql: false
     hibernate:
       ddl-auto: none
       naming:
-        physical-strategy: org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy
-        implicit-strategy: org.springframework.boot.orm.jpa.hibernate.SpringImplicitNamingStrategy
+        physical-strategy: org.hibernate.boot.model.naming.CamelCaseToUnderscoresNamingStrategy
+        implicit-strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyJpaCompliantImpl
     properties:
       hibernate.id.new_generator_mappings: true
       hibernate.connection.provider_disables_autocommit: true
@@ -89,7 +89,7 @@ jhipster:
       enabled: false
       host: localhost
       port: 5000
-      queue-size: 512
+      ring-buffer-size: 512
   mail:
     from: test@localhost
     base-url: http://127.0.0.1:8080
@@ -100,10 +100,6 @@ jhipster:
         base64-secret: MWRkODA5MWIwMTIyODQzY2EzNjM1ODljYTQwMjEyNzE2NDYyMmZmMTYxNGNiYTJlZTg5MzVjYjk0MzlhMTk1ZmM5NWIzMGE3ZTg1NDE3ODIxNDIxOGI4MDBhMjU0ZWEyODlmNjlkY2M3ZjRjYzg2NWU3NmRlODQ5NmZjNDBiNzI=
         # Token is valid 24 hours
         token-validity-in-seconds: 86400
-  metrics:
-    logs: # Reports metrics in the logs
-      enabled: true
-      report-frequency: 60 # in seconds
 
 # ===================================================================
 # Application specific properties

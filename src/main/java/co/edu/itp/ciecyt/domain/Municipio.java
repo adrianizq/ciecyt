@@ -3,7 +3,7 @@ package co.edu.itp.ciecyt.domain;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 import java.io.Serializable;
 

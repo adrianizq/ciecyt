@@ -5,10 +5,10 @@ import co.edu.itp.ciecyt.config.Constants;
 import co.edu.itp.ciecyt.domain.Authority;
 import co.edu.itp.ciecyt.domain.User;
 
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
 
-import javax.validation.constraints.*;
+import jakarta.validation.constraints.*;
 import java.time.Instant;
 import java.util.Set;
 import java.util.stream.Collectors;

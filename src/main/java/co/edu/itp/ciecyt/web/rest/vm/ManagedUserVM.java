@@ -1,7 +1,7 @@
 package co.edu.itp.ciecyt.web.rest.vm;
 
 import co.edu.itp.ciecyt.service.dto.UserDTO;
-import javax.validation.constraints.Size;
+import jakarta.validation.constraints.Size;
 
 /**
  * View Model extending the UserDTO, which is meant to be used in the user management UI.

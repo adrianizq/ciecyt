@@ -138,11 +138,12 @@ public class HibernateTimeZoneIT {
 
         String request = generateSqlRequest("offset_time", dateTimeWrapper.getId());
         SqlRowSet resultSet = jdbcTemplate.queryForRowSet(request);
-        String expectedValue = dateTimeWrapper
-            .getOffsetTime()
-            .toLocalTime()
-            .atDate(LocalDate.of(1970, Month.JANUARY, 1))
-            .atZone(ZoneId.systemDefault())
+        LocalDate firstJan1970 = LocalDate.of(1970, Month.JANUARY, 1);
+        String expectedValue = ZonedDateTime
+            .ofInstant(
+                Instant.ofEpochSecond(dateTimeWrapper.getOffsetTime().toEpochSecond(firstJan1970)),
+                ZoneId.of(zoneId)
+            )
             .format(timeFormatter);
 
         assertThatDateStoredValueIsEqualToInsertDateValueOnGMTTimeZone(resultSet, expectedValue);

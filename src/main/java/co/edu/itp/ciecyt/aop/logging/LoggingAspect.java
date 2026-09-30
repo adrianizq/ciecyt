@@ -1,6 +1,6 @@
 package co.edu.itp.ciecyt.aop.logging;
 
-import io.github.jhipster.config.JHipsterConstants;
+import tech.jhipster.config.JHipsterConstants;
 
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;

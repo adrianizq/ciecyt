@@ -2,7 +2,7 @@ package co.edu.itp.ciecyt.domain;
 
 import java.io.Serializable;
 import java.time.Instant;
-import javax.persistence.*;
+import jakarta.persistence.*;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 

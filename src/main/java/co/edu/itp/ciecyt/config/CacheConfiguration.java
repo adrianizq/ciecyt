@@ -1,7 +1,7 @@
 package co.edu.itp.ciecyt.config;
 
-import io.github.jhipster.config.JHipsterProperties;
-import io.github.jhipster.config.cache.PrefixedKeyGenerator;
+import tech.jhipster.config.JHipsterProperties;
+import tech.jhipster.config.cache.PrefixedKeyGenerator;
 import java.time.Duration;
 import org.ehcache.config.builders.*;
 import org.ehcache.jsr107.Eh107Configuration;

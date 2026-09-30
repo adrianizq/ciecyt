@@ -3,7 +3,7 @@ package co.edu.itp.ciecyt.web.rest.errors;
 import co.edu.itp.ciecyt.errors.BadRequestAlertException;
 import co.edu.itp.ciecyt.errors.ErrorConstants;
 
-import io.github.jhipster.web.util.HeaderUtil;
+import tech.jhipster.web.util.HeaderUtil;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.ConcurrencyFailureException;
@@ -23,7 +23,7 @@ import org.zalando.problem.violations.ConstraintViolationProblem;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
