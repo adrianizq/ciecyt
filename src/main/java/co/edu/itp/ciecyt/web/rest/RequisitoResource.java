@@ -1,5 +1,6 @@
 package co.edu.itp.ciecyt.web.rest;
 
+import co.edu.itp.ciecyt.security.AuthoritiesConstants;
 import co.edu.itp.ciecyt.service.RequisitoService;
 import co.edu.itp.ciecyt.service.dto.RequisitoDTO;
 import co.edu.itp.ciecyt.web.rest.errors.BadRequestAlertException;
@@ -17,6 +18,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -44,6 +46,7 @@ public class RequisitoResource {
      * {@code POST  /requisitos} : Create a new requisito.
      */
     @PostMapping("/requisitos")
+    @PreAuthorize("hasAnyRole('" + AuthoritiesConstants.ADMIN + "')")
     public ResponseEntity<RequisitoDTO> createRequisito(@RequestBody RequisitoDTO requisitoDTO) throws URISyntaxException {
         log.debug("REST request to save Requisito : {}", requisitoDTO);
         if (requisitoDTO.getId() != null) {
@@ -59,6 +62,7 @@ public class RequisitoResource {
      * {@code PUT  /requisitos} : Updates an existing requisito.
      */
     @PutMapping("/requisitos")
+    @PreAuthorize("hasAnyRole('" + AuthoritiesConstants.ADMIN + "')")
     public ResponseEntity<RequisitoDTO> updateRequisito(@RequestBody RequisitoDTO requisitoDTO) {
         log.debug("REST request to update Requisito : {}", requisitoDTO);
         if (requisitoDTO.getId() == null) {
@@ -115,6 +119,7 @@ public class RequisitoResource {
      * {@code DELETE  /requisitos/:id} : delete the "id" requisito.
      */
     @DeleteMapping("/requisitos/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN')")
     public ResponseEntity<Void> deleteRequisito(@PathVariable Long id) {
         log.debug("REST request to delete Requisito : {}", id);
         requisitoService.delete(id);

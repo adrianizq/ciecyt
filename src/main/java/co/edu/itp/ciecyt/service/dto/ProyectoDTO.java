@@ -75,6 +75,16 @@ public class ProyectoDTO implements Serializable {
 
     private String estado;
 
+    private LocalDate fechaInicioContinuidad;
+
+    private LocalDate fechaSustentacionProyecto;
+
+    private Integer periodosContinuidadUsados;
+
+    private Boolean continuidadPeriodoAdicional;
+
+    private String estadoContinuidad;
+
     private Long asesorId;
 
     private Boolean tieneJurado;
@@ -367,6 +377,46 @@ public class ProyectoDTO implements Serializable {
 
     public void setEstado(String estado) {
         this.estado = estado;
+    }
+
+    public LocalDate getFechaInicioContinuidad() {
+        return fechaInicioContinuidad;
+    }
+
+    public void setFechaInicioContinuidad(LocalDate fechaInicioContinuidad) {
+        this.fechaInicioContinuidad = fechaInicioContinuidad;
+    }
+
+    public LocalDate getFechaSustentacionProyecto() {
+        return fechaSustentacionProyecto;
+    }
+
+    public void setFechaSustentacionProyecto(LocalDate fechaSustentacionProyecto) {
+        this.fechaSustentacionProyecto = fechaSustentacionProyecto;
+    }
+
+    public Integer getPeriodosContinuidadUsados() {
+        return periodosContinuidadUsados == null ? 0 : periodosContinuidadUsados;
+    }
+
+    public void setPeriodosContinuidadUsados(Integer periodosContinuidadUsados) {
+        this.periodosContinuidadUsados = periodosContinuidadUsados;
+    }
+
+    public Boolean getContinuidadPeriodoAdicional() {
+        return continuidadPeriodoAdicional == null ? false : continuidadPeriodoAdicional;
+    }
+
+    public void setContinuidadPeriodoAdicional(Boolean continuidadPeriodoAdicional) {
+        this.continuidadPeriodoAdicional = continuidadPeriodoAdicional;
+    }
+
+    public String getEstadoContinuidad() {
+        return estadoContinuidad;
+    }
+
+    public void setEstadoContinuidad(String estadoContinuidad) {
+        this.estadoContinuidad = estadoContinuidad;
     }
 
     public Long getAsesorId() {

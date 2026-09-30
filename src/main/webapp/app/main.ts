@@ -12,6 +12,7 @@ import App from './app.vue';
 import Vue2Filters from 'vue2-filters';
 import router from './router';
 import * as config from './shared/config/config';
+import { setupAxiosInterceptors } from './shared/config/axios-interceptor';
 import * as bootstrapVueConfig from './shared/config/config-bootstrap-vue';
 import JhiItemCountComponent from './shared/jhi-item-count.vue';
 import AuditsService from './admin/audits/audits.service';
@@ -39,6 +40,10 @@ import FacultadService from '@/entities/facultad/facultad.service';
 import ModalidadService from '@/entities/modalidad/modalidad.service';
 import AcuerdoService from '@/entities/acuerdo/acuerdo.service';
 import MunicipioService from '@/entities/municipio/municipio.service';
+import DocenteHabilitadoService from '@/entities/docente-habilitado/docente-habilitado.service';
+import AsesorExternoService from '@/entities/asesor-externo/asesor-externo.service';
+import DecanoFacultadService from '@/entities/decano-facultad/decano-facultad.service';
+import RemisionPadronService from '@/entities/remision-padron/remision-padron.service';
 import DepartamentoService from '@/entities/departamento/departamento.service';
 import CicloPropedeuticoService from '@/entities/ciclo-propedeutico/ciclo-propedeutico.service';
 import ProductoService from '@/entities/producto/producto.service';
@@ -61,6 +66,7 @@ import IntegranteProyectoService from '@/entities/integrante-proyecto/integrante
 import InformacionPasantiaService from '@/entities/informacion-pasantia/informacion-pasantia.service';
 import SolicitudService from '@/entities/solicitud/solicitud.service';
 import AdjuntoProyectoFaseService from '@/entities/adjunto-proyecto-fase/adjunto-proyecto-fase.service';
+import RequisitoProyectoService from '@/entities/requisito-proyecto/requisito-proyecto.service';
 import RetroalimentacionService from '@/entities/retroalimentacion/retroalimentacion.service';
 import AdjuntoRetroalimentacionService from '@/entities/adjunto-retroalimentacion/adjunto-retroalimentacion.service';
 import FichaTecnicaService from '@/entities/ficha-tecnica/ficha-tecnica.service';
@@ -98,6 +104,24 @@ const alertService = new AlertService(store);
 const translationService = new TranslationService(store, i18n);
 const loginService = new LoginService();
 const accountService = new AccountService(store, translationService, router);
+
+// Antes esto solo escribia un console.log en la consola del navegador: la sesion
+// caducada seguia pareciendo activa y un 403 no mostraba nada al usuario.
+setupAxiosInterceptors(status => {
+  const token = localStorage.getItem('jhi-authenticationToken') || sessionStorage.getItem('jhi-authenticationToken');
+  if (status === 401) {
+    if (!token || !store.getters.authenticated) {
+      return;
+    }
+    store.commit('logout');
+    alertService.showAlert('Su sesión ha expirado. Vuelva a iniciar sesión para continuar.', 'warning');
+    if (router.currentRoute.path !== '/') {
+      router.push('/');
+    }
+    return;
+  }
+  alertService.showAlert('No tiene permisos para realizar esta acción.', 'danger');
+});
 
 router.beforeEach((to, from, next) => {
   if (!to.matched.length) {
@@ -139,6 +163,10 @@ new Vue({
     alertService: () => alertService,
     translationService: () => translationService,
     proyectoService: () => new ProyectoService(),
+    docenteHabilitadoService: () => new DocenteHabilitadoService(),
+    asesorExternoService: () => new AsesorExternoService(),
+    decanoFacultadService: () => new DecanoFacultadService(),
+    remisionPadronService: () => new RemisionPadronService(),
     prediccionesService: () => new PrediccionesService(),
     lineaInvestigacionService: () => new LineaInvestigacionService(),
 
@@ -169,6 +197,7 @@ new Vue({
     informacionPasantiaService: () => new InformacionPasantiaService(),
     solicitudService: () => new SolicitudService(),
     adjuntoProyectoFaseService: () => new AdjuntoProyectoFaseService(),
+    requisitoProyectoService: () => new RequisitoProyectoService(),
     retroalimentacionService: () => new RetroalimentacionService(),
     adjuntoRetroalimentacionService: () => new AdjuntoRetroalimentacionService(),
     fichaTecnicaService: () => new FichaTecnicaService(),

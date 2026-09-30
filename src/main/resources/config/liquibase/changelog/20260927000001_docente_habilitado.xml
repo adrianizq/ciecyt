@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.9.xsd
+                        http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+
+    <!-- ================================================================== -->
+    <!-- PROFESORES HABILITADOS PARA SER ASESOR O JURADO (Acuerdo 025)    -->
+    <!--                                                                   -->
+    <!-- El reglamento no designa cualquier profesor:                     -->
+    <!--                                                                   -->
+    <!--   art. 8  "El CIECYT, a partir de la lista de profesores          -->
+    <!--           habilitados por la decanatura" (tesis de pregrado y     -->
+    <!--           posgrado)                                                -->
+    <!--   art. 8 par. 2  "Las decanaturas deberan remitir a CIECYT al     -->
+    <!--           inicio de cada periodo academico la relacion actualizada -->
+    <!--           de los profesores que se encuentren habilitados para    -->
+    <!--           ser asesores"                                           -->
+    <!--   art. 9 par. 2  la misma obligacion para los jurados             -->
+    <!--                                                                   -->
+    <!-- Por eso la habilitacion es un dato propio y no se deduce de que   -->
+    <!-- la persona tenga el rol en el sistema: tener ROLE_ASESOR permite  -->
+    <!-- evaluar, pero solo estar habilitado en la lista permite que se   -->
+    <!-- designe a alguien en un proyecto.                                 -->
+    <!--                                                                   -->
+    <!-- La lista cambia con los semestres porque entran docentes nuevos   -->
+    <!-- y vuelven los que habian salido. En vez de borrar, se cierra el   -->
+    <!-- registro anterior con fecha_hasta y se abre uno nuevo, de modo     -->
+    <!-- que queda el historial de cada vigencia.                           -->
+    <!--                                                                   -->
+    <!-- A diferencia de la designacion, que dura hasta el final del       -->
+    <!-- proceso salvo que el asesor desista, la habilitacion se revisa     -->
+    <!-- periodicamente: por eso vive en su propia tabla y no se deduce    -->
+    <!-- de la designacion.                                                -->
+    <!--                                                                   -->
+    <!-- Una persona puede estar habilitada en varias facultades, y como   -->
+    <!-- asesor y como jurado de forma independiente. Solo admite un (1)    -->
+    <!-- registro vigente por persona, facultad y rol.                     -->
+    <!-- ================================================================== -->
+
+    <changeSet id="20260927000001-1" author="ciecyt">
+        <comment>Registro de profesores habilitados por facultad para asesor y jurado</comment>
+        <createTable tableName="docente_habilitado">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="docente_habilitado_user_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="docente_habilitado_facultad_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="rol" type="varchar(20)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="fecha_desde" type="date"/>
+            <column name="fecha_hasta" type="date"/>
+            <column name="acto_resolucion" type="varchar(255)"/>
+            <column name="observaciones" type="varchar(255)"/>
+        </createTable>
+        <addForeignKeyConstraint
+            baseTableName="docente_habilitado"
+            baseColumnNames="docente_habilitado_facultad_id"
+            referencedTableName="facultad"
+            referencedColumnNames="id"
+            constraintName="fk_docente_habilitado_facultad"/>
+        <addForeignKeyConstraint
+            baseTableName="docente_habilitado"
+            baseColumnNames="docente_habilitado_user_id"
+            referencedTableName="jhi_user"
+            referencedColumnNames="id"
+            constraintName="fk_docente_habilitado_user"/>
+        <createIndex indexName="ix_docente_habilitado_facultad" tableName="docente_habilitado">
+            <column name="docente_habilitado_facultad_id"/>
+        </createIndex>
+        <createIndex indexName="ix_docente_habilitado_user" tableName="docente_habilitado">
+            <column name="docente_habilitado_user_id"/>
+        </createIndex>
+        <comment>Un solo registro vigente por persona, facultad y rol; los anteriores quedan cerrados</comment>
+    </changeSet>
+
+    <!-- Indice unico parcial (WHERE): sintaxis de PostgreSQL, en H2 reventaba y
+         dejaba docente_habilitado creada a medias. -->
+    <changeSet id="20260927000001-1-idx" author="ciecyt" dbms="postgresql">
+        <sql>
+            CREATE UNIQUE INDEX ux_docente_habilitado_vigente
+                ON docente_habilitado (docente_habilitado_user_id, docente_habilitado_facultad_id, rol)
+                WHERE fecha_hasta IS NULL
+        </sql>
+    </changeSet>
+
+    <changeSet id="20260927000001-2" author="ciecyt">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="docente_habilitado"/>
+            </not>
+        </preConditions>
+        <comment>Sembrar la lista con los asesores y jurados que ya estan designados</comment>
+        <rollback>
+            <comment>La siembra no se revierte para no dejar sin lista a las designaciones vigentes</comment>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="20260927000001-3" author="ciecyt">
+        <comment>
+            Sembrar la lista de habilitados a partir de las designaciones que ya existen, para
+            que ningun proyecto en curso quede con un asesor fuera de la lista y para que las
+            decanaturas partan de la realidad y no de un registro vacio
+        </comment>
+        <sql>
+            INSERT INTO docente_habilitado
+                (docente_habilitado_user_id, docente_habilitado_facultad_id, rol, fecha_desde, observaciones)
+            SELECT DISTINCT
+                i.integrante_proyecto_user_id,
+                p.facultad_id,
+                CASE WHEN rm.roles_modalidad_authority_name = 'ROLE_JURADO' THEN 'JURADO' ELSE 'ASESOR' END,
+                CURRENT_DATE,
+                'Sembrado desde las designaciones vigentes'
+            FROM integrante_proyecto i
+            JOIN proyecto p ON p.id = i.integrante_proyecto_proyecto_id
+            JOIN roles_modalidad rm ON rm.id = i.integrante_proyecto_roles_modalidad_id
+            WHERE p.facultad_id IS NOT NULL
+              AND rm.roles_modalidad_authority_name IN ('ROLE_ASESOR', 'ROLE_JURADO')
+        </sql>
+    </changeSet>
+
+</databaseChangeLog>

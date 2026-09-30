@@ -342,6 +342,8 @@ import { IGrupoSemillero } from '@/shared/model/grupo-semillero.model';
 //ADR
 import { IProyecto, Proyecto } from '@/shared/model/proyecto.model';
 import ProyectoService from '@/entities/proyecto/proyecto.service';
+import DocenteHabilitadoService from '@/entities/docente-habilitado/docente-habilitado.service';
+import { IDocenteHabilitado } from '@/shared/model/docente-habilitado.model';
 import ProgramaService from '@/entities/programa/programa.service';
 import { IPrograma, Programa } from '@/shared/model/programa.model';
 
@@ -392,11 +394,18 @@ const validations: any = {
   validations,
 })
 export default class PropuestaInformacionGeneral extends Vue {
+
+  // El template llamaba previousState() pero el metodo no existia, asi que el boton
+  // Cancel/atrás fallaba con un TypeError y no hacia nada.
+  previousState() {
+    window.history.back();
+  }
   @Inject('modalidadService') private modalidadService: () => ModalidadService;
   @Inject('facultadService') private facultadService: () => FacultadService;
   @Inject('lineaInvestigacionService') private lineaInvestigacionService: () => LineaInvestigacionService;
   @Inject('usuarioService') private usuarioService: () => UsuarioService;
   @Inject('proyectoService') private proyectoService: () => ProyectoService;
+  @Inject('docenteHabilitadoService') private docenteHabilitadoService: () => DocenteHabilitadoService;
   @Inject('programaService') private programaService: () => ProgramaService;
     @Inject('investigacionTipoService') private investigacionTipoService: () => InvestigacionTipoService;
 
@@ -565,15 +574,9 @@ export default class PropuestaInformacionGeneral extends Vue {
         this.lineas_investigacion = res.data;
       });
 
-    //Obteniendo los usuarios asesores
-    this.usuarioService()
-      .retrieveAsesores()
-      .then(res => {
-        res.data.forEach(item => {
-          item.nombresApellidos = item.firstName + ' ' + item.lastName;
-          this.users.push(item);
-        });
-      });
+    //Obteniendo los asesores habilitados de la facultad. La designacion sale de la lista que
+    //remite la decanatura, no del directorio completo de la institucion.
+    this.cargarAsesoresDeLaFacultad();
 
 
        this.grupoSemilleroService()
@@ -589,6 +592,40 @@ export default class PropuestaInformacionGeneral extends Vue {
     this.proyecto.asesorId =  value;
    
 }
+
+  setFacultad(value) {
+    this.iniciandoFacultad = false;
+    this.submitStatus = 'ERROR';
+    this.proyecto.facultadId = value;
+    this.cargarAsesoresDeLaFacultad();
+  }
+
+  /**
+   * Los candidatos a asesor son los habilitados por la decanatura en la facultad del proyecto.
+   * Sin facultad no hay lista: la habilitacion es por facultad.
+   */
+  cargarAsesoresDeLaFacultad() {
+    this.users = [];
+    const idFacultad = this.proyecto && this.proyecto.facultadId;
+    if (!idFacultad) {
+      return;
+    }
+    this.docenteHabilitadoService()
+      .retrieveDeFacultad(idFacultad, 'ASESOR')
+      .then(res => {
+        (res.data || []).forEach((h: IDocenteHabilitado) => {
+          const u: any = h.user || {};
+          const nombre = ((u.firstName || '') + ' ' + (u.lastName || '')).trim();
+          this.users.push({
+            id: u.id,
+            nombresApellidos: nombre ? nombre + ' (' + (u.login || '') + ')' : u.login
+          });
+        });
+      })
+      .catch(() => {
+        this.users = [];
+      });
+  }
 }
 </script>
 

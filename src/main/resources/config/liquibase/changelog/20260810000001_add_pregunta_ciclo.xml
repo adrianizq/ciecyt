@@ -7,7 +7,7 @@
                         http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog-ext/dbchangelog-3.9.xsd">
 
     <!-- 1. Add pregunta_ciclo_id column to pregunta (Ciclo opcional para el banco de preguntas) -->
-    <changeSet id="20260810000001-1" author="opencode" dbms="postgresql">
+    <changeSet id="20260810000001-1" author="opencode">
         <preConditions onFail="MARK_RAN">
             <not>
                 <columnExists tableName="pregunta" columnName="pregunta_ciclo_id"/>

@@ -16,4 +16,27 @@ import LoginForm from '@/account/login-form/login-form.vue';
     'jhi-footer': JhiFooter,
   },
 })
-export default class App extends Vue {}
+export default class App extends Vue {
+  get dismissCountDown(): number {
+    return this.$store.getters.dismissCountDown;
+  }
+
+  get alertType(): string {
+    return this.$store.getters.alertType;
+  }
+
+  get textoAlerta(): string {
+    const mensaje = this.$store.getters.alertMessage;
+    if (mensaje === null || mensaje === undefined || mensaje === '') {
+      return '';
+    }
+    if (typeof mensaje === 'object') {
+      return mensaje.msg !== undefined ? String(mensaje.msg) : JSON.stringify(mensaje);
+    }
+    return String(mensaje);
+  }
+
+  countDownChanged(dismissCountDown: number): void {
+    this.$store.commit('countDownChanged', dismissCountDown);
+  }
+}

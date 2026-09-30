@@ -3,6 +3,7 @@ package co.edu.itp.ciecyt.service.mapper;
 
 import co.edu.itp.ciecyt.domain.*;
 import co.edu.itp.ciecyt.domain.enumeration.EnumEstadoProyecto;
+import co.edu.itp.ciecyt.domain.enumeration.EnumEstadoContinuidad;
 import co.edu.itp.ciecyt.service.dto.ProyectoDTO;
 
 import org.mapstruct.*;
@@ -27,6 +28,7 @@ public interface ProyectoMapper extends EntityMapper<ProyectoDTO, Proyecto> {
     @Mapping(source = "proyectoFase.id", target = "proyectoFaseId")
     @Mapping(source = "proyectoFase.fase", target = "fase")
     @Mapping(source = "estado", target = "estado", qualifiedByName = "estadoToString")
+    @Mapping(source = "estadoContinuidad", target = "estadoContinuidad", qualifiedByName = "estadoContinuidadToString")
     @Mapping(source = "proyectoCiclo.id", target = "proyectoCicloId")
     ProyectoDTO toDto(Proyecto proyecto);
 
@@ -40,6 +42,16 @@ public interface ProyectoMapper extends EntityMapper<ProyectoDTO, Proyecto> {
         return estado == null ? null : EnumEstadoProyecto.valueOf(estado);
     }
 
+    @Named("estadoContinuidadToString")
+    default String estadoContinuidadToString(EnumEstadoContinuidad estadoContinuidad) {
+        return estadoContinuidad == null ? null : estadoContinuidad.name();
+    }
+
+    @Named("stringToEstadoContinuidad")
+    default EnumEstadoContinuidad stringToEstadoContinuidad(String estadoContinuidad) {
+        return estadoContinuidad == null ? null : EnumEstadoContinuidad.valueOf(estadoContinuidad);
+    }
+
     @Mapping(source = "proyectoLineaInvestigacionId", target = "proyectoLineaInvestigacion")
     @Mapping(source = "proyectoGrupoSemilleroId", target = "proyectoGrupoSemillero")
     @Mapping(source = "proyectoModalidadId", target = "proyectoModalidad")
@@ -48,6 +60,7 @@ public interface ProyectoMapper extends EntityMapper<ProyectoDTO, Proyecto> {
     @Mapping(source = "proyectoProgramaId", target = "proyectoPrograma")
     @Mapping(source = "proyectoFaseId", target = "proyectoFase")
     @Mapping(source = "estado", target = "estado", qualifiedByName = "stringToEstado")
+    @Mapping(source = "estadoContinuidad", target = "estadoContinuidad", qualifiedByName = "stringToEstadoContinuidad")
     @Mapping(source = "proyectoCicloId", target = "proyectoCiclo")
     Proyecto toEntity(ProyectoDTO proyectoDTO);
 

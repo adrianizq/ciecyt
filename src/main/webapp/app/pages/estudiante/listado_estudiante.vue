@@ -7,15 +7,6 @@
       <h2 id="page-heading">
         <span id="proyecto-heading">Mis propuestas</span>
       </h2>
-      <b-alert
-        :show="dismissCountDown"
-        dismissible
-        :variant="alertType"
-        @dismissed="dismissCountDown = 0"
-        @dismiss-count-down="countDownChanged"
-      >
-        {{ alertMessage }}
-      </b-alert>
       <br />
       <div class="alert alert-warning" v-if="!isFetching && proyects && proyects.length === 0">
         <span>No se encontraron propuestas</span>
@@ -48,14 +39,14 @@
               <td class="text-right">
                 <div class="btn-group">
                   <router-link v-if="proyecto.estado==='EN_ELABORACION_PROPUESTA'"
-                    :to="{ name: 'EnviarPropuestaView', params: { proyectoId: proyecto.id } }"
+                    :to="{ name: 'PropuestaEnviarPropuestaView', params: { proyectoId: proyecto.id } }"
                   >
                     <button type="submit" id="save-entity" class="btn btn-primary">
                         <font-awesome-icon icon="paper-plane"></font-awesome-icon>&nbsp;<span>Enviar propuesta</span>
                     </button>
                   </router-link>
                   <router-link v-if="proyecto.estado==='VIABLE'"
-                    :to="{ name: 'EnviarProyectoView', params: { proyectoId: proyecto.id } }"
+                    :to="{ name: 'ProyectoEnviarProyectoView', params: { proyectoId: proyecto.id } }"
                   >
                     <button type="submit" id="save-entity" class="btn btn-primary">
                         <font-awesome-icon icon="paper-plane"></font-awesome-icon>&nbsp;<span>Enviar proyecto</span>

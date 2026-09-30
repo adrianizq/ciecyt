@@ -145,23 +145,12 @@
               <div class="text-danger" v-if="!$v.proyecto.proyectoProgramaId.required">Este campo es requerido</div>
             </div>
 
-           <div class="form-group" :class="{ 'form-group--error': $v.integranteProyecto.integranteProyectoUserId }">
+           <!-- Asesor: lo designa la decanatura, no el estudiante -->
+           <div class="form-group">
               <label class="form-control-label" v-text="$t('ciecytApp.proyecto.asesor')" for="asesor">Asesor</label>
-              <b-form-select
-                :options="users"
-                text-field="nombresApellidos"
-                value-field="id"
-                id="proyecto-asesorId"
-                v-model="proyecto.asesorId"
-                @input="setAsesor"
-                :class="{
-                  'is-invalid': $v.proyecto.asesorId.$error,
-                  'is-valid': !$v.proyecto.asesorId.$invalid
-                }"
-                  disabled="true"  
-              >
-              </b-form-select>
-              <div class="text-danger" v-if="!$v.proyecto.asesorId.required">Este campo es requerido</div>
+              <b-alert show variant="info" class="p-2 mb-1">
+                La decanatura designará al asesor a partir de los docentes habilitados. El estudiante no lo selecciona.
+              </b-alert>
             </div>
  
 
@@ -450,6 +439,12 @@ const validations: any = {
   validations,
 })
 export default class DiplomadoInformacionGeneral extends Vue {
+
+  // El template llamaba previousState() pero el metodo no existia, asi que el boton
+  // Cancel/atrás fallaba con un TypeError y no hacia nada.
+  previousState() {
+    window.history.back();
+  }
   @Inject('modalidadService') private modalidadService: () => ModalidadService;
   @Inject('facultadService') private facultadService: () => FacultadService;
   @Inject('lineaInvestigacionService') private lineaInvestigacionService: () => LineaInvestigacionService;
@@ -646,15 +641,6 @@ export default class DiplomadoInformacionGeneral extends Vue {
         this.lineas_investigacion = res.data;
       });
 
-    //Obteniendo los usuarios asesores
-    this.usuarioService()
-      .retrieveAsesores()
-      .then(res => {
-        res.data.forEach(item => {
-          item.nombresApellidos = item.firstName + ' ' + item.lastName;
-          this.users.push(item);
-        });
-      });
   }
   //metodos para las validaciones
   setTitulo(value) {
@@ -675,6 +661,7 @@ export default class DiplomadoInformacionGeneral extends Vue {
   setFacultad(value) {
     this.iniciandoFacultad = false;
     this.submitStatus = 'ERROR';
+    this.proyecto.facultadId = value;
   }
 
   setLinea(value) {

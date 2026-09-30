@@ -1,0 +1,5 @@
+export enum EnumEstadoContinuidad {
+  REGULAR = 'REGULAR',
+  CONTINUIDAD = 'CONTINUIDAD',
+  CONTINUIDAD_PERDIDA = 'CONTINUIDAD_PERDIDA',
+}

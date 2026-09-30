@@ -3,7 +3,6 @@ package co.edu.itp.ciecyt.domain;
 import co.edu.itp.ciecyt.domain.enumeration.EnumGenero;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
-import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -41,8 +40,8 @@ public class UserInfo implements Serializable {
     @Column(name = "telefono")
     private String telefono;
 
-    @Lob
-    @Type(type = "org.hibernate.type.TextType")
+    // Hibernate esperaba LONGVARCHAR (@Lob + TextType) pero H2 siempre reporta VARCHAR
+    // para la columna longvarchar: la validacion de esquema reventaba en los tests.
     @Column(name = "foto")
     private String foto;
 

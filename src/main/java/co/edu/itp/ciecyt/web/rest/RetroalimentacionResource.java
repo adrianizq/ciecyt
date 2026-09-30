@@ -1,7 +1,10 @@
 package co.edu.itp.ciecyt.web.rest;
 
+import co.edu.itp.ciecyt.service.ProyectoAutorizacionService;
+import co.edu.itp.ciecyt.service.ProyectoFaseService;
 import co.edu.itp.ciecyt.service.RetroalimentacionService;
 import co.edu.itp.ciecyt.web.rest.errors.BadRequestAlertException;
+import co.edu.itp.ciecyt.service.dto.ProyectoFaseDTO;
 import co.edu.itp.ciecyt.service.dto.RetroalimentacionDTO;
 
 import io.github.jhipster.web.util.HeaderUtil;
@@ -16,6 +19,8 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
@@ -40,8 +45,27 @@ public class RetroalimentacionResource {
 
     private final RetroalimentacionService retroalimentacionService;
 
-    public RetroalimentacionResource(RetroalimentacionService retroalimentacionService) {
+    private final ProyectoAutorizacionService autorizacion;
+
+    private final ProyectoFaseService proyectoFaseService;
+
+    public RetroalimentacionResource(RetroalimentacionService retroalimentacionService,
+        ProyectoAutorizacionService autorizacion, ProyectoFaseService proyectoFaseService) {
         this.retroalimentacionService = retroalimentacionService;
+        this.autorizacion = autorizacion;
+        this.proyectoFaseService = proyectoFaseService;
+    }
+
+    /**
+     * La retroalimentacion cuelga de una fase, y la fase de un proyecto. Sin resolver ese
+     * enlace no hay forma de decidir si quien llama es participe del proyecto.
+     */
+    private Long proyectoDeFase(Long proyectoFaseId) {
+        if (proyectoFaseId == null) {
+            return null;
+        }
+        Optional<ProyectoFaseDTO> fase = proyectoFaseService.findOne(proyectoFaseId);
+        return fase.isPresent() ? fase.get().getProyectoFaseProyectoId() : null;
     }
 
     /**
@@ -56,6 +80,13 @@ public class RetroalimentacionResource {
         log.debug("REST request to save Retroalimentacion : {}", retroalimentacionDTO);
         if (retroalimentacionDTO.getId() != null) {
             throw new BadRequestAlertException("A new retroalimentacion cannot already have an ID", ENTITY_NAME, "idexists");
+        }
+        Long proyectoId = proyectoDeFase(retroalimentacionDTO.getRetroalimentacionProyectoFaseId());
+        if (proyectoId == null) {
+            throw new BadRequestAlertException("La fase indicada no existe", ENTITY_NAME, "fasebad");
+        }
+        if (!autorizacion.puedeEscribirRetroalimentacionEn(proyectoId)) {
+            throw new AccessDeniedException("Solo el asesor o el jurado del proyecto registra la retroalimentacion");
         }
         RetroalimentacionDTO result = retroalimentacionService.save(retroalimentacionDTO);
         return ResponseEntity.created(new URI("/api/retroalimentacions/" + result.getId()))
@@ -78,6 +109,18 @@ public class RetroalimentacionResource {
         if (retroalimentacionDTO.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
+        Optional<RetroalimentacionDTO> existente = retroalimentacionService.findOne(retroalimentacionDTO.getId());
+        if (!existente.isPresent()) {
+            throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnotfound");
+        }
+        Long proyectoActual = proyectoDeFase(existente.get().getRetroalimentacionProyectoFaseId());
+        if (!autorizacion.puedeEscribirRetroalimentacionEn(proyectoActual)) {
+            throw new AccessDeniedException("Solo el asesor o el jurado del proyecto modifica la retroalimentacion");
+        }
+        if (retroalimentacionDTO.getRetroalimentacionProyectoFaseId() != null
+            && !retroalimentacionDTO.getRetroalimentacionProyectoFaseId().equals(existente.get().getRetroalimentacionProyectoFaseId())) {
+            throw new BadRequestAlertException("No se puede mover una retroalimentacion a otra fase", ENTITY_NAME, "faserelated");
+        }
         RetroalimentacionDTO result = retroalimentacionService.save(retroalimentacionDTO);
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, retroalimentacionDTO.getId().toString()))
@@ -93,6 +136,7 @@ public class RetroalimentacionResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of retroalimentacions in body.
      */
     @GetMapping("/retroalimentacions")
+    @PreAuthorize("hasAnyRole('CIECYT','ADMIN')")
     public ResponseEntity<List<RetroalimentacionDTO>> getAllRetroalimentacions(Pageable pageable) {
         log.debug("REST request to get a page of Retroalimentacions");
         Page<RetroalimentacionDTO> page = retroalimentacionService.findAll(pageable);
@@ -110,7 +154,14 @@ public class RetroalimentacionResource {
     public ResponseEntity<RetroalimentacionDTO> getRetroalimentacion(@PathVariable Long id) {
         log.debug("REST request to get Retroalimentacion : {}", id);
         Optional<RetroalimentacionDTO> retroalimentacionDTO = retroalimentacionService.findOne(id);
-        return ResponseUtil.wrapOrNotFound(retroalimentacionDTO);
+        if (!retroalimentacionDTO.isPresent()) {
+            return ResponseUtil.wrapOrNotFound(retroalimentacionDTO);
+        }
+        Long proyectoId = proyectoDeFase(retroalimentacionDTO.get().getRetroalimentacionProyectoFaseId());
+        if (!autorizacion.puedeLeerEvaluacionesDe(proyectoId)) {
+            throw new AccessDeniedException("No tiene acceso a la retroalimentacion de este proyecto");
+        }
+        return ResponseEntity.ok(retroalimentacionDTO.get());
     }
 
     /**
@@ -120,6 +171,7 @@ public class RetroalimentacionResource {
      * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
     @DeleteMapping("/retroalimentacions/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN')")
     public ResponseEntity<Void> deleteRetroalimentacion(@PathVariable Long id) {
         log.debug("REST request to delete Retroalimentacion : {}", id);
         retroalimentacionService.delete(id);

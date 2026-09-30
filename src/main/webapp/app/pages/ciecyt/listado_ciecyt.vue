@@ -28,13 +28,6 @@
                </select>          
               </div>
 
-        <b-alert :show="dismissCountDown"
-            dismissible
-            :variant="alertType"
-            @dismissed="dismissCountDown=0"
-            @dismiss-count-down="countDownChanged">
-            {{alertMessage}}
-        </b-alert>
         <br/>
         <div class="alert alert-warning" v-if="!isFetching && proyects && proyects.length === 0">
             <span>No se encontraron proyectos</span>
@@ -53,8 +46,12 @@
                   
                     <th  v-on:click="changeOrder('titulo')"><span v-text="$t('ciecytApp.proyecto.titulo')">Titulo</span> <font-awesome-icon icon="sort"></font-awesome-icon></th>
                      <th  v-on:click="changeOrder('modalidad')"><span >Modalidad</span> <font-awesome-icon icon="sort"></font-awesome-icon></th>
+                     <th ><span >Estudiante</span></th>
                      <th ><span >Jurado</span></th>
                      <th ><span >Asesor</span></th>
+                     <th ><span >Continuidad</span></th>
+                     <th ><span >Acto público</span></th>
+                     <th ><span >Requisitos</span></th>
 
                      <!--
                          <th class="col-md-1" v-on:click="changeOrder('id')"><span v-text="$t('global.field.id')">ID</span> <font-awesome-icon icon="sort"></font-awesome-icon></th>
@@ -77,7 +74,16 @@
                   </router-link>
                     <td>{{proyecto.titulo}}</td>
                      <td>{{proyecto.proyectoModalidadModalidad}}</td> 
-                   
+
+                    <!------ Estudiante: se identifica por cedula + nombres (Acuerdo 025, art. 5) ---->
+                     <td>
+                        <template v-if="estudianteDe(proyecto)">
+                            <div class="small text-muted">{{ estudianteDe(proyecto).integranteProyectoUserNuip || 'Sin documento' }}</div>
+                            <div>{{ estudianteDe(proyecto).integranteProyectoUserFirstName }} {{ estudianteDe(proyecto).integranteProyectoUserLastName }}</div>
+                        </template>
+                        <span v-else class="text-muted">—</span>
+                     </td>
+                    
                 
                     <!------ Jurado ---->
                      <td class="text-right">
@@ -112,6 +118,86 @@
                          </div>
                     </td>
 
+                    <!------ Continuidad (Acuerdo 025, art. 10) ---->
+                    <td class="text-center">
+                        <span class="badge" :class="continuidadBadge(proyecto)">
+                            {{ continuidadTexto(proyecto) }}
+                        </span>
+                        <div class="btn-group" v-if="proyecto.estadoContinuidad !== 'CONTINUIDAD_PERDIDA'">
+                            <button
+                                v-if="!proyecto.estadoContinuidad || proyecto.estadoContinuidad === 'REGULAR'"
+                                type="button" class="btn btn-primary btn-sm"
+                                @click="iniciarContinuidad(proyecto)">
+                                Iniciar
+                            </button>
+                            <button
+                                v-if="proyecto.estadoContinuidad === 'CONTINUIDAD' && !proyecto.continuidadPeriodoAdicional"
+                                type="button" class="btn btn-outline-secondary btn-sm"
+                                @click="otorgarAplazamiento(proyecto)">
+                                Aplazar
+                            </button>
+                            <button
+                                v-if="proyecto.estadoContinuidad === 'CONTINUIDAD'"
+                                type="button" class="btn btn-warning btn-sm"
+                                @click="registrarRenovacionContinuidad(proyecto)">
+                                Renovar ({{ proyecto.periodosContinuidadUsados || 0 }}/{{ marcadorContinuidad(proyecto) }})
+                            </button>
+                        </div>
+                    </td>
+
+                    <!------ Acto público: sustentación con jurado (9002, 9004) o socialización sin jurado (9001, 9003, 9006) ---->
+                    <td class="text-center">
+                        <div v-if="esListoParaProgramarActo(proyecto)">
+                            <div class="btn-group">
+                                <input
+                                    type="date"
+                                    class="form-control form-control-sm mr-1"
+                                    style="max-width: 150px; display: inline-block;"
+                                    v-model="fechasActo[proyecto.id]" />
+                                <button
+                                    type="button"
+                                    class="btn btn-primary btn-sm"
+                                    :disabled="!fechasActo[proyecto.id]"
+                                    @click="programarActo(proyecto)">
+                                    Programar
+                                </button>
+                            </div>
+                            <small class="text-muted d-block mt-1">
+                                {{ nombreActo(proyecto.proyectoModalidadId) }} sin jurado
+                            </small>
+                        </div>
+
+                        <div v-else-if="esActoProgramado(proyecto)">
+                            <span class="badge badge-info">
+                                {{ fechaActo(proyecto) }} · {{ nombreActo(proyecto.proyectoModalidadId) }}
+                            </span>
+                            <div class="btn-group mt-1">
+                                <button
+                                    type="button"
+                                    class="btn btn-success btn-sm"
+                                    @click="registrarActoRealizado(proyecto)">
+                                    Registrar realizada
+                                </button>
+                            </div>
+                        </div>
+
+                        <span v-else-if="proyecto.fechaSustentacionProyecto" class="badge badge-secondary">
+                            Realizada el {{ fechaActo(proyecto) }}
+                        </span>
+
+                        <span v-else class="text-muted">—</span>
+                    </td>
+
+                    <!------ Requisitos de inscripción (Acuerdo 025, art. 5) ---->
+                    <td class="text-center">
+                        <button
+                            type="button"
+                            class="btn btn-outline-primary btn-sm"
+                            @click="abrirRequisitos(proyecto)">
+                            Revisar
+                        </button>
+                    </td>
+
                     <!-------------------------------------------------
                      <td class="text-right">
                         <div class="btn-group" >
@@ -142,6 +228,64 @@
                 <b-pagination size="md" :total-rows="totalItems" v-model="page" :per-page="itemsPerPage" :change="loadPage(page)"></b-pagination>
             </div>
         </div>
+
+        <b-modal
+            id="modal-requisitos"
+            size="lg"
+            ok-only
+            ok-title="Cerrar"
+            :title="proyectoRequisitos ? 'Requisitos de inscripción · ' + proyectoRequisitos.titulo : 'Requisitos de inscripción'"
+            @hidden="cerrarRequisitos">
+            <div v-if="cargandoRequisitos">Cargando requisitos...</div>
+
+            <div v-else-if="requisitos.length === 0" class="alert alert-info">
+                Este proyecto todavía no tiene requisitos de inscripción.
+            </div>
+
+            <div v-for="requisito in requisitos" :key="requisito.id" class="border rounded p-2 mb-2">
+                <div class="d-flex justify-content-between align-items-start">
+                    <div>
+                        <strong>{{ requisito.requisitoProyectoRequisitoNombre }}</strong>
+                        <div class="text-muted small">{{ requisito.requisitoProyectoRequisitoCodigo }}</div>
+                    </div>
+                    <span class="badge" :class="claseEstadoRequisito(requisito)">{{ etiquetaEstadoRequisito(requisito) }}</span>
+                </div>
+
+                <div class="small mt-2 text-muted">
+                    <span v-if="requisito.fechaEntrega">Entregado el {{ dateToString(requisito.fechaEntrega) }}</span>
+                    <span v-if="requisito.validadoPor"> · validado por {{ requisito.validadoPor }}</span>
+                    <span v-if="requisito.fechaValidacion"> el {{ dateToString(requisito.fechaValidacion) }}</span>
+                </div>
+
+                <div class="mt-2">
+                    <label class="small mb-0" :for="'observacion-' + requisito.id">
+                        Observación<span v-if="esCampoRequisito(requisito)"> / dato entregado</span>
+                    </label>
+                    <textarea
+                        :id="'observacion-' + requisito.id"
+                        class="form-control form-control-sm"
+                        rows="2"
+                        v-model="observacionesRequisito[requisito.id]"></textarea>
+                </div>
+
+                <div class="btn-group mt-2">
+                    <button
+                        type="button"
+                        class="btn btn-success btn-sm"
+                        :disabled="guardandoRequisito"
+                        @click="validarRequisito(requisito, true)">
+                        Aprobar
+                    </button>
+                    <button
+                        type="button"
+                        class="btn btn-danger btn-sm"
+                        :disabled="guardandoRequisito"
+                        @click="validarRequisito(requisito, false)">
+                        Rechazar
+                    </button>
+                </div>
+            </div>
+        </b-modal>
     </div>
     </div>
 </template>
@@ -172,6 +316,13 @@ import ProyectoService from '@/entities/proyecto/proyecto.service';
 import { IIntegranteProyecto, IntegranteProyecto } from '@/shared/model/integrante-proyecto.model';
 import IntegranteProyectoService from '@/entities/integrante-proyecto/integrante-proyecto.service';
 import { jsPDF } from "jspdf";
+import { categoriaCalificacion } from '@/shared/config/calificacion';
+import { textoViabilidad } from '@/shared/config/viabilidad';
+import { estadoActoProgramado, estadoListoParaActo, requiereSustentacion } from '@/shared/config/opcion_grado';
+import RequisitoProyectoService from '@/entities/requisito-proyecto/requisito-proyecto.service';
+import { IRequisitoProyecto } from '@/shared/model/requisito-proyecto.model';
+import { EnumEstadoRequisito } from '@/shared/model/enumerations/enum-estado-requisito.model';
+import { TipoRequisito } from '@/shared/model/enumerations/tipo-requisito.model';
 
 
     const validations: any = {};
@@ -191,6 +342,8 @@ export default class ListadoCiecyt extends Vue {
     @Inject('programaService') private programaService: () => ProgramaService;
  
    @Inject('alertService') private alertService: () => AlertService;
+
+   @Inject('requisitoProyectoService') private requisitoProyectoService: () => RequisitoProyectoService;
 
    //doc = new jsPDF();
    
@@ -217,6 +370,13 @@ export default class ListadoCiecyt extends Vue {
   public totalItems = 0;
 
   public isFetching = false;
+  public fechasActo: { [proyectoId: number]: string } = {};
+
+  public proyectoRequisitos: IProyecto = null;
+  public requisitos: IRequisitoProyecto[] = [];
+  public observacionesRequisito: { [id: number]: string } = {};
+  public cargandoRequisitos = false;
+  public guardandoRequisito = false;
   public dismissCountDown: number = this.$store.getters.dismissCountDown;
   public dismissSecs: number = this.$store.getters.dismissSecs;
   public alertType: string = this.$store.getters.alertType;
@@ -291,7 +451,219 @@ retrieveSearchTitulo(){
 }
 
 
-public getAlertFromStore() {
+public abrirRequisitos(proyecto: IProyecto): void {
+  this.proyectoRequisitos = proyecto;
+  this.requisitos = [];
+  this.observacionesRequisito = {};
+  this.cargandoRequisitos = true;
+  (this.$bvModal as any).show('modal-requisitos');
+
+  this.requisitoProyectoService()
+    .findByProyecto(proyecto.id)
+    .then(lista => {
+      this.requisitos = lista || [];
+      this.requisitos.forEach(requisito => {
+        this.observacionesRequisito[requisito.id] = requisito.observacion;
+      });
+      this.cargandoRequisitos = false;
+    })
+    .catch(() => {
+      this.cargandoRequisitos = false;
+      this.alertService().showAlert('No se pudieron cargar los requisitos del proyecto', 'danger');
+    });
+}
+
+public cerrarRequisitos(): void {
+  this.proyectoRequisitos = null;
+  this.requisitos = [];
+  this.observacionesRequisito = {};
+}
+
+public validarRequisito(requisito: IRequisitoProyecto, aprobado: boolean): void {
+  const observacion = this.observacionesRequisito[requisito.id];
+  if (!aprobado && !observacion) {
+    this.alertService().showAlert('Indique la observación del rechazo', 'warning');
+    return;
+  }
+
+  this.guardandoRequisito = true;
+  this.requisitoProyectoService()
+    .validar(requisito.id, aprobado, observacion)
+    .then(actualizado => {
+      this.guardandoRequisito = false;
+      const indice = this.requisitos.findIndex(item => item.id === actualizado.id);
+      if (indice >= 0) {
+        this.requisitos.splice(indice, 1, actualizado);
+      }
+      this.observacionesRequisito[actualizado.id] = actualizado.observacion;
+      this.alertService().showAlert(aprobado ? 'Requisito aprobado' : 'Requisito rechazado', 'success');
+    })
+    .catch(() => {
+      this.guardandoRequisito = false;
+      this.alertService().showAlert('No se pudo validar el requisito', 'danger');
+    });
+}
+
+public esCampoRequisito(requisito: IRequisitoProyecto): boolean {
+  return requisito.requisitoProyectoRequisitoTipo === TipoRequisito.CAMPO;
+}
+
+public etiquetaEstadoRequisito(requisito: IRequisitoProyecto): string {
+  switch (requisito.estado) {
+    case EnumEstadoRequisito.APROBADO:
+      return 'Aprobado';
+    case EnumEstadoRequisito.ENTREGADO:
+      return 'Entregado';
+    case EnumEstadoRequisito.RECHAZADO:
+      return 'Rechazado';
+    default:
+      return 'Pendiente';
+  }
+}
+
+public claseEstadoRequisito(requisito: IRequisitoProyecto): string {
+  switch (requisito.estado) {
+    case EnumEstadoRequisito.APROBADO:
+      return 'badge-success';
+    case EnumEstadoRequisito.ENTREGADO:
+      return 'badge-info';
+    case EnumEstadoRequisito.RECHAZADO:
+      return 'badge-danger';
+    default:
+      return 'badge-secondary';
+  }
+}
+
+public continuidadTexto(proyecto: IProyecto): string {
+    if (proyecto.estadoContinuidad === 'CONTINUIDAD') {
+      const marcador = proyecto.continuidadPeriodoAdicional ? '3+1' : '3';
+      return 'En continuidad ' + (proyecto.periodosContinuidadUsados || 0) + '/' + marcador;
+    }
+    if (proyecto.estadoContinuidad === 'CONTINUIDAD_PERDIDA') {
+      return 'Derecho perdido';
+    }
+    return 'Regular';
+  }
+
+  public continuidadBadge(proyecto: IProyecto): string {
+    if (proyecto.estadoContinuidad === 'CONTINUIDAD') {
+      return 'badge-info';
+    }
+    if (proyecto.estadoContinuidad === 'CONTINUIDAD_PERDIDA') {
+      return 'badge-danger';
+    }
+    return 'badge-secondary';
+  }
+
+  public marcadorContinuidad(proyecto: IProyecto): string {
+    return proyecto.continuidadPeriodoAdicional ? '3+1' : '3';
+  }
+
+  public nombreActo(modalidadId: number | undefined | null): string {
+    return requiereSustentacion(modalidadId) ? 'Sustentación' : 'Socialización';
+  }
+
+  public esListoParaProgramarActo(proyecto: IProyecto): boolean {
+    return proyecto.estado === estadoListoParaActo(proyecto.proyectoModalidadId);
+  }
+
+  public esActoProgramado(proyecto: IProyecto): boolean {
+    return proyecto.estado === estadoActoProgramado(proyecto.proyectoModalidadId);
+  }
+
+  public fechaActo(proyecto: IProyecto): string {
+    return proyecto.fechaSustentacionProyecto ? this.dateToString(proyecto.fechaSustentacionProyecto) : 'sin fecha';
+  }
+
+  public dateToString(value: any): string {
+    if (!value) {
+      return '';
+    }
+    return typeof value === 'string' ? value.substring(0, 10) : String(value).substring(0, 10);
+  }
+
+  public programarActo(proyecto: IProyecto): void {
+    const fecha = this.fechasActo[proyecto.id];
+    if (!fecha) {
+      this.alertService().showAlert('Seleccione la fecha del acto público.', 'danger');
+      return;
+    }
+    const tipo = this.nombreActo(proyecto.proyectoModalidadId).toLowerCase();
+    this.proyectoService()
+      .programarActo(proyecto.id, fecha)
+      .then(() => {
+        this.alertService().showAlert(`${tipo} programada para el ${fecha}.`, 'success');
+        this.retrieveAllProyectos();
+      })
+      .catch(err => {
+        this.alertService().showAlert(this.errorMsgContinuidad(err), 'danger');
+      });
+  }
+
+  public registrarActoRealizado(proyecto: IProyecto): void {
+    const tipo = this.nombreActo(proyecto.proyectoModalidadId).toLowerCase();
+    this.proyectoService()
+      .registrarActoRealizado(proyecto.id)
+      .then(() => {
+        this.alertService().showAlert(
+          `${tipo} registrada como realizada. El responsable de evaluarla fue notificado.`,
+          'success'
+        );
+        this.retrieveAllProyectos();
+      })
+      .catch(err => {
+        this.alertService().showAlert(this.errorMsgContinuidad(err), 'danger');
+      });
+  }
+
+  public errorMsgContinuidad(err: any): any {
+    return (
+      (err && err.response && err.response.data && (err.response.data.title || err.response.data.message)) ||
+      (err && err.message) ||
+      err
+    );
+  }
+
+  public iniciarContinuidad(proyecto: IProyecto): void {
+    this.proyectoService()
+      .iniciarContinuidad(proyecto.id)
+      .then(() => {
+        this.alertService().showAlert('Continuidad iniciada: el estudiante dispone de tres (3) periodos académicos (Acuerdo 025, art. 10, parágrafo 3).', 'success');
+        this.retrieveAllProyectos();
+      })
+      .catch(err => {
+        this.alertService().showAlert(this.errorMsgContinuidad(err), 'danger');
+      });
+  }
+
+  public registrarRenovacionContinuidad(proyecto: IProyecto): void {
+    this.proyectoService()
+      .registrarRenovacionContinuidad(proyecto.id)
+      .then(() => {
+        this.alertService().showAlert('Renovación de continuidad registrada (Acuerdo 025, art. 10, parágrafo 4).', 'success');
+        this.retrieveAllProyectos();
+      })
+      .catch(err => {
+        this.alertService().showAlert(this.errorMsgContinuidad(err), 'danger');
+      });
+  }
+
+  public otorgarAplazamiento(proyecto: IProyecto): void {
+    this.proyectoService()
+      .otorgarAplazamientoContinuidad(proyecto.id)
+      .then(() => {
+        this.alertService().showAlert(
+          'Periodo académico adicional otorgado: el estudiante dispone de 3+1 periodos de continuidad (Acuerdo 025, art. 10, parágrafo 6).',
+          'success'
+        );
+        this.retrieveAllProyectos();
+      })
+      .catch(err => {
+        this.alertService().showAlert(this.errorMsgContinuidad(err), 'danger');
+      });
+  }
+
+  public getAlertFromStore() {
     this.dismissCountDown = this.$store.getters.dismissCountDown;
     this.dismissSecs = this.$store.getters.dismissSecs;
     this.alertType = this.$store.getters.alertType;
@@ -473,6 +845,17 @@ public get username(): string {
     return res;
   }
 
+  /**
+   * Integrante con rol Estudiante del proyecto: de ahi salen la cedula (UserInfo.nuip) y los
+   * nombres que el CIECYT cruza contra el record academico.
+   */
+  public estudianteDe(proyecto: any): any {
+    const integrantes = (proyecto && proyecto.listaIntegrantesProyecto) || [];
+    return integrantes.find(
+      (integrante: any) => integrante.integranteProyectoRolesModalidadRol === 'Estudiante'
+    ) || null;
+  }
+
 
   public get userid(): string {
     return this.$store.getters.account ? this.$store.getters.account.id : '';
@@ -612,21 +995,22 @@ public downloadPdf(){
     ////////////////////////////////////////////////////////////
 
 ///////////////////////////////
-if(this.proyects[i].viable==null){
-    doc.text(
-      "Viablilidad: "  + "Sin asignar Viabilidad"
-    , 10,15+(y*5));
+let textoViab: string;
+if(this.proyects[i].viabilidad){
+    textoViab = textoViabilidad(this.proyects[i].viabilidad);
+}
+else if(this.proyects[i].viable==null){
+    textoViab = "Sin asignar Viabilidad";
 }
 else if(this.proyects[i].viable==false){
-      doc.text(
-      "Viablilidad: "  + "NO ES VIABLE"
-    , 10,15+(y*5));
-    }
-else{
-  doc.text(
-      "Viablilidad: "  + "VIABLE"
-    , 10,15+(y*5));
+    textoViab = "No viable";
 }
+else{
+  textoViab = "Viable";
+}
+doc.text(
+      "Viabilidad: "  + textoViab
+    , 10,15+(y*5));
     y++;
 
     ////////////////////////////////////////////////////////////
@@ -639,8 +1023,9 @@ if(this.proyects[i].nota==0 || this.proyects[i].nota==null){
     , 10,15+(y*5));
 }
 else if(this.proyects[i].nota>0){
+      const calif = this.calificacionDe(this.proyects[i]);
       doc.text(
-      "Nota: "  + this.proyects[i].nota
+      "Nota: "  + this.proyects[i].nota + "  (" + calif.categoria + ")"
     , 10,15+(y*5));
     }
 
@@ -656,6 +1041,11 @@ else if(this.proyects[i].nota>0){
 
 
 doc.save("Proyectos y propuestas.pdf");
+}
+
+public calificacionDe(proyecto: IProyecto) {
+  return categoriaCalificacion(proyecto.proyectoModalidadId, proyecto.nota);
+}
 }
 </script>
 

@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.9.xsd
+                        http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+
+    <!-- ================================================================== -->
+    <!-- PROFESIONAL EXTERNO PARA ASESORIA O JURADO (Acuerdo 025)            -->
+    <!--                                                                     -->
+    <!-- art. 8 par. 1  "En caso de que se requiera un asesor externo,       -->
+    <!--                 este no podra tener ningun vinculo laboral con la   -->
+    <!--                 institucion y su idoneidad academica debera ser     -->
+    <!--                 verificada por el CIECYT."                          -->
+    <!-- art. 9 par. 1  lo mismo para el jurado externo.                     -->
+    <!--                                                                     -->
+    <!-- La persona externa NO tiene cuenta de usuario institucional (ese    -->
+    <!-- vinculo es el que el reglamento quiere evitar); se registra como    -->
+    <!-- dato, y solo cuando el CIECYT constata la idoneidad pasa a poder    -->
+    <!-- designarse. La designacion queda en integrante_proyecto con una     -->
+    <!-- columna propia, alternativa al usuario institucional.               -->
+    <!-- ================================================================== -->
+
+    <changeSet id="20260928000001-1" author="ciecyt">
+        <comment>Personas externas gestionadas por el CIECYT para asesoria o jurado</comment>
+        <createTable tableName="asesor_externo">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="nombres" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="apellidos" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="numero_documento" type="varchar(60)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="correo_electronico" type="varchar(255)"/>
+            <column name="telefono" type="varchar(40)"/>
+            <column name="titulos" type="varchar(2000)"/>
+            <column name="institucion_origen" type="varchar(255)"/>
+            <column name="rol" type="varchar(20)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="idoneidad_verificada" type="boolean" defaultValueBoolean="false">
+                <constraints nullable="false"/>
+            </column>
+            <column name="fecha_verificacion_idoneidad" type="date"/>
+            <column name="verificador_login" type="varchar(100)"/>
+            <column name="fuente_verificacion" type="varchar(2000)"/>
+            <column name="observaciones" type="varchar(2000)"/>
+            <column name="asesor_externo_facultad_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addForeignKeyConstraint
+            baseTableName="asesor_externo"
+            baseColumnNames="asesor_externo_facultad_id"
+            referencedTableName="facultad"
+            referencedColumnNames="id"
+            constraintName="fk_asesor_externo_facultad"/>
+        <createIndex indexName="ix_asesor_externo_facultad" tableName="asesor_externo">
+            <column name="asesor_externo_facultad_id"/>
+        </createIndex>
+    </changeSet>
+
+    <changeSet id="20260928000001-2" author="ciecyt">
+        <comment>La designacion puede apuntar a un profesional externo, como alternativa al usuario institucional</comment>
+        <addColumn tableName="integrante_proyecto">
+            <column name="integrante_proyecto_externo_id" type="bigint"/>
+        </addColumn>
+        <addForeignKeyConstraint
+            baseTableName="integrante_proyecto"
+            baseColumnNames="integrante_proyecto_externo_id"
+            referencedTableName="asesor_externo"
+            referencedColumnNames="id"
+            constraintName="fk_integrante_proyecto_externo"/>
+        <createIndex indexName="ix_integrante_proyecto_externo" tableName="integrante_proyecto">
+            <column name="integrante_proyecto_externo_id"/>
+        </createIndex>
+    </changeSet>
+
+</databaseChangeLog>

@@ -3,6 +3,7 @@ package co.edu.itp.ciecyt.web.rest;
 import co.edu.itp.ciecyt.CiecytApp;
 import co.edu.itp.ciecyt.domain.Formato;
 import co.edu.itp.ciecyt.repository.FormatoRepository;
+import co.edu.itp.ciecyt.security.AuthoritiesConstants;
 import co.edu.itp.ciecyt.service.FormatoService;
 import co.edu.itp.ciecyt.service.dto.FormatoDTO;
 import co.edu.itp.ciecyt.service.mapper.FormatoMapper;
@@ -31,7 +32,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  */
 @SpringBootTest(classes = CiecytApp.class)
 @AutoConfigureMockMvc
-@WithMockUser
+@WithMockUser(authorities = AuthoritiesConstants.ADMIN)
 public class FormatoResourceIT {
 
     private static final String DEFAULT_FORMATO = "AAAAAAAAAA";

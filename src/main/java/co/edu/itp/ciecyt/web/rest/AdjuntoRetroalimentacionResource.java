@@ -10,6 +10,7 @@ import io.github.jhipster.web.util.PaginationUtil;
 import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
@@ -82,6 +83,7 @@ public class AdjuntoRetroalimentacionResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PutMapping("/adjunto-retroalimentacions")
+    @PreAuthorize("@proyectoAutorizacionService.puedeModificarAdjuntoRetroalimentacion(#adjuntoRetroalimentacionDTO.id)")
     public ResponseEntity<AdjuntoRetroalimentacionDTO> updateAdjuntoRetroalimentacion(@RequestBody AdjuntoRetroalimentacionDTO adjuntoRetroalimentacionDTO) throws URISyntaxException {
         log.debug("REST request to update AdjuntoRetroalimentacion : {}", adjuntoRetroalimentacionDTO);
         if (adjuntoRetroalimentacionDTO.getId() == null) {
@@ -136,6 +138,7 @@ public class AdjuntoRetroalimentacionResource {
      * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
     @DeleteMapping("/adjunto-retroalimentacions/{id}")
+    @PreAuthorize("@proyectoAutorizacionService.puedeModificarAdjuntoRetroalimentacion(#id)")
     public ResponseEntity<Void> deleteAdjuntoRetroalimentacion(@PathVariable Long id) {
         log.debug("REST request to delete AdjuntoRetroalimentacion : {}", id);
         adjuntoRetroalimentacionService.delete(id);

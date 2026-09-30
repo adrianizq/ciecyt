@@ -1,5 +1,6 @@
 package co.edu.itp.ciecyt.web.rest;
 
+import co.edu.itp.ciecyt.security.AuthoritiesConstants;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -31,7 +32,7 @@ import org.springframework.util.Base64Utils;
  */
 @SpringBootTest(classes = CiecytApp.class)
 @AutoConfigureMockMvc
-@WithMockUser
+@WithMockUser(authorities = AuthoritiesConstants.ADMIN)
 public class AdjuntoProyectoFaseResourceIT {
 
     private static final String DEFAULT_NOMBRE_ADJUNTO = "AAAAAAAAAA";

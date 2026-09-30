@@ -163,9 +163,10 @@
                       header-bg-variant="light"
                       body-bg-variant="light"
                      header-text-variant="info">  
-            <br>La propuesta fue evaluada como:</strong> <br>
-                <div  >
-                <input type="text"  v-model="proyecto.viabilidad" disabled>
+            <br>La propuesta fue evaluada como: <br>
+                <div class="mt-1">
+                    <b-badge pill :variant="viabilidadVariant">{{ viabilidadTexto }}</b-badge>
+                    <p class="text-muted mt-2 mb-1">{{ viabilidadDescripcion }}</p>
                 </div>
                 </b-card>
         </div>
@@ -181,6 +182,7 @@ import { mixins } from 'vue-class-component';
 
 import MenuLateralPasantia from '@/components/propuesta_pasantia/menu_lateral_pasantia.vue';
 import { IProyecto, Proyecto } from '@/shared/model/proyecto.model';
+import { opcionViabilidad, textoViabilidad, descripcionViabilidad } from '@/shared/config/viabilidad';
 import { IUser } from '@/shared/model/user.model';
 
 import ProyectoService from '@/entities/proyecto/proyecto.service';
@@ -365,6 +367,19 @@ export default class Retroalimentacion extends mixins(JhiDataUtils){
   get isDisabled(){
     	return !this.terms;
     }
+
+  get viabilidadTexto(): string {
+    return textoViabilidad(this.proyecto.viabilidad);
+  }
+
+  get viabilidadDescripcion(): string {
+    return descripcionViabilidad(this.proyecto.viabilidad);
+  }
+
+  get viabilidadVariant(): string {
+    const opcion = opcionViabilidad(this.proyecto.viabilidad);
+    return opcion ? opcion.variant : 'secondary';
+  }
 }
 </script>
 

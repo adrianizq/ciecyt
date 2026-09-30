@@ -61,7 +61,6 @@
     <include file="config/liquibase/changelog/20220318154956_added_entity_Municipio.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20220418131017_added_entity_Departamento.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20260724000000_added_modalidades_configuracion.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20260726000001_fix_proyecto_missing_columns.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20260727000001_eliminar_rol_viabilidad.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20260808000001_estado_proyecto_historial.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20260808000002_notificacion.xml" relativeToChangelogFile="false"/>
@@ -69,6 +68,11 @@
     <include file="config/liquibase/changelog/20260810000001_add_pregunta_ciclo.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20260811000001_acuerdo29_flujo_grado.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20260811000003_add_fase_documentos.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20260923000001_modalidades_sin_acto_publico.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20260923000002_continuidad_opcion_grado.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20260924000001_transiciones_otras_modalidades.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20260924000002_sin_jurado_modalidades.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20260924000003_estados_socializacion.xml" relativeToChangelogFile="false"/>
     <!-- jhipster-needle-liquibase-add-changelog - JHipster will add liquibase changelogs here -->
     <include file="config/liquibase/changelog/20201008033203_added_entity_constraints_AdjuntoProyectoFase.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20201008033303_added_entity_constraints_AdjuntoRetroalimentacion.xml" relativeToChangelogFile="false"/>
@@ -104,7 +108,24 @@
     <include file="config/liquibase/changelog/20210227181719_added_entity_constraints_PreguntaModalidad.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20210227182807_added_entity_constraints_PreguntaAuthority.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20210501223720_added_entity_constraints_ElementoModalidad.xml" relativeToChangelogFile="false"/>
+    <!-- Va despues de los constraints: renombra proyecto_fases_id a proyecto_fase_id, y
+         20201008035903_added_entity_constraints_Proyecto.xml crea la FK sobre el nombre
+         original. Antes de este punto la FK no existia aun. -->
+    <include file="config/liquibase/changelog/20260726000001_fix_proyecto_missing_columns.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20260811000002_drop_acuerdo29_flujo_grado.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20260926000001_decanos_facultades.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20260926000002_integridad_user_info.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20260927000001_docente_habilitado.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20260927000002_menu_decanura.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20260927000003_remision_padron.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20260928000001_asesor_externo.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20260929000000_adjunto_archivo_varchar.xml" relativeToChangelogFile="false"/>
+    <!-- Requisitos Acuerdo 025, art. 5: requiere la tabla `requisito` creada en 20260811000001 -->
+    <include file="config/liquibase/changelog/20260929000001_requisitos_art5_acuerdo25.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20260929000002_elemento_proyecto_guia.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20260929000003_informacion_pasantia_convenio.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20260929000004_pregunta_authority_authority_name.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20260929000005_proyecto_nota_double.xml" relativeToChangelogFile="false"/>
     <!-- jhipster-needle-liquibase-add-constraints-changelog - JHipster will add liquibase constraints changelogs here -->
     <!-- jhipster-needle-liquibase-add-incremental-changelog - JHipster will add incremental liquibase changelogs here -->
 </databaseChangeLog>

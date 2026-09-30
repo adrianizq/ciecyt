@@ -7,7 +7,14 @@
         Added the constraints for entity Fases.
     -->
     <changeSet id="20201008034403-2" author="jhipster">
-        
+        <!--
+            La entidad Fases solo tiene id/fase/notificable: JHipster dejo la FK hacia
+            modalidad pero la columna fases_modalidad_id nunca se creo, asi que en base
+            nueva este changeSet moria y frenaba toda la migracion.
+        -->
+        <preConditions onFail="MARK_RAN">
+            <columnExists tableName="fases" columnName="fases_modalidad_id"/>
+        </preConditions>
         <addForeignKeyConstraint baseColumnNames="fases_modalidad_id"
                                  baseTableName="fases"
                                  constraintName="fk_fases_fases_modalidad_id"

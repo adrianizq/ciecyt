@@ -42,15 +42,31 @@ export default class AccountService {
           }
         } else {
           this.store.commit('logout');
-          this.router.push('/');
+          this.volverALaPortada();
           sessionStorage.removeItem('requested-url');
         }
         this.translationService.refreshTranslation(this.store.getters.currentLanguage);
       })
       .catch(() => {
         this.store.commit('logout');
-        this.router.push('/');
+        this.avisarSesionExpirada();
+        this.volverALaPortada();
       });
+  }
+
+  // El redirect silencioso anterior dejaba al usuario en la portada sin entender
+  // que habia perdido el formulario que estaba diligenciando.
+  private avisarSesionExpirada(): void {
+    this.store.commit('setAlertType', 'warning');
+    this.store.commit('setAlertMessage', 'Su sesión ha expirado. Vuelva a iniciar sesión para continuar.');
+  }
+
+  // vue-router rechaza la navegacion si la ruta destino ya es la actual; sin esta
+  // guarda se genera un NavigationDuplicated sin manejar en cada carga con sesion caducada.
+  private volverALaPortada(): void {
+    if (this.router.currentRoute.path !== '/') {
+      this.router.push('/');
+    }
   }
 
   public hasAnyAuthority(authorities: any): boolean {
@@ -71,7 +87,7 @@ export default class AccountService {
   }
 
   public retrieveAccountP(): Promise<boolean> {
-    return new Promise(resolve => {
+    return new Promise((resolve, reject) => {
       axios
         .get('api/account')
         .then(response => {
@@ -88,7 +104,7 @@ export default class AccountService {
             }
           } else {
             this.store.commit('logout');
-            this.router.push('/');
+            this.volverALaPortada();
             sessionStorage.removeItem('requested-url');
           }
           this.translationService.refreshTranslation(this.store.getters.currentLanguage);

@@ -14,6 +14,8 @@ import co.edu.itp.ciecyt.web.rest.errors.BadRequestAlertException;
 import io.github.jhipster.web.util.HeaderUtil;
 import io.github.jhipster.web.util.PaginationUtil;
 import io.github.jhipster.web.util.ResponseUtil;
+import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 import java.util.Map;
 //import net.sf.jasperreports.engine.JRException;
 import org.slf4j.Logger;
@@ -26,11 +28,14 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.io.FileNotFoundException;
 import java.net.URI;
+import javax.persistence.EntityNotFoundException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
@@ -91,6 +96,11 @@ public class ProyectoResource {
                 .created(new URI("/api/proyectos/" + result.getId()))
                 .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))
                 .body(result);
+        } catch (AccessDeniedException e) {
+            log.warn("Intento de guardar un Proyecto sin permisos: {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        } catch (EntityNotFoundException e) {
+            return ResponseUtil.wrapOrNotFound(Optional.empty());
         } catch (Exception e) {
             log.error("Error saving Proyecto: {}", e.getMessage(), e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
@@ -118,6 +128,11 @@ public class ProyectoResource {
                 .ok()
                 .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, proyectoDTO.getId().toString()))
                 .body(result);
+        } catch (AccessDeniedException e) {
+            log.warn("Intento de actualizar un Proyecto sin permisos: {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        } catch (EntityNotFoundException e) {
+            return ResponseUtil.wrapOrNotFound(Optional.empty());
         } catch (Exception e) {
             log.error("Error updating Proyecto: {}", e.getMessage(), e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
@@ -133,22 +148,27 @@ public class ProyectoResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of proyectos in body.
      */
     @GetMapping("/proyectos")
+    @PreAuthorize("hasAnyRole('CIECYT', 'ADMIN', 'DECANO')")
     public ResponseEntity<List<ProyectoDTO>> getAllProyectos(Pageable pageable) {
         log.debug("REST request to get a page of Proyectos");
-        Page<ProyectoDTO> page = proyectoService.findAll(pageable);
+        // El alcance lo resuelve el servicio: el gestor global ve todo y el decano solo las
+        // facultades que tiene asignadas. La anotacion deja pasar al rol, no el contenido.
+        Page<ProyectoDTO> page = proyectoService.findAllDeAlcance(pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return ResponseEntity.ok().headers(headers).body(page.getContent());
     }
 
     //ADR Retorna todos los protectos con una lista de los intgrantes
     @GetMapping("/proyectosIntegrantes")
+    @PreAuthorize("hasAnyRole('CIECYT', 'ADMIN', 'DECANO')")
     public ResponseEntity<List<ProyectoDTO>> getAllProyectosIntegrantes() throws Exception {
         log.debug("REST request to get a page of Proyectos");
-        List<ProyectoDTO> listDTO = proyectoService.findAllProyectosIntegrantes();
+        List<ProyectoDTO> listDTO = proyectoService.findAllProyectosIntegrantesDeAlcance();
         return new ResponseEntity<>(listDTO, HttpStatus.OK);
     }
 
     @GetMapping("/proyectos/{id}")
+    @PreAuthorize("@proyectoAutorizacionService.puedeLeer(#id)")
     public ResponseEntity<ProyectoDTO> getProyecto(@PathVariable Long id) {
         log.debug("REST request to get Proyecto : {}", id);
         Optional<ProyectoDTO> proyectoDTO = proyectoService.findOne(id);
@@ -173,8 +193,118 @@ public class ProyectoResource {
         if (estadoStr == null) {
             throw new BadRequestAlertException("El estado es obligatorio", ENTITY_NAME, "estadorequired");
         }
-        EnumEstadoProyecto nuevoEstado = EnumEstadoProyecto.valueOf(estadoStr);
-        ProyectoDTO result = proyectoService.cambiarEstado(id, nuevoEstado, observacion);
+        EnumEstadoProyecto nuevoEstado;
+        try {
+            nuevoEstado = EnumEstadoProyecto.valueOf(estadoStr);
+        } catch (IllegalArgumentException e) {
+            throw new BadRequestAlertException("El estado '" + estadoStr + "' no es valido", ENTITY_NAME, "estadoinvalido");
+        }
+
+        ProyectoDTO result;
+        try {
+            result = proyectoService.cambiarEstado(id, nuevoEstado, observacion);
+        } catch (IllegalArgumentException e) {
+            // Salto no permitido por el flujo de la modalidad o por el rol del usuario: es un
+            // rechazo de regla de negocio, no una falla del servidor.
+            log.warn("Cambio de estado rechazado en el proyecto {}: {}", id, e.getMessage());
+            throw new BadRequestAlertException(e.getMessage(), ENTITY_NAME, "transicionnopermitida");
+        }
+
+        return ResponseEntity.ok()
+            .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, id.toString()))
+            .body(result);
+    }
+
+    /**
+     * {@code POST  /proyectos/:id/acto/programar} : Programa el acto público del proyecto.
+     * Sustentación con jurado para 9002 y 9004, socialización sin jurado para 9001, 9003 y 9006
+     * (Acuerdo 025, art. 9 y 14 par. 2).
+     *
+     * @param id the id of the proyecto.
+     * @param payload map with {@code fecha} en formato ISO (yyyy-MM-dd).
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the updated proyectoDTO.
+     */
+    @PostMapping("/proyectos/{id}/acto/programar")
+    public ResponseEntity<ProyectoDTO> programarActoProyecto(
+        @PathVariable Long id,
+        @RequestBody Map<String, String> payload
+    ) {
+        log.debug("REST request to programarActo Proyecto : {}, payload : {}", id, payload);
+        String fechaStr = payload.get("fecha");
+        if (fechaStr == null) {
+            throw new BadRequestAlertException("La fecha del acto público es obligatoria", ENTITY_NAME, "fecharequired");
+        }
+        LocalDate fecha;
+        try {
+            fecha = LocalDate.parse(fechaStr);
+        } catch (DateTimeParseException e) {
+            throw new BadRequestAlertException("La fecha del acto público no tiene el formato yyyy-MM-dd", ENTITY_NAME, "fechainvalida");
+        }
+        ProyectoDTO result;
+        try {
+            result = proyectoService.programarActo(id, fecha);
+        } catch (IllegalArgumentException e) {
+            throw new BadRequestAlertException(e.getMessage(), ENTITY_NAME, "transicionnopermitida");
+        }
+        return ResponseEntity.ok()
+            .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, id.toString()))
+            .body(result);
+    }
+
+    /**
+     * {@code POST  /proyectos/:id/acto/realizado} : Registra que el acto público ya se realizó.
+     *
+     * @param id the id of the proyecto.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the updated proyectoDTO.
+     */
+    @PostMapping("/proyectos/{id}/acto/realizado")
+    public ResponseEntity<ProyectoDTO> registrarActoRealizadoProyecto(@PathVariable Long id) {
+        log.debug("REST request to registrarActoRealizado Proyecto : {}", id);
+        ProyectoDTO result;
+        try {
+            result = proyectoService.registrarActoRealizado(id);
+        } catch (IllegalArgumentException e) {
+            throw new BadRequestAlertException(e.getMessage(), ENTITY_NAME, "transicionnopermitida");
+        }
+        return ResponseEntity.ok()
+            .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, id.toString()))
+            .body(result);
+    }
+
+    /**
+     * {@code POST  /proyectos/:id/continuidad/iniciar} : Inicia la continuidad del proyecto
+     * (Acuerdo 025, art. 10, parágrafo 3).
+     */
+    @PostMapping("/proyectos/{id}/continuidad/iniciar")
+    public ResponseEntity<ProyectoDTO> iniciarContinuidad(@PathVariable Long id) {
+        log.debug("REST request to iniciarContinuidad Proyecto : {}", id);
+        ProyectoDTO result = proyectoService.iniciarContinuidad(id);
+        return ResponseEntity.ok()
+            .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, id.toString()))
+            .body(result);
+    }
+
+    /**
+     * {@code POST  /proyectos/:id/continuidad/renovar} : Registra una renovación de matrícula
+     * durante la continuidad (Acuerdo 025, art. 10, parágrafo 4).
+     */
+    @PostMapping("/proyectos/{id}/continuidad/renovar")
+    public ResponseEntity<ProyectoDTO> registrarRenovacionContinuidad(@PathVariable Long id) {
+        log.debug("REST request to registrarRenovacionContinuidad Proyecto : {}", id);
+        ProyectoDTO result = proyectoService.registrarRenovacionContinuidad(id);
+        return ResponseEntity.ok()
+            .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, id.toString()))
+            .body(result);
+    }
+
+    /**
+     * {@code POST  /proyectos/:id/continuidad/aplazar} : Otorga el periodo académico adicional
+     * de continuidad por fuerza mayor o caso fortuito (Acuerdo 025, art. 10, parágrafo 6).
+     */
+    @PostMapping("/proyectos/{id}/continuidad/aplazar")
+    public ResponseEntity<ProyectoDTO> otorgarAplazamientoContinuidad(@PathVariable Long id) {
+        log.debug("REST request to otorgarAplazamientoContinuidad Proyecto : {}", id);
+        ProyectoDTO result = proyectoService.otorgarAplazamientoContinuidad(id);
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, id.toString()))
             .body(result);
@@ -232,6 +362,7 @@ public class ProyectoResource {
     }
 
     @GetMapping("/proyectoIntegrantes/{id}")
+    @PreAuthorize("@proyectoAutorizacionService.puedeLeer(#id)")
     public ResponseEntity<ProyectoDTO> getProyectoIntegrante(@PathVariable Long id) throws Exception {
         log.debug("REST request to get Proyecto : {}", id);
         Optional<ProyectoDTO> proyectoDTO = proyectoService.findOneIntegrantes(id);
@@ -246,6 +377,7 @@ public class ProyectoResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the proyectoDTO, or with status {@code 404 (Not Found)}.
      */
     @GetMapping("/proyectosWithAsesor/{idProyecto}")
+    @PreAuthorize("@proyectoAutorizacionService.puedeLeer(#idProyecto)")
     public ResponseEntity<?> getProyectoWithAsesor(@PathVariable Long idProyecto) {
         log.debug("REST request to get Proyecto : {}", idProyecto);
 
@@ -269,6 +401,7 @@ public class ProyectoResource {
      * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
     @DeleteMapping("/proyectos/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN')")
     public ResponseEntity<Void> deleteProyecto(@PathVariable Long id) {
         log.debug("REST request to delete Proyecto : {}", id);
         proyectoService.delete(id);
@@ -281,6 +414,7 @@ public class ProyectoResource {
     ///////////////////////////////////////////////////////////////7777777777777777777777777
 
     @GetMapping("/proyectos-integrante/{idUsuario}")
+    @PreAuthorize("@proyectoAutorizacionService.esUsuarioActualOGestor(#idUsuario)")
     public ResponseEntity<?> findByIntegranteProyecto(@PathVariable Long idUsuario) {
         log.debug("REST request to get Proyecto : {}", idUsuario);
 
@@ -296,6 +430,7 @@ public class ProyectoResource {
     //////////////////////////////////////////////////////////////////777777777777777777777
 
     @GetMapping("/proyectos-integrante/{idUsuario}/{authority}")
+    @PreAuthorize("@proyectoAutorizacionService.esUsuarioActualOGestor(#idUsuario)")
     public ResponseEntity<?> findByIntegranteProyectoAuthority(@PathVariable Long idUsuario, @PathVariable String authority, Pageable pageable) {
         log.debug("REST request to get Proyecto : {}", idUsuario, authority);
 
@@ -326,6 +461,7 @@ public class ProyectoResource {
 
 //https://www.programcreek.com/java-api-examples/?class=org.springframework.data.domain.Pageable&method=getPageSize
     @GetMapping("/proyectos-integrante-rol/{idUsuario}/{rol}")
+    @PreAuthorize("@proyectoAutorizacionService.esUsuarioActualOGestor(#idUsuario)")
     public ResponseEntity<?> findByIntegranteProyectoRol(@PathVariable Long idUsuario, @PathVariable String rol, Pageable pageable) {
         log.debug("REST request to get Proyecto : {}", idUsuario, rol);
 
@@ -367,6 +503,11 @@ public class ProyectoResource {
             return ResponseEntity.created(new URI("/api/proyects/" + result.getId()))
                 .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))
                 .body(result);
+        } catch (AccessDeniedException e) {
+            log.warn("Intento de guardar un Proyecto sin permisos: {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        } catch (EntityNotFoundException e) {
+            return ResponseUtil.wrapOrNotFound(Optional.empty());
         } catch (Exception e) {
             log.error("Error saving Proyecto: {}", e.getMessage(), e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
@@ -394,6 +535,11 @@ public class ProyectoResource {
             return ResponseEntity.ok()
                 .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, proyectoDTO.getId().toString()))
                 .body(result);
+        } catch (AccessDeniedException e) {
+            log.warn("Intento de actualizar un Proyecto sin permisos: {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        } catch (EntityNotFoundException e) {
+            return ResponseUtil.wrapOrNotFound(Optional.empty());
         } catch (Exception e) {
             log.error("Error updating Proyecto: {}", e.getMessage(), e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();

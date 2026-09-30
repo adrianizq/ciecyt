@@ -22,6 +22,14 @@ public class IntegranteProyectoDTO implements Serializable {
 
     private String integranteProyectoUserLastName;
 
+    private String integranteProyectoUserNuip;
+
+    private String integranteProyectoUserCodigoItp;
+
+    private Long integranteProyectoExternoId;
+
+    private String integranteProyectoExternoNombre;
+
     private Long integranteProyectoProyectoId;
 
     private String integranteProyectoProyectoTitulo;
@@ -86,6 +94,38 @@ public class IntegranteProyectoDTO implements Serializable {
         this.integranteProyectoUserLastName = integranteProyectoUserLastName;
     }
 
+    public String getIntegranteProyectoUserNuip() {
+        return integranteProyectoUserNuip;
+    }
+
+    public void setIntegranteProyectoUserNuip(String integranteProyectoUserNuip) {
+        this.integranteProyectoUserNuip = integranteProyectoUserNuip;
+    }
+
+    public String getIntegranteProyectoUserCodigoItp() {
+        return integranteProyectoUserCodigoItp;
+    }
+
+    public void setIntegranteProyectoUserCodigoItp(String integranteProyectoUserCodigoItp) {
+        this.integranteProyectoUserCodigoItp = integranteProyectoUserCodigoItp;
+    }
+
+    public Long getIntegranteProyectoExternoId() {
+        return integranteProyectoExternoId;
+    }
+
+    public void setIntegranteProyectoExternoId(Long integranteProyectoExternoId) {
+        this.integranteProyectoExternoId = integranteProyectoExternoId;
+    }
+
+    public String getIntegranteProyectoExternoNombre() {
+        return integranteProyectoExternoNombre;
+    }
+
+    public void setIntegranteProyectoExternoNombre(String integranteProyectoExternoNombre) {
+        this.integranteProyectoExternoNombre = integranteProyectoExternoNombre;
+    }
+
     public Long getIntegranteProyectoProyectoId() {
         return integranteProyectoProyectoId;
     }
@@ -147,6 +187,9 @@ public class IntegranteProyectoDTO implements Serializable {
             ", descripcion='" + getDescripcion() + "'" +
             ", integranteProyectoUser=" + getIntegranteProyectoUserId() +
             ", integranteProyectoUser='" + getIntegranteProyectoUserLogin() + "'" +
+            ", integranteProyectoUserNuip='" + getIntegranteProyectoUserNuip() + "'" +
+            ", integranteProyectoUserCodigoItp='" + getIntegranteProyectoUserCodigoItp() + "'" +
+            ", integranteProyectoExterno=" + getIntegranteProyectoExternoId() +
             ", integranteProyectoProyecto=" + getIntegranteProyectoProyectoId() +
             ", integranteProyectoProyecto='" + getIntegranteProyectoProyectoTitulo() + "'" +
             ", integranteProyectoRolesModalidad=" + getIntegranteProyectoRolesModalidadId() +

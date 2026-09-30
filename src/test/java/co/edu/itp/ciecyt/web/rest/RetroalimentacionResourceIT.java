@@ -3,6 +3,7 @@ package co.edu.itp.ciecyt.web.rest;
 import co.edu.itp.ciecyt.CiecytApp;
 import co.edu.itp.ciecyt.domain.Retroalimentacion;
 import co.edu.itp.ciecyt.repository.RetroalimentacionRepository;
+import co.edu.itp.ciecyt.security.AuthoritiesConstants;
 import co.edu.itp.ciecyt.service.RetroalimentacionService;
 import co.edu.itp.ciecyt.service.dto.RetroalimentacionDTO;
 import co.edu.itp.ciecyt.service.mapper.RetroalimentacionMapper;
@@ -31,7 +32,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  */
 @SpringBootTest(classes = CiecytApp.class)
 @AutoConfigureMockMvc
-@WithMockUser
+@WithMockUser(authorities = AuthoritiesConstants.ADMIN)
 public class RetroalimentacionResourceIT {
 
     private static final String DEFAULT_TITULO = "AAAAAAAAAA";

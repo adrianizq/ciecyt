@@ -1,9 +1,14 @@
 package co.edu.itp.ciecyt.web.rest;
 
 import co.edu.itp.ciecyt.service.IntegranteProyectoService;
+import co.edu.itp.ciecyt.service.ProyectoAutorizacionService;
+import co.edu.itp.ciecyt.service.AsesorExternoService;
 import co.edu.itp.ciecyt.web.rest.errors.BadRequestAlertException;
 import co.edu.itp.ciecyt.service.dto.IntegranteProyectoDTO;
+import co.edu.itp.ciecyt.domain.AsesorExterno;
 import co.edu.itp.ciecyt.domain.IntegranteProyecto;
+import co.edu.itp.ciecyt.domain.Proyecto;
+import co.edu.itp.ciecyt.repository.ProyectoRepository;
 
 import io.github.jhipster.web.util.HeaderUtil;
 import io.github.jhipster.web.util.PaginationUtil;
@@ -17,12 +22,15 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 import java.net.URISyntaxException;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 /**
@@ -41,8 +49,59 @@ public class IntegranteProyectoResource {
 
     private final IntegranteProyectoService integranteProyectoService;
 
-    public IntegranteProyectoResource(IntegranteProyectoService integranteProyectoService) {
+    private final ProyectoAutorizacionService autorizacion;
+
+    private final AsesorExternoService asesorExternoService;
+
+    private final ProyectoRepository proyectoRepository;
+
+    public IntegranteProyectoResource(
+        IntegranteProyectoService integranteProyectoService,
+        ProyectoAutorizacionService autorizacion,
+        AsesorExternoService asesorExternoService,
+        ProyectoRepository proyectoRepository
+    ) {
         this.integranteProyectoService = integranteProyectoService;
+        this.autorizacion = autorizacion;
+        this.asesorExternoService = asesorExternoService;
+        this.proyectoRepository = proyectoRepository;
+    }
+
+    /**
+     * La fila tal como esta guardada, para resolver el proyecto al que pertenece. En una
+     * actualizacion el permiso se consulta sobre el proyecto real y no sobre el que trae el
+     * cuerpo, que podria ser otro.
+     */
+    private IntegranteProyectoDTO integridadDe(Long id) {
+        return integranteProyectoService.findOne(id).orElse(null);
+    }
+
+    /**
+     * Cuando se designa a un profesional externo (Acuerdo 25, paragrafos 1 de los articulos 8 y
+     * 9) se verifican tres cosas: que esa persona exista, que el CIECYT haya constatado su
+     * idoneidad, y que pertenezca a la misma facultad del proyecto. Ademas se exige que la
+     * designacion sea o de un usuario institucional o de un externo, nunca de ambos a la vez.
+     */
+    private void validarExterno(IntegranteProyectoDTO dto) {
+        Long externoId = dto.getIntegranteProyectoExternoId();
+        Long userId = dto.getIntegranteProyectoUserId();
+        if (externoId == null) {
+            return;
+        }
+        if (userId != null) {
+            throw new BadRequestAlertException("La designacion es o de un usuario institucional o de un profesional externo", ENTITY_NAME, "externoYUsuarioSimultaneos");
+        }
+        AsesorExterno externo = asesorExternoService.findOne(externoId)
+            .orElseThrow(() -> new BadRequestAlertException("La persona externa no existe", ENTITY_NAME, "externoInexistente"));
+        if (!Boolean.TRUE.equals(externo.getIdoneidadVerificada())) {
+            throw new BadRequestAlertException("Solo se designa a un profesional externo cuya idoneidad haya verificado el CIECYT", ENTITY_NAME, "externoNoVerificado");
+        }
+        Proyecto proyecto = proyectoRepository.findById(dto.getIntegranteProyectoProyectoId()).orElse(null);
+        Long facultadProyecto = proyecto != null && proyecto.getFacultad() != null ? proyecto.getFacultad().getId() : null;
+        Long facultadExterno = externo.getFacultad() != null ? externo.getFacultad().getId() : null;
+        if (!Objects.equals(facultadProyecto, facultadExterno)) {
+            throw new BadRequestAlertException("La persona externa debe pertenecer a la facultad del proyecto", ENTITY_NAME, "externoFacultadDistinta");
+        }
     }
 
     /**
@@ -54,6 +113,12 @@ public class IntegranteProyectoResource {
      */
     @PostMapping("/integrante-proyectos")
     public ResponseEntity<IntegranteProyectoDTO> createIntegranteProyecto(@RequestBody IntegranteProyectoDTO integranteProyectoDTO) throws URISyntaxException {
+        if (!autorizacion.puedeDesignarIntegrantesDe(
+                integranteProyectoDTO.getIntegranteProyectoProyectoId(),
+                integranteProyectoDTO.getIntegranteProyectoRolesModalidadId())) {
+            throw new AccessDeniedException("No puede designar integrantes en este proyecto");
+        }
+        validarExterno(integranteProyectoDTO);
         log.debug("REST request to save IntegranteProyecto : {}", integranteProyectoDTO);
         if (integranteProyectoDTO.getId() != null) {
             throw new BadRequestAlertException("A new integranteProyecto cannot already have an ID", ENTITY_NAME, "idexists");
@@ -75,6 +140,19 @@ public class IntegranteProyectoResource {
      */
     @PutMapping("/integrante-proyectos")
     public ResponseEntity<IntegranteProyectoDTO> updateIntegranteProyecto(@RequestBody IntegranteProyectoDTO integranteProyectoDTO) throws URISyntaxException {
+        if (integranteProyectoDTO.getId() != null) {
+            IntegranteProyectoDTO actual = integridadDe(integranteProyectoDTO.getId());
+            if (actual != null && !autorizacion.puedeDesignarIntegrantesDe(
+                    actual.getIntegranteProyectoProyectoId(),
+                    integranteProyectoDTO.getIntegranteProyectoRolesModalidadId())) {
+                throw new AccessDeniedException("No puede modificar los integrantes de este proyecto");
+            }
+        } else if (!autorizacion.puedeDesignarIntegrantesDe(
+                integranteProyectoDTO.getIntegranteProyectoProyectoId(),
+                integranteProyectoDTO.getIntegranteProyectoRolesModalidadId())) {
+            throw new AccessDeniedException("No puede designar integrantes en este proyecto");
+        }
+        validarExterno(integranteProyectoDTO);
         log.debug("REST request to update IntegranteProyecto : {}", integranteProyectoDTO);
         if (integranteProyectoDTO.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
@@ -121,6 +199,7 @@ public class IntegranteProyectoResource {
      * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
     @DeleteMapping("/integrante-proyectos/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN')")
     public ResponseEntity<Void> deleteIntegranteProyecto(@PathVariable Long id) {
         log.debug("REST request to delete IntegranteProyecto : {}", id);
         integranteProyectoService.delete(id);

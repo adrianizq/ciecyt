@@ -3,6 +3,7 @@ package co.edu.itp.ciecyt.web.rest;
 import co.edu.itp.ciecyt.CiecytApp;
 import co.edu.itp.ciecyt.domain.Departamento;
 import co.edu.itp.ciecyt.repository.DepartamentoRepository;
+import co.edu.itp.ciecyt.security.AuthoritiesConstants;
 import co.edu.itp.ciecyt.service.DepartamentoService;
 import co.edu.itp.ciecyt.service.dto.DepartamentoDTO;
 import co.edu.itp.ciecyt.service.mapper.DepartamentoMapper;
@@ -29,7 +30,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  */
 @SpringBootTest(classes = CiecytApp.class)
 @AutoConfigureMockMvc
-@WithMockUser
+@WithMockUser(authorities = AuthoritiesConstants.ADMIN)
 public class DepartamentoResourceIT {
 
     private static final String DEFAULT_CODIGO_DANE = "AAAAAAAAAA";

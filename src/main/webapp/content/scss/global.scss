@@ -20,7 +20,7 @@ body {
   line-height: 1.6;
   text-align: left;
   color: #333;
-  background-color: #F4F6F9;
+  background-color: #f4f6f9;
 }
 
 a {
@@ -30,7 +30,7 @@ a {
 }
 
 a:hover {
-  color: #C4A94D;
+  color: #c4a94d;
   font-weight: 500;
   cursor: pointer;
   text-decoration: none;
@@ -74,7 +74,7 @@ a:hover {
 .modalidad-card:hover {
   transform: translateY(-4px);
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
-  border-left: 4px solid #C4A94D;
+  border-left: 4px solid #c4a94d;
 }
 
 .modalidad-card .card-body {
@@ -150,9 +150,19 @@ a:hover {
 }
 
 .menu-lateral .step-btn:hover {
-  background: #F4F6F9;
+  background: #f4f6f9;
   color: #003366;
   text-decoration: none;
+}
+
+.menu-lateral .step-btn.step-btn-disabled {
+  cursor: not-allowed;
+  color: #9ca3af;
+}
+
+.menu-lateral .step-btn.step-btn-disabled:hover {
+  background: transparent;
+  color: #9ca3af;
 }
 
 .menu-lateral .step-btn.active {
@@ -162,7 +172,7 @@ a:hover {
 }
 
 .menu-lateral .step-btn.active .step-number {
-  background: #C4A94D;
+  background: #c4a94d;
   color: #003366;
 }
 
@@ -216,7 +226,7 @@ a:hover {
 }
 
 .form-control:focus {
-  border-color: #C4A94D;
+  border-color: #c4a94d;
   box-shadow: 0 0 0 0.2rem rgba(196, 169, 77, 0.25);
 }
 
@@ -251,8 +261,8 @@ a:hover {
 }
 
 .btn-info {
-  background-color: #C4A94D;
-  border-color: #C4A94D;
+  background-color: #c4a94d;
+  border-color: #c4a94d;
   color: #003366;
   font-weight: 600;
 }
@@ -507,7 +517,7 @@ a:hover {
 .ciecyt-header .accent-line {
   width: 60px;
   height: 3px;
-  background: #C4A94D;
+  background: #c4a94d;
   border-radius: 2px;
   margin: 0.75rem 0;
 }

@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.9.xsd
+                        http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog-ext.xsd">
+
+    <!-- ================================================================== -->
+    <!-- DECANOS POR FACULTAD (Acuerdo 025)                                  -->
+    <!--                                                                   -->
+    <!-- El reglamento asigna funciones al decano y a las decanaturas:       -->
+    <!-- art. 9 par. 2 (remitir a CIECYT la relacion de jurados            -->
+    <!-- habilitados), art. 10 par. 2 y art. 12 (copia de decisiones y      -->
+    <!-- solicitud de novedades), art. 19 y 20 (oficio de presentacion y     -->
+    <!-- autorizacion de la pasantia), art. 22 y 23 (firma del informe).    -->
+    <!--                                                                   -->
+    <!-- El cargo se modela como dato y no como fila de jhi_user_authority   -->
+    <!-- porque el alcance es por facultad y no global: la misma persona    -->
+    <!-- puede ser asesora en otra facultad y decana en una sola.           -->
+    <!-- Una facultad tiene un (1) decano vigente; al cambiar la persona    -->
+    <!-- se cierra el registro anterior (fecha_hasta) y queda el historico.  -->
+    <!-- ================================================================== -->
+
+    <changeSet id="20260926000001-1" author="ciecyt">
+        <comment>Normalizar el nombre de FACEC y registrar la facultad FTICS que aun no existia</comment>
+        <update tableName="facultad">
+            <column name="facultad" value="Administración y Ciencias Económicas y Contables"/>
+            <where>codigo_facultad = '2'</where>
+        </update>
+        <insert tableName="facultad">
+            <column name="id" valueNumeric="30001"/>
+            <column name="codigo_facultad" value="3"/>
+            <column name="facultad" value="Tecnologías de la Información y las Telecomunicaciones"/>
+        </insert>
+    </changeSet>
+
+    <changeSet id="20260926000001-2" author="ciecyt">
+        <comment>Vincular el decano de cada facultad y registrar el historial de cambios</comment>
+        <createTable tableName="decano_facultad">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="decano_facultad_facultad_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="decano_facultad_user_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cargo" type="varchar(100)" defaultValue="Decano">
+                <constraints nullable="false"/>
+            </column>
+            <column name="es_delegado" type="boolean" defaultValueBoolean="false"/>
+            <column name="fecha_desde" type="date"/>
+            <column name="fecha_hasta" type="date"/>
+            <column name="acto_resolucion" type="varchar(255)"/>
+            <column name="observaciones" type="varchar(255)"/>
+        </createTable>
+        <addForeignKeyConstraint
+            baseTableName="decano_facultad"
+            baseColumnNames="decano_facultad_facultad_id"
+            referencedTableName="facultad"
+            referencedColumnNames="id"
+            constraintName="fk_decano_facultad_facultad"/>
+        <addForeignKeyConstraint
+            baseTableName="decano_facultad"
+            baseColumnNames="decano_facultad_user_id"
+            referencedTableName="jhi_user"
+            referencedColumnNames="id"
+            constraintName="fk_decano_facultad_user"/>
+        <createIndex indexName="ix_decano_facultad_facultad" tableName="decano_facultad">
+            <column name="decano_facultad_facultad_id"/>
+        </createIndex>
+        <createIndex indexName="ix_decano_facultad_user" tableName="decano_facultad">
+            <column name="decano_facultad_user_id"/>
+        </createIndex>
+        <comment>Una facultad solo puede tener un decano vigente; los anteriores quedan con fecha_hasta</comment>
+    </changeSet>
+
+    <!-- El indice unico parcial (WHERE) es sintaxis de PostgreSQL: en H2 fallaba y
+         dejaba el changeSet anterior a medias, asi que rompia todas las corridas de prueba. -->
+    <changeSet id="20260926000001-2-idx" author="ciecyt" dbms="postgresql">
+        <sql>
+            CREATE UNIQUE INDEX ux_decano_facultad_vigente
+                ON decano_facultad (decano_facultad_facultad_id)
+                WHERE fecha_hasta IS NULL
+        </sql>
+    </changeSet>
+
+    <changeSet id="20260926000001-3" author="ciecyt">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">SELECT count(*) FROM jhi_authority WHERE name = 'ROLE_DECANO'</sqlCheck>
+        </preConditions>
+        <comment>Registrar la autoridad ROLE_DECANO</comment>
+        <insert tableName="jhi_authority">
+            <column name="name" value="ROLE_DECANO"/>
+        </insert>
+    </changeSet>
+
+</databaseChangeLog>

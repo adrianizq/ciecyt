@@ -14,6 +14,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -90,6 +91,7 @@ public class ProyectoHistorialEstadoResource {
      * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
     @DeleteMapping("/proyecto-historial-estados/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN')")
     public ResponseEntity<Void> deleteProyectoHistorialEstado(@PathVariable Long id) {
         log.debug("REST request to delete ProyectoHistorialEstado : {}", id);
         proyectoHistorialEstadoService.delete(id);

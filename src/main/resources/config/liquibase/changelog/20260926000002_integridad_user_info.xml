@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.9.xsd
+                        http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog-ext.xsd">
+
+    <!-- ================================================================== -->
+    <!-- INTEGRIDAD DE user_info                                             -->
+    <!--                                                                   -->
+    <!-- user_info.id es la llave primaria y a la vez el id de jhi_user, pero -->
+    <!-- la tabla no tiene ninguna llave foranea. Por eso quedaron filas de  -->
+    <!-- user_info cuyo usuario ya no existe, y al consultarlas la aplicacion -->
+    <!-- intentaba leer un usuario inexistente y terminaba en error 500.     -->
+    <!--                                                                   -->
+    <!-- Se borran los huerfanos y se agrega la FK con ON DELETE CASCADE para -->
+    <!-- que la relacion no se vuelva a romper cuando se borre un usuario    -->
+    <!-- desde la administracion.                                            -->
+    <!-- ================================================================== -->
+
+    <!--
+        Solo PostgreSQL: dev y prod corren sobre PostgreSQL y las pruebas sobre H2 con una
+        base en memoria nueva, donde no existen huerfanos que reparar. Ademas el original
+        usaba pg_constraint y DELETE ... USING, sintaxis que H2 no entiende y que rompia
+        el arranque de toda la suite de pruebas.
+    -->
+    <changeSet id="20260926000002-1" author="ciecyt" dbms="postgresql">
+        <preConditions onFail="MARK_RAN">
+            <tableExists tableName="user_info"/>
+        </preConditions>
+        <comment>Respaldo de los user_info huerfanos antes de borrarlos</comment>
+        <createTable tableName="user_info_huerfano_backup">
+            <column name="id" type="bigint">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="nuip" type="varchar(50)"/>
+            <column name="codigo_itp" type="varchar(50)"/>
+            <column name="celular" type="varchar(50)"/>
+        </createTable>
+        <sql>
+            INSERT INTO user_info_huerfano_backup (id, nuip, codigo_itp, celular)
+            SELECT ui.id, ui.nuip, ui.codigo_itp, ui.celular
+            FROM user_info ui
+            LEFT JOIN jhi_user u ON u.id = ui.id
+            WHERE u.id IS NULL
+        </sql>
+        <sql>
+            DELETE FROM user_info
+            WHERE id IN (SELECT id FROM user_info_huerfano_backup)
+        </sql>
+    </changeSet>
+
+    <changeSet id="20260926000002-2" author="ciecyt" dbms="postgresql">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">SELECT count(*) FROM pg_constraint WHERE conrelid = 'user_info'::regclass AND contype = 'f'</sqlCheck>
+        </preConditions>
+        <comment>user_info debe apuntar siempre a un usuario existente</comment>
+        <addForeignKeyConstraint
+            baseTableName="user_info"
+            baseColumnNames="id"
+            referencedTableName="jhi_user"
+            referencedColumnNames="id"
+            constraintName="fk_user_info_jhi_user"
+            onDelete="CASCADE"/>
+    </changeSet>
+
+</databaseChangeLog>

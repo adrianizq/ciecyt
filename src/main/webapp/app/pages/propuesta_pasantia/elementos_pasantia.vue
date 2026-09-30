@@ -100,6 +100,12 @@ import FasesService from '@/entities/fases/fases.service';
 
 export default class Elementos extends Vue {
 
+  // El template llamaba previousState() pero el metodo no existia, asi que el boton
+  // Cancel/atrás fallaba con un TypeError y no hacia nada.
+  previousState() {
+    window.history.back();
+  }
+
 
    @Inject('proyectoService') private proyectoService: () => ProyectoService;
    @Inject('elementoProyectoService') private elementoProyectoService: () => ElementoProyectoService;

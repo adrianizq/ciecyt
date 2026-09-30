@@ -17,6 +17,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -106,6 +107,7 @@ public class EstadoModalidadResource {
      * {@code DELETE  /estado-modalidads/:id} : delete the "id" estadoModalidad.
      */
     @DeleteMapping("/estado-modalidads/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN')")
     public ResponseEntity<Void> deleteEstadoModalidad(@PathVariable Long id) {
         log.debug("REST request to delete EstadoModalidad : {}", id);
         estadoModalidadService.delete(id);

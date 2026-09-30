@@ -11,7 +11,7 @@
                             <font-awesome-icon icon="tasks" />
                         </div>
                         <div>
-                            <h2 class="mb-1">Sustentación del Proyecto — Jurado</h2>
+                            <h2 class="mb-1">{{ tituloActo }}</h2>
                             <div class="header-meta">
                                 <span class="meta-item" v-if="proyecto.titulo">
                                     <font-awesome-icon icon="book" /> {{ proyecto.titulo }}
@@ -121,12 +121,12 @@
                                           type="number"
                                           class="form-control nota-input nota"
                                           min="0"
-                                          :max="ep.puntajeMaximo"
+                                          max="5"
                                           step="0.1"
                                           v-model="ep.respuestaNumero"
                                           @input="calcularNota"
                                         />
-                                        <small class="text-muted ml-2" v-if="ep.puntajeMaximo">Máximo: {{ ep.puntajeMaximo }}</small>
+                                        <small class="text-muted ml-2">Máximo: 5</small>
                                     </div>
 
                                     <b-form-textarea
@@ -232,20 +232,17 @@
                         </div>
                         <div class="card-body-custom">
                             <p class="text-muted mb-3">
-                                La <strong>nota</strong> final de la sustentación del proyecto se calcula automáticamente sumando las notas de cada elemento.
-                                Entre 90 y 100 puntos el proyecto se considera de muy bueno a excelente; entre 70 y menos de 90 de aceptable a bueno. Con menos de 70 puntos el proyecto es rechazado.
+                                {{ textoNotaFinal }}
                             </p>
                             <div class="d-flex align-items-center">
-                                <input
-                                  id="definitiva"
-                                  class="form-control nota-final"
-                                  v-if="!nota"
-                                  v-model="proyecto.nota"
-                                  disabled
-                                />
-                                <input id="definitiva" class="form-control nota-final" v-else disabled />
-                                <small class="text-muted ml-3">Nota final de la sustentación</small>
+                                <input id="definitiva" class="form-control nota-final" v-model="notaDisplay" disabled />
+                                <small class="text-muted ml-3">{{ etiquetaNotaFinal }}</small>
                             </div>
+                            <div class="nota-categoria" v-if="calificacion.categoria !== 'Sin calificación'">
+                                <b-badge pill :variant="calificacion.variant">{{ calificacion.categoria }}</b-badge>
+                                <span>{{ calificacion.descripcion }}</span>
+                            </div>
+                            <small class="text-muted d-block mt-2">{{ textoEscala }}</small>
                         </div>
                     </div>
 
@@ -310,6 +307,8 @@ import { numeric, required, minLength, maxLength, between, url } from 'vuelidate
 
 
 import JhiDataUtils from '@/shared/data/data-utils.service';
+import { categoriaCalificacion, textoEscalaCalificacion } from '@/shared/config/calificacion';
+import { estadoActoRealizado, estadoEvaluacionActo, nombreActoPublico, tieneJurado } from '@/shared/config/opcion_grado';
 
 
 
@@ -385,9 +384,29 @@ export default class PropuestaEvaluar extends mixins(JhiDataUtils){
 
     public isSaving = false;
     public proyectoRespuestasDatos: boolean = false;
-    public  authority: any="ROLE_JURADO";
      public nombreFase: any = "Sustentacion";
      public nota: number;
+     public notaDisplay: string = '';
+
+    public get tituloActo(): string {
+        return tieneJurado(this.modalidadId)
+            ? 'Sustentación del Proyecto — Jurado'
+            : 'Socialización del Proyecto — Asesor';
+    }
+
+    public get textoNotaFinal(): string {
+        return tieneJurado(this.modalidadId)
+            ? 'La nota final de la sustentación se calcula automáticamente promediando las notas de cada elemento, en una escala de 0.0 a 5.0. Para Tesis y Pasantía Investigativa: Reprobado menor a 3.0, Aprobado de 3.0 a 4.4, Meritorio de 4.5 a 4.9 y Laureado 5.0. En las demás opciones de grado la sustentación solo se aprueba o se reprueba.'
+            : 'La nota final de la socialización se calcula automáticamente promediando las notas de cada elemento, en una escala de 0.0 a 5.0. Esta modalidad no tiene jurado: el concepto favorable o desfavorable lo emite el asesor y solo se aprueba o se reprueba.';
+    }
+
+    public get etiquetaNotaFinal(): string {
+        return 'Nota final de la ' + nombreActoPublico(this.modalidadId).toLowerCase();
+    }
+
+    public get authority(): string {
+        return tieneJurado(this.modalidadId) ? 'ROLE_JURADO' : 'ROLE_ASESOR';
+    }
 
     public mounted(): void {
     }
@@ -402,9 +421,16 @@ export default class PropuestaEvaluar extends mixins(JhiDataUtils){
             CORRECCIONES_JURADO_PROPUESTA: 'Correcciones del jurado (propuesta)',
             EN_REVISION_JURADO_PROYECTO: 'En revisión del jurado (proyecto)',
             CORRECCIONES_JURADO_PROYECTO: 'Correcciones del jurado (proyecto)',
+            APROBADA_POR_ASESOR: 'Concepto favorable del asesor',
+            EN_REVISION_ASESOR_PROYECTO: 'En revisión del asesor (proyecto)',
+            CORRECCIONES_ASESOR_PROYECTO: 'Correcciones del asesor (proyecto)',
             VIABLE: 'Propuesta viable',
             NO_VIABLE: 'Propuesta no viable',
             LISTO_PARA_SUSTENTAR: 'Listo para sustentar',
+            LISTO_PARA_SOCIALIZAR: 'Listo para socializar',
+            SOCIALIZACION_PROGRAMADA: 'Socialización programada',
+            SOCIALIZACION_REALIZADA: 'Socialización realizada',
+            EN_EVALUACION_SOCIALIZACION: 'Evaluación de socialización',
             EN_SUSTENTACION: 'En sustentación',
             NOTA_DEFINITIVA: 'Nota definitiva'
         };
@@ -421,9 +447,16 @@ export default class PropuestaEvaluar extends mixins(JhiDataUtils){
             CORRECCIONES_JURADO_PROPUESTA: 'warning',
             EN_REVISION_JURADO_PROYECTO: 'info',
             CORRECCIONES_JURADO_PROYECTO: 'warning',
+            APROBADA_POR_ASESOR: 'success',
+            EN_REVISION_ASESOR_PROYECTO: 'info',
+            CORRECCIONES_ASESOR_PROYECTO: 'warning',
             VIABLE: 'success',
             NO_VIABLE: 'danger',
             LISTO_PARA_SUSTENTAR: 'success',
+            LISTO_PARA_SOCIALIZAR: 'success',
+            SOCIALIZACION_PROGRAMADA: 'primary',
+            SOCIALIZACION_REALIZADA: 'primary',
+            EN_EVALUACION_SOCIALIZACION: 'info',
             EN_SUSTENTACION: 'primary',
             NOTA_DEFINITIVA: 'success'
         };
@@ -433,6 +466,14 @@ export default class PropuestaEvaluar extends mixins(JhiDataUtils){
      get getNota(){
     	return this.nota;
     }
+
+     get calificacion() {
+        return categoriaCalificacion(this.modalidadId, this.nota);
+     }
+
+     get textoEscala() {
+        return textoEscalaCalificacion(this.modalidadId);
+     }
 
         beforeRouteEnter(to, from, next) {
             next(vm => {
@@ -556,11 +597,18 @@ export default class PropuestaEvaluar extends mixins(JhiDataUtils){
         }
 
         public cambiarEstadoNotaDefinitiva(): Promise<any> {
-            const observacion = this.proyecto.nota
-                ? 'Sustentación evaluada - nota definitiva registrada'
-                : 'Sustentación evaluada sin nota registrada';
-            return this.proyectoService()
-                .cambiarEstado(this.proyecto.id, 'NOTA_DEFINITIVA', observacion)
+            const calif = this.calificacion;
+            const acto = tieneJurado(this.modalidadId) ? 'Sustentación' : 'Socialización';
+            const observacion = this.proyecto.nota != null
+                ? acto + ' evaluada - nota definitiva registrada (' + calif.categoria + ')'
+                : acto + ' evaluada sin nota registrada';
+            const enEvaluacion = estadoEvaluacionActo(this.modalidadId);
+            const previo = enEvaluacion !== null && this.proyecto.estado === estadoActoRealizado(this.modalidadId)
+                ? this.proyectoService()
+                    .cambiarEstado(this.proyecto.id, enEvaluacion, acto + ' en evaluación por ' + (tieneJurado(this.modalidadId) ? 'el jurado' : 'el asesor'))
+                : Promise.resolve(null);
+            return previo
+                .then(() => this.proyectoService().cambiarEstado(this.proyecto.id, 'NOTA_DEFINITIVA', observacion))
                 .then(() => {
                     const message = this.$t('ciecytApp.proyecto.estadoActualizado', { estado: 'NOTA_DEFINITIVA' });
                     this.alertService().showAlert(message, 'success');
@@ -572,6 +620,8 @@ export default class PropuestaEvaluar extends mixins(JhiDataUtils){
               this.proyId = parseInt(this.$route.params.proyectoId);
                this.proyecto = await this.proyectoService().find(this.proyId);
                this.modalidadId = this.proyecto.proyectoModalidadId;
+               this.nota = this.proyecto.nota;
+               this.notaDisplay = this.proyecto.nota != null ? this.proyecto.nota.toFixed(2) : '';
 
                 let res= await this.fasesService()
                 .retrieveFase(this.nombreFase)   
@@ -683,20 +733,17 @@ public saveAndPreviousState() {
   }
 
    calcularNota(){
-     console.log("calculando nota");
-     var d =document.getElementsByTagName("input");
-     var n=0.0;
-     for(var i=0;i<d.length;i++){
-       if(d[i].type=="number" && d[i].className=="nota"){
-         n+=parseFloat(d[i].value);
-         this.nota=n;
-       
-       }
-       var f = (<HTMLInputElement>document.getElementById("definitiva"));
-      
-          f.value=this.nota.toFixed(1).toString();
-      
+     const notasValidas = this.proyectoRespuests
+       .filter(e => e.preguntaTipoPreguntaTipoPregunta === 'Nota (con puntaje)' && e.respuestaNumero != null && e.respuestaNumero !== '')
+       .map(e => parseFloat(e.respuestaNumero as string))
+       .filter(n => !isNaN(n));
+     if (notasValidas.length === 0) {
+       this.nota = null;
+       this.notaDisplay = '';
+       return;
      }
+     this.nota = notasValidas.reduce((acc, n) => acc + n, 0) / notasValidas.length;
+     this.notaDisplay = this.nota.toFixed(2);
    }
         
 }
@@ -904,6 +951,14 @@ public saveAndPreviousState() {
   font-size: 1.15rem;
   font-weight: 600;
   color: #003366;
+}
+.nota-categoria {
+  margin-top: 0.75rem;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  color: #374151;
+  font-size: 0.9rem;
 }
 
 /* Acciones */

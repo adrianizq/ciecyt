@@ -1,6 +1,7 @@
 package co.edu.itp.ciecyt.domain;
 
 import co.edu.itp.ciecyt.domain.enumeration.EnumEstadoProyecto;
+import co.edu.itp.ciecyt.domain.enumeration.EnumEstadoContinuidad;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.ZonedDateTime;
@@ -128,6 +129,19 @@ public class Proyecto implements Serializable {
     @Enumerated(EnumType.STRING)
     @Column(name = "estado")
     private EnumEstadoProyecto estado;
+
+    @Column(name = "fecha_inicio_continuidad")
+    private LocalDate fechaInicioContinuidad;
+
+    @Column(name = "periodos_continuidad_usados")
+    private Integer periodosContinuidadUsados = 0;
+
+    @Column(name = "continuidad_periodo_adicional")
+    private Boolean continuidadPeriodoAdicional = false;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "estado_continuidad")
+    private EnumEstadoContinuidad estadoContinuidad = EnumEstadoContinuidad.REGULAR;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "proyecto_linea_investigacion_id")
@@ -627,6 +641,58 @@ public class Proyecto implements Serializable {
 
     public void setEstado(EnumEstadoProyecto estado) {
         this.estado = estado;
+    }
+
+    public LocalDate getFechaInicioContinuidad() {
+        return fechaInicioContinuidad;
+    }
+
+    public Proyecto fechaInicioContinuidad(LocalDate fechaInicioContinuidad) {
+        this.fechaInicioContinuidad = fechaInicioContinuidad;
+        return this;
+    }
+
+    public void setFechaInicioContinuidad(LocalDate fechaInicioContinuidad) {
+        this.fechaInicioContinuidad = fechaInicioContinuidad;
+    }
+
+    public Integer getPeriodosContinuidadUsados() {
+        return periodosContinuidadUsados == null ? 0 : periodosContinuidadUsados;
+    }
+
+    public Proyecto periodosContinuidadUsados(Integer periodosContinuidadUsados) {
+        this.periodosContinuidadUsados = periodosContinuidadUsados;
+        return this;
+    }
+
+    public void setPeriodosContinuidadUsados(Integer periodosContinuidadUsados) {
+        this.periodosContinuidadUsados = periodosContinuidadUsados;
+    }
+
+    public Boolean getContinuidadPeriodoAdicional() {
+        return continuidadPeriodoAdicional == null ? false : continuidadPeriodoAdicional;
+    }
+
+    public Proyecto continuidadPeriodoAdicional(Boolean continuidadPeriodoAdicional) {
+        this.continuidadPeriodoAdicional = continuidadPeriodoAdicional;
+        return this;
+    }
+
+    public void setContinuidadPeriodoAdicional(Boolean continuidadPeriodoAdicional) {
+        this.continuidadPeriodoAdicional = continuidadPeriodoAdicional;
+    }
+
+    public EnumEstadoContinuidad getEstadoContinuidad() {
+        return estadoContinuidad == null ? EnumEstadoContinuidad.REGULAR : estadoContinuidad;
+    }
+
+    public Proyecto estadoContinuidad(EnumEstadoContinuidad estadoContinuidad) {
+        this.estadoContinuidad = estadoContinuidad;
+        return this;
+    }
+
+    public void setEstadoContinuidad(EnumEstadoContinuidad estadoContinuidad) {
+        this.estadoContinuidad = estadoContinuidad;
     }
 
     public LineaInvestigacion getProyectoLineaInvestigacion() {

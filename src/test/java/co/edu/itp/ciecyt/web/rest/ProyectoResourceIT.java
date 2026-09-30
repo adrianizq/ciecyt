@@ -3,6 +3,7 @@ package co.edu.itp.ciecyt.web.rest;
 import co.edu.itp.ciecyt.CiecytApp;
 import co.edu.itp.ciecyt.domain.Proyecto;
 import co.edu.itp.ciecyt.repository.ProyectoRepository;
+import co.edu.itp.ciecyt.security.AuthoritiesConstants;
 import co.edu.itp.ciecyt.service.ProyectoService;
 import co.edu.itp.ciecyt.service.dto.ProyectoDTO;
 import co.edu.itp.ciecyt.service.mapper.ProyectoMapper;
@@ -36,7 +37,7 @@ import co.edu.itp.ciecyt.domain.enumeration.EnumViabilidad;
  */
 @SpringBootTest(classes = CiecytApp.class)
 @AutoConfigureMockMvc
-@WithMockUser
+@WithMockUser(authorities = AuthoritiesConstants.ADMIN)
 public class ProyectoResourceIT {
 
     private static final String DEFAULT_TITULO = "AAAAAAAAAA";

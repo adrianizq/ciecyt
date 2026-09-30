@@ -8,26 +8,35 @@ const baseApiUrl = 'api/adjunto-retroalimentacions';
 
 export default class AdjuntoRetroalimentacionService {
   public find(id: number): Promise<IAdjuntoRetroalimentacion> {
-    return new Promise<IAdjuntoRetroalimentacion>(resolve => {
-      axios.get(`${baseApiUrl}/${id}`).then(function (res) {
-        resolve(res.data);
-      });
+    return new Promise<IAdjuntoRetroalimentacion>((resolve, reject) => {
+      axios
+        .get(`${baseApiUrl}/${id}`)
+        .then(function (res) {
+          resolve(res.data);
+        })
+        .catch(reject);
     });
   }
 
   public retrieve(paginationQuery?: any): Promise<any> {
-    return new Promise<any>(resolve => {
-      axios.get(baseApiUrl + `?${buildPaginationQueryOpts(paginationQuery)}`).then(function (res) {
-        resolve(res);
-      });
+    return new Promise<any>((resolve, reject) => {
+      axios
+        .get(baseApiUrl + `?${buildPaginationQueryOpts(paginationQuery)}`)
+        .then(function (res) {
+          resolve(res);
+        })
+        .catch(reject);
     });
   }
 
   public delete(id: number): Promise<any> {
-    return new Promise<any>(resolve => {
-      axios.delete(`${baseApiUrl}/${id}`).then(function (res) {
-        resolve(res);
-      });
+    return new Promise<any>((resolve, reject) => {
+      axios
+        .delete(`${baseApiUrl}/${id}`)
+        .then(function (res) {
+          resolve(res);
+        })
+        .catch(reject);
     });
   }
 
@@ -82,10 +91,13 @@ export default class AdjuntoRetroalimentacionService {
   }
 
   public findAdjuntoRetroalimentacionProyectoFaseAuthority(idProyecto?: any, idFase?: any, authority?: any): Promise<any> {
-    return new Promise<any>(resolve => {
-      axios.get(baseApiUrl + `/traer` + `/${idProyecto}` + `/${idFase}` + `/${authority}`).then(function (res) {
-        resolve(res);
-      });
+    return new Promise<any>((resolve, reject) => {
+      axios
+        .get(baseApiUrl + `/traer` + `/${idProyecto}` + `/${idFase}` + `/${authority}`)
+        .then(function (res) {
+          resolve(res);
+        })
+        .catch(reject);
     });
   }
 }

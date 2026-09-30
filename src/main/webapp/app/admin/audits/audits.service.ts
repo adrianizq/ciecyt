@@ -15,10 +15,11 @@ export default class AuditsService {
       }
       sorts += 'sort=' + req.sort[idx];
     }
-    return new Promise(resolve => {
+    return new Promise((resolve, reject) => {
       axios
         .get(`management/audits?fromDate=${req.fromDate}&toDate=${req.toDate}&${sorts}&page=${req.page}&size=${req.size}`)
-        .then(res => resolve(res));
+        .then(res => resolve(res))
+        .catch(reject);
     });
   }
 }

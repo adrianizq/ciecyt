@@ -6,15 +6,6 @@
       <h2 id="page-heading">
         <span id="proyecto-heading">Mis Sustentaciones - Jurado </span>
       </h2>
-      <b-alert
-        :show="dismissCountDown"
-        dismissible
-        :variant="alertType"
-        @dismissed="dismissCountDown = 0"
-        @dismiss-count-down="countDownChanged"
-      >
-        {{ alertMessage }}
-      </b-alert>
       <br />
       <div class="alert alert-warning" v-if="!isFetching && proyects && proyects.length === 0">
         <span>No se encontraron proyectos</span>
@@ -47,26 +38,23 @@
              
 
               <td class="text-right">
-                <div class="btn-group">
-                  <router-link v-if="proyecto.sustentar==true"
-                    :to="{ name: 'ProyectoEvaluarSustentacionView', params: { proyectoId: proyecto.id } }"
-                  
-                  >
-                    <button type="submit" id="save-entity"   class="btn btn-info" v-if="proyecto.nota==null">
+                <div class="btn-group" v-if="proyecto.sustentar==true">
+                  <router-link v-if="proyecto.nota==null" :to="{ name: 'ProyectoEvaluarSustentacionView', params: { proyectoId: proyecto.id } }">
+                    <button type="submit" id="save-entity"   class="btn btn-info">
                         <font-awesome-icon icon="pencil-alt"></font-awesome-icon>&nbsp;<span v-text="$t('entity.action.eval')">Evaluar</span>
    
                     </button>
-                    
-                    <button type="submit" id="save-entity"   class="btn btn-secondary" v-if="proyecto.nota>=70">
-                        <font-awesome-icon icon="pencil-alt"></font-awesome-icon>&nbsp;<span v-text="$t('entity.action.eval')">Evaluar</span>
-   
-                    </button>
-                    <button type="submit" id="save-entity"   class="btn btn-link" v-if="proyecto.nota>0&&proyecto.nota<70">
-                        <font-awesome-icon icon="pencil-alt"></font-awesome-icon>&nbsp;<span v-text="$t('entity.action.eval')">Evaluar</span>
-   
-                    </button>
-                  
                   </router-link>
+                  <span v-if="proyecto.nota!=null">
+                    <b-badge pill :variant="calificacionDe(proyecto).variant" class="mr-2">
+                      {{ proyecto.nota }} · {{ calificacionDe(proyecto).categoria }}
+                    </b-badge>
+                    <router-link :to="{ name: 'ProyectoEvaluarSustentacionView', params: { proyectoId: proyecto.id } }">
+                      <button type="submit" id="save-entity" class="btn btn-secondary">
+                        <font-awesome-icon icon="pencil-alt"></font-awesome-icon>&nbsp;<span v-text="$t('entity.action.eval')">Evaluar</span>
+                      </button>
+                    </router-link>
+                  </span>
                 </div>
               </td>
             </tr>
@@ -100,6 +88,7 @@ import MenuLateralListado from '@/components/propuesta_listado/menu_lateral_list
 
 import { IProyecto, Proyecto } from '@/shared/model/proyecto.model';
 import ProyectoService from '@/entities/proyecto/proyecto.service';
+import { categoriaCalificacion } from '@/shared/config/calificacion';
 
 const validations: any = {};
 
@@ -263,6 +252,10 @@ export default class Listado extends Vue {
   public get authorities(): string {
     console.log(this.$store.getters.account);
     return this.$store.getters.account ? this.$store.getters.account.authorities : '';
+  }
+
+  public calificacionDe(proyecto: IProyecto) {
+    return categoriaCalificacion(proyecto.proyectoModalidadId, proyecto.nota);
   }
 }
 </script>

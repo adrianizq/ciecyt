@@ -3,6 +3,7 @@ package co.edu.itp.ciecyt.web.rest;
 import co.edu.itp.ciecyt.CiecytApp;
 import co.edu.itp.ciecyt.domain.Modalidad;
 import co.edu.itp.ciecyt.repository.ModalidadRepository;
+import co.edu.itp.ciecyt.security.AuthoritiesConstants;
 import co.edu.itp.ciecyt.service.ModalidadService;
 import co.edu.itp.ciecyt.service.dto.ModalidadDTO;
 import co.edu.itp.ciecyt.service.mapper.ModalidadMapper;
@@ -29,7 +30,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  */
 @SpringBootTest(classes = CiecytApp.class)
 @AutoConfigureMockMvc
-@WithMockUser
+@WithMockUser(authorities = AuthoritiesConstants.ADMIN)
 public class ModalidadResourceIT {
 
     private static final String DEFAULT_MODALIDAD = "AAAAAAAAAA";

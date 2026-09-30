@@ -36,30 +36,10 @@ export default class JhiNavbar extends Vue {
       .all()
       .then(res => {
         this.menusTodos = res;
-        if (this.hasAnyAuthority('ROLE_ADMIN')) {
-          this.roles += 'ADMIN,';
-        }
-        if (this.hasAnyAuthority('ROLE_CIECYT')) {
-          this.roles += 'CIECYT,';
-        }
-        if (this.hasAnyAuthority('ROLE_JURADO')) {
-          this.roles += 'JURADO,';
-        }
-        if (this.hasAnyAuthority('ROLE_ASESOR')) {
-          this.roles += 'ASESOR,';
-        }
-        if (this.hasAnyAuthority('ROLE_ESTUDIANTE')) {
-          this.roles += 'ESTUDIANTE,';
-        }
-
-        //this.roles = this.roles.trim();
-        /*
-         if(this.roles=""){
-         this.roles="ANONYMOUS"
-       }*/
-        //this.roles=
-        console.log(this.roles);
       });
+    // Con hasAnyAuthorityAndCheckAuth se espera a que la cuenta esté cargada en el store
+    // (evita que el menú quede incompleto por la carrera con la carga de /api/account).
+    this.roles = await this.rolesDelUsuario();
     if (this.roles) {
       await this.menuService()
         //trae todos los menus pero se usa porque sino no encuntra las autoridades
@@ -81,6 +61,18 @@ export default class JhiNavbar extends Vue {
     }
 
     this.translationService().refreshTranslation(this.currentLanguage);
+  }
+
+  public async rolesDelUsuario(): Promise<string> {
+    const rolesNombres = ['ROLE_ADMIN', 'ROLE_CIECYT', 'ROLE_DECANO', 'ROLE_JURADO', 'ROLE_ASESOR', 'ROLE_ESTUDIANTE'];
+    let roles = '';
+    for (const rol of rolesNombres) {
+      const autorizado = await this.accountService().hasAnyAuthorityAndCheckAuth(rol);
+      if (autorizado) {
+        roles += rol.replace('ROLE_', '') + ',';
+      }
+    }
+    return roles;
   }
 
   public subIsActive(input) {

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.9.xsd">
+
+    <!--
+        Acuerdo 025 - art. 14, parágrafos 3 y 4:
+        Diplomado (9005) y Especialización (9007) no requieren sustentación ni socialización
+        como requisito para la obtención del título. Se desactivan los estados de sustentación
+        de esas modalidades en estado_modalidad.
+    -->
+    <changeSet id="20260923000001-1" author="ciecyt">
+        <comment>Acuerdo 025 art.14 par. 3 y 4: desactivar estados de sustentacion para 9005 y 9007</comment>
+        <update tableName="estado_modalidad">
+            <column name="activo" valueBoolean="false"/>
+            <where>estado_modalidad_modalidad_id IN (9005, 9007)
+                AND estado IN ('LISTO_PARA_SUSTENTAR', 'SUSTENTACION_PROGRAMADA', 'SUSTENTACION_REALIZADA',
+                'EN_EVALUACION_SUSTENTACION', 'AJUSTES_SUSTENTACION', 'NOTA_DEFINITIVA')</where>
+        </update>
+        <rollback>
+            <update tableName="estado_modalidad">
+                <column name="activo" valueBoolean="true"/>
+                <where>estado_modalidad_modalidad_id IN (9005, 9007)
+                    AND estado IN ('LISTO_PARA_SUSTENTAR', 'SUSTENTACION_PROGRAMADA', 'SUSTENTACION_REALIZADA',
+                    'EN_EVALUACION_SUSTENTACION', 'AJUSTES_SUSTENTACION', 'NOTA_DEFINITIVA')</where>
+            </update>
+        </rollback>
+    </changeSet>
+</databaseChangeLog>

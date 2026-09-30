@@ -380,6 +380,11 @@
             <artifactId>springdoc-openapi-common</artifactId>
             <version>1.6.11</version>
         </dependency>
+        <dependency>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-ui</artifactId>
+            <version>1.6.11</version>
+        </dependency>
 
 
         <!-- jhipster-needle-maven-add-dependency -->
@@ -394,6 +399,8 @@
                 <configuration>
                     <source>${java.version}</source>
                     <target>${java.version}</target>
+                    <debug>true</debug>
+                    <parameters>true</parameters>
                     <annotationProcessorPaths>
                         <path>
                             <groupId>org.springframework.boot</groupId>

@@ -3,6 +3,7 @@ package co.edu.itp.ciecyt.web.rest;
 import co.edu.itp.ciecyt.CiecytApp;
 import co.edu.itp.ciecyt.domain.ImpactosEsperados;
 import co.edu.itp.ciecyt.repository.ImpactosEsperadosRepository;
+import co.edu.itp.ciecyt.security.AuthoritiesConstants;
 import co.edu.itp.ciecyt.service.ImpactosEsperadosService;
 import co.edu.itp.ciecyt.service.dto.ImpactosEsperadosDTO;
 import co.edu.itp.ciecyt.service.mapper.ImpactosEsperadosMapper;
@@ -29,7 +30,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  */
 @SpringBootTest(classes = CiecytApp.class)
 @AutoConfigureMockMvc
-@WithMockUser
+@WithMockUser(authorities = AuthoritiesConstants.ADMIN)
 public class ImpactosEsperadosResourceIT {
 
     private static final String DEFAULT_IMPACTO = "AAAAAAAAAA";

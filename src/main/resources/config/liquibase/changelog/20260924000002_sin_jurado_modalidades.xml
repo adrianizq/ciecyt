@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.9.xsd">
+
+    <!--
+        Acuerdo 025 - roles_modalidad: eliminar el rol "Jurado" de las modalidades
+        que NO exigen jurado (art. 9), alineando la UI de creacion con la matriz de
+        transicion_estado (que ya no tiene ROLE_JURADO para estas modalidades).
+        - 9001 Pasantia Tecnologica: sin jurado (id 9102).
+        - 9003 Pasantia Internacional: sin jurado (id 9124).
+        - 9005 Diplomado: sin jurado (id 22203).
+        - 9006 Publicacion de Articulo: sin jurado/revisor (id 9152).
+        - 9007 Especializacion: sin jurado (id 9162).
+        Se mantienen "Jurado" en 9002 Pasantia Investigativa (9112) y 9004 Tesis (4542).
+    -->
+
+    <changeSet id="20260924000002-eliminar-jurado-9001" author="ciecyt">
+        <comment>Quitar rol Jurado de Pasantia Tecnologica (9001) - id 9102 (Acuerdo 025 art. 9)</comment>
+        <delete tableName="integrante_proyecto">
+            <where>integrante_proyecto_roles_modalidad_id = 9102</where>
+        </delete>
+        <delete tableName="roles_modalidad">
+            <where>id = 9102</where>
+        </delete>
+    </changeSet>
+
+    <changeSet id="20260924000002-eliminar-jurado-9003" author="ciecyt">
+        <comment>Quitar rol Jurado de Pasantia Internacional (9003) - id 9124 (Acuerdo 025 art. 9)</comment>
+        <delete tableName="roles_modalidad">
+            <where>id = 9124</where>
+        </delete>
+    </changeSet>
+
+    <changeSet id="20260924000002-eliminar-jurado-9005" author="ciecyt">
+        <comment>Quitar rol Jurado de Diplomado (9005) - id 22203 (Acuerdo 025 art. 9)</comment>
+        <delete tableName="roles_modalidad">
+            <where>id = 22203</where>
+        </delete>
+    </changeSet>
+
+    <changeSet id="20260924000002-eliminar-revisor-9006" author="ciecyt">
+        <comment>Quitar rol Revisor (ROLE_JURADO) de Publicacion de Articulo (9006) - id 9152 (Acuerdo 025 art. 9)</comment>
+        <delete tableName="roles_modalidad">
+            <where>id = 9152</where>
+        </delete>
+    </changeSet>
+
+    <changeSet id="20260924000002-eliminar-jurado-9007" author="ciecyt">
+        <comment>Quitar rol Jurado de Especializacion (9007) - id 9162 (Acuerdo 025 art. 9)</comment>
+        <delete tableName="roles_modalidad">
+            <where>id = 9162</where>
+        </delete>
+    </changeSet>
+
+</databaseChangeLog>

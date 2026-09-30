@@ -3,6 +3,7 @@ package co.edu.itp.ciecyt.web.rest;
 import co.edu.itp.ciecyt.CiecytApp;
 import co.edu.itp.ciecyt.domain.PreguntaAuthority;
 import co.edu.itp.ciecyt.repository.PreguntaAuthorityRepository;
+import co.edu.itp.ciecyt.security.AuthoritiesConstants;
 import co.edu.itp.ciecyt.service.PreguntaAuthorityService;
 import co.edu.itp.ciecyt.service.dto.PreguntaAuthorityDTO;
 import co.edu.itp.ciecyt.service.mapper.PreguntaAuthorityMapper;
@@ -29,7 +30,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  */
 @SpringBootTest(classes = CiecytApp.class)
 @AutoConfigureMockMvc
-@WithMockUser
+@WithMockUser(authorities = AuthoritiesConstants.ADMIN)
 public class PreguntaAuthorityResourceIT {
 
     @Autowired

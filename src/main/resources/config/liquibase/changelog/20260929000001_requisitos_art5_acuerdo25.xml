@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.9.xsd">
+
+    <!-- ==================================================================== -->
+    <!-- REQUISITOS DE INSCRIPCION - ACUERDO 025, ART. 5, PAR. 1              -->
+    <!-- Validacion manual de requisitos de inscripcion por CIECYT.           -->
+    <!-- Semilla: 6 DOCUMENTO (modalidad NULL = todas las modalidades) +      -->
+    <!-- 1 CAMPO (REQ_AVANCE_75). REQ_AVANCE_75 no aplica a Diplomado (9005)  -->
+    <!-- ni Especializacion (9007): la exclusion se hace en                  -->
+    <!-- RequisitoProyectoServiceImpl#generarParaProyecto.                    -->
+    <!-- El dato numerico del avance se registra en la observacion del        -->
+    <!-- RequisitoProyecto (sin columna nueva).                               -->
+    <!-- Los requisitos legacy del Acuerdo 29 (95000-95006) quedan inactivos. -->
+    <!-- ==================================================================== -->
+
+    <changeSet id="20260929000001-1" author="ciecyt">
+        <comment>Desactivar requisitos legacy del Acuerdo 29 (95000-95006)</comment>
+        <update tableName="requisito">
+            <column name="activo" valueBoolean="false"/>
+            <where>id between 95000 and 95006</where>
+        </update>
+    </changeSet>
+
+    <changeSet id="20260929000001-2" author="ciecyt">
+        <comment>Requisitos del Acuerdo 025, art. 5, par. 1</comment>
+
+        <insert tableName="requisito">
+            <column name="id" valueNumeric="95100"/>
+            <column name="codigo" value="REQ_CERT_EST_ACTIVO"/>
+            <column name="nombre" value="Certificado de estudiante activo"/>
+            <column name="descripcion" value="Certificado de estudiante activo expedido por Registro y Control (Acuerdo 025, art. 5, par. 1)"/>
+            <column name="tipo" value="DOCUMENTO"/>
+            <column name="obligatorio" valueBoolean="true"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="requisito_estado" value="EN_VALIDACION_DOCUMENTAL"/>
+        </insert>
+
+        <insert tableName="requisito">
+            <column name="id" valueNumeric="95101"/>
+            <column name="codigo" value="REQ_RECIBO_PAGO"/>
+            <column name="nombre" value="Recibo de pago de la opcion de grado"/>
+            <column name="descripcion" value="Recibo de pago de la opcion de grado validado por Tesoreria (Acuerdo 025, art. 5, par. 1)"/>
+            <column name="tipo" value="DOCUMENTO"/>
+            <column name="obligatorio" valueBoolean="true"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="requisito_estado" value="EN_VALIDACION_DOCUMENTAL"/>
+        </insert>
+
+        <insert tableName="requisito">
+            <column name="id" valueNumeric="95102"/>
+            <column name="codigo" value="REQ_RECORD_ACADEMICO"/>
+            <column name="nombre" value="Record academico"/>
+            <column name="descripcion" value="Record academico expedido por Registro y Control (Acuerdo 025, art. 5, par. 1)"/>
+            <column name="tipo" value="DOCUMENTO"/>
+            <column name="obligatorio" valueBoolean="true"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="requisito_estado" value="EN_VALIDACION_DOCUMENTAL"/>
+        </insert>
+
+        <insert tableName="requisito">
+            <column name="id" valueNumeric="95103"/>
+            <column name="codigo" value="REQ_FORMATO_INSCRIPCION"/>
+            <column name="nombre" value="Formato de inscripcion de la opcion de grado"/>
+            <column name="descripcion" value="Formato de inscripcion de la opcion de grado diligenciado y firmado (Acuerdo 025, art. 5, par. 1)"/>
+            <column name="tipo" value="DOCUMENTO"/>
+            <column name="obligatorio" valueBoolean="true"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="requisito_estado" value="EN_VALIDACION_DOCUMENTAL"/>
+        </insert>
+
+        <insert tableName="requisito">
+            <column name="id" valueNumeric="95104"/>
+            <column name="codigo" value="REQ_PROPUESTA"/>
+            <column name="nombre" value="Propuesta de trabajo de grado"/>
+            <column name="descripcion" value="Propuesta de trabajo de grado adjuntada por el estudiante (Acuerdo 025, art. 5, par. 1)"/>
+            <column name="tipo" value="DOCUMENTO"/>
+            <column name="obligatorio" valueBoolean="true"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="requisito_estado" value="EN_VALIDACION_DOCUMENTAL"/>
+        </insert>
+
+        <insert tableName="requisito">
+            <column name="id" valueNumeric="95105"/>
+            <column name="codigo" value="REQ_ASISTENCIA_SUSTENTACIONES"/>
+            <column name="nombre" value="Constancia de asistencia a sustentaciones"/>
+            <column name="descripcion" value="Constancia de asistencia a sustentaciones y socializaciones (Acuerdo 025, art. 5, par. 1)"/>
+            <column name="tipo" value="DOCUMENTO"/>
+            <column name="obligatorio" valueBoolean="true"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="requisito_estado" value="EN_VALIDACION_DOCUMENTAL"/>
+        </insert>
+
+        <insert tableName="requisito">
+            <column name="id" valueNumeric="95106"/>
+            <column name="codigo" value="REQ_AVANCE_75"/>
+            <column name="nombre" value="Avance minimo del 75% del trabajo de grado"/>
+            <column name="descripcion" value="Avance minimo del 75% del trabajo de grado; el valor numerico se registra en la observacion (Acuerdo 025, art. 5, par. 1). No aplica a Diplomado ni Especializacion."/>
+            <column name="tipo" value="CAMPO"/>
+            <column name="obligatorio" valueBoolean="true"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="requisito_estado" value="EN_VALIDACION_DOCUMENTAL"/>
+        </insert>
+    </changeSet>
+</databaseChangeLog>

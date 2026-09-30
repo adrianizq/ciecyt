@@ -7,7 +7,7 @@
                         http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog-ext/dbchangelog-3.9.xsd">
 
     <!-- 1. Add estado column to proyecto -->
-    <changeSet id="20260808000001-1" author="flow" dbms="postgresql">
+    <changeSet id="20260808000001-1" author="flow">
         <preConditions onFail="MARK_RAN">
             <not>
                 <columnExists tableName="proyecto" columnName="estado"/>
@@ -24,7 +24,7 @@
     </changeSet>
 
     <!-- 2. Create proyecto_historial_estado table -->
-    <changeSet id="20260808000001-2" author="flow" dbms="postgresql">
+    <changeSet id="20260808000001-2" author="flow">
         <preConditions onFail="MARK_RAN">
             <not>
                 <tableExists tableName="proyecto_historial_estado"/>

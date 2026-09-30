@@ -188,24 +188,12 @@
             </div>
 
 
-          <!-- Asesor   -->
-        
-            <div class="form-group" :class="{ 'form-group--error': $v.integranteProyecto.integranteProyectoUserId }">
+          <!-- Asesor: lo designa la decanatura, no el estudiante -->
+            <div class="form-group">
               <label class="form-control-label " v-text="$t('ciecytApp.proyecto.asesor')" for="asesor">Asesor</label>
-
-              <b-form-select
-                :options="users"
-                text-field="nombresApellidos"
-                value-field="id"
-                id="proyecto-asesorId"
-                v-model="proyecto.asesorId"
-                @input="setAsesor"
-                 disabled="true"  
-              >
-              </b-form-select>
-              <div class="error" v-if="!$v.integranteProyecto.integranteProyectoUserId.required && !iniciandoAsesor">
-                El proyecto debe tener un asesor
-              </div>
+              <b-alert show variant="info" class="p-2 mb-1">
+                La decanatura designará al asesor a partir de los docentes habilitados. El estudiante no lo selecciona.
+              </b-alert>
             </div>
          
          <!--/DEPARTAMENTO//////////////////////////////////////7 ///////////////////7-->
@@ -315,7 +303,6 @@ import FacultadService from '@/entities/facultad/facultad.service';
 import { IFacultad } from '@/shared/model/facultad.model';
 import UsuarioService from '@/entities/usuario/usuario.service';
 import { IUsuario } from '@/shared/model/usuario.model';
-import { IUser } from '@/shared/model/user.model';
 //ADR
 
 import { IMunicipio, Municipio } from '@/shared/model/municipio.model';
@@ -357,19 +344,24 @@ const validations: any = {
   validations
 })
 export default class PasantiaInformacionGeneral extends Vue {
+
+  // El template llamaba previousState() pero el metodo no existia, asi que el boton
+  // Cancel/atrás fallaba con un TypeError y no hacia nada.
+  previousState() {
+    window.history.back();
+  }
   @Inject('modalidadService') private modalidadService: () => ModalidadService;
   @Inject('facultadService') private facultadService: () => FacultadService;
   @Inject('usuarioService') private usuarioService: () => UsuarioService;
-  @Inject('proyectoService') private proyectoService: () => ProyectoService;
+@Inject('proyectoService') private proyectoService: () => ProyectoService;
   @Inject('investigacionTipoService') private investigacionTipoService: () => InvestigacionTipoService;
-   @Inject('programaService') private programaService: () => ProgramaService;
+    @Inject('programaService') private programaService: () => ProgramaService;
   @Inject('municipioService') private municipioService: () => MunicipioService;
   @Inject('departamentoService') private departamentoService: () => DepartamentoService;
   @Inject('alertService') private alertService: () => AlertService;
 
   public modalidads: IModalidad[] = [];
   public facultades: IFacultad[] = [];
-  public users: IUser[] = [];
   public  investigacionTips: IInvestigacionTipo[] = [];
   public investTipos: String[] = [];
 
@@ -533,16 +525,6 @@ this.departamentoService()
         this.facultades = res.data;
       });
 
-    //Obteniendo los usuarios asesores
-    this.usuarioService()
-      .retrieveAsesores()
-      .then(res => {
-        res.data.forEach(item => {
-          item.nombresApellidos = item.firstName + ' ' + item.lastName;
-          this.users.push(item);
-        });
-      });
-
       this.programaService()
       .retrieve()
       .then(res => {
@@ -570,6 +552,7 @@ this.departamentoService()
   setFacultad(value) {
     this.iniciandoFacultad = false;
     this.submitStatus = 'ERROR';
+    this.proyecto.facultadId = value;
   }
 
   setAsesor(value) {

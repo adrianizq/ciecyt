@@ -10,10 +10,13 @@ export default class PrediccionesService {
   //public proyectoId: number;
 
   public retrieve(tipo: number): Promise<any> {
-    return new Promise<any>(resolve => {
-      axios.get('api/proyectopredict' + `/${tipo}`).then(function (res) {
-        resolve(res);
-      });
+    return new Promise<any>((resolve, reject) => {
+      axios
+        .get('api/proyectopredict' + `/${tipo}`)
+        .then(function (res) {
+          resolve(res);
+        })
+        .catch(reject);
     });
   }
 }

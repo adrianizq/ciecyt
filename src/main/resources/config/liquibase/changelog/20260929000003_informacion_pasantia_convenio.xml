@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.9.xsd">
+
+    <!--
+        InformacionPasantia.declared el campo convenio (@Column(name = "convenio")) pero
+        ninguna migracion creaba esa columna: ni en H2 ni en PostgreSQL existia, y
+        Hibernate se quejaba con "missing column [convenio] in table [informacion_pasantia]".
+    -->
+    <changeSet id="20260929000003-1" author="ciecyt">
+        <preConditions onFail="MARK_RAN">
+            <and>
+                <tableExists tableName="informacion_pasantia"/>
+                <not>
+                    <columnExists tableName="informacion_pasantia" columnName="convenio"/>
+                </not>
+            </and>
+        </preConditions>
+        <comment>informacion_pasantia.convenio, que la entidad ya usaba pero la base no tenia</comment>
+        <addColumn tableName="informacion_pasantia">
+            <column name="convenio" type="varchar(255)">
+                <constraints nullable="true"/>
+            </column>
+        </addColumn>
+        <rollback>
+            <dropColumn tableName="informacion_pasantia" columnName="convenio"/>
+        </rollback>
+    </changeSet>
+
+</databaseChangeLog>

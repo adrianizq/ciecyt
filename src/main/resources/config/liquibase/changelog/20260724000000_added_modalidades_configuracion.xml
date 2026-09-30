@@ -10,6 +10,49 @@
     <!-- CONFIGURACION DE MODALIDADES: 7 modalidades con flujos independientes -->
     <!-- ================================================================== -->
 
+    <!-- ========== COLUMNAS DE APOYO ========== -->
+    <changeSet id="20260724000000-0" author="ciecyt">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists tableName="roles_modalidad" columnName="roles_modalidad_authority_name"/>
+            </not>
+        </preConditions>
+        <comment>
+            La entidad RolesModalidad ya trae roles_modalidad_authority_name, pero ningun
+            createTable la declaro, asi que en base nueva los inserts de este archivo fallaban.
+            Se crea antes de usarla y con MARK_RAN para no romper las bases que ya la tienen.
+        </comment>
+        <addColumn tableName="roles_modalidad">
+            <column name="roles_modalidad_authority_name" type="varchar(50)"/>
+        </addColumn>
+        <rollback>
+            <dropColumn columnName="roles_modalidad_authority_name" tableName="roles_modalidad"/>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="20260724000000-0-ciclo" author="ciecyt">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="ciclo"/>
+            </not>
+        </preConditions>
+        <comment>
+            La entidad Ciclo apunta a la tabla ciclo, pero ningun changelog la crea: solo el
+            changeSet -6 de este archivo la re-keya y la rellena, y ahi fallaba en base nueva.
+        </comment>
+        <createTable tableName="ciclo">
+            <column name="id" type="bigint">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="ciclo" type="varchar(255)">
+                <constraints nullable="true"/>
+            </column>
+        </createTable>
+        <rollback>
+            <dropTable tableName="ciclo"/>
+        </rollback>
+    </changeSet>
+
     <!-- ========== FASES GLOBALES ========== -->
     <!-- Fases compartidas por las diferentes modalidades -->
     <changeSet id="20260724000000-1" author="ciecyt">

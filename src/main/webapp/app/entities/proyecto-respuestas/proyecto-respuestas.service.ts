@@ -8,26 +8,35 @@ const baseApiUrl = 'api/proyecto-respuestas';
 
 export default class ProyectoRespuestasService {
   public find(id: number): Promise<IProyectoRespuestas> {
-    return new Promise<IProyectoRespuestas>(resolve => {
-      axios.get(`${baseApiUrl}/${id}`).then(function (res) {
-        resolve(res.data);
-      });
+    return new Promise<IProyectoRespuestas>((resolve, reject) => {
+      axios
+        .get(`${baseApiUrl}/${id}`)
+        .then(function (res) {
+          resolve(res.data);
+        })
+        .catch(reject);
     });
   }
 
   public retrieve(paginationQuery?: any): Promise<any> {
-    return new Promise<any>(resolve => {
-      axios.get(baseApiUrl + `?${buildPaginationQueryOpts(paginationQuery)}`).then(function (res) {
-        resolve(res);
-      });
+    return new Promise<any>((resolve, reject) => {
+      axios
+        .get(baseApiUrl + `?${buildPaginationQueryOpts(paginationQuery)}`)
+        .then(function (res) {
+          resolve(res);
+        })
+        .catch(reject);
     });
   }
 
   public delete(id: number): Promise<any> {
-    return new Promise<any>(resolve => {
-      axios.delete(`${baseApiUrl}/${id}`).then(function (res) {
-        resolve(res);
-      });
+    return new Promise<any>((resolve, reject) => {
+      axios
+        .delete(`${baseApiUrl}/${id}`)
+        .then(function (res) {
+          resolve(res);
+        })
+        .catch(reject);
     });
   }
 
@@ -64,11 +73,14 @@ export default class ProyectoRespuestasService {
   }
 
   public retrieveProyectoRespuestas(id?: number, faseId?: number, authority?: string): Promise<any> {
-    return new Promise<any>(resolve => {
+    return new Promise<any>((resolve, reject) => {
       //axios.get('api/proyecto-respuestas-proyecto' + `/${id}`).then(function (res) {
-      axios.get('api/proyecto-respuestas-proyecto-fase-authority' + `/${id}/${faseId}/${authority}`).then(function (res) {
-        resolve(res);
-      });
+      axios
+        .get('api/proyecto-respuestas-proyecto-fase-authority' + `/${id}/${faseId}/${authority}`)
+        .then(function (res) {
+          resolve(res);
+        })
+        .catch(reject);
     });
   }
 }

@@ -29,6 +29,15 @@ public class IntegranteProyecto implements Serializable {
     @JsonIgnoreProperties("integranteProyectos")
     private User integranteProyectoUser;
 
+    /**
+     * Alternativa al usuario institucional: un profesional externo verificado por el CIECYT
+     * (Acuerdo 25, paragrafos 1 de los articulos 8 y 9) cuando la lista habilitada no tiene
+     * disponibilidad. Nunca se llenan los dos a la vez.
+     */
+    @ManyToOne
+    @JsonIgnoreProperties("integranteProyectos")
+    private AsesorExterno integranteProyectoExterno;
+
     @ManyToOne
     @JsonIgnoreProperties("integranteProyectos")
     private Proyecto integranteProyectoProyecto;
@@ -83,6 +92,14 @@ public class IntegranteProyecto implements Serializable {
 
     public void setIntegranteProyectoUser(User user) {
         this.integranteProyectoUser = user;
+    }
+
+    public AsesorExterno getIntegranteProyectoExterno() {
+        return integranteProyectoExterno;
+    }
+
+    public void setIntegranteProyectoExterno(AsesorExterno integranteProyectoExterno) {
+        this.integranteProyectoExterno = integranteProyectoExterno;
     }
 
     public Proyecto getIntegranteProyectoProyecto() {

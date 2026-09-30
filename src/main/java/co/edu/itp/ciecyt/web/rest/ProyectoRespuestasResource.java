@@ -1,5 +1,6 @@
 package co.edu.itp.ciecyt.web.rest;
 
+import co.edu.itp.ciecyt.service.ProyectoAutorizacionService;
 import co.edu.itp.ciecyt.service.ProyectoRespuestasService;
 import co.edu.itp.ciecyt.service.dto.ElementoProyectoDTO;
 import co.edu.itp.ciecyt.web.rest.errors.BadRequestAlertException;
@@ -17,6 +18,8 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
@@ -41,8 +44,12 @@ public class ProyectoRespuestasResource {
 
     private final ProyectoRespuestasService proyectoRespuestasService;
 
-    public ProyectoRespuestasResource(ProyectoRespuestasService proyectoRespuestasService) {
+    private final ProyectoAutorizacionService autorizacion;
+
+    public ProyectoRespuestasResource(ProyectoRespuestasService proyectoRespuestasService,
+        ProyectoAutorizacionService autorizacion) {
         this.proyectoRespuestasService = proyectoRespuestasService;
+        this.autorizacion = autorizacion;
     }
 
     /**
@@ -57,6 +64,9 @@ public class ProyectoRespuestasResource {
         log.debug("REST request to save ProyectoRespuestas : {}", proyectoRespuestasDTO);
         if (proyectoRespuestasDTO.getId() != null) {
             throw new BadRequestAlertException("A new proyectoRespuestas cannot already have an ID", ENTITY_NAME, "idexists");
+        }
+        if (!autorizacion.puedeEscribirRespuestaDe(proyectoRespuestasDTO.getProyectoRespuestasProyectoId(), proyectoRespuestasDTO.getAuthority())) {
+            throw new AccessDeniedException("Solo el rol que evalua puede registrar su evaluacion en este proyecto");
         }
         ProyectoRespuestasDTO result = proyectoRespuestasService.save(proyectoRespuestasDTO);
         return ResponseEntity.created(new URI("/api/proyecto-respuestas/" + result.getId()))
@@ -79,6 +89,22 @@ public class ProyectoRespuestasResource {
         if (proyectoRespuestasDTO.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
+        Optional<ProyectoRespuestasDTO> existente = proyectoRespuestasService.findOne(proyectoRespuestasDTO.getId());
+        if (!existente.isPresent()) {
+            throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnotfound");
+        }
+        ProyectoRespuestasDTO actual = existente.get();
+        if (!autorizacion.puedeEscribirRespuestaDe(actual.getProyectoRespuestasProyectoId(), actual.getAuthority())) {
+            throw new AccessDeniedException("Solo el rol que evalua puede modificar su evaluacion en este proyecto");
+        }
+        if (proyectoRespuestasDTO.getProyectoRespuestasProyectoId() != null
+            && !proyectoRespuestasDTO.getProyectoRespuestasProyectoId().equals(actual.getProyectoRespuestasProyectoId())) {
+            throw new BadRequestAlertException("No se puede reasignar una evaluacion a otro proyecto", ENTITY_NAME, "proyectorelated");
+        }
+        if (proyectoRespuestasDTO.getAuthority() != null
+            && !proyectoRespuestasDTO.getAuthority().equals(actual.getAuthority())) {
+            throw new BadRequestAlertException("No se puede cambiar el rol que suscribe la evaluacion", ENTITY_NAME, "authoritymismatch");
+        }
         ProyectoRespuestasDTO result = proyectoRespuestasService.save(proyectoRespuestasDTO);
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, proyectoRespuestasDTO.getId().toString()))
@@ -94,6 +120,7 @@ public class ProyectoRespuestasResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of proyectoRespuestas in body.
      */
     @GetMapping("/proyecto-respuestas")
+    @PreAuthorize("hasAnyRole('CIECYT','ADMIN')")
     public ResponseEntity<List<ProyectoRespuestasDTO>> getAllProyectoRespuestas(Pageable pageable) {
         log.debug("REST request to get a page of ProyectoRespuestas");
         Page<ProyectoRespuestasDTO> page = proyectoRespuestasService.findAll(pageable);
@@ -111,7 +138,15 @@ public class ProyectoRespuestasResource {
     public ResponseEntity<ProyectoRespuestasDTO> getProyectoRespuestas(@PathVariable Long id) {
         log.debug("REST request to get ProyectoRespuestas : {}", id);
         Optional<ProyectoRespuestasDTO> proyectoRespuestasDTO = proyectoRespuestasService.findOne(id);
-        return ResponseUtil.wrapOrNotFound(proyectoRespuestasDTO);
+        if (!proyectoRespuestasDTO.isPresent()) {
+            return ResponseUtil.wrapOrNotFound(proyectoRespuestasDTO);
+        }
+        if (!autorizacion.puedeVerRespuestasDeRolEn(
+                proyectoRespuestasDTO.get().getProyectoRespuestasProyectoId(),
+                proyectoRespuestasDTO.get().getAuthority())) {
+            throw new AccessDeniedException("No tiene acceso a las evaluaciones de este proyecto");
+        }
+        return ResponseEntity.ok(proyectoRespuestasDTO.get());
     }
 
     /**
@@ -121,6 +156,7 @@ public class ProyectoRespuestasResource {
      * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
     @DeleteMapping("/proyecto-respuestas/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN')")
     public ResponseEntity<Void> deleteProyectoRespuestas(@PathVariable Long id) {
         log.debug("REST request to delete ProyectoRespuestas : {}", id);
         proyectoRespuestasService.delete(id);
@@ -140,6 +176,9 @@ public class ProyectoRespuestasResource {
     @GetMapping("/proyecto-respuestas-proyecto/{idProyecto}")
     public ResponseEntity<?> getProyectoRespuestasProyecto(@PathVariable Long idProyecto) {
         log.debug("REST request to get ProyectoRespuestasProyecto : {}", idProyecto);
+        if (!autorizacion.puedeLeerRespuestasDe(idProyecto)) {
+            throw new AccessDeniedException("No tiene acceso a las evaluaciones de este proyecto");
+        }
         try {
             final List<ProyectoRespuestasDTO> proyectoRespuestasDTO = proyectoRespuestasService.findByProyectoRespuestasProyectoId(idProyecto);
             return new ResponseEntity<>(proyectoRespuestasDTO, HttpStatus.OK);
@@ -159,6 +198,9 @@ public class ProyectoRespuestasResource {
     @GetMapping("/proyecto-respuestas-proyecto-fase-authority/{idProyecto}/{idFase}/{authority}")
     public ResponseEntity<?> getProyectoRespuestasProyectoFaseAuthority(@PathVariable Long idProyecto, @PathVariable Long idFase,@PathVariable String authority) {
         log.debug("REST request to get ProyectoRespuestasProyecto : {}", idProyecto);
+        if (!autorizacion.puedeLeerRespuestasDe(idProyecto)) {
+            throw new AccessDeniedException("No tiene acceso a las evaluaciones de este proyecto");
+        }
         try {
             final List<ProyectoRespuestasDTO> proyectoRespuestasDTO = proyectoRespuestasService.findByProyectoRespuestasProyectoIdFaseAuthority(idProyecto,idFase,authority);
             return new ResponseEntity<>(proyectoRespuestasDTO, HttpStatus.OK);

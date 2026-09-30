@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.9.xsd">
+
+    <!--
+        PreguntaAuthority declaraba 'private String authorityName' pero la migracion que crea
+        la tabla solo dejaba 'id' y 'pregunta3_id'. Hibernate fallaba al arrancar con
+        "Schema-validation: missing column [authority_name] in table [pregunta_authority]".
+    -->
+    <changeSet id="20260929000004-1" author="ciecyt">
+        <preConditions onFail="MARK_RAN">
+            <and>
+                <tableExists tableName="pregunta_authority"/>
+                <not>
+                    <columnExists tableName="pregunta_authority" columnName="authority_name"/>
+                </not>
+            </and>
+        </preConditions>
+        <comment>pregunta_authority.authority_name, ya usado por la entidad</comment>
+        <addColumn tableName="pregunta_authority">
+            <column name="authority_name" type="varchar(255)">
+                <constraints nullable="true"/>
+            </column>
+        </addColumn>
+        <rollback>
+            <dropColumn tableName="pregunta_authority" columnName="authority_name"/>
+        </rollback>
+    </changeSet>
+
+</databaseChangeLog>

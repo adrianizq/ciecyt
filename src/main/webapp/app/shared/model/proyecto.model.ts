@@ -1,5 +1,6 @@
 import { IIntegranteProyecto } from './integrante-proyecto.model';
 import { EnumEstadoProyecto } from './enumerations/enum-estado-proyecto.model';
+import { EnumEstadoContinuidad } from './enumerations/enum-estado-continuidad.model';
 
 export interface IProyecto {
   id?: number;
@@ -50,6 +51,11 @@ export interface IProyecto {
   viable?: boolean;
   viabilidad?: string;
   sustentar?: boolean;
+  fechaInicioContinuidad?: Date;
+  fechaSustentacionProyecto?: Date;
+  periodosContinuidadUsados?: number;
+  continuidadPeriodoAdicional?: boolean;
+  estadoContinuidad?: EnumEstadoContinuidad;
 }
 
 export class Proyecto implements IProyecto {
@@ -101,6 +107,11 @@ export class Proyecto implements IProyecto {
     public recomendacionesJuradoSustentacion?: string,
     public viable?: boolean,
     public viabilidad?: string,
-    public sustentar?: boolean
+    public sustentar?: boolean,
+    public fechaInicioContinuidad?: Date,
+    public fechaSustentacionProyecto?: Date,
+    public periodosContinuidadUsados?: number,
+    public continuidadPeriodoAdicional?: boolean,
+    public estadoContinuidad?: EnumEstadoContinuidad
   ) {}
 }

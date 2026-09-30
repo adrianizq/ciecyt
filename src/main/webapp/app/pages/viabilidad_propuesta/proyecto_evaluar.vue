@@ -231,24 +231,25 @@
                         </div>
                         <div class="card-body-custom">
                             <p class="text-muted mb-3">
-                                Marque <strong>Sustentar</strong> si el proyecto cumple con los requisitos para la sustentación.
-                                Si el proyecto aún no está listo para sustentar, marque <strong>Pendiente Sustentar</strong>.
+                                {{ referenciaAcuerdoActo }}
+                                Marque <strong>{{ decisionPasaTitulo }}</strong> si el proyecto cumple con los requisitos para el acto público.
+                                Si aún no está listo, marque <strong>{{ decisionPendienteTitulo }}</strong>.
                             </p>
                             <div class="row">
                                 <div class="col-md-6 mb-3 mb-md-0">
                                     <label :class="['decision-card', 'success', { 'active': proyecto.sustentar === true }]">
                                         <input type="radio" :value="true" v-model="proyecto.sustentar" class="d-none" />
                                         <font-awesome-icon icon="check-circle" class="decision-icon" />
-                                        <div class="decision-title">Sustentar</div>
-                                        <div class="decision-text">El proyecto cumple con los requisitos para la sustentación</div>
+                                        <div class="decision-title">{{ decisionPasaTitulo }}</div>
+                                        <div class="decision-text">{{ decisionPasaDescripcion }}</div>
                                     </label>
                                 </div>
                                 <div class="col-md-6">
                                     <label :class="['decision-card', 'warning', { 'active': proyecto.sustentar === false }]">
                                         <input type="radio" :value="false" v-model="proyecto.sustentar" class="d-none" />
                                         <font-awesome-icon icon="clipboard-list" class="decision-icon" />
-                                        <div class="decision-title">Pendiente Sustentar</div>
-                                        <div class="decision-text">El proyecto aún no está listo para sustentar</div>
+                                        <div class="decision-title">{{ decisionPendienteTitulo }}</div>
+                                        <div class="decision-text">{{ decisionPendienteDescripcion }}</div>
                                     </label>
                                 </div>
                             </div>
@@ -314,6 +315,7 @@ import { IAdjuntoRetroalimentacion, AdjuntoRetroalimentacion } from '@/shared/mo
 import AdjuntoRetroalimentacionService from '@/entities/adjunto-retroalimentacion/adjunto-retroalimentacion.service';
 
 import JhiDataUtils from '@/shared/data/data-utils.service';
+import { estadoCorreccionesProyecto, estadoListoParaActo, nombreActoPublico, referenciaAcuerdoActoPublico, requiereActoPublico, tipoActoPublico } from '@/shared/config/opcion_grado';
 
 
 
@@ -383,6 +385,35 @@ export default class PropuestaEvaluar extends mixins(JhiDataUtils){
     public modalidadId: number = 0;
     public enumRespuestas: EnumRespuestas;
 
+    public get actoTitulo(): string {
+        const nombre = nombreActoPublico(this.modalidadId);
+        return nombre ? nombre : 'acto público';
+    }
+
+    public get decisionPasaTitulo(): string {
+        return requiereActoPublico(this.modalidadId) ? this.actoTitulo : 'Aprobar documento final';
+    }
+
+    public get decisionPasaDescripcion(): string {
+        return requiereActoPublico(this.modalidadId)
+            ? 'El proyecto cumple con los requisitos para la ' + this.actoTitulo.toLowerCase()
+            : 'El documento final cumple con los requisitos para el trámite de grado';
+    }
+
+    public get decisionPendienteTitulo(): string {
+        return requiereActoPublico(this.modalidadId) ? 'Pendiente ' + this.actoTitulo : 'Con observaciones';
+    }
+
+    public get decisionPendienteDescripcion(): string {
+        return requiereActoPublico(this.modalidadId)
+            ? 'El proyecto aún no está listo para la ' + this.actoTitulo.toLowerCase()
+            : 'El documento final requiere correcciones antes del trámite de grado';
+    }
+
+    public get referenciaAcuerdoActo(): string {
+        return referenciaAcuerdoActoPublico(this.modalidadId);
+    }
+
     public isSaving = false;
     public proyectoRespuestasDatos: boolean = false;
     public  authority: any="ROLE_JURADO";
@@ -404,7 +435,8 @@ export default class PropuestaEvaluar extends mixins(JhiDataUtils){
             NO_VIABLE: 'Propuesta no viable',
             LISTO_PARA_SUSTENTAR: 'Listo para sustentar',
             EN_SUSTENTACION: 'En sustentación',
-            NOTA_DEFINITIVA: 'Nota definitiva'
+            NOTA_DEFINITIVA: 'Nota definitiva',
+            FINALIZADO: 'Finalizado'
         };
         return estado ? (estados[estado] || estado) : '';
     }
@@ -423,7 +455,8 @@ export default class PropuestaEvaluar extends mixins(JhiDataUtils){
             NO_VIABLE: 'danger',
             LISTO_PARA_SUSTENTAR: 'success',
             EN_SUSTENTACION: 'primary',
-            NOTA_DEFINITIVA: 'success'
+            NOTA_DEFINITIVA: 'success',
+            FINALIZADO: 'success'
         };
         return estado ? (variants[estado] || 'secondary') : 'secondary';
     }
@@ -480,7 +513,7 @@ export default class PropuestaEvaluar extends mixins(JhiDataUtils){
 
             if (accion === 'enviar' && this.proyecto.sustentar == null) {
                 this.isSaving = false;
-                this.alertService().showAlert('Seleccione una decisión de sustentación antes de enviar la evaluación.', 'danger');
+                this.alertService().showAlert('Seleccione una decisión antes de enviar la evaluación.', 'danger');
                 return;
             }
 
@@ -561,11 +594,17 @@ export default class PropuestaEvaluar extends mixins(JhiDataUtils){
             let nuevoEstado: string | null = null;
             let observacion = '';
             if (sustentar) {
-                nuevoEstado = 'LISTO_PARA_SUSTENTAR';
-                observacion = 'Proyecto listo para sustentación';
+                if (requiereActoPublico(this.modalidadId)) {
+                    nuevoEstado = estadoListoParaActo(this.modalidadId);
+                    observacion = 'Proyecto listo para ' + this.actoTitulo.toLowerCase();
+                } else {
+                    nuevoEstado = 'FINALIZADO';
+                    observacion =
+                        'Documento final aprobado - opción de grado sin acto público (Acuerdo 025, art. 14, parágrafos 3 y 4)';
+                }
             } else {
-                nuevoEstado = 'CORRECCIONES_JURADO_PROYECTO';
-                observacion = 'Proyecto requiere correcciones antes de la sustentación';
+                nuevoEstado = estadoCorreccionesProyecto(this.modalidadId);
+                observacion = 'Proyecto requiere correcciones antes de ' + this.actoTitulo.toLowerCase();
             }
             return this.proyectoService()
                 .cambiarEstado(this.proyecto.id, nuevoEstado, observacion)

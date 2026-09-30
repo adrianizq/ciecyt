@@ -247,17 +247,20 @@ public class UserService {
 
                 Optional <UserInfoDTO> infOld = userInfoService.findOne(user.getId());
 
-                UserInfoDTO update = infOld.get();
-
-                UserInfoDTO info = userDTO.getUserInfo(); //ya viene el objeto cargado
+                UserInfoDTO info = userDTO.getUserInfo() != null ? userDTO.getUserInfo() : new UserInfoDTO();
                 info.setUserId(user.getId());
+
+                //Si el usuario todavia no tiene UserInfo se crea, para no fallar al activar,
+                //editar o cambiarle los roles a un usuario creado sin datos personificados.
+                UserInfoDTO update = infOld.orElseGet(UserInfoDTO::new);
+                update.setUserId(user.getId());
                 update.setCelular(info.getCelular());
                 update.setNuip(info.getNuip());
                 update.setCodigoItp(info.getCodigoItp());
                 //update.setFoto(info.getFoto());
                 //update.setFotoContentType(info.getFotoContentType());
                 userInfoService.save(update);
-                log.debug("Created Information for UserInfo: {}", info);
+                log.debug("Created Information for UserInfo: {}", update);
 
 
                 return user;

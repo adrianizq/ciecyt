@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.9.xsd">
+
+    <!--
+        proyecto.nota se creaba con ${floatType} = float4 (REAL), pero la entidad lo declara
+        Double y Hibernate exige DOUBLE. En H2 1.4 la columna era REAL y la validacion de
+        esquema fallaba con "found [real (Types#REAL)], but expecting [double (Types#DOUBLE)]".
+
+        Solo H2: en PostgreSQL la validacion no corre (ddl-auto none) y una conversion
+        real -> double precision ahi afectaria datos ya cargados.
+    -->
+    <changeSet id="20260929000005-1" author="ciecyt" dbms="h2">
+        <preConditions onFail="MARK_RAN">
+            <and>
+                <tableExists tableName="proyecto"/>
+                <columnExists tableName="proyecto" columnName="nota"/>
+            </and>
+        </preConditions>
+        <comment>proyecto.nota es Double en la entidad, no float4</comment>
+        <modifyDataType tableName="proyecto" columnName="nota" newDataType="double"/>
+        <rollback>
+            <modifyDataType tableName="proyecto" columnName="nota" newDataType="float4"/>
+        </rollback>
+    </changeSet>
+
+</databaseChangeLog>

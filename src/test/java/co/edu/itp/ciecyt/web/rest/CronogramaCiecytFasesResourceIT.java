@@ -3,6 +3,7 @@ package co.edu.itp.ciecyt.web.rest;
 import co.edu.itp.ciecyt.CiecytApp;
 import co.edu.itp.ciecyt.domain.CronogramaCiecytFases;
 import co.edu.itp.ciecyt.repository.CronogramaCiecytFasesRepository;
+import co.edu.itp.ciecyt.security.AuthoritiesConstants;
 import co.edu.itp.ciecyt.service.CronogramaCiecytFasesService;
 import co.edu.itp.ciecyt.service.dto.CronogramaCiecytFasesDTO;
 import co.edu.itp.ciecyt.service.mapper.CronogramaCiecytFasesMapper;
@@ -31,7 +32,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  */
 @SpringBootTest(classes = CiecytApp.class)
 @AutoConfigureMockMvc
-@WithMockUser
+@WithMockUser(authorities = AuthoritiesConstants.ADMIN)
 public class CronogramaCiecytFasesResourceIT {
 
     private static final LocalDate DEFAULT_INICIO_FASE = LocalDate.ofEpochDay(0L);

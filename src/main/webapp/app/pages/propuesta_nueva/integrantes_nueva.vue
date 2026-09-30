@@ -114,7 +114,7 @@ import { userInfo } from 'os';
        
    
         public back() {
-            this.$router.push({ name: 'PropuestaInformacionGenearalNuevaEditView', params: { proyectoId: this.proyId } });
+            this.$router.push({ name: 'PropuestaInformacionGeneralNuevaEditView', params: { proyectoId: this.proyId } });
         }
 
         public save(accion: 'borrador' | 'continuar' = 'continuar'): void {

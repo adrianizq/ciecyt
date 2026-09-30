@@ -281,8 +281,9 @@ const PropuestaRetroalimentacionViabilidadDiplomado = () => import('../pages/pro
 ////7
 //const PropuestaRetroalimentacionViabilidadDiplomado = () => import('../pages/propuesta_diplomado/retroalimentacion_viabilidad.vue');
 const PropuestaIntegrantes = () => import('../pages/propuesta/integrantes.vue');
-const PropuestaDocumento = () => import('../pages/propuesta/documento.vue');
+const PropuestaChecklist = () => import('../pages/propuesta/checklist.vue');
 const PropuestaEnviarPropuesta = () => import('../pages/propuesta/enviar_propuesta.vue');
+const PropuestaDocumento = () => import('../pages/propuesta/documento.vue');
 const ProyectoEnviarProyecto = () => import('../pages/proyectos/enviar_proyecto.vue');
 const PropuestaRetroalimentacion = () => import('../pages/propuesta/retroalimentacion.vue');
 const ProyectoRetroalimentacion = () => import('../pages/proyectos/retroalimentacion.vue');
@@ -310,6 +311,8 @@ const ProyectoEvaluarSustentacion = () => import('../pages/viabilidad_propuesta/
 const AsignarJurado = () => import('../pages/ciecyt/asignar_jurado.vue');
 
 const AsignarAsesor = () => import('../pages/ciecyt/asignar_asesor.vue');
+const PadronHabilitados = () => import('../pages/decanura/padron_habilitados.vue');
+const RemisionPadron = () => import('../pages/decanura/remision_padron.vue');
 
 const PropuestaInformacionGeneralNueva = () => import('../pages/propuesta_nueva/informacion_general_nueva.vue');
 const PropuestaIntegrantesNueva = () => import('../pages/propuesta_nueva/integrantes_nueva.vue');
@@ -428,7 +431,7 @@ export default new Router({
       path: '/admin/jhi-health',
       name: 'JhiHealthComponent',
       component: JhiHealthComponent,
-      meta: { authorities: ['_ADMIN'] }
+      meta: { authorities: ['ROLE_ADMIN'] }
     },
     {
       path: '/admin/logs',
@@ -1136,6 +1139,10 @@ export default new Router({
       component: AsignarJurado,
       meta: { authorities: ['ROLE_ADMIN', 'ROLE_CIECYT'] }
     },
+    {
+      path: '/ciecyt/asignar-jurado/:proyectoId',
+      redirect: to => ({ path: `/ciecyt/asignar-jurado/${to.params.proyectoId}/view` })
+    },
 
     {
       path: '/ciecyt/asignar-asesor/:proyectoId/view',
@@ -1143,13 +1150,34 @@ export default new Router({
       component: AsignarAsesor,
       meta: { authorities: ['ROLE_ADMIN', 'ROLE_CIECYT'] }
     },
-    /////////////////////////////////////////////////////
     {
-      path: '/entity/informacion-pasantia',
-      name: 'InformacionPasantia',
-      component: InformacionPasantia,
-      meta: { authorities: ['ROLE_USER'] }
+      path: '/ciecyt/asignar-asesor/:proyectoId',
+      redirect: to => ({ path: `/ciecyt/asignar-asesor/${to.params.proyectoId}/view` })
     },
+      /////////////////////////////////////////////////////
+      {
+        // La decanatura mantiene la lista de la que el CIECYT designa. El backend comprueba que
+        // el usuario sea decano de la facultad, asi que el menu es solo la via comfortable.
+        path: '/decanura/padron-habilitados',
+        name: 'PadronHabilitados',
+        component: PadronHabilitados,
+        meta: { authorities: ['ROLE_DECANO', 'ROLE_ADMIN'] }
+      },
+      /////////////////////////////////////////////////////
+      {
+        // Constancia de la remision al CIECYT que pide el paragrafo 2 del articulo 8.
+        path: '/decanura/remision-padron',
+        name: 'RemisionPadron',
+        component: RemisionPadron,
+        meta: { authorities: ['ROLE_DECANO', 'ROLE_ADMIN'] }
+      },
+      /////////////////////////////////////////////////////
+      {
+        path: '/entity/informacion-pasantia',
+        name: 'InformacionPasantia',
+        component: InformacionPasantia,
+        meta: { authorities: ['ROLE_USER'] }
+      },
     {
       path: '/entity/informacion-pasantia/new',
       name: 'InformacionPasantiaCreate',
@@ -1713,6 +1741,18 @@ export default new Router({
       meta: { authorities: ['ROLE_USER'] }
     },
     {
+      path: '/propuesta/checklist/:proyectoId',
+      name: 'PropuestaChecklistView',
+      component: PropuestaChecklist,
+      meta: { authorities: ['ROLE_USER'] }
+    },
+    {
+      path: '/propuesta/enviar_propuesta/:proyectoId',
+      name: 'PropuestaEnviarPropuestaView',
+      component: PropuestaEnviarPropuesta,
+      meta: { authorities: ['ROLE_USER'] }
+    },
+    {
       path: '/propuesta/documento/certificado-estudiante/:proyectoId',
       name: 'PropuestaDocumentoCertificadoView',
       component: PropuestaDocumento,
@@ -1734,12 +1774,6 @@ export default new Router({
       path: '/propuesta/documento/formato-inscripcion/:proyectoId',
       name: 'PropuestaDocumentoFormatoView',
       component: PropuestaDocumento,
-      meta: { authorities: ['ROLE_USER'] }
-    },
-    {
-      path: '/propuesta/enviar_propuesta/:proyectoId',
-      name: 'PropuestaEnviarPropuestaView',
-      component: PropuestaEnviarPropuesta,
       meta: { authorities: ['ROLE_USER'] }
     },
     {
@@ -1802,7 +1836,7 @@ export default new Router({
       path: '/viabilidad-propuesta/listado-sustentacion',
       name: 'PropuestaListadoSustentacionView',
       component: ProyectoListadoSustentacion,
-      meta: { authorities: ['ROLE_JURADO', 'ROLE_ADMIN'] }
+      meta: { authorities: ['ROLE_JURADO', 'ROLE_ASESOR', 'ROLE_ADMIN'] }
     },
 
     {
@@ -1888,7 +1922,7 @@ export default new Router({
       path: '/viabilidad-propuesta/proyecto-evaluar-sustentacion/:proyectoId',
       name: 'ProyectoEvaluarSustentacionView',
       component: ProyectoEvaluarSustentacion,
-      meta: { authorities: ['ROLE_JURADO', 'ROLE_ADMIN']  }
+      meta: { authorities: ['ROLE_JURADO', 'ROLE_ASESOR', 'ROLE_ADMIN']  }
     },
     
 

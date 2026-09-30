@@ -179,6 +179,11 @@ public class AdjuntoProyectoFaseServiceImpl implements AdjuntoProyectoFaseServic
 
             Path filePath = filesDir.resolve(dto.getFile()).normalize();
 
+            if (!filePath.startsWith(filesDir.normalize())) {
+                log.warn("Se rechaza la lectura de un archivo fuera del directorio de carga: {}", dto.getFile());
+                throw new FileNotFoundException("File not found " + dto.getFile());
+            }
+
             Resource resource = new UrlResource(filePath.toUri());
 
             if(resource.exists()) {

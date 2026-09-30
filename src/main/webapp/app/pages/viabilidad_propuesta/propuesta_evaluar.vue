@@ -334,33 +334,23 @@
                         </div>
                         <div class="card-body-custom">
                             <p class="text-muted mb-3">
-                                Marque <strong>Viable</strong> si la propuesta cumple con los requisitos establecidos por el Ciecyt.
-                                Si la propuesta es viable pero tiene correcciones, marque <strong>Pendiente</strong>.
-                                Si la propuesta no es viable, marque <strong>No Viable</strong>.
+                                De conformidad con el Acuerdo 025, el concepto de viabilidad de la propuesta puede ser:
+                                <strong>Viable</strong> (cumple la totalidad de los requisitos), <strong>Viable con modificaciones</strong>
+                                (cumple los requisitos esenciales pero debe corregir las observaciones señaladas y remitirla para una nueva revisión)
+                                o <strong>No viable</strong> (debe reformularse y volver a presentarse).
                             </p>
+                            <div class="mb-3">
+                                <button type="button" class="btn btn-outline-primary btn-sm" v-b-modal.modalRubricaPropuesta>
+                                    <font-awesome-icon icon="clipboard-list" />&nbsp;<span>Ver rúbrica institucional</span>
+                                </button>
+                            </div>
                             <div class="row">
-                                <div class="col-md-4 mb-3 mb-md-0">
-                                    <label :class="['decision-card', 'success', { 'active': proyecto.viabilidad === 'VIABLE' }]">
-                                        <input type="radio" value="VIABLE" v-model="proyecto.viabilidad" class="d-none" />
-                                        <font-awesome-icon icon="check-circle" class="decision-icon" />
-                                        <div class="decision-title">Viable</div>
-                                        <div class="decision-text">La propuesta cumple con los requisitos del Ciecyt</div>
-                                    </label>
-                                </div>
-                                <div class="col-md-4 mb-3 mb-md-0">
-                                    <label :class="['decision-card', 'warning', { 'active': proyecto.viabilidad === 'PENDIENTE' }]">
-                                        <input type="radio" value="PENDIENTE" v-model="proyecto.viabilidad" class="d-none" />
-                                        <font-awesome-icon icon="clipboard-list" class="decision-icon" />
-                                        <div class="decision-title">Pendiente</div>
-                                        <div class="decision-text">La propuesta es viable pero requiere correcciones</div>
-                                    </label>
-                                </div>
-                                <div class="col-md-4">
-                                    <label :class="['decision-card', 'danger', { 'active': proyecto.viabilidad === 'NO_VIABLE' }]">
-                                        <input type="radio" value="NO_VIABLE" v-model="proyecto.viabilidad" class="d-none" />
-                                        <font-awesome-icon icon="times-circle" class="decision-icon" />
-                                        <div class="decision-title">No Viable</div>
-                                        <div class="decision-text">La propuesta no es viable</div>
+                                <div class="col-md-4 mb-3 mb-md-0" v-for="opcion in viabilidadOpciones" :key="opcion.valor">
+                                    <label :class="['decision-card', opcion.variant, { 'active': proyecto.viabilidad === opcion.valor }]">
+                                        <input type="radio" :value="opcion.valor" v-model="proyecto.viabilidad" class="d-none" />
+                                        <font-awesome-icon :icon="opcion.icon" class="decision-icon" />
+                                        <div class="decision-title">{{ opcion.titulo }}</div>
+                                        <div class="decision-text">{{ opcion.descripcion }}</div>
                                     </label>
                                 </div>
                             </div>
@@ -401,6 +391,45 @@
                 </div>
             </div>
         </form>
+
+        <b-modal id="modalRubricaPropuesta" size="lg" title="Rúbrica institucional de evaluación de la propuesta" ok-only ok-title="Cerrar">
+            <p class="text-muted">
+                La evaluación de la propuesta se realiza con base en la rúbrica institucional establecida por el CIECYT,
+                alineada con los criterios del Acuerdo 025, art. 14, parágrafo 7, y con las calificaciones del
+                parágrafo 9 de la misma norma.
+            </p>
+            <table class="table table-sm table-striped table-bordered">
+                <thead>
+                <tr>
+                    <th>Criterio</th>
+                    <th class="text-center">Peso</th>
+                    <th>Niveles de desempeño</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr v-for="criterio in criteriosRubrica" :key="criterio.codigo">
+                    <td>
+                        <strong>{{ criterio.codigo }}.</strong> {{ criterio.criterio }}
+                        <div class="text-muted small">{{ criterio.descripcion }}</div>
+                    </td>
+                    <td class="text-center">{{ criterio.peso }}%</td>
+                    <td>
+                        <span
+                            v-for="nivel in criterio.niveles"
+                            :key="nivel.nivel"
+                            class="d-block small">
+                            <strong>{{ nivel.nivel }}</strong> ({{ nivel.puntaje.toFixed(1).replace('.', ',') }}):
+                            {{ nivel.descripcion }}
+                        </span>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+            <div class="alert alert-info mb-0">
+                <strong>Escala de calificación (Acuerdo 025, art. 14, parágrafo 9):</strong>
+                {{ escalaRubrica }}
+            </div>
+        </b-modal>
     </div>
 </template>
 <script lang="ts">
@@ -431,6 +460,8 @@ import ImpactosEsperadosService from '@/entities/impactos-esperados/impactos-esp
 
 
 import JhiDataUtils from '@/shared/data/data-utils.service';
+import { VIABILIDAD_OPCIONES, OpcionViabilidad } from '@/shared/config/viabilidad';
+import { CRITERIOS_RUBRICA_PROPUESTA, escalaCalificacionRubrica, ICriterioRubrica } from '@/shared/config/rubrica';
 
 
 
@@ -505,6 +536,15 @@ export default class PropuestaEvaluar extends mixins(JhiDataUtils){
     public cronograms: ICronograma[]=[];
     public impacts: IImpactosEsperados[]=[];
     public results: any[]=[];
+    public viabilidadOpciones: OpcionViabilidad[] = VIABILIDAD_OPCIONES;
+
+    public get criteriosRubrica(): ICriterioRubrica[] {
+        return CRITERIOS_RUBRICA_PROPUESTA;
+    }
+
+    public get escalaRubrica(): string {
+        return escalaCalificacionRubrica(this.proyecto.proyectoModalidadId);
+    }
 
     
 

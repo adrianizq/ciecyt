@@ -1,6 +1,6 @@
 <template>
   <div class="menu-lateral">
-    <div v-for="(item, index) in items" :key="index" class="step-item">
+    <div v-for="(item, index) in itemsVisibles" :key="index" class="step-item">
       <router-link
         class="step-btn"
         :class="{ active: isActive(item.to) }"
@@ -20,13 +20,43 @@
 
 <script lang="ts">
 import Component from 'vue-class-component';
-import { Vue, Prop } from 'vue-property-decorator';
+import { Vue, Prop, Inject } from 'vue-property-decorator';
+import ProyectoService from '@/entities/proyecto/proyecto.service';
+import RolesModalidadService from '@/entities/roles-modalidad/roles-modalidad.service';
 
 @Component
 export default class PropuestaMenuLateralNueva extends Vue {
+  @Inject('proyectoService') private proyectoService: () => ProyectoService;
+  @Inject('rolesModalidadService') private rolesModalidadService: () => RolesModalidadService;
+
   items = this.$store.getters.menuLateralNueva;
   @Prop()
   proyectoId: number;
+
+  itemsVisibles: any[] = [];
+
+  async created() {
+    this.itemsVisibles = this.items.slice();
+    if (this.proyectoId) {
+      try {
+        const proyecto = await this.proyectoService().find(this.proyectoId);
+        const modalidadId = proyecto.proyectoModalidadId;
+        const tieneJurado = modalidadId != null;
+        if (tieneJurado) {
+          const rolJurado = await this.rolesModalidadService().findRolModalidad('Jurado', modalidadId);
+          const necesitaJurado = !!rolJurado && !!rolJurado.id;
+          this.itemsVisibles = this.items.filter(item => {
+            if (item.title === 'Jurado') {
+              return necesitaJurado;
+            }
+            return true;
+          });
+        }
+      } catch (e) {
+        console.error('Error al filtrar el menu lateral por modalidad:', e);
+      }
+    }
+  }
 
   isActive(to) {
     return this.$route.path.startsWith(to);

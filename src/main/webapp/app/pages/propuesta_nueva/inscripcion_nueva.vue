@@ -129,7 +129,7 @@
             <div class="row mt-4">
                 <div class="col-12 d-flex justify-content-between">
                     <button type="button" class="btn btn-outline-secondary" v-on:click="back">
-                        <font-awesome-icon icon="arrow-left"></font-awesome-icon>&nbsp;Volver a Jurado
+                        <font-awesome-icon icon="arrow-left"></font-awesome-icon>&nbsp;Volver
                     </button>
                     <router-link :to="{name: 'PropuestasInvestigadorEditView'}" tag="button" class="btn btn-primary">
                         <font-awesome-icon icon="list"></font-awesome-icon>&nbsp;Ver mis propuestas
@@ -146,6 +146,7 @@
     import MenuLateralNueva from '@/components/propuesta_nueva/menu_lateral_nueva.vue';
     import { IProyecto, Proyecto } from '@/shared/model/proyecto.model';
     import ProyectoService from '@/entities/proyecto/proyecto.service';
+    import RolesModalidadService from '@/entities/roles-modalidad/roles-modalidad.service';
     import { IIntegranteProyecto } from '@/shared/model/integrante-proyecto.model';
     import IntegranteProyectoService from '@/entities/integrante-proyecto/integrante-proyecto.service';
 
@@ -159,6 +160,7 @@
     export default class PropuestaInscripcionNueva extends Vue {
         @Inject('proyectoService') private proyectoService: () => ProyectoService;
         @Inject('integranteProyectoService') private integranteProyectoService: () => IntegranteProyectoService;
+        @Inject('rolesModalidadService') private rolesModalidadService: () => RolesModalidadService;
         @Inject('alertService') private alertService: () => AlertService;
 
         public proyecto: IProyecto = new Proyecto();
@@ -191,8 +193,15 @@
             return d.toLocaleDateString('es-CO', { year: 'numeric', month: 'long', day: 'numeric' });
         }
 
-        public back() {
-            this.$router.push({ name: 'PropuestaJuradoNuevaEditView', params: { proyectoId: String(this.proyId) } });
+        public async back() {
+            const proyecto = await this.proyectoService().find(this.proyId);
+            const modalidadId = proyecto.proyectoModalidadId;
+            const rolJurado = await this.rolesModalidadService().findRolModalidad("Jurado", modalidadId);
+            if (rolJurado && rolJurado.id) {
+                this.$router.push({ name: 'PropuestaJuradoNuevaEditView', params: { proyectoId: String(this.proyId) } });
+            } else {
+                this.$router.push({ name: 'PropuestaAsesorNuevaEditView', params: { proyectoId: String(this.proyId) } });
+            }
         }
 
         async initRelationships() {

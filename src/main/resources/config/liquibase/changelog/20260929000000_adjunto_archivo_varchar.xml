@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.9.xsd">
+
+    <!-- ================================================================== -->
+    <!-- adjunto_proyecto_fase.archivo guarda el NOMBRE del archivo, no el   -->
+    <!-- archivo: AdjuntoProyectoFaseServiceImpl.attachFile escribe los      -->
+    <!-- bytes en disco y hace entity.setArchivo(nameFile), y el campo de la -->
+    <!-- entidad es String.                                                 -->
+    <!--                                                                    -->
+    <!-- El changelog original (20201008033203) declaro la columna como     -->
+    <!-- longblob, asi que Hibernate arrancaba con "wrong column type ...    -->
+    <!-- found [blob], but expecting [varchar(255)]" y ninguna prueba podia  -->
+    <!-- cargar el contexto.                                                -->
+    <!--                                                                    -->
+    <!-- Solo H2: es la base en memoria que se reconstruye en cada corrida   -->
+    <!-- de pruebas. En PostgreSQL la columna es BYTEA y convertirla puede   -->
+    <!-- tocar datos de produccion, cosa que se decide aparte.               -->
+    <!-- ================================================================== -->
+
+    <changeSet id="20260929000000-1" author="ciecyt" dbms="h2">
+        <comment>adjunto_proyecto_fase.archivo es el nombre del archivo (String), no binario</comment>
+        <modifyDataType tableName="adjunto_proyecto_fase" columnName="archivo" newDataType="varchar(255)"/>
+        <rollback>
+            <modifyDataType tableName="adjunto_proyecto_fase" columnName="archivo" newDataType="longblob"/>
+        </rollback>
+    </changeSet>
+
+</databaseChangeLog>

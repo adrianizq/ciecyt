@@ -20,6 +20,11 @@ public interface TransicionEstadoRepository extends JpaRepository<TransicionEsta
         EnumEstadoProyecto estadoOrigen
     );
 
+    List<TransicionEstado> findByTransicionEstadoModalidadIdAndActivoTrueAndEstadoDestino(
+        Long modalidadId,
+        EnumEstadoProyecto estadoDestino
+    );
+
     boolean existsByTransicionEstadoModalidadIdAndEstadoOrigenAndEstadoDestino(
         Long modalidadId,
         EnumEstadoProyecto estadoOrigen,

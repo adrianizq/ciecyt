@@ -703,6 +703,12 @@ const validations: any = {
   validations
 })
 export default class PasantiaInformacionEmpresa extends Vue {
+
+  // El template llamaba previousState() pero el metodo no existia, asi que el boton
+  // Cancel/atrás fallaba con un TypeError y no hacia nada.
+  previousState() {
+    window.history.back();
+  }
   @Inject('informacionPasantiaService') private informacionPasantiaService: () => InformacionPasantiaService;
   @Inject('municipioService') private municipioService: () => MunicipioService;
   @Inject('departamentoService') private departamentoService: () => DepartamentoService;

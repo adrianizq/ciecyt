@@ -238,7 +238,7 @@
                                     <strong>Enviar correcciones al estudiante:</strong> publica las observaciones y recomendaciones para que el estudiante las corrija.
                                 </li>
                                 <li>
-                                    <strong>Enviar al jurado:</strong> publica la evaluación y continúa el flujo hacia el jurado del proyecto.
+                                    <strong>{{ textoEnvioFinal }}:</strong> publica la evaluación y continúa el flujo hacia {{ textoEnvioFinalDestino }}.
                                 </li>
                             </ul>
                             <div class="acciones-footer">
@@ -252,7 +252,7 @@
                                     <font-awesome-icon icon="envelope" />&nbsp;<span>Enviar correcciones al estudiante</span>
                                 </button>
                                 <button type="button" id="save-jurado" class="btn btn-primary" v-on:click="save('jurado')">
-                                    <font-awesome-icon icon="paper-plane" />&nbsp;<span>Enviar al jurado</span>
+                                    <font-awesome-icon icon="paper-plane" />&nbsp;<span>{{ textoEnvioFinal }}</span>
                                 </button>
                             </div>
                         </div>
@@ -286,6 +286,7 @@ import { IAdjuntoRetroalimentacion, AdjuntoRetroalimentacion } from '@/shared/mo
 import AdjuntoRetroalimentacionService from '@/entities/adjunto-retroalimentacion/adjunto-retroalimentacion.service';
 
 import JhiDataUtils from '@/shared/data/data-utils.service';
+import { ESTADO_CORRECCIONES_ASESOR_PROYECTO, ESTADO_LISTO_PARA_SOCIALIZAR, tieneJurado } from '@/shared/config/opcion_grado';
 
 
 
@@ -358,6 +359,16 @@ export default class PropuestaEvaluar extends mixins(JhiDataUtils){
     public modalidadId: number = 0;
     public enumRespuestas: EnumRespuestas;
 
+    public get textoEnvioFinal(): string {
+        return tieneJurado(this.modalidadId) ? 'Enviar al jurado' : 'Aprobar para socialización';
+    }
+
+    public get textoEnvioFinalDestino(): string {
+        return tieneJurado(this.modalidadId)
+            ? 'el jurado del proyecto'
+            : 'la socialización, que CIECYT programará sin jurado';
+    }
+
     public isSaving = false;
     public proyectoRespuestasDatos: boolean = false;
     public  authority: any="ROLE_ASESOR";
@@ -375,9 +386,16 @@ export default class PropuestaEvaluar extends mixins(JhiDataUtils){
             CORRECCIONES_JURADO_PROPUESTA: 'Correcciones del jurado (propuesta)',
             EN_REVISION_JURADO_PROYECTO: 'En revisión del jurado (proyecto)',
             CORRECCIONES_JURADO_PROYECTO: 'Correcciones del jurado (proyecto)',
+            APROBADA_POR_ASESOR: 'Concepto favorable del asesor',
+            EN_REVISION_ASESOR_PROYECTO: 'En revisión del asesor (proyecto)',
+            CORRECCIONES_ASESOR_PROYECTO: 'Correcciones del asesor (proyecto)',
             VIABLE: 'Propuesta viable',
             NO_VIABLE: 'Propuesta no viable',
             LISTO_PARA_SUSTENTAR: 'Listo para sustentar',
+            LISTO_PARA_SOCIALIZAR: 'Listo para socializar',
+            SOCIALIZACION_PROGRAMADA: 'Socialización programada',
+            SOCIALIZACION_REALIZADA: 'Socialización realizada',
+            EN_EVALUACION_SOCIALIZACION: 'Evaluación de socialización',
             EN_SUSTENTACION: 'En sustentación',
             NOTA_DEFINITIVA: 'Nota definitiva'
         };
@@ -394,9 +412,16 @@ export default class PropuestaEvaluar extends mixins(JhiDataUtils){
             CORRECCIONES_JURADO_PROPUESTA: 'warning',
             EN_REVISION_JURADO_PROYECTO: 'info',
             CORRECCIONES_JURADO_PROYECTO: 'warning',
+            APROBADA_POR_ASESOR: 'success',
+            EN_REVISION_ASESOR_PROYECTO: 'info',
+            CORRECCIONES_ASESOR_PROYECTO: 'warning',
             VIABLE: 'success',
             NO_VIABLE: 'danger',
             LISTO_PARA_SUSTENTAR: 'success',
+            LISTO_PARA_SOCIALIZAR: 'success',
+            SOCIALIZACION_PROGRAMADA: 'primary',
+            SOCIALIZACION_REALIZADA: 'primary',
+            EN_EVALUACION_SOCIALIZACION: 'info',
             EN_SUSTENTACION: 'primary',
             NOTA_DEFINITIVA: 'success'
         };
@@ -528,11 +553,19 @@ export default class PropuestaEvaluar extends mixins(JhiDataUtils){
         }
 
         public enviarAlJurado(): Promise<any> {
+            const conJurado = tieneJurado(this.modalidadId);
+            const nuevoEstado = conJurado ? 'EN_REVISION_JURADO_PROYECTO' : ESTADO_LISTO_PARA_SOCIALIZAR;
+            const observacion = conJurado
+                ? 'Asesor aprueba y envía el proyecto al jurado'
+                : 'Asesor aprueba el proyecto y lo deja listo para la socialización (Acuerdo 025, art. 25, literal b)';
+            const mensaje = conJurado
+                ? 'Proyecto enviado al jurado.'
+                : 'Proyecto aprobado. CIECYT puede programar la socialización.';
             return this.proyectoService()
-                .cambiarEstado(this.proyecto.id, 'EN_REVISION_JURADO_PROYECTO', 'Asesor aprueba y envía el proyecto al jurado')
+                .cambiarEstado(this.proyecto.id, nuevoEstado, observacion)
                 .then(() => {
                     this.isSaving = false;
-                    this.alertService().showAlert('Proyecto enviado al jurado.', 'success');
+                    this.alertService().showAlert(mensaje, 'success');
                 })
                 .catch(err => {
                     this.isSaving = false;

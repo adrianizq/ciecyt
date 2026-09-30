@@ -10,6 +10,7 @@ import java.util.Optional;
 import co.edu.itp.ciecyt.service.dto.ProyectoDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
 import org.springframework.data.domain.Page;
@@ -194,6 +195,7 @@ public class MenuResource {
 	 * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
 	 */
 	@DeleteMapping("/menus/{id}")
+	@PreAuthorize("hasAnyRole('ADMIN')")
 	public ResponseEntity<Void> deleteMenu(@PathVariable Long id) {
 		log.debug("REST request to delete Menu : {}", id);
 		menuService.delete(id);

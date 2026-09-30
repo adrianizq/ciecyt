@@ -1,5 +1,7 @@
 package co.edu.itp.ciecyt.web.rest;
 
+import co.edu.itp.ciecyt.domain.User;
+import co.edu.itp.ciecyt.security.AuthoritiesConstants;
 import co.edu.itp.ciecyt.service.UserInfoQueryService;
 import co.edu.itp.ciecyt.service.UserInfoService;
 import co.edu.itp.ciecyt.service.UserService;
@@ -40,6 +42,8 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
+import co.edu.itp.ciecyt.security.SecurityUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -72,6 +76,42 @@ public class UserInfoResource {
     }
 
     /**
+     * El id de user_info es el mismo id de jhi_user: la tabla comparte clave primaria con borrado
+     * en cascada. Por eso la pertenencia se resuelve comparando contra el usuario en sesion, sin
+     * campo de propietario adicional que se pueda dejar sin rellenar.
+     */
+    private boolean esRegistroPropio(Long id) {
+        if (id == null) {
+            return false;
+        }
+        return userService.getUserWithAuthorities()
+            .map(User::getId)
+            .filter(id::equals)
+            .isPresent();
+    }
+
+    private boolean esAdministrador() {
+        return SecurityUtils.isCurrentUserInRole(AuthoritiesConstants.ADMIN);
+    }
+
+    /**
+     * Los datos de user_info son documentos de identidad (nuip, codigo de ITP, contacto y foto).
+     * Solo se tocan los propios, salvo la administracion de la aplicacion. Sin esto, el id viaja en
+     * el cuerpo de la peticion y cualquiera podia leer o sobrescribir el registro de otra persona.
+     */
+    private void exigirRegistroPropioOAdmin(Long id) {
+        if (!esAdministrador() && !esRegistroPropio(id)) {
+            throw new AccessDeniedException("No puede consultar ni modificar los datos personales de otra persona");
+        }
+    }
+
+    private void exigirAdministrador() {
+        if (!esAdministrador()) {
+            throw new AccessDeniedException("No puede listar los datos personales de los usuarios");
+        }
+    }
+
+    /**
      * {@code POST  /user-infos} : Create a new usuario.
      *
      * @param userInfoDTO the usuarioDTO to create.
@@ -84,6 +124,7 @@ public class UserInfoResource {
         if (userInfoDTO.getId() != null) {
             throw new BadRequestAlertException("A new userInfo cannot already have an ID", ENTITY_NAME, "idexists");
         }
+        exigirRegistroPropioOAdmin(userInfoDTO.getUserId());
         UserInfoDTO result = userInfoService.save(userInfoDTO);
         return ResponseEntity.created(new URI("/api/user-info/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))
@@ -105,6 +146,13 @@ public class UserInfoResource {
         if (userInfoDTO.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
+        // El id de la entidad y el usuario al que pertenece deben ser el mismo, y ese tiene que
+        // ser el del usuario en sesion: si vinieran distintos, el save escribiria sobre otro
+        // registro mediante el userId.
+        if (userInfoDTO.getUserId() != null && !userInfoDTO.getUserId().equals(userInfoDTO.getId())) {
+            throw new BadRequestAlertException("El registro no corresponde al usuario indicado", ENTITY_NAME, "idmismatch");
+        }
+        exigirRegistroPropioOAdmin(userInfoDTO.getId());
 
         /*byte[] file = userInfoDTO.getAvatarImage();
         //Setea en nulo la url de la imagen.
@@ -145,6 +193,7 @@ public class UserInfoResource {
     @GetMapping("/user-info")
     public ResponseEntity<List<UserInfoDTO>> getAllUsuarios(Pageable pageable) {
         log.debug("REST request to get a page of Usuarios");
+        exigirAdministrador();
         Page<UserInfoDTO> page = userInfoService.findAll(pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return ResponseEntity.ok().headers(headers).body(page.getContent());
@@ -178,6 +227,7 @@ public class UserInfoResource {
     @GetMapping("/user-info/{id}")
     public ResponseEntity<UserInfoDTO> getUserInfo(@PathVariable Long id) {
         log.debug("REST request to get UserInfo : {}", id);
+        exigirRegistroPropioOAdmin(id);
         Optional<UserInfoDTO> userInfoDTO = userInfoService.findOne(id);
         return ResponseUtil.wrapOrNotFound(userInfoDTO);
     }

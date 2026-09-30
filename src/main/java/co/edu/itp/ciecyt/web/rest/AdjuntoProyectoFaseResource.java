@@ -15,6 +15,7 @@ import java.util.Optional;
 import javax.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
@@ -92,6 +93,7 @@ public class AdjuntoProyectoFaseResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PutMapping("/adjunto-proyecto-fases")
+    @PreAuthorize("@proyectoAutorizacionService.puedeModificarAdjuntoProyectoFase(#adjuntoProyectoFaseDTO.id)")
     public ResponseEntity<AdjuntoProyectoFaseDTO> updateAdjuntoProyectoFase(@RequestBody AdjuntoProyectoFaseDTO adjuntoProyectoFaseDTO) throws URISyntaxException {
         log.debug("REST request to update AdjuntoProyectoFase : {}", adjuntoProyectoFaseDTO);
         if (adjuntoProyectoFaseDTO.getId() == null) {
@@ -147,6 +149,7 @@ public class AdjuntoProyectoFaseResource {
      * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
     @DeleteMapping("/adjunto-proyecto-fases/{id}")
+    @PreAuthorize("@proyectoAutorizacionService.puedeModificarAdjuntoProyectoFase(#id)")
     public ResponseEntity<Void> deleteAdjuntoProyectoFase(@PathVariable Long id) {
         log.debug("REST request to delete AdjuntoProyectoFase : {}", id);
         adjuntoProyectoFaseService.delete(id);
@@ -174,6 +177,14 @@ public class AdjuntoProyectoFaseResource {
             } catch (Exception e) {
                 log.error("Error cargando archivo: {} ", adjunto.get(), e);
             }
+
+            // El archivo puede no existir o quedar fuera del directorio de carga (por ejemplo si
+            // el nombre guardado intenta salir de ese directorio). En ambos casos no hay nada que
+            // devolver, y seguir adelante-usando un resource nulo-terminaba en un error 500.
+            if (resource == null) {
+                return ResponseEntity.notFound().build();
+            }
+
             // Try to determine file's content type
             String contentType = null;
             try {

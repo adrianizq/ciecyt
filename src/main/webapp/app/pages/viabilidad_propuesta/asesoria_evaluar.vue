@@ -1,13 +1,6 @@
 <template>
 
     <div class="asesoria-evaluar">
-        <b-alert :show="dismissCountDown"
-            dismissible
-            :variant="alertType"
-            @dismissed="dismissCountDown=0"
-            @dismiss-count-down="countDownChanged">
-            {{alertMessage}}
-        </b-alert>
         <form @submit.prevent="save('borrador')">
 
             <!-- Cabecera del proyecto -->
@@ -280,7 +273,7 @@
                                     <strong>Enviar correcciones al estudiante:</strong> publica las observaciones y recomendaciones para que el estudiante las corrija.
                                 </li>
                                 <li>
-                                    <strong>Enviar al jurado:</strong> publica la evaluación y continúa el flujo hacia el jurado de la propuesta.
+                                    <strong>{{ textoEnvioRevision }}:</strong> {{ textoEnvioRevisionDescripcion }}
                                 </li>
                             </ul>
                             <div class="acciones-footer">
@@ -294,7 +287,7 @@
                                     <font-awesome-icon icon="envelope" />&nbsp;<span>Enviar correcciones al estudiante</span>
                                 </button>
                                 <button type="button" id="save-jurado" class="btn btn-primary" v-on:click="save('jurado')">
-                                    <font-awesome-icon icon="paper-plane" />&nbsp;<span>Enviar al jurado</span>
+                                    <font-awesome-icon icon="paper-plane" />&nbsp;<span>{{ textoEnvioRevision }}</span>
                                 </button>
                             </div>
                         </div>
@@ -330,6 +323,7 @@ import { IAdjuntoRetroalimentacion, AdjuntoRetroalimentacion } from '@/shared/mo
 import AdjuntoRetroalimentacionService from '@/entities/adjunto-retroalimentacion/adjunto-retroalimentacion.service';
 
 import JhiDataUtils from '@/shared/data/data-utils.service';
+import { ESTADO_APROBADA_POR_ASESOR, ESTADO_CORRECCIONES_ASESOR, tieneJurado, textoEnvioRevision } from '@/shared/config/opcion_grado';
 
 
 
@@ -403,6 +397,16 @@ export default class PropuestaEvaluar extends mixins(JhiDataUtils){
     public modalidadId: number = 0;
     public enumRespuestas: EnumRespuestas;
 
+    public get textoEnvioRevision(): string {
+        return textoEnvioRevision(this.modalidadId);
+    }
+
+    public get textoEnvioRevisionDescripcion(): string {
+        return tieneJurado(this.modalidadId)
+            ? 'publica la evaluación y continúa el flujo hacia el jurado de la propuesta.'
+            : 'publica la evaluación, registra el concepto favorable del asesor y habilita el desarrollo del proyecto.';
+    }
+
     public isSaving = false;
     public proyectoRespuestasDatos: boolean = false;
     public  authority: any="ROLE_ASESOR";
@@ -439,9 +443,16 @@ export default class PropuestaEvaluar extends mixins(JhiDataUtils){
             CORRECCIONES_JURADO_PROPUESTA: 'Correcciones del jurado (propuesta)',
             EN_REVISION_JURADO_PROYECTO: 'En revisión del jurado (proyecto)',
             CORRECCIONES_JURADO_PROYECTO: 'Correcciones del jurado (proyecto)',
+            APROBADA_POR_ASESOR: 'Concepto favorable del asesor',
+            EN_REVISION_ASESOR_PROYECTO: 'En revisión del asesor (proyecto)',
+            CORRECCIONES_ASESOR_PROYECTO: 'Correcciones del asesor (proyecto)',
             VIABLE: 'Propuesta viable',
             NO_VIABLE: 'Propuesta no viable',
             LISTO_PARA_SUSTENTAR: 'Listo para sustentar',
+            LISTO_PARA_SOCIALIZAR: 'Listo para socializar',
+            SOCIALIZACION_PROGRAMADA: 'Socialización programada',
+            SOCIALIZACION_REALIZADA: 'Socialización realizada',
+            EN_EVALUACION_SOCIALIZACION: 'Evaluación de socialización',
             EN_SUSTENTACION: 'En sustentación',
             NOTA_DEFINITIVA: 'Nota definitiva'
         };
@@ -458,9 +469,16 @@ export default class PropuestaEvaluar extends mixins(JhiDataUtils){
             CORRECCIONES_JURADO_PROPUESTA: 'warning',
             EN_REVISION_JURADO_PROYECTO: 'info',
             CORRECCIONES_JURADO_PROYECTO: 'warning',
+            APROBADA_POR_ASESOR: 'success',
+            EN_REVISION_ASESOR_PROYECTO: 'info',
+            CORRECCIONES_ASESOR_PROYECTO: 'warning',
             VIABLE: 'success',
             NO_VIABLE: 'danger',
             LISTO_PARA_SUSTENTAR: 'success',
+            LISTO_PARA_SOCIALIZAR: 'success',
+            SOCIALIZACION_PROGRAMADA: 'primary',
+            SOCIALIZACION_REALIZADA: 'primary',
+            EN_EVALUACION_SOCIALIZACION: 'info',
             EN_SUSTENTACION: 'primary',
             NOTA_DEFINITIVA: 'success'
         };
@@ -595,15 +613,26 @@ export default class PropuestaEvaluar extends mixins(JhiDataUtils){
 
         public cambiarEstadoSegunAsesoria(accion: 'correcciones' | 'jurado'): Promise<any> {
             const enviado = this.proyecto.enviado;
-            const nuevoEstado = enviado ? 'EN_REVISION_JURADO_PROPUESTA' : 'CORRECCIONES_ASESOR';
-            const observacion = enviado ? 'Asesor aprueba y envía la propuesta al jurado' : 'Asesor solicita correcciones en la propuesta';
+            const conJurado = tieneJurado(this.modalidadId);
+            const nuevoEstado = !enviado
+                ? ESTADO_CORRECCIONES_ASESOR
+                : conJurado
+                ? 'EN_REVISION_JURADO_PROPUESTA'
+                : ESTADO_APROBADA_POR_ASESOR;
+            const observacion = !enviado
+                ? 'Asesor solicita correcciones en la propuesta'
+                : conJurado
+                ? 'Asesor aprueba y envía la propuesta al jurado'
+                : 'Asesor emite concepto favorable de la propuesta (Acuerdo 025, art. 24, literal b)';
             return this.proyectoService()
                 .cambiarEstado(this.proyecto.id, nuevoEstado, observacion)
                 .then(() => {
                     this.isSaving = false;
-                    const message = accion === 'correcciones'
+                    const message = !enviado
                         ? 'Correcciones enviadas al estudiante.'
-                        : 'Propuesta enviada al jurado.';
+                        : conJurado
+                        ? 'Propuesta enviada al jurado.'
+                        : 'Concepto favorable registrado. El estudiante puede iniciar el desarrollo del proyecto.';
                     this.alertService().showAlert(message, 'success');
                     this.getAlertFromStore();
                 })

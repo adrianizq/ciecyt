@@ -6,7 +6,7 @@
     xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.9.xsd
                         http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog-ext/dbchangelog-3.9.xsd">
 
-    <changeSet id="20260809000000-1" author="adr" dbms="postgresql">
+    <changeSet id="20260809000000-1" author="adr">
         <preConditions onFail="MARK_RAN">
             <and>
                 <tableExists tableName="proyecto"/>

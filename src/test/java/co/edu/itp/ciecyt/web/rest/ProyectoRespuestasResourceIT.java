@@ -3,6 +3,7 @@ package co.edu.itp.ciecyt.web.rest;
 import co.edu.itp.ciecyt.CiecytApp;
 import co.edu.itp.ciecyt.domain.ProyectoRespuestas;
 import co.edu.itp.ciecyt.repository.ProyectoRespuestasRepository;
+import co.edu.itp.ciecyt.security.AuthoritiesConstants;
 import co.edu.itp.ciecyt.service.ProyectoRespuestasService;
 import co.edu.itp.ciecyt.service.dto.ProyectoRespuestasDTO;
 import co.edu.itp.ciecyt.service.mapper.ProyectoRespuestasMapper;
@@ -30,7 +31,7 @@ import co.edu.itp.ciecyt.domain.enumeration.EnumRespuestas;
  */
 @SpringBootTest(classes = CiecytApp.class)
 @AutoConfigureMockMvc
-@WithMockUser
+@WithMockUser(authorities = AuthoritiesConstants.ADMIN)
 public class ProyectoRespuestasResourceIT {
 
     private static final EnumRespuestas DEFAULT_RESPUESTA = EnumRespuestas.CUMPLE;

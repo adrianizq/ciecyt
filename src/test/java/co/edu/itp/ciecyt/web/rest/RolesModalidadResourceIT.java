@@ -3,6 +3,7 @@ package co.edu.itp.ciecyt.web.rest;
 import co.edu.itp.ciecyt.CiecytApp;
 import co.edu.itp.ciecyt.domain.RolesModalidad;
 import co.edu.itp.ciecyt.repository.RolesModalidadRepository;
+import co.edu.itp.ciecyt.security.AuthoritiesConstants;
 import co.edu.itp.ciecyt.service.RolesModalidadService;
 import co.edu.itp.ciecyt.service.dto.RolesModalidadDTO;
 import co.edu.itp.ciecyt.service.mapper.RolesModalidadMapper;
@@ -29,7 +30,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  */
 @SpringBootTest(classes = CiecytApp.class)
 @AutoConfigureMockMvc
-@WithMockUser
+@WithMockUser(authorities = AuthoritiesConstants.ADMIN)
 public class RolesModalidadResourceIT {
 
     private static final String DEFAULT_ROL = "AAAAAAAAAA";

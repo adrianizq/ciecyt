@@ -9,13 +9,6 @@
             <span id="proyecto-heading">Mis propuestas</span>
             
         </h2>
-        <b-alert :show="dismissCountDown"
-            dismissible
-            :variant="alertType"
-            @dismissed="dismissCountDown=0"
-            @dismiss-count-down="countDownChanged">
-            {{alertMessage}}
-        </b-alert>
         <br/>
         <div class="alert alert-warning" v-if="!isFetching && proyects && proyects.length === 0">
             <span>No se encontraron proyectos</span>

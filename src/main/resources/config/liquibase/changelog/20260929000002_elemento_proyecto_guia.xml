@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.9.xsd">
+
+    <!-- ================================================================== -->
+    <!-- ELEMENTO_PROYECTO como guia, no como captura                        -->
+    <!--                                                                    -->
+    <!-- 20260811000002 borro esta tabla porque el flujo del Acuerdo 29 paso -->
+    <!-- a ser un documento que el estudiante sube. Pero la entidad          -->
+    <!-- ElementoProyecto sigue viva y diez paginas la siguen usando         -->
+    <!-- (evaluacion de viabilidad, proyectos, pasantia, diplomado,          -->
+    <!-- sustentacion), ademas de main.ts, que registra el servicio.        -->
+    <!--                                                                    -->
+    <!-- Se recrea el mismo esquema original para que esas paginas sigan    -->
+    <!-- funcionando y la informacion quede como guia. No se restituye la    -->
+    <!-- FK hacia elemento: la tabla elemento ya no existe y la entidad      -->
+    <!-- ElementoProyecto guarda elemento_proyecto_elemento_id como Long.    -->
+    <!--                                                                    -->
+    <!-- Esquema identico al createTable de                                 -->
+    <!-- 20201008034003_added_entity_ElementoProyecto.xml.                   -->
+    <!-- ================================================================== -->
+
+    <changeSet id="20260929000002-1" author="ciecyt">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="elemento_proyecto"/>
+            </not>
+        </preConditions>
+        <comment>Restituir elemento_proyecto como guia (sin la FK a elemento, que ya no existe)</comment>
+        <createTable tableName="elemento_proyecto">
+            <column name="id" type="bigint">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="dato" type="varchar(255)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="elemento_proyecto_proyecto_descripcion" type="varchar(255)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="elemento_fases_id" type="bigint">
+                <constraints nullable="true"/>
+            </column>
+            <column name="elemento_proyecto_elemento_id" type="bigint">
+                <constraints nullable="true"/>
+            </column>
+            <column name="elemento_proyecto_proyecto_id" type="bigint">
+                <constraints nullable="true"/>
+            </column>
+        </createTable>
+        <addForeignKeyConstraint
+            baseTableName="elemento_proyecto"
+            baseColumnNames="elemento_proyecto_proyecto_id"
+            referencedTableName="proyecto"
+            referencedColumnNames="id"
+            constraintName="fk_elemento_proyecto_elemento_proyecto_proyecto_id"/>
+        <createIndex indexName="ix_elemento_proyecto_proyecto" tableName="elemento_proyecto">
+            <column name="elemento_proyecto_proyecto_id"/>
+        </createIndex>
+        <rollback>
+            <dropTable tableName="elemento_proyecto"/>
+        </rollback>
+    </changeSet>
+
+</databaseChangeLog>

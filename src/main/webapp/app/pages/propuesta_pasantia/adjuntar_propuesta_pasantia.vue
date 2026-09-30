@@ -106,6 +106,12 @@ const validations: any = {
 
 //export default class EnviarPropuesta extends Vue {
   export default class EnviarPropuesta extends mixins(JhiDataUtils){
+
+  // El template llamaba previousState() pero el metodo no existia, asi que el boton
+  // Cancel/atrás fallaba con un TypeError y no hacia nada.
+  previousState() {
+    window.history.back();
+  }
   @Inject('proyectoService') private proyectoService: () => ProyectoService;
   @Inject('adjuntoProyectoFaseService') private adjuntoProyectoFaseService: () => AdjuntoProyectoFaseService;
   @Inject('fasesService') private fasesService: () => FasesService;

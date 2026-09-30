@@ -3,6 +3,7 @@ package co.edu.itp.ciecyt.service.mapper;
 import co.edu.itp.ciecyt.domain.Ciclo;
 import co.edu.itp.ciecyt.domain.Modalidad;
 import co.edu.itp.ciecyt.service.dto.CicloDTO;
+import java.util.Collections;
 import java.util.Set;
 import java.util.stream.Collectors;
 import org.mapstruct.Mapper;
@@ -24,14 +25,14 @@ public interface CicloMapper extends EntityMapper<CicloDTO, Ciclo> {
 
     default Set<Long> modalidadesToIds(Set<Modalidad> modalidades) {
         if (modalidades == null) {
-            return Set.of();
+            return Collections.emptySet();
         }
         return modalidades.stream().map(Modalidad::getId).collect(Collectors.toSet());
     }
 
     default Set<String> modalidadesToNombres(Set<Modalidad> modalidades) {
         if (modalidades == null) {
-            return Set.of();
+            return Collections.emptySet();
         }
         return modalidades.stream().map(Modalidad::getModalidad).collect(Collectors.toSet());
     }

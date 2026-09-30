@@ -87,8 +87,10 @@ public class Usuario implements Serializable {
 
     //ADR mapear con la clase user el id de usuario
     //https://www.jhipster.tech/tips/022_tip_registering_user_with_additional_information.html
-    //falta terminar
+    // Sin el @JoinColumn Hibernate genera <propiedad>_id (user_id) por implicit naming
+    // strategy y la validacion de esquema fallaba: la tabla usuario solo tiene la columna id.
     @OneToOne
     @MapsId
+    @JoinColumn(name = "id")
     private User user;
 }

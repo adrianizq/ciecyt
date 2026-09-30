@@ -3,6 +3,7 @@ package co.edu.itp.ciecyt.web.rest;
 import co.edu.itp.ciecyt.CiecytApp;
 import co.edu.itp.ciecyt.domain.LineaInvestigacion;
 import co.edu.itp.ciecyt.repository.LineaInvestigacionRepository;
+import co.edu.itp.ciecyt.security.AuthoritiesConstants;
 import co.edu.itp.ciecyt.service.LineaInvestigacionService;
 import co.edu.itp.ciecyt.service.dto.LineaInvestigacionDTO;
 import co.edu.itp.ciecyt.service.mapper.LineaInvestigacionMapper;
@@ -29,7 +30,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  */
 @SpringBootTest(classes = CiecytApp.class)
 @AutoConfigureMockMvc
-@WithMockUser
+@WithMockUser(authorities = AuthoritiesConstants.ADMIN)
 public class LineaInvestigacionResourceIT {
 
     private static final String DEFAULT_LINEA = "AAAAAAAAAA";

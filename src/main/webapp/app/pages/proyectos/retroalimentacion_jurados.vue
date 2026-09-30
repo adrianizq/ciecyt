@@ -364,7 +364,12 @@ export default class RetroalimentacionJurados extends mixins(JhiDataUtils){
       'EN_EVALUACION_SUSTENTACION',
       'AJUSTES_SUSTENTACION',
       'NOTA_DEFINITIVA',
-      'FINALIZADO'
+      'FINALIZADO',
+      'APROBADA_POR_ASESOR',
+      'LISTO_PARA_SOCIALIZAR',
+      'SOCIALIZACION_PROGRAMADA',
+      'SOCIALIZACION_REALIZADA',
+      'EN_EVALUACION_SOCIALIZACION'
     ];
     return publicado.includes(this.proyecto.estado as string);
   }

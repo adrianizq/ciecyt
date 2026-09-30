@@ -51,6 +51,8 @@
     import { IUser } from '@/shared/model/user.model';
     import { IProyecto, Proyecto } from '@/shared/model/proyecto.model';
     import ProyectoService from '@/entities/proyecto/proyecto.service';
+    import DocenteHabilitadoService from '@/entities/docente-habilitado/docente-habilitado.service';
+    import { IDocenteHabilitado } from '@/shared/model/docente-habilitado.model';
 
     import { IIntegranteProyecto, IntegranteProyecto } from '@/shared/model/integrante-proyecto.model';
     import IntegranteProyectoService from '@/entities/integrante-proyecto/integrante-proyecto.service';
@@ -69,6 +71,7 @@
         @Inject('proyectoService') private proyectoService: () => ProyectoService;
         @Inject('integranteProyectoService') private integranteProyectoService: () => IntegranteProyectoService;
         @Inject('rolesModalidadService') private rolesModalidadService: () => RolesModalidadService;
+        @Inject('docenteHabilitadoService') private docenteHabilitadoService: () => DocenteHabilitadoService;
         @Inject('alertService') private alertService: () => AlertService;
 
         public users: IUser[] = [];
@@ -121,7 +124,13 @@
                     this.alertService().showAlert('Borrador guardado. Aún puedes continuar más tarde.', 'info');
                     return;
                 }
-                this.$router.push({ name: 'PropuestaJuradoNuevaEditView', params: { proyectoId: String(this.proyId) } });
+                // Si la modalidad no requiere jurado (Acuerdo 025, art. 9), se omite ese paso
+                const rolJurado = await this.rolesModalidadService().findRolModalidad("Jurado", this.modalidadId);
+                if (rolJurado && rolJurado.id) {
+                    this.$router.push({ name: 'PropuestaJuradoNuevaEditView', params: { proyectoId: String(this.proyId) } });
+                } else {
+                    this.$router.push({ name: 'PropuestaInscripcionNuevaEditView', params: { proyectoId: String(this.proyId) } });
+                }
             } catch (err) {
                 this.isSaving = false;
                 console.error('Error guardando asesor:', err);
@@ -152,18 +161,17 @@
                     this.integranteProyecto.integranteProyectoRolesModalidadId = this.rolModalidadId;
                 }
 
-                // Cargar usuarios asesores al final para que el select tenga sus opciones
-                const usuariosRes = await this.usuarioService().retrieveAsesores();
-                usuariosRes.data.forEach((item) => {
-                    if (item.firstName && item.lastName && item.userInfo) {
-                        if (item.userInfo.nuip)
-                            item.nombresApellidos = item.firstName + ' ' + item.lastName + ' ' + item.userInfo.nuip;
-                    } else if (item.firstName && item.lastName) {
-                        item.nombresApellidos = item.firstName + ' ' + item.lastName;
-                    }
-
-                    this.users.push(item);
-                    this.options.push({ value: item.id, text: item.nombresApellidos })
+                // Cargar los asesores habilitados de la facultad del proyecto: la designacion
+                // sale de la lista que remite la decanatura, no del directorio completo de la
+                // institucion.
+                const habilitadosRes = await this.docenteHabilitadoService().retrieveDeFacultad(this.proyecto.facultadId, 'ASESOR');
+                (habilitadosRes.data || []).forEach((h: IDocenteHabilitado) => {
+                    const u: any = h.user || {};
+                    const nombre = ((u.firstName || '') + ' ' + (u.lastName || '')).trim();
+                    let texto = nombre ? nombre + ' (' + (u.login || '') + ')' : u.login;
+                    texto = texto ? texto + ' — Asesor' : 'Asesor';
+                    this.users.push({ id: u.id, nombresApellidos: texto } as any);
+                    this.options.push({ value: u.id, text: texto });
                 });
             } catch (e) {
                 console.error('Error cargando datos del asesor:', e);

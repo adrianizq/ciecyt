@@ -18,12 +18,27 @@
 
                             </b-form-select>-->
                             <model-select 
+                            v-if="!integrante.esExterno"
                             :options="options"
                             @input="selectFromParentComponent"
                             placeholder="busque por nombre o cedula"
                             v-model="integrante.integranteProyectoUserId"
                             >
                         </model-select>
+                        <model-select 
+                            v-if="integrante.esExterno"
+                            :options="opcionesExternos"
+                            placeholder="profesional externo verificado por el CIECYT"
+                            v-model="integrante.integranteProyectoExternoId"
+                            >
+                        </model-select>
+                        <b-form-checkbox
+                            class="mt-2"
+                            v-model="integrante.esExterno"
+                            @change="alternarExterno(integrante)"
+                        >
+                            Documentarlo como profesional externo (sin vinculo laboral con la institucion)
+                        </b-form-checkbox>
                         </b-form-group>
                     </div>
 
@@ -57,6 +72,10 @@
     import { IUser } from '@/shared/model/user.model';
     import { IProyecto, Proyecto } from '@/shared/model/proyecto.model';
     import ProyectoService from '@/entities/proyecto/proyecto.service';
+    import DocenteHabilitadoService from '@/entities/docente-habilitado/docente-habilitado.service';
+    import { IDocenteHabilitado } from '@/shared/model/docente-habilitado.model';
+    import AsesorExternoService from '@/entities/asesor-externo/asesor-externo.service';
+    import { IAsesorExterno } from '@/shared/model/asesor-externo.model';
 
     import { IIntegranteProyecto, IntegranteProyecto } from '@/shared/model/integrante-proyecto.model';
     import IntegranteProyectoService from '@/entities/integrante-proyecto/integrante-proyecto.service';
@@ -76,6 +95,8 @@
         @Inject('proyectoService') private proyectoService: () => ProyectoService;
         @Inject('integranteProyectoService') private integranteProyectoService: () => IntegranteProyectoService;
         @Inject('rolesModalidadService') private rolesModalidadService: () => RolesModalidadService;
+        @Inject('docenteHabilitadoService') private docenteHabilitadoService: () => DocenteHabilitadoService;
+        @Inject('asesorExternoService') private asesorExternoService: () => AsesorExternoService;
         @Inject('alertService') private alertService: () => AlertService;
 
         public users: IUser[] = [];
@@ -83,6 +104,7 @@
         public integrantesProyecto: IIntegranteProyecto[] = [];
         public user: number = null;
         public proyecto: IProyecto = new Proyecto();
+        public facultadId: number = null;
         public proyId?: any;
         public isSaving = false;
         public modalidadId: number = 0;
@@ -90,6 +112,7 @@
         public cantAsesores: number = 0;
         public rolModalidadId?: number =0;
         public options : any = [];
+        public opcionesExternos: any = [];
 
 //public proyId: string = null;
 
@@ -128,6 +151,15 @@
                 for (let integrante of this.integrantesProyecto) {
                     //Actualizando el integrante
                        i++;
+                    if (integrante.esExterno) {
+                        integrante.integranteProyectoUserId = null;
+                        integrante.integranteProyectoUserLogin = null;
+                        integrante.integranteProyectoUserFirstName = null;
+                        integrante.integranteProyectoUserLastName = null;
+                    } else {
+                        integrante.integranteProyectoExternoId = null;
+                        integrante.integranteProyectoExternoNombre = null;
+                    }
                     if (integrante.id) {
                          this.integranteProyectoService().update(integrante);
                         (<any>this).$router.go(0);
@@ -147,52 +179,150 @@
                 //TODO: mostrar mensajes de error
             }
         }
+         /**
+          * Los candidatos son los que la decanatura tiene habilitados en la facultad del
+          * proyecto, no todos los usuarios con rol de asesor. Es la lista de la que el CIECYT
+          * designa, y el backend rechaza a quien no este en ella, asi que ofrecer a otro solo
+          * producia un error al guardar.
+          */
+         async cargarHabilitados() {
+            if (!this.facultadId) {
+                this.options = [];
+                return;
+            }
+            try {
+                const res = await this.docenteHabilitadoService().retrieveDeFacultad(this.facultadId, 'ASESOR');
+                const habilitados: IDocenteHabilitado[] = res.data || [];
+                this.options = habilitados.map(h => {
+                    const u: any = h.user || {};
+                    const nombre = ((u.firstName || '') + ' ' + (u.lastName || '')).trim();
+                    const texto = nombre ? nombre + ' (' + (u.login || '') + ')' : u.login;
+                    return {
+                        value: u.id,
+                        text: (texto || 'Sin nombre') + ' — ' + (h.rol || ''),
+                        vigente: !h.fechaHasta
+                    };
+                });
+                this.users = habilitados.map(h => ({ id: (h.user || {}).id } as any));
+            } catch (e) {
+                this.options = [];
+                this.users = [];
+                if (e && e.response && e.response.status === 403) {
+                    this.alertService()
+                        .error('No tiene permiso para consultar el padron de habilitados de la facultad')
+                        .then(() => {});
+                }
+            }
+         }
+
+         /**
+          * Los profesionales externos son los que el CIECYT ya verifico para esta facultad,
+          * solo asi pueden designarse (Acuerdo 25, paragrafos 1 de los articulos 8 y 9). La
+          * lista sale del registro de asesores externos, no de los usuarios del sistema.
+          */
+         async cargarExternos() {
+            if (!this.facultadId) {
+                this.opcionesExternos = [];
+                return;
+            }
+            try {
+                const res = await this.asesorExternoService().retrieveDeFacultad(this.facultadId, 'ASESOR');
+                const externos: IAsesorExterno[] = res.data || [];
+                this.opcionesExternos = externos.map(e => {
+                    const nombre = ((e.nombres || '') + ' ' + (e.apellidos || '')).trim();
+                    return {
+                        value: e.id,
+                        text: (nombre || 'Sin nombre') + ' (doc. ' + (e.numeroDocumento || '') + ')'
+                    };
+                });
+            } catch (e) {
+                this.opcionesExternos = [];
+                if (e && e.response && e.response.status === 403) {
+                    this.alertService()
+                        .error('No tiene permiso para consultar los profesionales externos de la facultad')
+                        .then(() => {});
+                }
+            }
+         }
+
+         /**
+          * Al abrir la casilla de externo se descarta el usuario institucional seleccionado, y al
+          * cerrarla se descarta el externo: nunca se guardan las dos designaciones a la vez y el
+          * backend lo rechaza asi llegara igualmente.
+          */
+         public alternarExterno(integrante: any) {
+            if (integrante.esExterno) {
+                integrante.integranteProyectoUserId = null;
+                integrante.integranteProyectoUserLogin = null;
+                integrante.integranteProyectoUserFirstName = null;
+                integrante.integranteProyectoUserLastName = null;
+            } else {
+                integrante.integranteProyectoExternoId = null;
+                integrante.integranteProyectoExternoNombre = null;
+            }
+         }
+
+         /**
+          * Quien ya estaba designado conserva su designacion aun si salio del padron despues, pero
+          * no apareceria en la lista de candidatos y el selector lo mostraria vacio, como si no
+          * hubiera nadie. Se agrega a las opciones, marcado como no vigente, para que lo que esta
+          * designado se vea y no se pierda.
+          */
+         public anadirDesignadosFueraDelPadron() {
+             if (!this.integrantesProyecto) {
+                 return;
+             }
+             const yaEnOpciones = new Set(this.options.map(o => o.value));
+             const yaExternos = new Set(this.opcionesExternos.map(o => o.value));
+             for (const integrante of this.integrantesProyecto) {
+                 const extId = integrante.integranteProyectoExternoId;
+                 if (extId != null) {
+                     this.$set(integrante, 'esExterno', true);
+                     if (!yaExternos.has(extId)) {
+                         this.opcionesExternos.push({
+                             value: extId,
+                             text: (integrante.integranteProyectoExternoNombre || 'Profesional externo') + ' (ya designado)'
+                         });
+                         yaExternos.add(extId);
+                     }
+                 } else {
+                     this.$set(integrante, 'esExterno', false);
+                 }
+                 const u: any = (integrante as any).integranteProyectoUser || {};
+                 const userId = integrante.integranteProyectoUserId;
+                 if (userId == null || yaEnOpciones.has(userId)) {
+                     continue;
+                 }
+                 const nombre = ((u.firstName || '') + ' ' + (u.lastName || '')).trim();
+                 const texto = nombre ? nombre + ' (' + (u.login || '') + ')' : (u.login || 'Docente');
+                 this.options.push({
+                     value: userId,
+                     text: texto + ' (no vigente — ya designado)',
+                     vigente: false
+                 });
+                 yaEnOpciones.add(userId);
+             }
+         }
 
          async initRelationships() {
             try {
-                //Obteniendo los usuarios estudiantes
-                
-                this.usuarioService()
-                    .retrieveAsesores()
-                    .then(res => {
-                      
-                        res.data.forEach((item) => {
-                            if(item.firstName && item.lastName && item.userInfo ){
-                                if(item.userInfo.nuip)
-                                item.nombresApellidos = item.firstName + ' ' + item.lastName  + ' ' +  item.userInfo.nuip;
-                            }else if(item.firstName && item.lastName){
-                                item.nombresApellidos = item.firstName + ' ' + item.lastName;
-                            }
-
-                            this.users.push(item);
-                            this.options.push({value: item.id, text: item.nombresApellidos})
-
-                        });
-
-                    });
-                
-               
-                  
-
+                //El proyecto se carga primero: la lista de candidatos sale de la facultad a la
+                //que pertenece, y sin ella no hay contra quien comparar.
                 this.proyId = parseInt(this.$route.params.proyectoId);
 
                 this.proyecto = await this.proyectoService().find(this.proyId);
-                //console.log(this.proyecto);
-
-                /*await this.proyectoService().find(this.proyId).then
-                    (res=> {
-                            this.proyecto = res;
-                    });
-                */
+                this.facultadId = this.proyecto.facultadId;
                 this.modalidadId = this.proyecto.proyectoModalidadId;
 
-                
-                            
-                 await this.integranteProyectoService()
+                await this.cargarHabilitados();
+
+                await this.cargarExternos();
+
+                await this.integranteProyectoService()
                     .retrieveAsesoresProyecto(this.proyId )
                     .then(res => {
                        this.integrantesProyecto = res.data;
-                       //console.log(res.data);
+                       this.anadirDesignadosFueraDelPadron();
                    });
                     
                   if(this.integrantesProyecto.length==0){  
@@ -210,6 +340,7 @@
 
                             integrante.integranteProyectoProyectoId = this.proyId;
                             integrante.integranteProyectoRolesModalidadId = this.rolModalidadId;
+                            integrante.esExterno = false;
 
                             this.integrantesProyecto.push(integrante);
                             

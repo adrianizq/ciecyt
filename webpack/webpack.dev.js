@@ -33,7 +33,17 @@ module.exports = merge(baseWebpackConfig, {
     port: 9060,
     proxy: [
       {
-        context: ['/api', '/services', '/management', '/swagger-resources', '/v2/api-docs', '/h2-console', '/auth'],
+        context: [
+          '/api',
+          '/services',
+          '/management',
+          '/swagger-resources',
+          '/v2/api-docs',
+          '/v3/api-docs',
+          '/swagger-ui',
+          '/h2-console',
+          '/auth',
+        ],
         target: 'http://127.0.0.1:8080',
         secure: false,
         headers: { host: 'localhost:9000' },

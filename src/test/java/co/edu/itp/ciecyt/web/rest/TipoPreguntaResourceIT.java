@@ -3,6 +3,7 @@ package co.edu.itp.ciecyt.web.rest;
 import co.edu.itp.ciecyt.CiecytApp;
 import co.edu.itp.ciecyt.domain.TipoPregunta;
 import co.edu.itp.ciecyt.repository.TipoPreguntaRepository;
+import co.edu.itp.ciecyt.security.AuthoritiesConstants;
 import co.edu.itp.ciecyt.service.TipoPreguntaService;
 import co.edu.itp.ciecyt.service.dto.TipoPreguntaDTO;
 import co.edu.itp.ciecyt.service.mapper.TipoPreguntaMapper;
@@ -29,7 +30,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  */
 @SpringBootTest(classes = CiecytApp.class)
 @AutoConfigureMockMvc
-@WithMockUser
+@WithMockUser(authorities = AuthoritiesConstants.ADMIN)
 public class TipoPreguntaResourceIT {
 
     private static final String DEFAULT_TIPO_PREGUNTA = "AAAAAAAAAA";

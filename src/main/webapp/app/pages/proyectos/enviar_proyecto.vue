@@ -69,11 +69,18 @@ import { IUser } from '@/shared/model/user.model';
 import ProyectoService from '@/entities/proyecto/proyecto.service';
 import AlertService from '@/shared/alert/alert.service';
 import { IIntegranteProyecto } from '@/shared/model/integrante-proyecto.model';
+import { estadoRevisionProyecto, tieneJurado } from '@/shared/config/opcion_grado';
 
 @Component({
   components: { MenuLateralProyecto },
 })
 export default class EnviarProyecto extends Vue {
+
+  // El template llamaba previousState() pero el metodo no existia, asi que el boton
+  // Cancel/atrás fallaba con un TypeError y no hacia nada.
+  previousState() {
+    window.history.back();
+  }
   @Inject('proyectoService') private proyectoService: () => ProyectoService;
   @Inject('alertService') private alertService: () => AlertService;
 
@@ -103,8 +110,11 @@ export default class EnviarProyecto extends Vue {
   public save(): void {
     this.isSaving = true;
     // El envío del proyecto actualiza el estado y sincroniza los flags legacy.
-    const estado = 'EN_REVISION_JURADO_PROYECTO';
-    const observacion = 'Estudiante envió el proyecto al jurado';
+    const modalidadId = this.proyecto.proyectoModalidadId;
+    const estado = estadoRevisionProyecto(modalidadId);
+    const observacion = tieneJurado(modalidadId)
+      ? 'Estudiante envió el proyecto al jurado'
+      : 'Estudiante envió el proyecto a revisión del asesor (Acuerdo 025, socialización sin jurado)';
 
     this.proyectoService()
       .cambiarEstado(this.proyecto.id, estado, observacion)

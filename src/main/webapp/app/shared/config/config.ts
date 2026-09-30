@@ -1,7 +1,6 @@
 import Vuex from 'vuex';
 import VueI18n from 'vue-i18n';
 import JhiFormatter from './formatter';
-import { setupAxiosInterceptors } from '@/shared/config/axios-interceptor';
 
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { faSort } from '@fortawesome/free-solid-svg-icons/faSort';
@@ -59,7 +58,6 @@ export function initVueApp(vue) {
   vue.use(VueCookie);
   vue.use(Vuelidate);
   vue.use(Vue2Filters);
-  setupAxiosInterceptors(() => console.log('Unauthorized!'));
   filters.initFilters();
 }
 
@@ -152,24 +150,9 @@ export function initVueXStore(vue) {
           to: '/propuesta/integrantes',
         },
         {
-          title: 'Certificado de Estudiante Activo',
-          description: 'Expedido por Registro y Control',
-          to: '/propuesta/documento/certificado-estudiante',
-        },
-        {
-          title: 'Recibo de Pago de la Opción de Grado',
-          description: 'Validado por Tesorería',
-          to: '/propuesta/documento/recibo-pago',
-        },
-        {
-          title: 'Récord Académico',
-          description: 'Expedido por Registro y Control',
-          to: '/propuesta/documento/record-academico',
-        },
-        {
-          title: 'Formato de Inscripción de la Opción de Grado',
-          description: 'Formato de inscripción de la opción de grado',
-          to: '/propuesta/documento/formato-inscripcion',
+          title: 'Requisitos de Inscripción',
+          description: 'Lista de verificación de los requisitos de inscripción (Acuerdo 025, art. 5)',
+          to: '/propuesta/checklist',
         },
         {
           title: 'Adjuntar Propuesta',
@@ -327,11 +310,13 @@ export function initVueXStore(vue) {
           title: 'Jurado(s)',
           description: 'Ingrese el jurado o jurados',
           to: '/ciecyt/asignar-jurado',
+          requiereProyecto: true,
         },
         {
           title: 'Asesor(es)',
           description: 'Ingrese el asesor o asesores',
           to: '/ciecyt/asignar-asesor',
+          requiereProyecto: true,
         },
       ],
       menu_lateral_nueva: [

@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <!--
+      El paragrafo 2 del articulo 8 y el del articulo 9 obligan a las decanaturas a remitir al
+      CIECYT, al inicio de cada periodo, la relacion de profesores habilitados. Guardar el padron
+      al dia no deja constancia de que la remision se hizo, ni de que se remitio. Estas dos tablas
+      la dejan.
+    -->
+
+    <changeSet id="20260927000003-1-tabla-remision-padron" author="ciecyt">
+        <comment>Remision de la relacion de habilitados al CIECYT</comment>
+        <createTable tableName="remision_padron">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="remision_padron_facultad_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="periodo" type="varchar(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="fecha_remision" type="timestamp">
+                <constraints nullable="false"/>
+            </column>
+            <column name="remision_padron_remitido_por_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="estado" type="varchar(20)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="fecha_envio" type="timestamp"/>
+            <column name="observaciones" type="varchar(255)"/>
+        </createTable>
+
+        <addForeignKeyConstraint baseTableName="remision_padron"
+                                 baseColumnNames="remision_padron_facultad_id"
+                                 constraintName="fk_remision_padron_facultad"
+                                 referencedTableName="facultad"
+                                 referencedColumnNames="id"/>
+
+        <addForeignKeyConstraint baseTableName="remision_padron"
+                                 baseColumnNames="remision_padron_remitido_por_id"
+                                 constraintName="fk_remision_padron_remitido_por"
+                                 referencedTableName="jhi_user"
+                                 referencedColumnNames="id"/>
+
+        <createIndex indexName="ix_remision_padron_facultad_periodo"
+                     tableName="remision_padron">
+            <column name="remision_padron_facultad_id"/>
+            <column name="periodo"/>
+        </createIndex>
+    </changeSet>
+
+    <changeSet id="20260927000003-2-una-remision-enviada-por-periodo" author="ciecyt" dbms="postgresql">
+        <comment>
+            Solo puede haber una remision enviada por facultad y periodo: es la que hace fe, y dos
+            remitidas para el mismo periodo serian dos verdades. Los borradores si se pueden rehacer
+            cuantas veces quiera la decanatura, asi que el indice no los abarca.
+
+            El indice unico parcial (WHERE) es sintaxis de PostgreSQL, por eso este changeSet solo
+            corre sobre la base de produccion: en H2 (pruebas) la sentencia no se acepta.
+        </comment>
+        <sql>
+            CREATE UNIQUE INDEX ux_remision_padron_enviada
+            ON remision_padron (remision_padron_facultad_id, periodo)
+            WHERE estado = 'ENVIADO';
+        </sql>
+    </changeSet>
+
+    <changeSet id="20260927000003-3-tabla-remision-padron-docente" author="ciecyt">
+        <comment>Docentes de una remision, con el nombre y correo del momento de la remision</comment>
+        <createTable tableName="remision_padron_docente">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="remision_padron_docente_remision_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="remision_padron_docente_docente_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="rol" type="varchar(20)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="nombre_al_remitir" type="varchar(255)"/>
+            <column name="correo_al_remitir" type="varchar(255)"/>
+        </createTable>
+
+        <addForeignKeyConstraint baseTableName="remision_padron_docente"
+                                 baseColumnNames="remision_padron_docente_remision_id"
+                                 constraintName="fk_remision_docente_remision"
+                                 referencedTableName="remision_padron"
+                                 referencedColumnNames="id"/>
+
+        <addForeignKeyConstraint baseTableName="remision_padron_docente"
+                                 baseColumnNames="remision_padron_docente_docente_id"
+                                 constraintName="fk_remision_docente_docente"
+                                 referencedTableName="jhi_user"
+                                 referencedColumnNames="id"/>
+    </changeSet>
+
+    <changeSet id="20260927000003-4-menu-remision" author="ciecyt">
+        <comment>La remision es una pantalla aparte del padron: una mantiene la lista, la otra deja constancia de lo remitido</comment>
+        <insert tableName="menu">
+            <column name="id" valueNumeric="6602"/>
+            <column name="nombre" value="Remitir padron a CIECYT"/>
+            <column name="url" value="/decanura/remision-padron"/>
+            <column name="icono" value="fa fa-send"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="es_publico" valueBoolean="false"/>
+            <column name="rol" value="DECANO ADMIN"/>
+            <column name="orden" valueNumeric="6"/>
+        </insert>
+    </changeSet>
+
+</databaseChangeLog>

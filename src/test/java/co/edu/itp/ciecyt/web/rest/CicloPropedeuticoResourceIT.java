@@ -3,6 +3,7 @@ package co.edu.itp.ciecyt.web.rest;
 import co.edu.itp.ciecyt.CiecytApp;
 import co.edu.itp.ciecyt.domain.CicloPropedeutico;
 import co.edu.itp.ciecyt.repository.CicloPropedeuticoRepository;
+import co.edu.itp.ciecyt.security.AuthoritiesConstants;
 import co.edu.itp.ciecyt.service.CicloPropedeuticoService;
 import co.edu.itp.ciecyt.service.dto.CicloPropedeuticoDTO;
 import co.edu.itp.ciecyt.service.mapper.CicloPropedeuticoMapper;
@@ -29,7 +30,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  */
 @SpringBootTest(classes = CiecytApp.class)
 @AutoConfigureMockMvc
-@WithMockUser
+@WithMockUser(authorities = AuthoritiesConstants.ADMIN)
 public class CicloPropedeuticoResourceIT {
 
     private static final String DEFAULT_CICLO = "AAAAAAAAAA";

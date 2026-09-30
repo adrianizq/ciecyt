@@ -5,6 +5,16 @@
       <jhi-navbar></jhi-navbar>
     </div>
     <div class="container-fluid" style="padding: 0 1.5rem;">
+      <b-alert
+        class="global-alert"
+        :show="dismissCountDown"
+        dismissible
+        :variant="alertType"
+        @dismissed="countDownChanged(0)"
+        @dismiss-count-down="countDownChanged"
+      >
+        {{ textoAlerta }}
+      </b-alert>
       <div class="jh-card">
         <router-view></router-view>
       </div>
@@ -23,5 +33,11 @@
 <style>
     .btn-switch {
         display: inline-grid;
+    }
+    .global-alert {
+        position: sticky;
+        top: 0;
+        z-index: 1030;
+        margin-top: 0.75rem;
     }
 </style>

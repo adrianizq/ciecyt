@@ -206,6 +206,7 @@ public class UserResource {
 
 
     @GetMapping("/users/asesores")
+    @PreAuthorize("hasAnyRole(\"" + AuthoritiesConstants.CIECYT + "\", \"" + AuthoritiesConstants.ADMIN + "\")")
         public ResponseEntity<?> getAllUsersAsesoresNoPage() {
         //Optional<User> user = userService.getUserWithAuthorities();
         //Locale locale = Locale.forLanguageTag(user.get().getLangKey());
@@ -229,7 +230,11 @@ public class UserResource {
     }
 
     @GetMapping("/users/estudiantes")
-        public ResponseEntity<?> getAllUsersEstudiantesNoPage() {
+    // El lista de estudiantes (para conformar el grupo en una propuesta) permanece abierto a
+    // usuarios autenticados: el proponente es un estudiante que arma su equipo. Los directorios
+    // sensibles (asesores/jurados, que alimentan designaciones segun el Acuerdo 25) si estan
+    // restringidos a CIECYT/ADMIN.
+    public ResponseEntity<?> getAllUsersEstudiantesNoPage() {
         //Optional<User> user = userService.getUserWithAuthorities();
         //Locale locale = Locale.forLanguageTag(user.get().getLangKey());
         try{
@@ -247,6 +252,7 @@ public class UserResource {
 
 
     @GetMapping("/users/jurados")
+    @PreAuthorize("hasAnyRole(\"" + AuthoritiesConstants.CIECYT + "\", \"" + AuthoritiesConstants.ADMIN + "\")")
     public ResponseEntity<?> getAllUsersJuradosNoPage() {
         //Optional<User> user = userService.getUserWithAuthorities();
         //Locale locale = Locale.forLanguageTag(user.get().getLangKey());

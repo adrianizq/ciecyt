@@ -3,6 +3,7 @@ package co.edu.itp.ciecyt.web.rest;
 import co.edu.itp.ciecyt.CiecytApp;
 import co.edu.itp.ciecyt.domain.Fases;
 import co.edu.itp.ciecyt.repository.FasesRepository;
+import co.edu.itp.ciecyt.security.AuthoritiesConstants;
 import co.edu.itp.ciecyt.service.FasesService;
 import co.edu.itp.ciecyt.service.dto.FasesDTO;
 import co.edu.itp.ciecyt.service.mapper.FasesMapper;
@@ -29,7 +30,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  */
 @SpringBootTest(classes = CiecytApp.class)
 @AutoConfigureMockMvc
-@WithMockUser
+@WithMockUser(authorities = AuthoritiesConstants.ADMIN)
 public class FasesResourceIT {
 
     private static final String DEFAULT_FASE = "AAAAAAAAAA";

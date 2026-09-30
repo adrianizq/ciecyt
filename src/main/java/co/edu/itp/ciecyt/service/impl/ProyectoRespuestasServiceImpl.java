@@ -1,6 +1,7 @@
 package co.edu.itp.ciecyt.service.impl;
 
 import co.edu.itp.ciecyt.domain.ElementoProyecto;
+import co.edu.itp.ciecyt.service.ProyectoAutorizacionService;
 import co.edu.itp.ciecyt.service.ProyectoRespuestasService;
 import co.edu.itp.ciecyt.domain.ProyectoRespuestas;
 import co.edu.itp.ciecyt.repository.ProyectoRespuestasRepository;
@@ -16,7 +17,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -32,9 +35,41 @@ public class ProyectoRespuestasServiceImpl implements ProyectoRespuestasService 
 
     private final ProyectoRespuestasMapper proyectoRespuestasMapper;
 
-    public ProyectoRespuestasServiceImpl(ProyectoRespuestasRepository proyectoRespuestasRepository, ProyectoRespuestasMapper proyectoRespuestasMapper) {
+    private final ProyectoAutorizacionService autorizacion;
+
+    public ProyectoRespuestasServiceImpl(ProyectoRespuestasRepository proyectoRespuestasRepository, ProyectoRespuestasMapper proyectoRespuestasMapper, ProyectoAutorizacionService autorizacion) {
         this.proyectoRespuestasRepository = proyectoRespuestasRepository;
         this.proyectoRespuestasMapper = proyectoRespuestasMapper;
+        this.autorizacion = autorizacion;
+    }
+
+    /**
+     * Descarta del resultado las respuestas de un rol que aun no ha entregado su concepto.
+     *
+     * <p>Se filtra aqui y no en el resource para que el descarte aplique a cualquier lector, y se
+     * deja en el resource el 403 de quien no puede ni ver el proyecto. Asi el estudiante que
+     * consulta los comentarios de su propuesta obtiene una lista vacia, igual que si el asesor
+     * aun no hubiera escrito nada, y no se le revela que hay un borrador en curso.
+     *
+     * <p>La decision se evalua una vez por rol y no una vez por respuesta, porque el proyecto se
+     * resuelve en base de datos y las respuestas se agrupan por autoridad.
+     */
+    private List<ProyectoRespuestasDTO> soloRespuestasVisibles(Long idProyecto, List<ProyectoRespuestas> respuestas) {
+        List<ProyectoRespuestasDTO> visibles = new ArrayList<>();
+        Map<String, Boolean> porRol = new HashMap<>();
+        for (ProyectoRespuestas respuesta : respuestas) {
+            String authority = respuesta.getAuthority();
+            // Boolean y no boolean: un null es la senal de que ese rol todavia no se consulto.
+            Boolean visible = porRol.get(authority);
+            if (visible == null) {
+                visible = autorizacion.puedeVerRespuestasDeRolEn(idProyecto, authority);
+                porRol.put(authority, visible);
+            }
+            if (visible) {
+                visibles.add(proyectoRespuestasMapper.toDto(respuesta));
+            }
+        }
+        return visibles;
     }
 
     @Override
@@ -71,24 +106,17 @@ public class ProyectoRespuestasServiceImpl implements ProyectoRespuestasService 
     @Override
     public List<ProyectoRespuestasDTO> findByProyectoRespuestasProyectoId(Long idProyecto) throws Exception {
         log.debug("Request to get all ElementoProyecto whit a idProyecto");
-        List<ProyectoRespuestasDTO> listDTO = new ArrayList<>();
         List<ProyectoRespuestas> list = proyectoRespuestasRepository.findByProyectoRespuestasProyectoIdOrderByProyectoRespuestasProyectoId(idProyecto);
-
-        for (ProyectoRespuestas obj : list) {
-            listDTO.add(proyectoRespuestasMapper.toDto(obj));
-        }
-        return listDTO;
+        return soloRespuestasVisibles(idProyecto, list);
     }
 
     @Override
     public List<ProyectoRespuestasDTO> findByProyectoRespuestasProyectoIdFaseAuthority(Long idProyecto, Long idFase, String authority) throws Exception {
         log.debug("Request to get all ElementoProyecto whit a idProyecto");
-        List<ProyectoRespuestasDTO> listDTO = new ArrayList<>();
-        List<ProyectoRespuestas> list = proyectoRespuestasRepository.findByProyectoRespuestasProyectoIdAndFaseIdAndAuthority(idProyecto,idFase,authority);
-
-        for (ProyectoRespuestas obj : list) {
-            listDTO.add(proyectoRespuestasMapper.toDto(obj));
+        if (!autorizacion.puedeVerRespuestasDeRolEn(idProyecto, authority)) {
+            return new ArrayList<>();
         }
-        return listDTO;
+        List<ProyectoRespuestas> list = proyectoRespuestasRepository.findByProyectoRespuestasProyectoIdAndFaseIdAndAuthority(idProyecto,idFase,authority);
+        return soloRespuestasVisibles(idProyecto, list);
     }
 }

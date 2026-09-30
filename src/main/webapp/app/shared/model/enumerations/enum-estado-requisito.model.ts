@@ -1,0 +1,6 @@
+export enum EnumEstadoRequisito {
+  PENDIENTE = 'PENDIENTE',
+  ENTREGADO = 'ENTREGADO',
+  APROBADO = 'APROBADO',
+  RECHAZADO = 'RECHAZADO',
+}

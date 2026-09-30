@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.9.xsd
+                        http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog-ext/dbchangelog-3.9.xsd">
+
+    <!-- Acuerdo 025 art. 10: continuidad de la opción de grado (3 periodos académicos) -->
+    <changeSet id="20260923000002-1" author="ciecyt">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists tableName="proyecto" columnName="fecha_inicio_continuidad"/>
+            </not>
+        </preConditions>
+        <addColumn tableName="proyecto">
+            <column name="fecha_inicio_continuidad" type="date">
+                <constraints nullable="true"/>
+            </column>
+            <column name="periodos_continuidad_usados" type="int" defaultValueNumeric="0">
+                <constraints nullable="false"/>
+            </column>
+            <column name="estado_continuidad" type="varchar(30)" defaultValue="REGULAR">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+        <rollback>
+            <dropColumn tableName="proyecto" columnName="estado_continuidad"/>
+            <dropColumn tableName="proyecto" columnName="periodos_continuidad_usados"/>
+            <dropColumn tableName="proyecto" columnName="fecha_inicio_continuidad"/>
+        </rollback>
+    </changeSet>
+
+    <!-- Acuerdo 025 art. 10 par. 6: periodo adicional excepcional por fuerza mayor o caso fortuito -->
+    <changeSet id="20260923000002-2" author="ciecyt">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists tableName="proyecto" columnName="continuidad_periodo_adicional"/>
+            </not>
+        </preConditions>
+        <addColumn tableName="proyecto">
+            <column name="continuidad_periodo_adicional" type="boolean" defaultValueBoolean="false">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+        <rollback>
+            <dropColumn tableName="proyecto" columnName="continuidad_periodo_adicional"/>
+        </rollback>
+    </changeSet>
+
+</databaseChangeLog>

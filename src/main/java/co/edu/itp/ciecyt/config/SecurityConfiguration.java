@@ -47,7 +47,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
             .antMatchers("/app/**/*.{js,html}")
             .antMatchers("/i18n/**")
             .antMatchers("/content/**")
-            .antMatchers("/swagger-ui/index.html")
+            .antMatchers("/swagger-ui/**")
+            .antMatchers("/v3/api-docs/**")
             .antMatchers("/test/**");
     }
 
@@ -70,7 +71,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
             .featurePolicy("geolocation 'none'; midi 'none'; sync-xhr 'none'; microphone 'none'; camera 'none'; magnetometer 'none'; gyroscope 'none'; speaker 'none'; fullscreen 'self'; payment 'none'")
         .and()
             .frameOptions()
-            .deny()
+            .sameOrigin()
         .and()
             .sessionManagement()
             .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
@@ -81,7 +82,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
             .antMatchers("/api/activate").permitAll()
             .antMatchers("/api/menus-no-page").permitAll()
             .antMatchers("/api/menus-roles/**").permitAll()
-            .antMatchers("/api/proyectosIntegrantes/**").permitAll()
             .antMatchers("/api/account/reset-password/init").permitAll()
             .antMatchers("/api/account/reset-password/finish").permitAll()
             .antMatchers("/api/**").authenticated()

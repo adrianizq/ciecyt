@@ -11,6 +11,16 @@
         Added the entity IntegranteProyecto.
     -->
     <changeSet id="20201008035003-1" author="jhipster">
+        <!--
+            Este archivo "constraints" repite el createTable que ya hizo
+            20201008035003_added_entity_IntegranteProyecto.xml, asi que en base nueva
+            moria con "table already exists".
+        -->
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="integrante_proyecto"/>
+            </not>
+        </preConditions>
         <createTable tableName="integrante_proyecto">
             <column name="id" type="bigint">
                 <constraints primaryKey="true" nullable="false"/>

@@ -6,6 +6,11 @@ export interface IIntegranteProyecto {
   integranteProyectoUserId?: number;
   integranteProyectoUserFirstName?: string;
   integranteProyectoUserLastName?: string;
+  integranteProyectoUserNuip?: string;
+  integranteProyectoUserCodigoItp?: string;
+  integranteProyectoExternoId?: number;
+  integranteProyectoExternoNombre?: string;
+  esExterno?: boolean;
   integranteProyectoProyectoTitulo?: string;
   integranteProyectoProyectoId?: number;
   integranteProyectoRolesModalidadRol?: string;
@@ -21,6 +26,11 @@ export class IntegranteProyecto implements IIntegranteProyecto {
     public integranteProyectoUserId?: number,
     public integranteProyectoUserFirstName?: string,
     public integranteProyectoUserLastName?: string,
+    public integranteProyectoUserNuip?: string,
+    public integranteProyectoUserCodigoItp?: string,
+    public integranteProyectoExternoId?: number,
+    public integranteProyectoExternoNombre?: string,
+    public esExterno?: boolean,
     public integranteProyectoProyectoTitulo?: string,
     public integranteProyectoProyectoId?: number,
     public integranteProyectoRolesModalidadRol?: string,

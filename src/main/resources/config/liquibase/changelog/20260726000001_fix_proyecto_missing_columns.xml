@@ -7,7 +7,7 @@
                         http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog-ext/dbchangelog-3.9.xsd">
 
     <!-- Fix mismatch: entity expects 'proyecto_fase_id' but DB has 'proyecto_fases_id' -->
-    <changeSet id="20260726000001-1" author="fix" dbms="postgresql">
+    <changeSet id="20260726000001-1" author="fix">
         <preConditions onFail="MARK_RAN">
             <not>
                 <columnExists tableName="proyecto" columnName="proyecto_fase_id"/>
@@ -21,7 +21,7 @@
     </changeSet>
 
     <!-- Add missing 'fase' column (String) to proyecto table -->
-    <changeSet id="20260726000001-2" author="fix" dbms="postgresql">
+    <changeSet id="20260726000001-2" author="fix">
         <preConditions onFail="MARK_RAN">
             <not>
                 <columnExists tableName="proyecto" columnName="fase"/>
@@ -38,7 +38,7 @@
     </changeSet>
 
     <!-- Add missing 'proyecto_ciclo_id' FK column to proyecto table -->
-    <changeSet id="20260726000001-3" author="fix" dbms="postgresql">
+    <changeSet id="20260726000001-3" author="fix">
         <preConditions onFail="MARK_RAN">
             <not>
                 <columnExists tableName="proyecto" columnName="proyecto_ciclo_id"/>
@@ -86,6 +86,27 @@
             <modifyDataType tableName="proyecto" columnName="fecha_pre_envio_propuesta" newDataType="timestamp with time zone"/>
             <modifyDataType tableName="proyecto" columnName="fecha_viabilidad_propuesta" newDataType="timestamp with time zone"/>
             <modifyDataType tableName="proyecto" columnName="fecha_sustentacion_proyecto" newDataType="timestamp with time zone"/>
+        </rollback>
+    </changeSet>
+
+    <!--
+        El changeSet -4 solo corre en PostgreSQL: su precondicion pide data_type =
+        'timestamp with time zone', y en H2 la columna llega como DATETIME (TIMESTAMP).
+        Hibernate espera LocalDate en esos tres campos, asi que en las pruebas
+        reventaba con "wrong column type". Mismo cambio, ahora si aplicable en H2.
+    -->
+    <changeSet id="20260726000001-5" author="fix" dbms="h2">
+        <preConditions onFail="MARK_RAN">
+            <tableExists tableName="proyecto"/>
+        </preConditions>
+        <comment>proyecto: Instant -> LocalDate en la entidad, por eso la columna debe ser date</comment>
+        <modifyDataType tableName="proyecto" columnName="fecha_pre_envio_propuesta" newDataType="date"/>
+        <modifyDataType tableName="proyecto" columnName="fecha_viabilidad_propuesta" newDataType="date"/>
+        <modifyDataType tableName="proyecto" columnName="fecha_sustentacion_proyecto" newDataType="date"/>
+        <rollback>
+            <modifyDataType tableName="proyecto" columnName="fecha_pre_envio_propuesta" newDataType="datetime"/>
+            <modifyDataType tableName="proyecto" columnName="fecha_viabilidad_propuesta" newDataType="datetime"/>
+            <modifyDataType tableName="proyecto" columnName="fecha_sustentacion_proyecto" newDataType="datetime"/>
         </rollback>
     </changeSet>
 

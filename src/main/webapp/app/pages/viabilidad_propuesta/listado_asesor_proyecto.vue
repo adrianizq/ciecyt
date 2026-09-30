@@ -9,13 +9,6 @@
             <span id="proyecto-heading">Mis proyectos</span>
             
         </h2>
-        <b-alert :show="dismissCountDown"
-            dismissible
-            :variant="alertType"
-            @dismissed="dismissCountDown=0"
-            @dismiss-count-down="countDownChanged">
-            {{alertMessage}}
-        </b-alert>
         <br/>
         <div class="alert alert-warning" v-if="!isFetching && proyects && proyects.length === 0">
             <span>No se encontraron proyectos</span>
@@ -51,9 +44,16 @@
                         <div class="btn-group" >
                             <router-link :to="{name: 'AsesoriaEvaluarProyectoView', 
                             params: {proyectoId: proyecto.id}}" tag="button" class="btn btn-info btn-sm details"
-                            v-if="proyecto.viabilidad=='VIABLE'">
+                            v-if="proyecto.estado=='EN_REVISION_ASESOR_PROYECTO' || (proyecto.viabilidad=='VIABLE' && !esEstadoActoPublico(proyecto))">
                                <b-icon-eye-fill  ></b-icon-eye-fill>&nbsp;
                                 <span class="d-none d-md-inline" v-text="$t('entity.action.revisar')">Revisar</span>
+                            </router-link>
+
+                            <router-link :to="{name: 'ProyectoEvaluarSustentacionView',
+                            params: {proyectoId: proyecto.id}}" tag="button" class="btn btn-primary btn-sm details"
+                            v-if="esEstadoActoPublico(proyecto)">
+                               <b-icon-eye-fill  ></b-icon-eye-fill>&nbsp;
+                                <span class="d-none d-md-inline">{{ etiquetaActo() }}</span>
                             </router-link>
   
                         </div>
@@ -92,6 +92,7 @@ import MenuLateralListado from '@/components/propuesta_listado/menu_lateral_list
 
 import { IProyecto, Proyecto } from '@/shared/model/proyecto.model';
 import ProyectoService from '@/entities/proyecto/proyecto.service';
+import { ESTADO_EN_EVALUACION_SOCIALIZACION, ESTADO_SOCIALIZACION_PROGRAMADA, ESTADO_SOCIALIZACION_REALIZADA, tieneJurado } from '@/shared/config/opcion_grado';
 
 const validations: any = {};
 
@@ -125,6 +126,21 @@ export default class Listado extends Vue {
   public dismissSecs: number = this.$store.getters.dismissSecs;
   public alertType: string = this.$store.getters.alertType;
   public alertMessage: any = this.$store.getters.alertMessage;
+
+  public esEstadoActoPublico(proyecto: IProyecto): boolean {
+    if (tieneJurado(proyecto.proyectoModalidadId)) {
+      return false;
+    }
+    return (
+      proyecto.estado === ESTADO_SOCIALIZACION_PROGRAMADA ||
+      proyecto.estado === ESTADO_SOCIALIZACION_REALIZADA ||
+      proyecto.estado === ESTADO_EN_EVALUACION_SOCIALIZACION
+    );
+  }
+
+  public etiquetaActo(): string {
+    return 'Evaluar socialización';
+  }
   public autoridades: any = this.$store.getters.account.authorities;
 
   public getAlertFromStore() {

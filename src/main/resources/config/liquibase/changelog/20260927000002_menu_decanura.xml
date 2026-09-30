@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <!--
+      El menu se arma con un LIKE '%ROL%' sobre la columna menu.rol, asi que el reconocimiento de
+      un rol es una cuestion de que su nombre aparezca en esa cadena. El decanura no aparecia en
+      ningun menu y el navbar ni siquiera lo buscaba entre los roles, de modo que la persona que
+      dirige una facultad no tenia por donde entrar a mantener la lista de habilitados.
+    -->
+
+    <changeSet id="20260927000002-1-menu-decanura" author="ciecyt">
+        <comment>Menu de decanura: la lista de docentes habilitados que el CIECYT usa para designar</comment>
+        <insert tableName="menu">
+            <column name="id" valueNumeric="6601"/>
+            <column name="nombre" value="Docentes habilitados"/>
+            <column name="url" value="/decanura/padron-habilitados"/>
+            <column name="icono" value="fa fa-user-check"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="es_publico" valueBoolean="false"/>
+            <column name="rol" value="DECANO ADMIN"/>
+            <column name="orden" valueNumeric="5"/>
+        </insert>
+    </changeSet>
+
+    <changeSet id="20260927000002-2-decanura-ve-inicio-y-cuenta" author="ciecyt">
+        <comment>La decanatura es un usuario mas: necesita Inicio, Cuenta, Contrasena, Ajustes y Cerrar sesion</comment>
+        <update tableName="menu">
+            <column name="rol" value="ADMIN CIECYT DECANO JURADO ASESOR USER ESTUDIANTE"/>
+            <where>url = '/'</where>
+        </update>
+        <update tableName="menu">
+            <column name="rol" value="ADMIN CIECYT DECANO JURADO ASESOR ESTUDIANTE"/>
+            <where>url = '/account'</where>
+        </update>
+        <update tableName="menu">
+            <column name="rol" value="ADMIN CIECYT DECANO JURADO ASESOR ESTUDIANTE"/>
+            <where>url = '/account/password'</where>
+        </update>
+        <update tableName="menu">
+            <column name="rol" value="ADMIN CIECYT DECANO JURADO ASESOR ESTUDIANTE"/>
+            <where>url = '/account/settings'</where>
+        </update>
+        <update tableName="menu">
+            <column name="rol" value="ADMIN CIECYT DECANO JURADO ASESOR ESTUDIANTE"/>
+            <where>url = 'logout()'</where>
+        </update>
+    </changeSet>
+
+    <changeSet id="20260927000002-3-orden-proyecto" author="ciecyt">
+        <comment>Deja espacio entre Proyecto (orden 4) y Cuenta (orden 9) para el menu de decanura</comment>
+        <update tableName="menu">
+            <column name="orden" valueNumeric="10"/>
+            <where>url = '/account'</where>
+        </update>
+    </changeSet>
+
+</databaseChangeLog>

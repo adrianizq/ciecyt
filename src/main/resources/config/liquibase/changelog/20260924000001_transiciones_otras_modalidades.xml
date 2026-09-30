@@ -1,0 +1,1094 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.9.xsd">
+
+    <!--
+        Acuerdo 025 - Matrices de transicion de estado para las modalidades distintas de Tesis.
+        Tesis (9004) ya tiene su matriz en 20260811000001 (ids 95200-95231).
+        - 9001 Pasantia Tecnologica: socializacion sin jurado (art. 9, 14 par. 2), asesor evalúa (art. 24.b).
+        - 9002 Pasantia Investigativa Profesional: sustentacion con jurado y nota escalonada (art. 14 par. 1 y 9).
+        - 9003 Pasantia Internacional: socializacion sin jurado, asesor evalúa.
+        - 9005 Diplomado: sin acto publico (art. 14 par. 3), CIECYT registra NOTA tras certificacion (art. 32 par. 6).
+        - 9006 Publicacion de Articulo: socializacion, asesor evalúa; aceptacion de revista certifica (art. 33-36).
+        - 9007 Especializacion: sin acto publico (art. 14 par. 4), CIECYT registra NOTA tras certificacion (art. 39 par. 3).
+    -->
+
+    <changeSet id="20260924000001-9001" author="ciecyt">
+        <comment>Pasantia Tecnologica (modalidad 9001) - Acuerdo 025</comment>
+        <insert tableName="transicion_estado">
+            <column name="id" valueNumeric="96100"/>
+            <column name="estado_origen" value="PREINSCRITA"/>
+            <column name="estado_destino" value="EN_VALIDACION_DOCUMENTAL"/>
+            <column name="rol_requerido" value="ROLE_ESTUDIANTE"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="transicion_estado_modalidad_id" valueNumeric="9001"/>
+        </insert>
+        <insert tableName="transicion_estado">
+            <column name="id" valueNumeric="96101"/>
+            <column name="estado_origen" value="EN_VALIDACION_DOCUMENTAL"/>
+            <column name="estado_destino" value="OBSERVACIONES_DOCUMENTACION"/>
+            <column name="rol_requerido" value="ROLE_CIECYT"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="transicion_estado_modalidad_id" valueNumeric="9001"/>
+        </insert>
+        <insert tableName="transicion_estado">
+            <column name="id" valueNumeric="96102"/>
+            <column name="estado_origen" value="EN_VALIDACION_DOCUMENTAL"/>
+            <column name="estado_destino" value="HABILITADO"/>
+            <column name="rol_requerido" value="ROLE_CIECYT"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="transicion_estado_modalidad_id" valueNumeric="9001"/>
+        </insert>
+        <insert tableName="transicion_estado">
+            <column name="id" valueNumeric="96103"/>
+            <column name="estado_origen" value="OBSERVACIONES_DOCUMENTACION"/>
+            <column name="estado_destino" value="EN_VALIDACION_DOCUMENTAL"/>
+            <column name="rol_requerido" value="ROLE_ESTUDIANTE"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="transicion_estado_modalidad_id" valueNumeric="9001"/>
+        </insert>
+        <insert tableName="transicion_estado">
+            <column name="id" valueNumeric="96104"/>
+            <column name="estado_origen" value="HABILITADO"/>
+            <column name="estado_destino" value="EN_ELABORACION_PROPUESTA"/>
+            <column name="rol_requerido" value="ROLE_ESTUDIANTE"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="transicion_estado_modalidad_id" valueNumeric="9001"/>
+        </insert>
+        <insert tableName="transicion_estado">
+            <column name="id" valueNumeric="96105"/>
+            <column name="estado_origen" value="HABILITADO"/>
+            <column name="estado_destino" value="EN_REVISION_ASESOR"/>
+            <column name="rol_requerido" value="ROLE_ESTUDIANTE"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="transicion_estado_modalidad_id" valueNumeric="9001"/>
+        </insert>
+        <insert tableName="transicion_estado">
+            <column name="id" valueNumeric="96106"/>
+            <column name="estado_origen" value="EN_ELABORACION_PROPUESTA"/>
+            <column name="estado_destino" value="EN_VALIDACION_DOCUMENTAL"/>
+            <column name="rol_requerido" value="ROLE_ESTUDIANTE"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="transicion_estado_modalidad_id" valueNumeric="9001"/>
+        </insert>
+        <insert tableName="transicion_estado">
+            <column name="id" valueNumeric="96107"/>
+            <column name="estado_origen" value="EN_REVISION_ASESOR"/>
+            <column name="estado_destino" value="CORRECCIONES_ASESOR"/>
+            <column name="rol_requerido" value="ROLE_ASESOR"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="transicion_estado_modalidad_id" valueNumeric="9001"/>
+        </insert>
+        <insert tableName="transicion_estado">
+            <column name="id" valueNumeric="96108"/>
+            <column name="estado_origen" value="EN_REVISION_ASESOR"/>
+            <column name="estado_destino" value="APROBADA_POR_ASESOR"/>
+            <column name="rol_requerido" value="ROLE_ASESOR"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="transicion_estado_modalidad_id" valueNumeric="9001"/>
+        </insert>
+        <insert tableName="transicion_estado">
+            <column name="id" valueNumeric="96109"/>
+            <column name="estado_origen" value="CORRECCIONES_ASESOR"/>
+            <column name="estado_destino" value="EN_REVISION_ASESOR"/>
+            <column name="rol_requerido" value="ROLE_ESTUDIANTE"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="transicion_estado_modalidad_id" valueNumeric="9001"/>
+        </insert>
+        <insert tableName="transicion_estado">
+            <column name="id" valueNumeric="96110"/>
+            <column name="estado_origen" value="APROBADA_POR_ASESOR"/>
+            <column name="estado_destino" value="EN_REVISION_JURADO_PROPUESTA"/>
+            <column name="rol_requerido" value="*"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="transicion_estado_modalidad_id" valueNumeric="9001"/>
+        </insert>
+        <insert tableName="transicion_estado">
+            <column name="id" valueNumeric="96111"/>
+            <column name="estado_origen" value="EN_REVISION_JURADO_PROPUESTA"/>
+            <column name="estado_destino" value="CORRECCIONES_JURADO_PROPUESTA"/>
+            <column name="rol_requerido" value="ROLE_ASESOR"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="transicion_estado_modalidad_id" valueNumeric="9001"/>
+        </insert>
+        <insert tableName="transicion_estado">
+            <column name="id" valueNumeric="96112"/>
+            <column name="estado_origen" value="EN_REVISION_JURADO_PROPUESTA"/>
+            <column name="estado_destino" value="VIABLE"/>
+            <column name="rol_requerido" value="ROLE_ASESOR"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="transicion_estado_modalidad_id" valueNumeric="9001"/>
+        </insert>
+        <insert tableName="transicion_estado">
+            <column name="id" valueNumeric="96113"/>
+            <column name="estado_origen" value="CORRECCIONES_JURADO_PROPUESTA"/>
+            <column name="estado_destino" value="EN_REVISION_JURADO_PROPUESTA"/>
+            <column name="rol_requerido" value="ROLE_ESTUDIANTE"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="transicion_estado_modalidad_id" valueNumeric="9001"/>
+        </insert>
+        <insert tableName="transicion_estado">
+            <column name="id" valueNumeric="96114"/>
+            <column name="estado_origen" value="VIABLE"/>
+            <column name="estado_destino" value="EN_ELABORACION_PROYECTO"/>
+            <column name="rol_requerido" value="ROLE_ESTUDIANTE"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="transicion_estado_modalidad_id" valueNumeric="9001"/>
+        </insert>
+        <insert tableName="transicion_estado">
+            <column name="id" valueNumeric="96115"/>
+            <column name="estado_origen" value="EN_ELABORACION_PROYECTO"/>
+            <column name="estado_destino" value="EN_REVISION_JURADO_PROYECTO"/>
+            <column name="rol_requerido" value="ROLE_ESTUDIANTE"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="transicion_estado_modalidad_id" valueNumeric="9001"/>
+        </insert>
+        <insert tableName="transicion_estado">
+            <column name="id" valueNumeric="96116"/>
+            <column name="estado_origen" value="EN_REVISION_JURADO_PROYECTO"/>
+            <column name="estado_destino" value="CORRECCIONES_JURADO_PROYECTO"/>
+            <column name="rol_requerido" value="ROLE_ASESOR"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="transicion_estado_modalidad_id" valueNumeric="9001"/>
+        </insert>
+        <insert tableName="transicion_estado">
+            <column name="id" valueNumeric="96117"/>
+            <column name="estado_origen" value="EN_REVISION_JURADO_PROYECTO"/>
+            <column name="estado_destino" value="LISTO_PARA_SUSTENTAR"/>
+            <column name="rol_requerido" value="ROLE_ASESOR"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="transicion_estado_modalidad_id" valueNumeric="9001"/>
+        </insert>
+        <insert tableName="transicion_estado">
+            <column name="id" valueNumeric="96118"/>
+            <column name="estado_origen" value="CORRECCIONES_JURADO_PROYECTO"/>
+            <column name="estado_destino" value="EN_REVISION_JURADO_PROYECTO"/>
+            <column name="rol_requerido" value="ROLE_ESTUDIANTE"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="transicion_estado_modalidad_id" valueNumeric="9001"/>
+        </insert>
+        <insert tableName="transicion_estado">
+            <column name="id" valueNumeric="96119"/>
+            <column name="estado_origen" value="LISTO_PARA_SUSTENTAR"/>
+            <column name="estado_destino" value="SUSTENTACION_PROGRAMADA"/>
+            <column name="rol_requerido" value="ROLE_CIECYT"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="transicion_estado_modalidad_id" valueNumeric="9001"/>
+        </insert>
+        <insert tableName="transicion_estado">
+            <column name="id" valueNumeric="96120"/>
+            <column name="estado_origen" value="SUSTENTACION_PROGRAMADA"/>
+            <column name="estado_destino" value="SUSTENTACION_REALIZADA"/>
+            <column name="rol_requerido" value="ROLE_CIECYT"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="transicion_estado_modalidad_id" valueNumeric="9001"/>
+        </insert>
+        <insert tableName="transicion_estado">
+            <column name="id" valueNumeric="96121"/>
+            <column name="estado_origen" value="SUSTENTACION_REALIZADA"/>
+            <column name="estado_destino" value="EN_EVALUACION_SUSTENTACION"/>
+            <column name="rol_requerido" value="ROLE_ASESOR"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="transicion_estado_modalidad_id" valueNumeric="9001"/>
+        </insert>
+        <insert tableName="transicion_estado">
+            <column name="id" valueNumeric="96122"/>
+            <column name="estado_origen" value="EN_EVALUACION_SUSTENTACION"/>
+            <column name="estado_destino" value="AJUSTES_SUSTENTACION"/>
+            <column name="rol_requerido" value="ROLE_ASESOR"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="transicion_estado_modalidad_id" valueNumeric="9001"/>
+        </insert>
+        <insert tableName="transicion_estado">
+            <column name="id" valueNumeric="96123"/>
+            <column name="estado_origen" value="EN_EVALUACION_SUSTENTACION"/>
+            <column name="estado_destino" value="NOTA_DEFINITIVA"/>
+            <column name="rol_requerido" value="ROLE_ASESOR"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="transicion_estado_modalidad_id" valueNumeric="9001"/>
+        </insert>
+        <insert tableName="transicion_estado">
+            <column name="id" valueNumeric="96124"/>
+            <column name="estado_origen" value="AJUSTES_SUSTENTACION"/>
+            <column name="estado_destino" value="EN_EVALUACION_SUSTENTACION"/>
+            <column name="rol_requerido" value="ROLE_ESTUDIANTE"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="transicion_estado_modalidad_id" valueNumeric="9001"/>
+        </insert>
+        <insert tableName="transicion_estado">
+            <column name="id" valueNumeric="96125"/>
+            <column name="estado_origen" value="NOTA_DEFINITIVA"/>
+            <column name="estado_destino" value="FINALIZADO"/>
+            <column name="rol_requerido" value="ROLE_CIECYT"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="transicion_estado_modalidad_id" valueNumeric="9001"/>
+        </insert>
+        <insert tableName="transicion_estado">
+            <column name="id" valueNumeric="96126"/>
+            <column name="estado_origen" value="PREINSCRITA"/>
+            <column name="estado_destino" value="EN_ELABORACION_PROPUESTA"/>
+            <column name="rol_requerido" value="ROLE_ESTUDIANTE"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="transicion_estado_modalidad_id" valueNumeric="9001"/>
+        </insert>
+        <insert tableName="transicion_estado">
+            <column name="id" valueNumeric="96127"/>
+            <column name="estado_origen" value="EN_ELABORACION_PROPUESTA"/>
+            <column name="estado_destino" value="EN_REVISION_ASESOR"/>
+            <column name="rol_requerido" value="ROLE_ESTUDIANTE"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="transicion_estado_modalidad_id" valueNumeric="9001"/>
+        </insert>
+        <insert tableName="transicion_estado">
+            <column name="id" valueNumeric="96128"/>
+            <column name="estado_origen" value="EN_REVISION_ASESOR"/>
+            <column name="estado_destino" value="EN_REVISION_JURADO_PROPUESTA"/>
+            <column name="rol_requerido" value="ROLE_ASESOR"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="transicion_estado_modalidad_id" valueNumeric="9001"/>
+        </insert>
+    </changeSet>
+
+    <changeSet id="20260924000001-9002" author="ciecyt">
+        <comment>Pasantia Investigativa Profesional (sustentacion con jurado) (modalidad 9002) - Acuerdo 025</comment>
+        <insert tableName="transicion_estado">
+            <column name="id" valueNumeric="96000"/>
+            <column name="estado_origen" value="PREINSCRITA"/>
+            <column name="estado_destino" value="EN_VALIDACION_DOCUMENTAL"/>
+            <column name="rol_requerido" value="ROLE_ESTUDIANTE"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="transicion_estado_modalidad_id" valueNumeric="9002"/>
+        </insert>
+        <insert tableName="transicion_estado">
+            <column name="id" valueNumeric="96001"/>
+            <column name="estado_origen" value="EN_VALIDACION_DOCUMENTAL"/>
+            <column name="estado_destino" value="OBSERVACIONES_DOCUMENTACION"/>
+            <column name="rol_requerido" value="ROLE_CIECYT"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="transicion_estado_modalidad_id" valueNumeric="9002"/>
+        </insert>
+        <insert tableName="transicion_estado">
+            <column name="id" valueNumeric="96002"/>
+            <column name="estado_origen" value="EN_VALIDACION_DOCUMENTAL"/>
+            <column name="estado_destino" value="HABILITADO"/>
+            <column name="rol_requerido" value="ROLE_CIECYT"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="transicion_estado_modalidad_id" valueNumeric="9002"/>
+        </insert>
+        <insert tableName="transicion_estado">
+            <column name="id" valueNumeric="96003"/>
+            <column name="estado_origen" value="OBSERVACIONES_DOCUMENTACION"/>
+            <column name="estado_destino" value="EN_VALIDACION_DOCUMENTAL"/>
+            <column name="rol_requerido" value="ROLE_ESTUDIANTE"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="transicion_estado_modalidad_id" valueNumeric="9002"/>
+        </insert>
+        <insert tableName="transicion_estado">
+            <column name="id" valueNumeric="96004"/>
+            <column name="estado_origen" value="HABILITADO"/>
+            <column name="estado_destino" value="EN_ELABORACION_PROPUESTA"/>
+            <column name="rol_requerido" value="ROLE_ESTUDIANTE"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="transicion_estado_modalidad_id" valueNumeric="9002"/>
+        </insert>
+        <insert tableName="transicion_estado">
+            <column name="id" valueNumeric="96005"/>
+            <column name="estado_origen" value="HABILITADO"/>
+            <column name="estado_destino" value="EN_REVISION_ASESOR"/>
+            <column name="rol_requerido" value="ROLE_ESTUDIANTE"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="transicion_estado_modalidad_id" valueNumeric="9002"/>
+        </insert>
+        <insert tableName="transicion_estado">
+            <column name="id" valueNumeric="96006"/>
+            <column name="estado_origen" value="EN_ELABORACION_PROPUESTA"/>
+            <column name="estado_destino" value="EN_VALIDACION_DOCUMENTAL"/>
+            <column name="rol_requerido" value="ROLE_ESTUDIANTE"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="transicion_estado_modalidad_id" valueNumeric="9002"/>
+        </insert>
+        <insert tableName="transicion_estado">
+            <column name="id" valueNumeric="96007"/>
+            <column name="estado_origen" value="EN_REVISION_ASESOR"/>
+            <column name="estado_destino" value="CORRECCIONES_ASESOR"/>
+            <column name="rol_requerido" value="ROLE_ASESOR"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="transicion_estado_modalidad_id" valueNumeric="9002"/>
+        </insert>
+        <insert tableName="transicion_estado">
+            <column name="id" valueNumeric="96008"/>
+            <column name="estado_origen" value="EN_REVISION_ASESOR"/>
+            <column name="estado_destino" value="APROBADA_POR_ASESOR"/>
+            <column name="rol_requerido" value="ROLE_ASESOR"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="transicion_estado_modalidad_id" valueNumeric="9002"/>
+        </insert>
+        <insert tableName="transicion_estado">
+            <column name="id" valueNumeric="96009"/>
+            <column name="estado_origen" value="CORRECCIONES_ASESOR"/>
+            <column name="estado_destino" value="EN_REVISION_ASESOR"/>
+            <column name="rol_requerido" value="ROLE_ESTUDIANTE"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="transicion_estado_modalidad_id" valueNumeric="9002"/>
+        </insert>
+        <insert tableName="transicion_estado">
+            <column name="id" valueNumeric="96010"/>
+            <column name="estado_origen" value="APROBADA_POR_ASESOR"/>
+            <column name="estado_destino" value="EN_REVISION_JURADO_PROPUESTA"/>
+            <column name="rol_requerido" value="*"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="transicion_estado_modalidad_id" valueNumeric="9002"/>
+        </insert>
+        <insert tableName="transicion_estado">
+            <column name="id" valueNumeric="96011"/>
+            <column name="estado_origen" value="EN_REVISION_JURADO_PROPUESTA"/>
+            <column name="estado_destino" value="CORRECCIONES_JURADO_PROPUESTA"/>
+            <column name="rol_requerido" value="ROLE_JURADO"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="transicion_estado_modalidad_id" valueNumeric="9002"/>
+        </insert>
+        <insert tableName="transicion_estado">
+            <column name="id" valueNumeric="96012"/>
+            <column name="estado_origen" value="EN_REVISION_JURADO_PROPUESTA"/>
+            <column name="estado_destino" value="VIABLE"/>
+            <column name="rol_requerido" value="ROLE_JURADO"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="transicion_estado_modalidad_id" valueNumeric="9002"/>
+        </insert>
+        <insert tableName="transicion_estado">
+            <column name="id" valueNumeric="96013"/>
+            <column name="estado_origen" value="CORRECCIONES_JURADO_PROPUESTA"/>
+            <column name="estado_destino" value="EN_REVISION_JURADO_PROPUESTA"/>
+            <column name="rol_requerido" value="ROLE_ESTUDIANTE"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="transicion_estado_modalidad_id" valueNumeric="9002"/>
+        </insert>
+        <insert tableName="transicion_estado">
+            <column name="id" valueNumeric="96014"/>
+            <column name="estado_origen" value="VIABLE"/>
+            <column name="estado_destino" value="EN_ELABORACION_PROYECTO"/>
+            <column name="rol_requerido" value="ROLE_ESTUDIANTE"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="transicion_estado_modalidad_id" valueNumeric="9002"/>
+        </insert>
+        <insert tableName="transicion_estado">
+            <column name="id" valueNumeric="96015"/>
+            <column name="estado_origen" value="EN_ELABORACION_PROYECTO"/>
+            <column name="estado_destino" value="EN_REVISION_JURADO_PROYECTO"/>
+            <column name="rol_requerido" value="ROLE_ESTUDIANTE"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="transicion_estado_modalidad_id" valueNumeric="9002"/>
+        </insert>
+        <insert tableName="transicion_estado">
+            <column name="id" valueNumeric="96016"/>
+            <column name="estado_origen" value="EN_REVISION_JURADO_PROYECTO"/>
+            <column name="estado_destino" value="CORRECCIONES_JURADO_PROYECTO"/>
+            <column name="rol_requerido" value="ROLE_JURADO"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="transicion_estado_modalidad_id" valueNumeric="9002"/>
+        </insert>
+        <insert tableName="transicion_estado">
+            <column name="id" valueNumeric="96017"/>
+            <column name="estado_origen" value="EN_REVISION_JURADO_PROYECTO"/>
+            <column name="estado_destino" value="LISTO_PARA_SUSTENTAR"/>
+            <column name="rol_requerido" value="ROLE_JURADO"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="transicion_estado_modalidad_id" valueNumeric="9002"/>
+        </insert>
+        <insert tableName="transicion_estado">
+            <column name="id" valueNumeric="96018"/>
+            <column name="estado_origen" value="CORRECCIONES_JURADO_PROYECTO"/>
+            <column name="estado_destino" value="EN_REVISION_JURADO_PROYECTO"/>
+            <column name="rol_requerido" value="ROLE_ESTUDIANTE"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="transicion_estado_modalidad_id" valueNumeric="9002"/>
+        </insert>
+        <insert tableName="transicion_estado">
+            <column name="id" valueNumeric="96019"/>
+            <column name="estado_origen" value="LISTO_PARA_SUSTENTAR"/>
+            <column name="estado_destino" value="SUSTENTACION_PROGRAMADA"/>
+            <column name="rol_requerido" value="ROLE_CIECYT"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="transicion_estado_modalidad_id" valueNumeric="9002"/>
+        </insert>
+        <insert tableName="transicion_estado">
+            <column name="id" valueNumeric="96020"/>
+            <column name="estado_origen" value="SUSTENTACION_PROGRAMADA"/>
+            <column name="estado_destino" value="SUSTENTACION_REALIZADA"/>
+            <column name="rol_requerido" value="ROLE_CIECYT"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="transicion_estado_modalidad_id" valueNumeric="9002"/>
+        </insert>
+        <insert tableName="transicion_estado">
+            <column name="id" valueNumeric="96021"/>
+            <column name="estado_origen" value="SUSTENTACION_REALIZADA"/>
+            <column name="estado_destino" value="EN_EVALUACION_SUSTENTACION"/>
+            <column name="rol_requerido" value="ROLE_JURADO"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="transicion_estado_modalidad_id" valueNumeric="9002"/>
+        </insert>
+        <insert tableName="transicion_estado">
+            <column name="id" valueNumeric="96022"/>
+            <column name="estado_origen" value="EN_EVALUACION_SUSTENTACION"/>
+            <column name="estado_destino" value="AJUSTES_SUSTENTACION"/>
+            <column name="rol_requerido" value="ROLE_JURADO"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="transicion_estado_modalidad_id" valueNumeric="9002"/>
+        </insert>
+        <insert tableName="transicion_estado">
+            <column name="id" valueNumeric="96023"/>
+            <column name="estado_origen" value="EN_EVALUACION_SUSTENTACION"/>
+            <column name="estado_destino" value="NOTA_DEFINITIVA"/>
+            <column name="rol_requerido" value="ROLE_JURADO"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="transicion_estado_modalidad_id" valueNumeric="9002"/>
+        </insert>
+        <insert tableName="transicion_estado">
+            <column name="id" valueNumeric="96024"/>
+            <column name="estado_origen" value="AJUSTES_SUSTENTACION"/>
+            <column name="estado_destino" value="EN_EVALUACION_SUSTENTACION"/>
+            <column name="rol_requerido" value="ROLE_ESTUDIANTE"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="transicion_estado_modalidad_id" valueNumeric="9002"/>
+        </insert>
+        <insert tableName="transicion_estado">
+            <column name="id" valueNumeric="96025"/>
+            <column name="estado_origen" value="NOTA_DEFINITIVA"/>
+            <column name="estado_destino" value="FINALIZADO"/>
+            <column name="rol_requerido" value="ROLE_CIECYT"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="transicion_estado_modalidad_id" valueNumeric="9002"/>
+        </insert>
+        <insert tableName="transicion_estado">
+            <column name="id" valueNumeric="96026"/>
+            <column name="estado_origen" value="PREINSCRITA"/>
+            <column name="estado_destino" value="EN_ELABORACION_PROPUESTA"/>
+            <column name="rol_requerido" value="ROLE_ESTUDIANTE"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="transicion_estado_modalidad_id" valueNumeric="9002"/>
+        </insert>
+        <insert tableName="transicion_estado">
+            <column name="id" valueNumeric="96027"/>
+            <column name="estado_origen" value="EN_ELABORACION_PROPUESTA"/>
+            <column name="estado_destino" value="EN_REVISION_ASESOR"/>
+            <column name="rol_requerido" value="ROLE_ESTUDIANTE"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="transicion_estado_modalidad_id" valueNumeric="9002"/>
+        </insert>
+        <insert tableName="transicion_estado">
+            <column name="id" valueNumeric="96028"/>
+            <column name="estado_origen" value="EN_REVISION_ASESOR"/>
+            <column name="estado_destino" value="EN_REVISION_JURADO_PROPUESTA"/>
+            <column name="rol_requerido" value="ROLE_ASESOR"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="transicion_estado_modalidad_id" valueNumeric="9002"/>
+        </insert>
+    </changeSet>
+    <changeSet id="20260924000001-9003" author="ciecyt">
+        <comment>Pasantia Internacional (modalidad 9003) - Acuerdo 025</comment>
+        <insert tableName="transicion_estado">
+            <column name="id" valueNumeric="96200"/>
+            <column name="estado_origen" value="PREINSCRITA"/>
+            <column name="estado_destino" value="EN_VALIDACION_DOCUMENTAL"/>
+            <column name="rol_requerido" value="ROLE_ESTUDIANTE"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="transicion_estado_modalidad_id" valueNumeric="9003"/>
+        </insert>
+        <insert tableName="transicion_estado">
+            <column name="id" valueNumeric="96201"/>
+            <column name="estado_origen" value="EN_VALIDACION_DOCUMENTAL"/>
+            <column name="estado_destino" value="OBSERVACIONES_DOCUMENTACION"/>
+            <column name="rol_requerido" value="ROLE_CIECYT"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="transicion_estado_modalidad_id" valueNumeric="9003"/>
+        </insert>
+        <insert tableName="transicion_estado">
+            <column name="id" valueNumeric="96202"/>
+            <column name="estado_origen" value="EN_VALIDACION_DOCUMENTAL"/>
+            <column name="estado_destino" value="HABILITADO"/>
+            <column name="rol_requerido" value="ROLE_CIECYT"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="transicion_estado_modalidad_id" valueNumeric="9003"/>
+        </insert>
+        <insert tableName="transicion_estado">
+            <column name="id" valueNumeric="96203"/>
+            <column name="estado_origen" value="OBSERVACIONES_DOCUMENTACION"/>
+            <column name="estado_destino" value="EN_VALIDACION_DOCUMENTAL"/>
+            <column name="rol_requerido" value="ROLE_ESTUDIANTE"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="transicion_estado_modalidad_id" valueNumeric="9003"/>
+        </insert>
+        <insert tableName="transicion_estado">
+            <column name="id" valueNumeric="96204"/>
+            <column name="estado_origen" value="HABILITADO"/>
+            <column name="estado_destino" value="EN_ELABORACION_PROPUESTA"/>
+            <column name="rol_requerido" value="ROLE_ESTUDIANTE"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="transicion_estado_modalidad_id" valueNumeric="9003"/>
+        </insert>
+        <insert tableName="transicion_estado">
+            <column name="id" valueNumeric="96205"/>
+            <column name="estado_origen" value="HABILITADO"/>
+            <column name="estado_destino" value="EN_REVISION_ASESOR"/>
+            <column name="rol_requerido" value="ROLE_ESTUDIANTE"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="transicion_estado_modalidad_id" valueNumeric="9003"/>
+        </insert>
+        <insert tableName="transicion_estado">
+            <column name="id" valueNumeric="96206"/>
+            <column name="estado_origen" value="EN_ELABORACION_PROPUESTA"/>
+            <column name="estado_destino" value="EN_VALIDACION_DOCUMENTAL"/>
+            <column name="rol_requerido" value="ROLE_ESTUDIANTE"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="transicion_estado_modalidad_id" valueNumeric="9003"/>
+        </insert>
+        <insert tableName="transicion_estado">
+            <column name="id" valueNumeric="96207"/>
+            <column name="estado_origen" value="EN_REVISION_ASESOR"/>
+            <column name="estado_destino" value="CORRECCIONES_ASESOR"/>
+            <column name="rol_requerido" value="ROLE_ASESOR"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="transicion_estado_modalidad_id" valueNumeric="9003"/>
+        </insert>
+        <insert tableName="transicion_estado">
+            <column name="id" valueNumeric="96208"/>
+            <column name="estado_origen" value="EN_REVISION_ASESOR"/>
+            <column name="estado_destino" value="APROBADA_POR_ASESOR"/>
+            <column name="rol_requerido" value="ROLE_ASESOR"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="transicion_estado_modalidad_id" valueNumeric="9003"/>
+        </insert>
+        <insert tableName="transicion_estado">
+            <column name="id" valueNumeric="96209"/>
+            <column name="estado_origen" value="CORRECCIONES_ASESOR"/>
+            <column name="estado_destino" value="EN_REVISION_ASESOR"/>
+            <column name="rol_requerido" value="ROLE_ESTUDIANTE"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="transicion_estado_modalidad_id" valueNumeric="9003"/>
+        </insert>
+        <insert tableName="transicion_estado">
+            <column name="id" valueNumeric="96210"/>
+            <column name="estado_origen" value="APROBADA_POR_ASESOR"/>
+            <column name="estado_destino" value="EN_REVISION_JURADO_PROPUESTA"/>
+            <column name="rol_requerido" value="*"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="transicion_estado_modalidad_id" valueNumeric="9003"/>
+        </insert>
+        <insert tableName="transicion_estado">
+            <column name="id" valueNumeric="96211"/>
+            <column name="estado_origen" value="EN_REVISION_JURADO_PROPUESTA"/>
+            <column name="estado_destino" value="CORRECCIONES_JURADO_PROPUESTA"/>
+            <column name="rol_requerido" value="ROLE_ASESOR"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="transicion_estado_modalidad_id" valueNumeric="9003"/>
+        </insert>
+        <insert tableName="transicion_estado">
+            <column name="id" valueNumeric="96212"/>
+            <column name="estado_origen" value="EN_REVISION_JURADO_PROPUESTA"/>
+            <column name="estado_destino" value="VIABLE"/>
+            <column name="rol_requerido" value="ROLE_ASESOR"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="transicion_estado_modalidad_id" valueNumeric="9003"/>
+        </insert>
+        <insert tableName="transicion_estado">
+            <column name="id" valueNumeric="96213"/>
+            <column name="estado_origen" value="CORRECCIONES_JURADO_PROPUESTA"/>
+            <column name="estado_destino" value="EN_REVISION_JURADO_PROPUESTA"/>
+            <column name="rol_requerido" value="ROLE_ESTUDIANTE"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="transicion_estado_modalidad_id" valueNumeric="9003"/>
+        </insert>
+        <insert tableName="transicion_estado">
+            <column name="id" valueNumeric="96214"/>
+            <column name="estado_origen" value="VIABLE"/>
+            <column name="estado_destino" value="EN_ELABORACION_PROYECTO"/>
+            <column name="rol_requerido" value="ROLE_ESTUDIANTE"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="transicion_estado_modalidad_id" valueNumeric="9003"/>
+        </insert>
+        <insert tableName="transicion_estado">
+            <column name="id" valueNumeric="96215"/>
+            <column name="estado_origen" value="EN_ELABORACION_PROYECTO"/>
+            <column name="estado_destino" value="EN_REVISION_JURADO_PROYECTO"/>
+            <column name="rol_requerido" value="ROLE_ESTUDIANTE"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="transicion_estado_modalidad_id" valueNumeric="9003"/>
+        </insert>
+        <insert tableName="transicion_estado">
+            <column name="id" valueNumeric="96216"/>
+            <column name="estado_origen" value="EN_REVISION_JURADO_PROYECTO"/>
+            <column name="estado_destino" value="CORRECCIONES_JURADO_PROYECTO"/>
+            <column name="rol_requerido" value="ROLE_ASESOR"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="transicion_estado_modalidad_id" valueNumeric="9003"/>
+        </insert>
+        <insert tableName="transicion_estado">
+            <column name="id" valueNumeric="96217"/>
+            <column name="estado_origen" value="EN_REVISION_JURADO_PROYECTO"/>
+            <column name="estado_destino" value="LISTO_PARA_SUSTENTAR"/>
+            <column name="rol_requerido" value="ROLE_ASESOR"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="transicion_estado_modalidad_id" valueNumeric="9003"/>
+        </insert>
+        <insert tableName="transicion_estado">
+            <column name="id" valueNumeric="96218"/>
+            <column name="estado_origen" value="CORRECCIONES_JURADO_PROYECTO"/>
+            <column name="estado_destino" value="EN_REVISION_JURADO_PROYECTO"/>
+            <column name="rol_requerido" value="ROLE_ESTUDIANTE"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="transicion_estado_modalidad_id" valueNumeric="9003"/>
+        </insert>
+        <insert tableName="transicion_estado">
+            <column name="id" valueNumeric="96219"/>
+            <column name="estado_origen" value="LISTO_PARA_SUSTENTAR"/>
+            <column name="estado_destino" value="SUSTENTACION_PROGRAMADA"/>
+            <column name="rol_requerido" value="ROLE_CIECYT"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="transicion_estado_modalidad_id" valueNumeric="9003"/>
+        </insert>
+        <insert tableName="transicion_estado">
+            <column name="id" valueNumeric="96220"/>
+            <column name="estado_origen" value="SUSTENTACION_PROGRAMADA"/>
+            <column name="estado_destino" value="SUSTENTACION_REALIZADA"/>
+            <column name="rol_requerido" value="ROLE_CIECYT"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="transicion_estado_modalidad_id" valueNumeric="9003"/>
+        </insert>
+        <insert tableName="transicion_estado">
+            <column name="id" valueNumeric="96221"/>
+            <column name="estado_origen" value="SUSTENTACION_REALIZADA"/>
+            <column name="estado_destino" value="EN_EVALUACION_SUSTENTACION"/>
+            <column name="rol_requerido" value="ROLE_ASESOR"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="transicion_estado_modalidad_id" valueNumeric="9003"/>
+        </insert>
+        <insert tableName="transicion_estado">
+            <column name="id" valueNumeric="96222"/>
+            <column name="estado_origen" value="EN_EVALUACION_SUSTENTACION"/>
+            <column name="estado_destino" value="AJUSTES_SUSTENTACION"/>
+            <column name="rol_requerido" value="ROLE_ASESOR"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="transicion_estado_modalidad_id" valueNumeric="9003"/>
+        </insert>
+        <insert tableName="transicion_estado">
+            <column name="id" valueNumeric="96223"/>
+            <column name="estado_origen" value="EN_EVALUACION_SUSTENTACION"/>
+            <column name="estado_destino" value="NOTA_DEFINITIVA"/>
+            <column name="rol_requerido" value="ROLE_ASESOR"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="transicion_estado_modalidad_id" valueNumeric="9003"/>
+        </insert>
+        <insert tableName="transicion_estado">
+            <column name="id" valueNumeric="96224"/>
+            <column name="estado_origen" value="AJUSTES_SUSTENTACION"/>
+            <column name="estado_destino" value="EN_EVALUACION_SUSTENTACION"/>
+            <column name="rol_requerido" value="ROLE_ESTUDIANTE"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="transicion_estado_modalidad_id" valueNumeric="9003"/>
+        </insert>
+        <insert tableName="transicion_estado">
+            <column name="id" valueNumeric="96225"/>
+            <column name="estado_origen" value="NOTA_DEFINITIVA"/>
+            <column name="estado_destino" value="FINALIZADO"/>
+            <column name="rol_requerido" value="ROLE_CIECYT"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="transicion_estado_modalidad_id" valueNumeric="9003"/>
+        </insert>
+        <insert tableName="transicion_estado">
+            <column name="id" valueNumeric="96226"/>
+            <column name="estado_origen" value="PREINSCRITA"/>
+            <column name="estado_destino" value="EN_ELABORACION_PROPUESTA"/>
+            <column name="rol_requerido" value="ROLE_ESTUDIANTE"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="transicion_estado_modalidad_id" valueNumeric="9003"/>
+        </insert>
+        <insert tableName="transicion_estado">
+            <column name="id" valueNumeric="96227"/>
+            <column name="estado_origen" value="EN_ELABORACION_PROPUESTA"/>
+            <column name="estado_destino" value="EN_REVISION_ASESOR"/>
+            <column name="rol_requerido" value="ROLE_ESTUDIANTE"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="transicion_estado_modalidad_id" valueNumeric="9003"/>
+        </insert>
+        <insert tableName="transicion_estado">
+            <column name="id" valueNumeric="96228"/>
+            <column name="estado_origen" value="EN_REVISION_ASESOR"/>
+            <column name="estado_destino" value="EN_REVISION_JURADO_PROPUESTA"/>
+            <column name="rol_requerido" value="ROLE_ASESOR"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="transicion_estado_modalidad_id" valueNumeric="9003"/>
+        </insert>
+    </changeSet>
+
+    <changeSet id="20260924000001-9005" author="ciecyt">
+        <comment>Diplomado (sin acto publico) (modalidad 9005) - Acuerdo 025</comment>
+        <insert tableName="transicion_estado">
+            <column name="id" valueNumeric="96400"/>
+            <column name="estado_origen" value="PREINSCRITA"/>
+            <column name="estado_destino" value="EN_VALIDACION_DOCUMENTAL"/>
+            <column name="rol_requerido" value="ROLE_ESTUDIANTE"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="transicion_estado_modalidad_id" valueNumeric="9005"/>
+        </insert>
+        <insert tableName="transicion_estado">
+            <column name="id" valueNumeric="96401"/>
+            <column name="estado_origen" value="EN_VALIDACION_DOCUMENTAL"/>
+            <column name="estado_destino" value="HABILITADO"/>
+            <column name="rol_requerido" value="ROLE_CIECYT"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="transicion_estado_modalidad_id" valueNumeric="9005"/>
+        </insert>
+        <insert tableName="transicion_estado">
+            <column name="id" valueNumeric="96402"/>
+            <column name="estado_origen" value="EN_VALIDACION_DOCUMENTAL"/>
+            <column name="estado_destino" value="OBSERVACIONES_DOCUMENTACION"/>
+            <column name="rol_requerido" value="ROLE_CIECYT"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="transicion_estado_modalidad_id" valueNumeric="9005"/>
+        </insert>
+        <insert tableName="transicion_estado">
+            <column name="id" valueNumeric="96403"/>
+            <column name="estado_origen" value="OBSERVACIONES_DOCUMENTACION"/>
+            <column name="estado_destino" value="EN_VALIDACION_DOCUMENTAL"/>
+            <column name="rol_requerido" value="ROLE_ESTUDIANTE"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="transicion_estado_modalidad_id" valueNumeric="9005"/>
+        </insert>
+        <insert tableName="transicion_estado">
+            <column name="id" valueNumeric="96404"/>
+            <column name="estado_origen" value="HABILITADO"/>
+            <column name="estado_destino" value="EN_ELABORACION_PROYECTO"/>
+            <column name="rol_requerido" value="ROLE_ESTUDIANTE"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="transicion_estado_modalidad_id" valueNumeric="9005"/>
+        </insert>
+        <insert tableName="transicion_estado">
+            <column name="id" valueNumeric="96405"/>
+            <column name="estado_origen" value="EN_ELABORACION_PROYECTO"/>
+            <column name="estado_destino" value="NOTA_DEFINITIVA"/>
+            <column name="rol_requerido" value="ROLE_CIECYT"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="transicion_estado_modalidad_id" valueNumeric="9005"/>
+        </insert>
+        <insert tableName="transicion_estado">
+            <column name="id" valueNumeric="96406"/>
+            <column name="estado_origen" value="NOTA_DEFINITIVA"/>
+            <column name="estado_destino" value="FINALIZADO"/>
+            <column name="rol_requerido" value="ROLE_CIECYT"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="transicion_estado_modalidad_id" valueNumeric="9005"/>
+        </insert>
+    </changeSet>
+    <changeSet id="20260924000001-9006" author="ciecyt">
+        <comment>Publicacion de Articulo (modalidad 9006) - Acuerdo 025</comment>
+        <insert tableName="transicion_estado">
+            <column name="id" valueNumeric="96300"/>
+            <column name="estado_origen" value="PREINSCRITA"/>
+            <column name="estado_destino" value="EN_VALIDACION_DOCUMENTAL"/>
+            <column name="rol_requerido" value="ROLE_ESTUDIANTE"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="transicion_estado_modalidad_id" valueNumeric="9006"/>
+        </insert>
+        <insert tableName="transicion_estado">
+            <column name="id" valueNumeric="96301"/>
+            <column name="estado_origen" value="EN_VALIDACION_DOCUMENTAL"/>
+            <column name="estado_destino" value="OBSERVACIONES_DOCUMENTACION"/>
+            <column name="rol_requerido" value="ROLE_CIECYT"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="transicion_estado_modalidad_id" valueNumeric="9006"/>
+        </insert>
+        <insert tableName="transicion_estado">
+            <column name="id" valueNumeric="96302"/>
+            <column name="estado_origen" value="EN_VALIDACION_DOCUMENTAL"/>
+            <column name="estado_destino" value="HABILITADO"/>
+            <column name="rol_requerido" value="ROLE_CIECYT"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="transicion_estado_modalidad_id" valueNumeric="9006"/>
+        </insert>
+        <insert tableName="transicion_estado">
+            <column name="id" valueNumeric="96303"/>
+            <column name="estado_origen" value="OBSERVACIONES_DOCUMENTACION"/>
+            <column name="estado_destino" value="EN_VALIDACION_DOCUMENTAL"/>
+            <column name="rol_requerido" value="ROLE_ESTUDIANTE"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="transicion_estado_modalidad_id" valueNumeric="9006"/>
+        </insert>
+        <insert tableName="transicion_estado">
+            <column name="id" valueNumeric="96304"/>
+            <column name="estado_origen" value="HABILITADO"/>
+            <column name="estado_destino" value="EN_ELABORACION_PROPUESTA"/>
+            <column name="rol_requerido" value="ROLE_ESTUDIANTE"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="transicion_estado_modalidad_id" valueNumeric="9006"/>
+        </insert>
+        <insert tableName="transicion_estado">
+            <column name="id" valueNumeric="96305"/>
+            <column name="estado_origen" value="HABILITADO"/>
+            <column name="estado_destino" value="EN_REVISION_ASESOR"/>
+            <column name="rol_requerido" value="ROLE_ESTUDIANTE"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="transicion_estado_modalidad_id" valueNumeric="9006"/>
+        </insert>
+        <insert tableName="transicion_estado">
+            <column name="id" valueNumeric="96306"/>
+            <column name="estado_origen" value="EN_ELABORACION_PROPUESTA"/>
+            <column name="estado_destino" value="EN_VALIDACION_DOCUMENTAL"/>
+            <column name="rol_requerido" value="ROLE_ESTUDIANTE"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="transicion_estado_modalidad_id" valueNumeric="9006"/>
+        </insert>
+        <insert tableName="transicion_estado">
+            <column name="id" valueNumeric="96307"/>
+            <column name="estado_origen" value="EN_REVISION_ASESOR"/>
+            <column name="estado_destino" value="CORRECCIONES_ASESOR"/>
+            <column name="rol_requerido" value="ROLE_ASESOR"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="transicion_estado_modalidad_id" valueNumeric="9006"/>
+        </insert>
+        <insert tableName="transicion_estado">
+            <column name="id" valueNumeric="96308"/>
+            <column name="estado_origen" value="EN_REVISION_ASESOR"/>
+            <column name="estado_destino" value="APROBADA_POR_ASESOR"/>
+            <column name="rol_requerido" value="ROLE_ASESOR"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="transicion_estado_modalidad_id" valueNumeric="9006"/>
+        </insert>
+        <insert tableName="transicion_estado">
+            <column name="id" valueNumeric="96309"/>
+            <column name="estado_origen" value="CORRECCIONES_ASESOR"/>
+            <column name="estado_destino" value="EN_REVISION_ASESOR"/>
+            <column name="rol_requerido" value="ROLE_ESTUDIANTE"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="transicion_estado_modalidad_id" valueNumeric="9006"/>
+        </insert>
+        <insert tableName="transicion_estado">
+            <column name="id" valueNumeric="96310"/>
+            <column name="estado_origen" value="APROBADA_POR_ASESOR"/>
+            <column name="estado_destino" value="EN_REVISION_JURADO_PROPUESTA"/>
+            <column name="rol_requerido" value="*"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="transicion_estado_modalidad_id" valueNumeric="9006"/>
+        </insert>
+        <insert tableName="transicion_estado">
+            <column name="id" valueNumeric="96311"/>
+            <column name="estado_origen" value="EN_REVISION_JURADO_PROPUESTA"/>
+            <column name="estado_destino" value="CORRECCIONES_JURADO_PROPUESTA"/>
+            <column name="rol_requerido" value="ROLE_ASESOR"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="transicion_estado_modalidad_id" valueNumeric="9006"/>
+        </insert>
+        <insert tableName="transicion_estado">
+            <column name="id" valueNumeric="96312"/>
+            <column name="estado_origen" value="EN_REVISION_JURADO_PROPUESTA"/>
+            <column name="estado_destino" value="VIABLE"/>
+            <column name="rol_requerido" value="ROLE_ASESOR"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="transicion_estado_modalidad_id" valueNumeric="9006"/>
+        </insert>
+        <insert tableName="transicion_estado">
+            <column name="id" valueNumeric="96313"/>
+            <column name="estado_origen" value="CORRECCIONES_JURADO_PROPUESTA"/>
+            <column name="estado_destino" value="EN_REVISION_JURADO_PROPUESTA"/>
+            <column name="rol_requerido" value="ROLE_ESTUDIANTE"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="transicion_estado_modalidad_id" valueNumeric="9006"/>
+        </insert>
+        <insert tableName="transicion_estado">
+            <column name="id" valueNumeric="96314"/>
+            <column name="estado_origen" value="VIABLE"/>
+            <column name="estado_destino" value="EN_ELABORACION_PROYECTO"/>
+            <column name="rol_requerido" value="ROLE_ESTUDIANTE"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="transicion_estado_modalidad_id" valueNumeric="9006"/>
+        </insert>
+        <insert tableName="transicion_estado">
+            <column name="id" valueNumeric="96315"/>
+            <column name="estado_origen" value="EN_ELABORACION_PROYECTO"/>
+            <column name="estado_destino" value="EN_REVISION_JURADO_PROYECTO"/>
+            <column name="rol_requerido" value="ROLE_ESTUDIANTE"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="transicion_estado_modalidad_id" valueNumeric="9006"/>
+        </insert>
+        <insert tableName="transicion_estado">
+            <column name="id" valueNumeric="96316"/>
+            <column name="estado_origen" value="EN_REVISION_JURADO_PROYECTO"/>
+            <column name="estado_destino" value="CORRECCIONES_JURADO_PROYECTO"/>
+            <column name="rol_requerido" value="ROLE_ASESOR"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="transicion_estado_modalidad_id" valueNumeric="9006"/>
+        </insert>
+        <insert tableName="transicion_estado">
+            <column name="id" valueNumeric="96317"/>
+            <column name="estado_origen" value="EN_REVISION_JURADO_PROYECTO"/>
+            <column name="estado_destino" value="LISTO_PARA_SUSTENTAR"/>
+            <column name="rol_requerido" value="ROLE_ASESOR"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="transicion_estado_modalidad_id" valueNumeric="9006"/>
+        </insert>
+        <insert tableName="transicion_estado">
+            <column name="id" valueNumeric="96318"/>
+            <column name="estado_origen" value="CORRECCIONES_JURADO_PROYECTO"/>
+            <column name="estado_destino" value="EN_REVISION_JURADO_PROYECTO"/>
+            <column name="rol_requerido" value="ROLE_ESTUDIANTE"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="transicion_estado_modalidad_id" valueNumeric="9006"/>
+        </insert>
+        <insert tableName="transicion_estado">
+            <column name="id" valueNumeric="96319"/>
+            <column name="estado_origen" value="LISTO_PARA_SUSTENTAR"/>
+            <column name="estado_destino" value="SUSTENTACION_PROGRAMADA"/>
+            <column name="rol_requerido" value="ROLE_CIECYT"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="transicion_estado_modalidad_id" valueNumeric="9006"/>
+        </insert>
+        <insert tableName="transicion_estado">
+            <column name="id" valueNumeric="96320"/>
+            <column name="estado_origen" value="SUSTENTACION_PROGRAMADA"/>
+            <column name="estado_destino" value="SUSTENTACION_REALIZADA"/>
+            <column name="rol_requerido" value="ROLE_CIECYT"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="transicion_estado_modalidad_id" valueNumeric="9006"/>
+        </insert>
+        <insert tableName="transicion_estado">
+            <column name="id" valueNumeric="96321"/>
+            <column name="estado_origen" value="SUSTENTACION_REALIZADA"/>
+            <column name="estado_destino" value="EN_EVALUACION_SUSTENTACION"/>
+            <column name="rol_requerido" value="ROLE_ASESOR"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="transicion_estado_modalidad_id" valueNumeric="9006"/>
+        </insert>
+        <insert tableName="transicion_estado">
+            <column name="id" valueNumeric="96322"/>
+            <column name="estado_origen" value="EN_EVALUACION_SUSTENTACION"/>
+            <column name="estado_destino" value="AJUSTES_SUSTENTACION"/>
+            <column name="rol_requerido" value="ROLE_ASESOR"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="transicion_estado_modalidad_id" valueNumeric="9006"/>
+        </insert>
+        <insert tableName="transicion_estado">
+            <column name="id" valueNumeric="96323"/>
+            <column name="estado_origen" value="EN_EVALUACION_SUSTENTACION"/>
+            <column name="estado_destino" value="NOTA_DEFINITIVA"/>
+            <column name="rol_requerido" value="ROLE_ASESOR"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="transicion_estado_modalidad_id" valueNumeric="9006"/>
+        </insert>
+        <insert tableName="transicion_estado">
+            <column name="id" valueNumeric="96324"/>
+            <column name="estado_origen" value="AJUSTES_SUSTENTACION"/>
+            <column name="estado_destino" value="EN_EVALUACION_SUSTENTACION"/>
+            <column name="rol_requerido" value="ROLE_ESTUDIANTE"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="transicion_estado_modalidad_id" valueNumeric="9006"/>
+        </insert>
+        <insert tableName="transicion_estado">
+            <column name="id" valueNumeric="96325"/>
+            <column name="estado_origen" value="NOTA_DEFINITIVA"/>
+            <column name="estado_destino" value="FINALIZADO"/>
+            <column name="rol_requerido" value="ROLE_CIECYT"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="transicion_estado_modalidad_id" valueNumeric="9006"/>
+        </insert>
+        <insert tableName="transicion_estado">
+            <column name="id" valueNumeric="96326"/>
+            <column name="estado_origen" value="PREINSCRITA"/>
+            <column name="estado_destino" value="EN_ELABORACION_PROPUESTA"/>
+            <column name="rol_requerido" value="ROLE_ESTUDIANTE"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="transicion_estado_modalidad_id" valueNumeric="9006"/>
+        </insert>
+        <insert tableName="transicion_estado">
+            <column name="id" valueNumeric="96327"/>
+            <column name="estado_origen" value="EN_ELABORACION_PROPUESTA"/>
+            <column name="estado_destino" value="EN_REVISION_ASESOR"/>
+            <column name="rol_requerido" value="ROLE_ESTUDIANTE"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="transicion_estado_modalidad_id" valueNumeric="9006"/>
+        </insert>
+        <insert tableName="transicion_estado">
+            <column name="id" valueNumeric="96328"/>
+            <column name="estado_origen" value="EN_REVISION_ASESOR"/>
+            <column name="estado_destino" value="EN_REVISION_JURADO_PROPUESTA"/>
+            <column name="rol_requerido" value="ROLE_ASESOR"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="transicion_estado_modalidad_id" valueNumeric="9006"/>
+        </insert>
+    </changeSet>
+
+    <changeSet id="20260924000001-9007" author="ciecyt">
+        <comment>Especializacion (sin acto publico) (modalidad 9007) - Acuerdo 025</comment>
+        <insert tableName="transicion_estado">
+            <column name="id" valueNumeric="96500"/>
+            <column name="estado_origen" value="PREINSCRITA"/>
+            <column name="estado_destino" value="EN_VALIDACION_DOCUMENTAL"/>
+            <column name="rol_requerido" value="ROLE_ESTUDIANTE"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="transicion_estado_modalidad_id" valueNumeric="9007"/>
+        </insert>
+        <insert tableName="transicion_estado">
+            <column name="id" valueNumeric="96501"/>
+            <column name="estado_origen" value="EN_VALIDACION_DOCUMENTAL"/>
+            <column name="estado_destino" value="HABILITADO"/>
+            <column name="rol_requerido" value="ROLE_CIECYT"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="transicion_estado_modalidad_id" valueNumeric="9007"/>
+        </insert>
+        <insert tableName="transicion_estado">
+            <column name="id" valueNumeric="96502"/>
+            <column name="estado_origen" value="EN_VALIDACION_DOCUMENTAL"/>
+            <column name="estado_destino" value="OBSERVACIONES_DOCUMENTACION"/>
+            <column name="rol_requerido" value="ROLE_CIECYT"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="transicion_estado_modalidad_id" valueNumeric="9007"/>
+        </insert>
+        <insert tableName="transicion_estado">
+            <column name="id" valueNumeric="96503"/>
+            <column name="estado_origen" value="OBSERVACIONES_DOCUMENTACION"/>
+            <column name="estado_destino" value="EN_VALIDACION_DOCUMENTAL"/>
+            <column name="rol_requerido" value="ROLE_ESTUDIANTE"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="transicion_estado_modalidad_id" valueNumeric="9007"/>
+        </insert>
+        <insert tableName="transicion_estado">
+            <column name="id" valueNumeric="96504"/>
+            <column name="estado_origen" value="HABILITADO"/>
+            <column name="estado_destino" value="EN_ELABORACION_PROYECTO"/>
+            <column name="rol_requerido" value="ROLE_ESTUDIANTE"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="transicion_estado_modalidad_id" valueNumeric="9007"/>
+        </insert>
+        <insert tableName="transicion_estado">
+            <column name="id" valueNumeric="96505"/>
+            <column name="estado_origen" value="EN_ELABORACION_PROYECTO"/>
+            <column name="estado_destino" value="NOTA_DEFINITIVA"/>
+            <column name="rol_requerido" value="ROLE_CIECYT"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="transicion_estado_modalidad_id" valueNumeric="9007"/>
+        </insert>
+        <insert tableName="transicion_estado">
+            <column name="id" valueNumeric="96506"/>
+            <column name="estado_origen" value="NOTA_DEFINITIVA"/>
+            <column name="estado_destino" value="FINALIZADO"/>
+            <column name="rol_requerido" value="ROLE_CIECYT"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="transicion_estado_modalidad_id" valueNumeric="9007"/>
+        </insert>
+    </changeSet>
+
+    <changeSet id="20260924000002" author="ciecyt">
+        <comment>Acuerdo 025 - reactivar NOTA_DEFINITIVA para diplomado/especializacion (calificación final sin acto público)</comment>
+        <update tableName="estado_modalidad">
+            <column name="activo" valueBoolean="true"/>
+            <where>estado_modalidad_modalidad_id IN (9005, 9007) AND estado = 'NOTA_DEFINITIVA'</where>
+        </update>
+        <rollback>
+            <update tableName="estado_modalidad">
+                <column name="activo" valueBoolean="false"/>
+                <where>estado_modalidad_modalidad_id IN (9005, 9007) AND estado = 'NOTA_DEFINITIVA'</where>
+            </update>
+        </rollback>
+    </changeSet>
+
+</databaseChangeLog>

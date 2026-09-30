@@ -3,6 +3,7 @@ package co.edu.itp.ciecyt.web.rest;
 import co.edu.itp.ciecyt.CiecytApp;
 import co.edu.itp.ciecyt.domain.Municipio;
 import co.edu.itp.ciecyt.repository.MunicipioRepository;
+import co.edu.itp.ciecyt.security.AuthoritiesConstants;
 import co.edu.itp.ciecyt.service.MunicipioService;
 import co.edu.itp.ciecyt.service.dto.MunicipioDTO;
 import co.edu.itp.ciecyt.service.mapper.MunicipioMapper;
@@ -29,7 +30,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  */
 @SpringBootTest(classes = CiecytApp.class)
 @AutoConfigureMockMvc
-@WithMockUser
+@WithMockUser(authorities = AuthoritiesConstants.ADMIN)
 public class MunicipioResourceIT {
 
     private static final String DEFAULT_REGION = "AAAAAAAAAA";

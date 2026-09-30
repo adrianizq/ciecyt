@@ -4,6 +4,7 @@ import co.edu.itp.ciecyt.CiecytApp;
 import co.edu.itp.ciecyt.domain.InformacionPasantia;
 import co.edu.itp.ciecyt.repository.InformacionPasantiaRepository;
 
+import co.edu.itp.ciecyt.security.AuthoritiesConstants;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +27,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  */
 @SpringBootTest(classes = CiecytApp.class)
 @AutoConfigureMockMvc
-@WithMockUser
+@WithMockUser(authorities = AuthoritiesConstants.ADMIN)
 public class InformacionPasantiaResourceIT {
 
     private static final Integer DEFAULT_DURACION_HORAS = 1;
