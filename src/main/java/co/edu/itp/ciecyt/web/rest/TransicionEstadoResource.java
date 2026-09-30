@@ -3,7 +3,7 @@ package co.edu.itp.ciecyt.web.rest;
 import co.edu.itp.ciecyt.domain.enumeration.EnumEstadoProyecto;
 import co.edu.itp.ciecyt.service.TransicionEstadoService;
 import co.edu.itp.ciecyt.service.dto.TransicionEstadoDTO;
-import co.edu.itp.ciecyt.web.rest.errors.BadRequestAlertException;
+import co.edu.itp.ciecyt.errors.BadRequestAlertException;
 import io.github.jhipster.web.util.HeaderUtil;
 import io.github.jhipster.web.util.PaginationUtil;
 import io.github.jhipster.web.util.ResponseUtil;

@@ -4,7 +4,7 @@ import co.edu.itp.ciecyt.domain.Authority;
 import co.edu.itp.ciecyt.service.PreguntaAuthorityService;
 import co.edu.itp.ciecyt.service.dto.ModalidadDTO;
 import co.edu.itp.ciecyt.service.dto.PreguntaModalidadDTO;
-import co.edu.itp.ciecyt.web.rest.errors.BadRequestAlertException;
+import co.edu.itp.ciecyt.errors.BadRequestAlertException;
 import co.edu.itp.ciecyt.service.dto.PreguntaAuthorityDTO;
 
 import io.github.jhipster.web.util.HeaderUtil;

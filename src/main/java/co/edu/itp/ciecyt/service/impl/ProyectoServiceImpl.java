@@ -34,7 +34,7 @@ import co.edu.itp.ciecyt.service.dto.RolesModalidadDTO;
 import co.edu.itp.ciecyt.service.dto.TransicionEstadoDTO;
 import co.edu.itp.ciecyt.service.mapper.ProyectoMapper;
 import co.edu.itp.ciecyt.config.Constants;
-import co.edu.itp.ciecyt.web.rest.errors.BadRequestAlertException;
+import co.edu.itp.ciecyt.errors.BadRequestAlertException;
 import java.time.Instant;
 import java.time.LocalDate;
 import javax.persistence.EntityNotFoundException;

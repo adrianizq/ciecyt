@@ -33,7 +33,7 @@ import co.edu.itp.ciecyt.domain.User;
 import co.edu.itp.ciecyt.service.MenuService;
 import co.edu.itp.ciecyt.service.UserService;
 import co.edu.itp.ciecyt.service.dto.MenuDTO;
-import co.edu.itp.ciecyt.web.rest.errors.BadRequestAlertException;
+import co.edu.itp.ciecyt.errors.BadRequestAlertException;
 import co.edu.itp.ciecyt.web.rest.model.ApiMessage;
 import io.github.jhipster.web.util.HeaderUtil;
 import io.github.jhipster.web.util.PaginationUtil;

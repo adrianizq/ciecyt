@@ -6,7 +6,7 @@ import co.edu.itp.ciecyt.service.InformacionPasantiaService;
 
 import co.edu.itp.ciecyt.service.dto.ElementoProyectoDTO;
 import co.edu.itp.ciecyt.service.dto.InformacionPasantiaDTO;
-import co.edu.itp.ciecyt.web.rest.errors.BadRequestAlertException;
+import co.edu.itp.ciecyt.errors.BadRequestAlertException;
 
 import io.github.jhipster.web.util.HeaderUtil;
 import io.github.jhipster.web.util.PaginationUtil;

@@ -1,4 +1,4 @@
-package co.edu.itp.ciecyt.web.rest.errors;
+package co.edu.itp.ciecyt.errors;
 
 import org.zalando.problem.AbstractThrowableProblem;
 import org.zalando.problem.Status;

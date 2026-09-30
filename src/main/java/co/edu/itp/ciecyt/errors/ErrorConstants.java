@@ -1,4 +1,4 @@
-package co.edu.itp.ciecyt.web.rest.errors;
+package co.edu.itp.ciecyt.errors;
 
 import java.net.URI;
 

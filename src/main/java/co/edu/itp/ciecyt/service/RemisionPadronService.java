@@ -9,7 +9,7 @@ import co.edu.itp.ciecyt.repository.FacultadRepository;
 import co.edu.itp.ciecyt.repository.RemisionPadronRepository;
 import co.edu.itp.ciecyt.repository.UserRepository;
 import co.edu.itp.ciecyt.security.SecurityUtils;
-import co.edu.itp.ciecyt.web.rest.errors.BadRequestAlertException;
+import co.edu.itp.ciecyt.errors.BadRequestAlertException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;

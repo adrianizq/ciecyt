@@ -1,5 +1,7 @@
 package co.edu.itp.ciecyt.web.rest.errors;
 
+import co.edu.itp.ciecyt.errors.ErrorConstants;
+
 import co.edu.itp.ciecyt.CiecytApp;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

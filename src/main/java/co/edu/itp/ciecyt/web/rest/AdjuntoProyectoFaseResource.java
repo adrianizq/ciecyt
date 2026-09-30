@@ -3,7 +3,7 @@ package co.edu.itp.ciecyt.web.rest;
 import co.edu.itp.ciecyt.service.AdjuntoProyectoFaseService;
 import co.edu.itp.ciecyt.service.dto.AdjuntoProyectoFaseDTO;
 import co.edu.itp.ciecyt.service.dto.IntegranteProyectoDTO;
-import co.edu.itp.ciecyt.web.rest.errors.BadRequestAlertException;
+import co.edu.itp.ciecyt.errors.BadRequestAlertException;
 import io.github.jhipster.web.util.HeaderUtil;
 import io.github.jhipster.web.util.PaginationUtil;
 import io.github.jhipster.web.util.ResponseUtil;

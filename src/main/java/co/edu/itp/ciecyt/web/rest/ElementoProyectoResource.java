@@ -2,7 +2,7 @@ package co.edu.itp.ciecyt.web.rest;
 
 import co.edu.itp.ciecyt.service.ElementoProyectoService;
 import co.edu.itp.ciecyt.service.dto.ImpactosEsperadosDTO;
-import co.edu.itp.ciecyt.web.rest.errors.BadRequestAlertException;
+import co.edu.itp.ciecyt.errors.BadRequestAlertException;
 import co.edu.itp.ciecyt.service.dto.ElementoProyectoDTO;
 
 import io.github.jhipster.web.util.HeaderUtil;

@@ -10,7 +10,7 @@ import co.edu.itp.ciecyt.service.dto.RequisitoProyectoDTO;
 import co.edu.itp.ciecyt.service.dto.TransicionEstadoDTO;
 import co.edu.itp.ciecyt.service.mapper.AdjuntoProyectoFaseMapper;
 import co.edu.itp.ciecyt.service.mapper.ProyectoMapper;
-import co.edu.itp.ciecyt.web.rest.errors.BadRequestAlertException;
+import co.edu.itp.ciecyt.errors.BadRequestAlertException;
 import io.github.jhipster.web.util.HeaderUtil;
 import io.github.jhipster.web.util.PaginationUtil;
 import io.github.jhipster.web.util.ResponseUtil;

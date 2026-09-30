@@ -6,7 +6,7 @@ import co.edu.itp.ciecyt.repository.UsuarioRepository;
 import co.edu.itp.ciecyt.repository.UserRepository;
 import co.edu.itp.ciecyt.service.dto.UsuarioDTO;
 import co.edu.itp.ciecyt.service.mapper.UsuarioMapper;
-import co.edu.itp.ciecyt.web.rest.errors.BadRequestAlertException;
+import co.edu.itp.ciecyt.errors.BadRequestAlertException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

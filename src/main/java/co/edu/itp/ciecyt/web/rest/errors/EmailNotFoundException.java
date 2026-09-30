@@ -1,5 +1,7 @@
 package co.edu.itp.ciecyt.web.rest.errors;
 
+import co.edu.itp.ciecyt.errors.ErrorConstants;
+
 import org.zalando.problem.AbstractThrowableProblem;
 import org.zalando.problem.Status;
 

@@ -2,7 +2,7 @@ package co.edu.itp.ciecyt.web.rest;
 
 import co.edu.itp.ciecyt.service.ProyectoHistorialEstadoService;
 import co.edu.itp.ciecyt.service.dto.ProyectoHistorialEstadoDTO;
-import co.edu.itp.ciecyt.web.rest.errors.BadRequestAlertException;
+import co.edu.itp.ciecyt.errors.BadRequestAlertException;
 import io.github.jhipster.web.util.HeaderUtil;
 import io.github.jhipster.web.util.ResponseUtil;
 import java.net.URI;

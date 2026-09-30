@@ -10,7 +10,7 @@ import co.edu.itp.ciecyt.service.UserInfoService;
 import co.edu.itp.ciecyt.service.UserService;
 import co.edu.itp.ciecyt.service.dto.UserDTO;
 import co.edu.itp.ciecyt.service.dto.UserInfoDTO;
-import co.edu.itp.ciecyt.web.rest.errors.BadRequestAlertException;
+import co.edu.itp.ciecyt.errors.BadRequestAlertException;
 import co.edu.itp.ciecyt.web.rest.errors.EmailAlreadyUsedException;
 import co.edu.itp.ciecyt.web.rest.errors.LoginAlreadyUsedException;
 import co.edu.itp.ciecyt.web.rest.model.ApiMessage;

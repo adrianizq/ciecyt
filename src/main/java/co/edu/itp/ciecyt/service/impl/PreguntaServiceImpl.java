@@ -15,7 +15,7 @@ import co.edu.itp.ciecyt.service.dto.PreguntaModalidadDTO;
 import co.edu.itp.ciecyt.service.mapper.PreguntaAuthorityMapper;
 import co.edu.itp.ciecyt.service.mapper.PreguntaMapper;
 import co.edu.itp.ciecyt.service.mapper.PreguntaModalidadMapper;
-import co.edu.itp.ciecyt.web.rest.errors.BadRequestAlertException;
+import co.edu.itp.ciecyt.errors.BadRequestAlertException;
 import org.ehcache.xml.model.TimeUnit;
 import org.hibernate.annotations.Synchronize;
 import org.slf4j.Logger;

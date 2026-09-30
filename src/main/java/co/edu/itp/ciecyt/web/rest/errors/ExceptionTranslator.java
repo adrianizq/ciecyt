@@ -1,5 +1,8 @@
 package co.edu.itp.ciecyt.web.rest.errors;
 
+import co.edu.itp.ciecyt.errors.BadRequestAlertException;
+import co.edu.itp.ciecyt.errors.ErrorConstants;
+
 import io.github.jhipster.web.util.HeaderUtil;
 
 import org.springframework.beans.factory.annotation.Value;

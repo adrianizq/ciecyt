@@ -11,7 +11,7 @@ import co.edu.itp.ciecyt.domain.User;
 import co.edu.itp.ciecyt.repository.ProyectoRepository;
 import co.edu.itp.ciecyt.repository.UserInfoRepository;
 import co.edu.itp.ciecyt.repository.UserRepository;
-import co.edu.itp.ciecyt.web.rest.errors.BadRequestAlertException;
+import co.edu.itp.ciecyt.errors.BadRequestAlertException;
 import co.edu.itp.ciecyt.service.DocenteHabilitadoService;
 import co.edu.itp.ciecyt.service.IntegranteProyectoService;
 import co.edu.itp.ciecyt.service.RolesModalidadService;

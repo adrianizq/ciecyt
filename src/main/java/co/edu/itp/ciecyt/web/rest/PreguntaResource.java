@@ -5,7 +5,7 @@ import co.edu.itp.ciecyt.repository.PreguntaRepository;
 import co.edu.itp.ciecyt.service.PreguntaModalidadService;
 import co.edu.itp.ciecyt.service.PreguntaService;
 import co.edu.itp.ciecyt.service.mapper.PreguntaMapper;
-import co.edu.itp.ciecyt.web.rest.errors.BadRequestAlertException;
+import co.edu.itp.ciecyt.errors.BadRequestAlertException;
 import co.edu.itp.ciecyt.service.dto.PreguntaDTO;
 
 import io.github.jhipster.web.util.HeaderUtil;

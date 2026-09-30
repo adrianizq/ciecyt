@@ -9,7 +9,7 @@ import co.edu.itp.ciecyt.service.dto.UserDTO;
 import co.edu.itp.ciecyt.service.dto.UserInfoCriteria;
 import co.edu.itp.ciecyt.service.dto.UserInfoDTO;
 import co.edu.itp.ciecyt.service.dto.UsuarioDTO;
-import co.edu.itp.ciecyt.web.rest.errors.BadRequestAlertException;
+import co.edu.itp.ciecyt.errors.BadRequestAlertException;
 import io.github.jhipster.web.util.HeaderUtil;
 import io.github.jhipster.web.util.HeaderUtil;
 import io.github.jhipster.web.util.PaginationUtil;

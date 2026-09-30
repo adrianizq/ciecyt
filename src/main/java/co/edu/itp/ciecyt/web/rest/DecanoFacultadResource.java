@@ -2,7 +2,7 @@ package co.edu.itp.ciecyt.web.rest;
 
 import co.edu.itp.ciecyt.domain.DecanoFacultad;
 import co.edu.itp.ciecyt.service.DecanoFacultadService;
-import co.edu.itp.ciecyt.web.rest.errors.BadRequestAlertException;
+import co.edu.itp.ciecyt.errors.BadRequestAlertException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
