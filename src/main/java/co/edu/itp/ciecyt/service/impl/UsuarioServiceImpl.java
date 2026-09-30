@@ -3,8 +3,10 @@ package co.edu.itp.ciecyt.service.impl;
 import co.edu.itp.ciecyt.service.UsuarioService;
 import co.edu.itp.ciecyt.domain.Usuario;
 import co.edu.itp.ciecyt.repository.UsuarioRepository;
+import co.edu.itp.ciecyt.repository.UserRepository;
 import co.edu.itp.ciecyt.service.dto.UsuarioDTO;
 import co.edu.itp.ciecyt.service.mapper.UsuarioMapper;
+import co.edu.itp.ciecyt.web.rest.errors.BadRequestAlertException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -28,9 +30,12 @@ public class UsuarioServiceImpl implements UsuarioService {
 
     private final UsuarioMapper usuarioMapper;
 
-    public UsuarioServiceImpl(UsuarioRepository usuarioRepository, UsuarioMapper usuarioMapper) {
+    private final UserRepository userRepository;
+
+    public UsuarioServiceImpl(UsuarioRepository usuarioRepository, UsuarioMapper usuarioMapper, UserRepository userRepository) {
         this.usuarioRepository = usuarioRepository;
         this.usuarioMapper = usuarioMapper;
+        this.userRepository = userRepository;
     }
 
     /**
@@ -43,6 +48,15 @@ public class UsuarioServiceImpl implements UsuarioService {
     public UsuarioDTO save(UsuarioDTO usuarioDTO) {
         log.debug("Request to save Usuario : {}", usuarioDTO);
         Usuario usuario = usuarioMapper.toEntity(usuarioDTO);
+        // Usuario comparte la clave primaria con User (@MapsId): Hibernate solo acepta la
+        // entidad User viva del contexto, no la instancia reconstruida por el mapper.
+        if (usuario.getUser() == null || usuario.getUser().getId() == null) {
+            throw new BadRequestAlertException("No se indico el usuario propietario del registro", "usuario", "userrequired");
+        }
+        usuario.setUser(
+            userRepository.findById(usuario.getUser().getId())
+                .orElseThrow(() -> new BadRequestAlertException("El usuario indicado no existe", "usuario", "usernotfound"))
+        );
         usuario = usuarioRepository.save(usuario);
         return usuarioMapper.toDto(usuario);
     }

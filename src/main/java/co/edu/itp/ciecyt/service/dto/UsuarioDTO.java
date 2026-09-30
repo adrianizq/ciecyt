@@ -13,6 +13,8 @@ public class UsuarioDTO implements Serializable {
 
     private String descripcion;
 
+    private Long userId;
+
 
     public Long getId() {
         return id;
@@ -36,6 +38,14 @@ public class UsuarioDTO implements Serializable {
 
     public void setDescripcion(String descripcion) {
         this.descripcion = descripcion;
+    }
+
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
     }
 
     @Override
@@ -65,6 +75,7 @@ public class UsuarioDTO implements Serializable {
             "id=" + getId() +
             ", usuario='" + getUsuario() + "'" +
             ", descripcion='" + getDescripcion() + "'" +
+            ", userId=" + getUserId() +
             "}";
     }
 }

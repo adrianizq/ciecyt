@@ -1,6 +1,7 @@
 package co.edu.itp.ciecyt.web.rest;
 
 import co.edu.itp.ciecyt.CiecytApp;
+import co.edu.itp.ciecyt.domain.Programa;
 import co.edu.itp.ciecyt.domain.Proyecto;
 import co.edu.itp.ciecyt.repository.ProyectoRepository;
 import co.edu.itp.ciecyt.security.AuthoritiesConstants;
@@ -16,6 +17,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import java.time.LocalDate;
@@ -153,6 +155,13 @@ public class ProyectoResourceIT {
      * if they test an entity which requires the current entity.
      */
     public static Proyecto createEntity(EntityManager em) {
+        // ProyectoMapper expone el nombre del programa en el DTO a partir de la
+        // relacion proyectoPrograma, por lo que debe existir para que el campo
+        // "programa" del JSON tenga valor.
+        Programa programa = new Programa()
+            .programa(DEFAULT_PROGRAMA);
+        em.persist(programa);
+
         Proyecto proyecto = new Proyecto()
             .titulo(DEFAULT_TITULO)
             .url(DEFAULT_URL)
@@ -182,7 +191,8 @@ public class ProyectoResourceIT {
             .fechaViabilidadPropuesta(DEFAULT_FECHA_VIABILIDAD_PROPUESTA)
             .fechaSustentacionProyecto(DEFAULT_FECHA_SUSTENTACION_PROYECTO)
             .sustentar(DEFAULT_SUSTENTAR)
-            .proyectoEnviado(DEFAULT_PROYECTO_ENVIADO);
+            .proyectoEnviado(DEFAULT_PROYECTO_ENVIADO)
+            .proyectoPrograma(programa);
         return proyecto;
     }
     /**
@@ -236,15 +246,19 @@ public class ProyectoResourceIT {
         int databaseSizeBeforeCreate = proyectoRepository.findAll().size();
         // Create the Proyecto
         ProyectoDTO proyectoDTO = proyectoMapper.toDto(proyecto);
-        restProyectoMockMvc.perform(post("/api/proyectos")
+        MvcResult createResult = restProyectoMockMvc.perform(post("/api/proyectos")
             .contentType(MediaType.APPLICATION_JSON)
             .content(TestUtil.convertObjectToJsonBytes(proyectoDTO)))
-            .andExpect(status().isCreated());
+            .andExpect(status().isCreated())
+            .andReturn();
 
         // Validate the Proyecto in the database
         List<Proyecto> proyectoList = proyectoRepository.findAll();
         assertThat(proyectoList).hasSize(databaseSizeBeforeCreate + 1);
-        Proyecto testProyecto = proyectoList.get(proyectoList.size() - 1);
+        // Se localiza por el id devuelto en Location: la tabla ya tiene datos
+        // sembrados y findAll() no garantiza el orden de la lista.
+        long creadoId = Long.parseLong(createResult.getResponse().getHeader("Location").replaceAll(".*/", ""));
+        Proyecto testProyecto = proyectoRepository.findById(creadoId).get();
         assertThat(testProyecto.getTitulo()).isEqualTo(DEFAULT_TITULO);
         assertThat(testProyecto.getUrl()).isEqualTo(DEFAULT_URL);
         assertThat(testProyecto.getLugarEjecucion()).isEqualTo(DEFAULT_LUGAR_EJECUCION);
@@ -267,7 +281,7 @@ public class ProyectoResourceIT {
         assertThat(testProyecto.getNota()).isEqualTo(DEFAULT_NOTA);
         assertThat(testProyecto.getConclusion()).isEqualTo(DEFAULT_CONCLUSION);
         assertThat(testProyecto.getRecomendaciones()).isEqualTo(DEFAULT_RECOMENDACIONES);
-        assertThat(testProyecto.getViabilidad()).isEqualTo(DEFAULT_VIABILIDAD);
+        assertThat(testProyecto.getViabilidad()).isEqualTo(DEFAULT_VIABILIDAD.toString());
         assertThat(testProyecto.isPreEnviado()).isEqualTo(DEFAULT_PRE_ENVIADO);
         assertThat(testProyecto.getFechaPreEnvioPropuesta()).isEqualTo(DEFAULT_FECHA_PRE_ENVIO_PROPUESTA);
         assertThat(testProyecto.getFechaViabilidadPropuesta()).isEqualTo(DEFAULT_FECHA_VIABILIDAD_PROPUESTA);
@@ -304,7 +318,7 @@ public class ProyectoResourceIT {
         proyectoRepository.saveAndFlush(proyecto);
 
         // Get all the proyectoList
-        restProyectoMockMvc.perform(get("/api/proyectos?sort=id,desc"))
+        restProyectoMockMvc.perform(get("/api/proyectos?sort=id,desc&size=2000"))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(proyecto.getId().intValue())))
@@ -400,6 +414,14 @@ public class ProyectoResourceIT {
         Proyecto updatedProyecto = proyectoRepository.findById(proyecto.getId()).get();
         // Disconnect from session so that the updates on updatedProyecto are not directly saved in db
         em.detach(updatedProyecto);
+        // El nombre "programa" del DTO se toma de la relacion proyectoPrograma
+        // (ProyectoMapper), de modo que se necesita otro Programa con el valor
+        // actualizado para que cambie tras el PUT.
+        Programa programaUpdated = new Programa()
+            .programa(UPDATED_PROGRAMA);
+        em.persist(programaUpdated);
+        em.flush();
+        updatedProyecto.proyectoPrograma(programaUpdated);
         updatedProyecto
             .titulo(UPDATED_TITULO)
             .url(UPDATED_URL)
@@ -440,7 +462,8 @@ public class ProyectoResourceIT {
         // Validate the Proyecto in the database
         List<Proyecto> proyectoList = proyectoRepository.findAll();
         assertThat(proyectoList).hasSize(databaseSizeBeforeUpdate);
-        Proyecto testProyecto = proyectoList.get(proyectoList.size() - 1);
+        // Se busca por su id: findAll() no garantiza el orden con datos sembrados.
+        Proyecto testProyecto = proyectoRepository.findById(proyecto.getId()).get();
         assertThat(testProyecto.getTitulo()).isEqualTo(UPDATED_TITULO);
         assertThat(testProyecto.getUrl()).isEqualTo(UPDATED_URL);
         assertThat(testProyecto.getLugarEjecucion()).isEqualTo(UPDATED_LUGAR_EJECUCION);
@@ -463,7 +486,7 @@ public class ProyectoResourceIT {
         assertThat(testProyecto.getNota()).isEqualTo(UPDATED_NOTA);
         assertThat(testProyecto.getConclusion()).isEqualTo(UPDATED_CONCLUSION);
         assertThat(testProyecto.getRecomendaciones()).isEqualTo(UPDATED_RECOMENDACIONES);
-        assertThat(testProyecto.getViabilidad()).isEqualTo(UPDATED_VIABILIDAD);
+        assertThat(testProyecto.getViabilidad()).isEqualTo(UPDATED_VIABILIDAD.toString());
         assertThat(testProyecto.isPreEnviado()).isEqualTo(UPDATED_PRE_ENVIADO);
         assertThat(testProyecto.getFechaPreEnvioPropuesta()).isEqualTo(UPDATED_FECHA_PRE_ENVIO_PROPUESTA);
         assertThat(testProyecto.getFechaViabilidadPropuesta()).isEqualTo(UPDATED_FECHA_VIABILIDAD_PROPUESTA);

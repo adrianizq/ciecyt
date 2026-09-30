@@ -16,6 +16,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import java.util.List;
@@ -97,15 +98,19 @@ public class RolesModalidadResourceIT {
         int databaseSizeBeforeCreate = rolesModalidadRepository.findAll().size();
         // Create the RolesModalidad
         RolesModalidadDTO rolesModalidadDTO = rolesModalidadMapper.toDto(rolesModalidad);
-        restRolesModalidadMockMvc.perform(post("/api/roles-modalidads")
+        MvcResult createResult = restRolesModalidadMockMvc.perform(post("/api/roles-modalidads")
             .contentType(MediaType.APPLICATION_JSON)
             .content(TestUtil.convertObjectToJsonBytes(rolesModalidadDTO)))
-            .andExpect(status().isCreated());
+            .andExpect(status().isCreated())
+            .andReturn();
 
         // Validate the RolesModalidad in the database
         List<RolesModalidad> rolesModalidadList = rolesModalidadRepository.findAll();
         assertThat(rolesModalidadList).hasSize(databaseSizeBeforeCreate + 1);
-        RolesModalidad testRolesModalidad = rolesModalidadList.get(rolesModalidadList.size() - 1);
+        // Se localiza por el id devuelto en Location: la tabla ya tiene datos
+        // sembrados y findAll() no garantiza el orden de la lista.
+        long creadoId = Long.parseLong(createResult.getResponse().getHeader("Location").replaceAll(".*/", ""));
+        RolesModalidad testRolesModalidad = rolesModalidadRepository.findById(creadoId).get();
         assertThat(testRolesModalidad.getRol()).isEqualTo(DEFAULT_ROL);
         assertThat(testRolesModalidad.getCantidad()).isEqualTo(DEFAULT_CANTIDAD);
         assertThat(testRolesModalidad.isCalificador()).isEqualTo(DEFAULT_CALIFICADOR);
@@ -139,7 +144,7 @@ public class RolesModalidadResourceIT {
         rolesModalidadRepository.saveAndFlush(rolesModalidad);
 
         // Get all the rolesModalidadList
-        restRolesModalidadMockMvc.perform(get("/api/roles-modalidads?sort=id,desc"))
+        restRolesModalidadMockMvc.perform(get("/api/roles-modalidads?sort=id,desc&size=2000"))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(rolesModalidad.getId().intValue())))
@@ -197,7 +202,8 @@ public class RolesModalidadResourceIT {
         // Validate the RolesModalidad in the database
         List<RolesModalidad> rolesModalidadList = rolesModalidadRepository.findAll();
         assertThat(rolesModalidadList).hasSize(databaseSizeBeforeUpdate);
-        RolesModalidad testRolesModalidad = rolesModalidadList.get(rolesModalidadList.size() - 1);
+        // Se busca por su id: findAll() no garantiza el orden con datos sembrados.
+        RolesModalidad testRolesModalidad = rolesModalidadRepository.findById(rolesModalidad.getId()).get();
         assertThat(testRolesModalidad.getRol()).isEqualTo(UPDATED_ROL);
         assertThat(testRolesModalidad.getCantidad()).isEqualTo(UPDATED_CANTIDAD);
         assertThat(testRolesModalidad.isCalificador()).isEqualTo(UPDATED_CALIFICADOR);

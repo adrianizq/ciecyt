@@ -97,8 +97,12 @@ public class PreguntaServiceImpl implements PreguntaService {
 
         //Guardar las modalidades
         List <PreguntaModalidad> pmL = preguntaModalidadRepository.findByPreguntaId(pregunta.getId());
-        List <PreguntaModalidadDTO> lpmDto= new ArrayList<>();
-        lpmDto = preguntaDTO.getPreguntaModalidads();
+        // El DTO no siempre trae las listas: sin esto un POST/PUT sin modalidades
+        // terminaria en NullPointerException al iterar.
+        List <PreguntaModalidadDTO> lpmDto= preguntaDTO.getPreguntaModalidads();
+        if (lpmDto == null) {
+            lpmDto = new ArrayList<>();
+        }
         for(PreguntaModalidad pm: pmL){
             preguntaModalidadRepository.delete(pm);
         }
@@ -111,8 +115,10 @@ public class PreguntaServiceImpl implements PreguntaService {
 
         //Guardar las authorities
         List <PreguntaAuthority> paL = preguntaAuthorityRepository.findByPregunta3Id(pregunta.getId());
-        List <PreguntaAuthorityDTO> lpaDto = new ArrayList<>();
-        lpaDto = preguntaDTO.getAuthorities();
+        List <PreguntaAuthorityDTO> lpaDto = preguntaDTO.getAuthorities();
+        if (lpaDto == null) {
+            lpaDto = new ArrayList<>();
+        }
         for(PreguntaAuthority pa: paL){
             preguntaAuthorityRepository.delete(pa);
         }

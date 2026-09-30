@@ -1,6 +1,7 @@
 package co.edu.itp.ciecyt.web.rest;
 
 import co.edu.itp.ciecyt.CiecytApp;
+import co.edu.itp.ciecyt.domain.Fases;
 import co.edu.itp.ciecyt.domain.Pregunta;
 import co.edu.itp.ciecyt.repository.PreguntaRepository;
 import co.edu.itp.ciecyt.security.AuthoritiesConstants;
@@ -16,6 +17,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import java.util.List;
@@ -78,6 +80,11 @@ public class PreguntaResourceIT {
             .pregunta(DEFAULT_PREGUNTA)
             .puntaje(DEFAULT_PUNTAJE)
             .puntajeMaximo(DEFAULT_PUNTAJE_MAXIMO);
+        // Add required entity: la fase es obligatoria para guardar una pregunta
+        Fases fases = FasesResourceIT.createEntity(em);
+        em.persist(fases);
+        em.flush();
+        pregunta.setPreguntaFase(fases);
         return pregunta;
     }
     /**
@@ -93,6 +100,11 @@ public class PreguntaResourceIT {
             .pregunta(UPDATED_PREGUNTA)
             .puntaje(UPDATED_PUNTAJE)
             .puntajeMaximo(UPDATED_PUNTAJE_MAXIMO);
+        // Add required entity: la fase es obligatoria para guardar una pregunta
+        Fases fases = FasesResourceIT.createEntity(em);
+        em.persist(fases);
+        em.flush();
+        pregunta.setPreguntaFase(fases);
         return pregunta;
     }
 
@@ -107,15 +119,17 @@ public class PreguntaResourceIT {
         int databaseSizeBeforeCreate = preguntaRepository.findAll().size();
         // Create the Pregunta
         PreguntaDTO preguntaDTO = preguntaMapper.toDto(pregunta);
-        restPreguntaMockMvc.perform(post("/api/preguntas")
+        MvcResult createResult = restPreguntaMockMvc.perform(post("/api/preguntas")
             .contentType(MediaType.APPLICATION_JSON)
             .content(TestUtil.convertObjectToJsonBytes(preguntaDTO)))
-            .andExpect(status().isCreated());
+            .andExpect(status().isCreated())
+            .andReturn();
 
-        // Validate the Pregunta in the database
+        // Validate the Pregunta in the database: se localiza por el id devuelto en Location
         List<Pregunta> preguntaList = preguntaRepository.findAll();
         assertThat(preguntaList).hasSize(databaseSizeBeforeCreate + 1);
-        Pregunta testPregunta = preguntaList.get(preguntaList.size() - 1);
+        long creadoId = Long.parseLong(createResult.getResponse().getHeader("Location").replaceAll(".*/", ""));
+        Pregunta testPregunta = preguntaRepository.findById(creadoId).get();
         assertThat(testPregunta.getEncabezado()).isEqualTo(DEFAULT_ENCABEZADO);
         assertThat(testPregunta.getDescripcion()).isEqualTo(DEFAULT_DESCRIPCION);
         assertThat(testPregunta.getPregunta()).isEqualTo(DEFAULT_PREGUNTA);
@@ -215,7 +229,7 @@ public class PreguntaResourceIT {
         // Validate the Pregunta in the database
         List<Pregunta> preguntaList = preguntaRepository.findAll();
         assertThat(preguntaList).hasSize(databaseSizeBeforeUpdate);
-        Pregunta testPregunta = preguntaList.get(preguntaList.size() - 1);
+        Pregunta testPregunta = preguntaRepository.findById(pregunta.getId()).get();
         assertThat(testPregunta.getEncabezado()).isEqualTo(UPDATED_ENCABEZADO);
         assertThat(testPregunta.getDescripcion()).isEqualTo(UPDATED_DESCRIPCION);
         assertThat(testPregunta.getPregunta()).isEqualTo(UPDATED_PREGUNTA);

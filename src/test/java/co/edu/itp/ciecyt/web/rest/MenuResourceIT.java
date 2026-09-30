@@ -16,6 +16,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import java.util.List;
@@ -117,15 +118,19 @@ public class MenuResourceIT {
         int databaseSizeBeforeCreate = menuRepository.findAll().size();
         // Create the Menu
         MenuDTO menuDTO = menuMapper.toDto(menu);
-        restMenuMockMvc.perform(post("/api/menus")
+        MvcResult createResult = restMenuMockMvc.perform(post("/api/menus")
             .contentType(MediaType.APPLICATION_JSON)
             .content(TestUtil.convertObjectToJsonBytes(menuDTO)))
-            .andExpect(status().isCreated());
+            .andExpect(status().isCreated())
+            .andReturn();
 
         // Validate the Menu in the database
         List<Menu> menuList = menuRepository.findAll();
         assertThat(menuList).hasSize(databaseSizeBeforeCreate + 1);
-        Menu testMenu = menuList.get(menuList.size() - 1);
+        // Se localiza por el id devuelto en Location: la tabla ya tiene datos
+        // sembrados y findAll() no garantiza el orden de la lista.
+        long creadoId = Long.parseLong(createResult.getResponse().getHeader("Location").replaceAll(".*/", ""));
+        Menu testMenu = menuRepository.findById(creadoId).get();
         assertThat(testMenu.getNombre()).isEqualTo(DEFAULT_NOMBRE);
         assertThat(testMenu.getUrl()).isEqualTo(DEFAULT_URL);
         assertThat(testMenu.getIcono()).isEqualTo(DEFAULT_ICONO);
@@ -163,7 +168,7 @@ public class MenuResourceIT {
         menuRepository.saveAndFlush(menu);
 
         // Get all the menuList
-        restMenuMockMvc.perform(get("/api/menus?sort=id,desc"))
+        restMenuMockMvc.perform(get("/api/menus?sort=id,desc&size=2000"))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(menu.getId().intValue())))
@@ -233,7 +238,8 @@ public class MenuResourceIT {
         // Validate the Menu in the database
         List<Menu> menuList = menuRepository.findAll();
         assertThat(menuList).hasSize(databaseSizeBeforeUpdate);
-        Menu testMenu = menuList.get(menuList.size() - 1);
+        // Se busca por su id: findAll() no garantiza el orden con datos sembrados.
+        Menu testMenu = menuRepository.findById(menu.getId()).get();
         assertThat(testMenu.getNombre()).isEqualTo(UPDATED_NOMBRE);
         assertThat(testMenu.getUrl()).isEqualTo(UPDATED_URL);
         assertThat(testMenu.getIcono()).isEqualTo(UPDATED_ICONO);

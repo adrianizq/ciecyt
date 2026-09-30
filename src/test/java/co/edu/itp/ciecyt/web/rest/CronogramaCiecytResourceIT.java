@@ -16,6 +16,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import java.time.LocalDate;
@@ -104,15 +105,19 @@ public class CronogramaCiecytResourceIT {
         int databaseSizeBeforeCreate = cronogramaCiecytRepository.findAll().size();
         // Create the CronogramaCiecyt
         CronogramaCiecytDTO cronogramaCiecytDTO = cronogramaCiecytMapper.toDto(cronogramaCiecyt);
-        restCronogramaCiecytMockMvc.perform(post("/api/cronograma-ciecyts")
+        MvcResult createResult = restCronogramaCiecytMockMvc.perform(post("/api/cronograma-ciecyts")
             .contentType(MediaType.APPLICATION_JSON)
             .content(TestUtil.convertObjectToJsonBytes(cronogramaCiecytDTO)))
-            .andExpect(status().isCreated());
+            .andExpect(status().isCreated())
+            .andReturn();
 
         // Validate the CronogramaCiecyt in the database
         List<CronogramaCiecyt> cronogramaCiecytList = cronogramaCiecytRepository.findAll();
         assertThat(cronogramaCiecytList).hasSize(databaseSizeBeforeCreate + 1);
-        CronogramaCiecyt testCronogramaCiecyt = cronogramaCiecytList.get(cronogramaCiecytList.size() - 1);
+        // Se localiza por el id devuelto en Location: la tabla ya tiene datos
+        // sembrados y findAll() no garantiza el orden de la lista.
+        long creadoId = Long.parseLong(createResult.getResponse().getHeader("Location").replaceAll(".*/", ""));
+        CronogramaCiecyt testCronogramaCiecyt = cronogramaCiecytRepository.findById(creadoId).get();
         assertThat(testCronogramaCiecyt.getTituloCronograma()).isEqualTo(DEFAULT_TITULO_CRONOGRAMA);
         assertThat(testCronogramaCiecyt.getFechaInicio()).isEqualTo(DEFAULT_FECHA_INICIO);
         assertThat(testCronogramaCiecyt.getFechaFin()).isEqualTo(DEFAULT_FECHA_FIN);
@@ -147,7 +152,7 @@ public class CronogramaCiecytResourceIT {
         cronogramaCiecytRepository.saveAndFlush(cronogramaCiecyt);
 
         // Get all the cronogramaCiecytList
-        restCronogramaCiecytMockMvc.perform(get("/api/cronograma-ciecyts?sort=id,desc"))
+        restCronogramaCiecytMockMvc.perform(get("/api/cronograma-ciecyts?sort=id,desc&size=2000"))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(cronogramaCiecyt.getId().intValue())))
@@ -208,7 +213,8 @@ public class CronogramaCiecytResourceIT {
         // Validate the CronogramaCiecyt in the database
         List<CronogramaCiecyt> cronogramaCiecytList = cronogramaCiecytRepository.findAll();
         assertThat(cronogramaCiecytList).hasSize(databaseSizeBeforeUpdate);
-        CronogramaCiecyt testCronogramaCiecyt = cronogramaCiecytList.get(cronogramaCiecytList.size() - 1);
+        // Se busca por su id: findAll() no garantiza el orden con datos sembrados.
+        CronogramaCiecyt testCronogramaCiecyt = cronogramaCiecytRepository.findById(cronogramaCiecyt.getId()).get();
         assertThat(testCronogramaCiecyt.getTituloCronograma()).isEqualTo(UPDATED_TITULO_CRONOGRAMA);
         assertThat(testCronogramaCiecyt.getFechaInicio()).isEqualTo(UPDATED_FECHA_INICIO);
         assertThat(testCronogramaCiecyt.getFechaFin()).isEqualTo(UPDATED_FECHA_FIN);

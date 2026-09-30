@@ -16,6 +16,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import java.util.List;
@@ -92,15 +93,18 @@ public class FacultadResourceIT {
         int databaseSizeBeforeCreate = facultadRepository.findAll().size();
         // Create the Facultad
         FacultadDTO facultadDTO = facultadMapper.toDto(facultad);
-        restFacultadMockMvc.perform(post("/api/facultads")
+        MvcResult createResult = restFacultadMockMvc.perform(post("/api/facultads")
             .contentType(MediaType.APPLICATION_JSON)
             .content(TestUtil.convertObjectToJsonBytes(facultadDTO)))
-            .andExpect(status().isCreated());
+            .andExpect(status().isCreated())
+            .andReturn();
 
-        // Validate the Facultad in the database
+        // Validate the Facultad in the database: se localiza por el id devuelto en Location,
+        // porque la tabla ya tiene datos sembrados y findAll() no garantiza el orden.
         List<Facultad> facultadList = facultadRepository.findAll();
         assertThat(facultadList).hasSize(databaseSizeBeforeCreate + 1);
-        Facultad testFacultad = facultadList.get(facultadList.size() - 1);
+        long creadoId = Long.parseLong(createResult.getResponse().getHeader("Location").replaceAll(".*/", ""));
+        Facultad testFacultad = facultadRepository.findById(creadoId).get();
         assertThat(testFacultad.getCodigoFacultad()).isEqualTo(DEFAULT_CODIGO_FACULTAD);
         assertThat(testFacultad.getFacultad()).isEqualTo(DEFAULT_FACULTAD);
     }
@@ -185,10 +189,11 @@ public class FacultadResourceIT {
             .content(TestUtil.convertObjectToJsonBytes(facultadDTO)))
             .andExpect(status().isOk());
 
-        // Validate the Facultad in the database
+        // Validate the Facultad in the database: se busca por su id, porque findAll() no
+        // garantiza el orden cuando la tabla ya tiene datos sembrados.
         List<Facultad> facultadList = facultadRepository.findAll();
         assertThat(facultadList).hasSize(databaseSizeBeforeUpdate);
-        Facultad testFacultad = facultadList.get(facultadList.size() - 1);
+        Facultad testFacultad = facultadRepository.findById(facultad.getId()).get();
         assertThat(testFacultad.getCodigoFacultad()).isEqualTo(UPDATED_CODIGO_FACULTAD);
         assertThat(testFacultad.getFacultad()).isEqualTo(UPDATED_FACULTAD);
     }

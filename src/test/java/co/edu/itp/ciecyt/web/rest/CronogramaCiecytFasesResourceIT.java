@@ -16,6 +16,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import java.time.LocalDate;
@@ -99,15 +100,19 @@ public class CronogramaCiecytFasesResourceIT {
         int databaseSizeBeforeCreate = cronogramaCiecytFasesRepository.findAll().size();
         // Create the CronogramaCiecytFases
         CronogramaCiecytFasesDTO cronogramaCiecytFasesDTO = cronogramaCiecytFasesMapper.toDto(cronogramaCiecytFases);
-        restCronogramaCiecytFasesMockMvc.perform(post("/api/cronograma-ciecyt-fases")
+        MvcResult createResult = restCronogramaCiecytFasesMockMvc.perform(post("/api/cronograma-ciecyt-fases")
             .contentType(MediaType.APPLICATION_JSON)
             .content(TestUtil.convertObjectToJsonBytes(cronogramaCiecytFasesDTO)))
-            .andExpect(status().isCreated());
+            .andExpect(status().isCreated())
+            .andReturn();
 
         // Validate the CronogramaCiecytFases in the database
         List<CronogramaCiecytFases> cronogramaCiecytFasesList = cronogramaCiecytFasesRepository.findAll();
         assertThat(cronogramaCiecytFasesList).hasSize(databaseSizeBeforeCreate + 1);
-        CronogramaCiecytFases testCronogramaCiecytFases = cronogramaCiecytFasesList.get(cronogramaCiecytFasesList.size() - 1);
+        // Se localiza por el id devuelto en Location: la tabla ya tiene datos
+        // sembrados y findAll() no garantiza el orden de la lista.
+        long creadoId = Long.parseLong(createResult.getResponse().getHeader("Location").replaceAll(".*/", ""));
+        CronogramaCiecytFases testCronogramaCiecytFases = cronogramaCiecytFasesRepository.findById(creadoId).get();
         assertThat(testCronogramaCiecytFases.getInicioFase()).isEqualTo(DEFAULT_INICIO_FASE);
         assertThat(testCronogramaCiecytFases.getFinFase()).isEqualTo(DEFAULT_FIN_FASE);
         assertThat(testCronogramaCiecytFases.getTextoExplicativo()).isEqualTo(DEFAULT_TEXTO_EXPLICATIVO);
@@ -141,7 +146,7 @@ public class CronogramaCiecytFasesResourceIT {
         cronogramaCiecytFasesRepository.saveAndFlush(cronogramaCiecytFases);
 
         // Get all the cronogramaCiecytFasesList
-        restCronogramaCiecytFasesMockMvc.perform(get("/api/cronograma-ciecyt-fases?sort=id,desc"))
+        restCronogramaCiecytFasesMockMvc.perform(get("/api/cronograma-ciecyt-fases?sort=id,desc&size=2000"))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(cronogramaCiecytFases.getId().intValue())))
@@ -199,7 +204,8 @@ public class CronogramaCiecytFasesResourceIT {
         // Validate the CronogramaCiecytFases in the database
         List<CronogramaCiecytFases> cronogramaCiecytFasesList = cronogramaCiecytFasesRepository.findAll();
         assertThat(cronogramaCiecytFasesList).hasSize(databaseSizeBeforeUpdate);
-        CronogramaCiecytFases testCronogramaCiecytFases = cronogramaCiecytFasesList.get(cronogramaCiecytFasesList.size() - 1);
+        // Se busca por su id: findAll() no garantiza el orden con datos sembrados.
+        CronogramaCiecytFases testCronogramaCiecytFases = cronogramaCiecytFasesRepository.findById(cronogramaCiecytFases.getId()).get();
         assertThat(testCronogramaCiecytFases.getInicioFase()).isEqualTo(UPDATED_INICIO_FASE);
         assertThat(testCronogramaCiecytFases.getFinFase()).isEqualTo(UPDATED_FIN_FASE);
         assertThat(testCronogramaCiecytFases.getTextoExplicativo()).isEqualTo(UPDATED_TEXTO_EXPLICATIVO);

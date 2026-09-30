@@ -93,4 +93,17 @@ public class Usuario implements Serializable {
     @MapsId
     @JoinColumn(name = "id")
     private User user;
+
+    public User getUser() {
+        return user;
+    }
+
+    public Usuario user(User user) {
+        this.user = user;
+        return this;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
 }

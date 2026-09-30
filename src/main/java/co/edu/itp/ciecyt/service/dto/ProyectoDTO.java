@@ -67,6 +67,10 @@ public class ProyectoDTO implements Serializable {
 
     private Boolean preEnviado;
 
+    private LocalDate fechaPreEnvioPropuesta;
+
+    private LocalDate fechaViabilidadPropuesta;
+
     private Boolean sustentar;
 
     private Boolean proyectoEnviado;
@@ -345,6 +349,22 @@ public class ProyectoDTO implements Serializable {
 
     public void setPreEnviado(Boolean preEnviado) {
         this.preEnviado = preEnviado;
+    }
+
+    public LocalDate getFechaPreEnvioPropuesta() {
+        return fechaPreEnvioPropuesta;
+    }
+
+    public void setFechaPreEnvioPropuesta(LocalDate fechaPreEnvioPropuesta) {
+        this.fechaPreEnvioPropuesta = fechaPreEnvioPropuesta;
+    }
+
+    public LocalDate getFechaViabilidadPropuesta() {
+        return fechaViabilidadPropuesta;
+    }
+
+    public void setFechaViabilidadPropuesta(LocalDate fechaViabilidadPropuesta) {
+        this.fechaViabilidadPropuesta = fechaViabilidadPropuesta;
     }
 
     public Boolean getSustentar() {

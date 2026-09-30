@@ -16,6 +16,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import java.util.List;
@@ -87,15 +88,19 @@ public class ModalidadResourceIT {
         int databaseSizeBeforeCreate = modalidadRepository.findAll().size();
         // Create the Modalidad
         ModalidadDTO modalidadDTO = modalidadMapper.toDto(modalidad);
-        restModalidadMockMvc.perform(post("/api/modalidads")
+        MvcResult createResult = restModalidadMockMvc.perform(post("/api/modalidads")
             .contentType(MediaType.APPLICATION_JSON)
             .content(TestUtil.convertObjectToJsonBytes(modalidadDTO)))
-            .andExpect(status().isCreated());
+            .andExpect(status().isCreated())
+            .andReturn();
 
         // Validate the Modalidad in the database
         List<Modalidad> modalidadList = modalidadRepository.findAll();
         assertThat(modalidadList).hasSize(databaseSizeBeforeCreate + 1);
-        Modalidad testModalidad = modalidadList.get(modalidadList.size() - 1);
+        // Se localiza por el id devuelto en Location: la tabla ya tiene datos
+        // sembrados y findAll() no garantiza el orden de la lista.
+        long creadoId = Long.parseLong(createResult.getResponse().getHeader("Location").replaceAll(".*/", ""));
+        Modalidad testModalidad = modalidadRepository.findById(creadoId).get();
         assertThat(testModalidad.getModalidad()).isEqualTo(DEFAULT_MODALIDAD);
     }
 
@@ -127,7 +132,7 @@ public class ModalidadResourceIT {
         modalidadRepository.saveAndFlush(modalidad);
 
         // Get all the modalidadList
-        restModalidadMockMvc.perform(get("/api/modalidads?sort=id,desc"))
+        restModalidadMockMvc.perform(get("/api/modalidads?sort=id,desc&size=2000"))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(modalidad.getId().intValue())))
@@ -179,7 +184,8 @@ public class ModalidadResourceIT {
         // Validate the Modalidad in the database
         List<Modalidad> modalidadList = modalidadRepository.findAll();
         assertThat(modalidadList).hasSize(databaseSizeBeforeUpdate);
-        Modalidad testModalidad = modalidadList.get(modalidadList.size() - 1);
+        // Se busca por su id: findAll() no garantiza el orden con datos sembrados.
+        Modalidad testModalidad = modalidadRepository.findById(modalidad.getId()).get();
         assertThat(testModalidad.getModalidad()).isEqualTo(UPDATED_MODALIDAD);
     }
 

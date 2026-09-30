@@ -1,8 +1,10 @@
 package co.edu.itp.ciecyt.web.rest;
 
 import co.edu.itp.ciecyt.CiecytApp;
+import co.edu.itp.ciecyt.domain.User;
 import co.edu.itp.ciecyt.domain.Usuario;
 import co.edu.itp.ciecyt.repository.UsuarioRepository;
+import co.edu.itp.ciecyt.security.AuthoritiesConstants;
 import co.edu.itp.ciecyt.service.UsuarioService;
 import co.edu.itp.ciecyt.service.dto.UsuarioDTO;
 import co.edu.itp.ciecyt.service.mapper.UsuarioMapper;
@@ -15,6 +17,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import java.util.List;
@@ -65,6 +68,11 @@ public class UsuarioResourceIT {
         Usuario usuario = new Usuario()
             .usuario(DEFAULT_USUARIO)
             .descripcion(DEFAULT_DESCRIPCION);
+        // Add required entity: Usuario comparte clave primaria con User (@MapsId)
+        User user = UserResourceIT.createEntity(em);
+        em.persist(user);
+        em.flush();
+        usuario.setUser(user);
         return usuario;
     }
     /**
@@ -77,6 +85,11 @@ public class UsuarioResourceIT {
         Usuario usuario = new Usuario()
             .usuario(UPDATED_USUARIO)
             .descripcion(UPDATED_DESCRIPCION);
+        // Add required entity: Usuario comparte clave primaria con User (@MapsId)
+        User user = UserResourceIT.createEntity(em);
+        em.persist(user);
+        em.flush();
+        usuario.setUser(user);
         return usuario;
     }
 
@@ -91,15 +104,17 @@ public class UsuarioResourceIT {
         int databaseSizeBeforeCreate = usuarioRepository.findAll().size();
         // Create the Usuario
         UsuarioDTO usuarioDTO = usuarioMapper.toDto(usuario);
-        restUsuarioMockMvc.perform(post("/api/usuarios")
+        MvcResult createResult = restUsuarioMockMvc.perform(post("/api/usuarios")
             .contentType(MediaType.APPLICATION_JSON)
             .content(TestUtil.convertObjectToJsonBytes(usuarioDTO)))
-            .andExpect(status().isCreated());
+            .andExpect(status().isCreated())
+            .andReturn();
 
-        // Validate the Usuario in the database
+        // Validate the Usuario in the database: se localiza por el id devuelto en Location
         List<Usuario> usuarioList = usuarioRepository.findAll();
         assertThat(usuarioList).hasSize(databaseSizeBeforeCreate + 1);
-        Usuario testUsuario = usuarioList.get(usuarioList.size() - 1);
+        long creadoId = Long.parseLong(createResult.getResponse().getHeader("Location").replaceAll(".*/", ""));
+        Usuario testUsuario = usuarioRepository.findById(creadoId).get();
         assertThat(testUsuario.getUsuario()).isEqualTo(DEFAULT_USUARIO);
         assertThat(testUsuario.getDescripcion()).isEqualTo(DEFAULT_DESCRIPCION);
     }
@@ -132,7 +147,7 @@ public class UsuarioResourceIT {
         usuarioRepository.saveAndFlush(usuario);
 
         // Get all the usuarioList
-        restUsuarioMockMvc.perform(get("/api/usuarios?sort=id,desc"))
+        restUsuarioMockMvc.perform(get("/api/usuarios?sort=id,desc&size=2000"))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(usuario.getId().intValue())))
@@ -187,7 +202,7 @@ public class UsuarioResourceIT {
         // Validate the Usuario in the database
         List<Usuario> usuarioList = usuarioRepository.findAll();
         assertThat(usuarioList).hasSize(databaseSizeBeforeUpdate);
-        Usuario testUsuario = usuarioList.get(usuarioList.size() - 1);
+        Usuario testUsuario = usuarioRepository.findById(usuario.getId()).get();
         assertThat(testUsuario.getUsuario()).isEqualTo(UPDATED_USUARIO);
         assertThat(testUsuario.getDescripcion()).isEqualTo(UPDATED_DESCRIPCION);
     }
@@ -213,6 +228,7 @@ public class UsuarioResourceIT {
 
     @Test
     @Transactional
+    @WithMockUser(authorities = AuthoritiesConstants.ADMIN)
     public void deleteUsuario() throws Exception {
         // Initialize the database
         usuarioRepository.saveAndFlush(usuario);
