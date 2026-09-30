@@ -8,6 +8,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import co.edu.itp.ciecyt.CiecytApp;
 import co.edu.itp.ciecyt.domain.AdjuntoRetroalimentacion;
 import co.edu.itp.ciecyt.repository.AdjuntoRetroalimentacionRepository;
+import co.edu.itp.ciecyt.security.AuthoritiesConstants;
 import co.edu.itp.ciecyt.service.AdjuntoRetroalimentacionService;
 import co.edu.itp.ciecyt.service.dto.AdjuntoRetroalimentacionDTO;
 import co.edu.itp.ciecyt.service.mapper.AdjuntoRetroalimentacionMapper;
@@ -31,7 +32,7 @@ import org.springframework.util.Base64Utils;
  */
 @SpringBootTest(classes = CiecytApp.class)
 @AutoConfigureMockMvc
-@WithMockUser
+@WithMockUser(authorities = AuthoritiesConstants.ADMIN)
 public class AdjuntoRetroalimentacionResourceIT {
 
     private static final String DEFAULT_NOMBRE_ADJUNTO = "AAAAAAAAAA";
@@ -149,7 +150,7 @@ public class AdjuntoRetroalimentacionResourceIT {
         AdjuntoRetroalimentacionDTO adjuntoRetroalimentacionDTO = adjuntoRetroalimentacionMapper.toDto(adjuntoRetroalimentacion);
         restAdjuntoRetroalimentacionMockMvc
             .perform(
-                post("/api/adjunto-retro-alimentacions")
+                post("/api/adjunto-retroalimentacions")
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(TestUtil.convertObjectToJsonBytes(adjuntoRetroalimentacionDTO))
             )
@@ -186,7 +187,7 @@ public class AdjuntoRetroalimentacionResourceIT {
         // An entity with an existing ID cannot be created, so this API call must fail
         restAdjuntoRetroalimentacionMockMvc
             .perform(
-                post("/api/adjunto-retro-alimentacions")
+                post("/api/adjunto-retroalimentacions")
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(TestUtil.convertObjectToJsonBytes(adjuntoRetroalimentacionDTO))
             )
@@ -205,7 +206,7 @@ public class AdjuntoRetroalimentacionResourceIT {
 
         // Get all the adjuntoRetroalimentacionList
         restAdjuntoRetroalimentacionMockMvc
-            .perform(get("/api/adjunto-retro-alimentacions?sort=id,desc"))
+            .perform(get("/api/adjunto-retroalimentacions?sort=id,desc"))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(adjuntoRetroalimentacion.getId().intValue())))
@@ -217,9 +218,6 @@ public class AdjuntoRetroalimentacionResourceIT {
             .andExpect(jsonPath("$.[*].nombreArchivoOriginal").value(hasItem(DEFAULT_NOMBRE_ARCHIVO_ORIGINAL)))
             .andExpect(jsonPath("$.[*].fechaInicio").value(hasItem(DEFAULT_FECHA_INICIO.toString())))
             .andExpect(jsonPath("$.[*].fechaFin").value(hasItem(DEFAULT_FECHA_FIN.toString())))
-            .andExpect(jsonPath("$.[*].archivoContentType").value(hasItem(DEFAULT_ARCHIVO_CONTENT_TYPE)))
-            //.andExpect(jsonPath("$.[*].archivo").value(hasItem(Base64Utils.encodeToString(DEFAULT_ARCHIVO))))
-            .andExpect(jsonPath("$.[*].archivo").value(hasItem(DEFAULT_ARCHIVO)))
             .andExpect(jsonPath("$.[*].archivoContentType").value(hasItem(DEFAULT_ARCHIVO_CONTENT_TYPE)))
             .andExpect(jsonPath("$.[*].authority").value(hasItem(DEFAULT_AUTHORITY)))
             .andExpect(jsonPath("$.[*].file").value(hasItem(DEFAULT_FILE)));
@@ -233,7 +231,7 @@ public class AdjuntoRetroalimentacionResourceIT {
 
         // Get the adjuntoRetroalimentacion
         restAdjuntoRetroalimentacionMockMvc
-            .perform(get("/api/adjunto-retro-alimentacions/{id}", adjuntoRetroalimentacion.getId()))
+            .perform(get("/api/adjunto-retroalimentacions/{id}", adjuntoRetroalimentacion.getId()))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.id").value(adjuntoRetroalimentacion.getId().intValue()))
@@ -246,9 +244,6 @@ public class AdjuntoRetroalimentacionResourceIT {
             .andExpect(jsonPath("$.fechaInicio").value(DEFAULT_FECHA_INICIO.toString()))
             .andExpect(jsonPath("$.fechaFin").value(DEFAULT_FECHA_FIN.toString()))
             .andExpect(jsonPath("$.archivoContentType").value(DEFAULT_ARCHIVO_CONTENT_TYPE))
-            //.andExpect(jsonPath("$.archivo").value(Base64Utils.encodeToString(DEFAULT_ARCHIVO)))
-            .andExpect(jsonPath("$.archivo").value(DEFAULT_ARCHIVO))
-            .andExpect(jsonPath("$.archivoContentType").value(DEFAULT_ARCHIVO_CONTENT_TYPE))
             .andExpect(jsonPath("$.authority").value(DEFAULT_AUTHORITY))
             .andExpect(jsonPath("$.file").value(DEFAULT_FILE));
     }
@@ -258,7 +253,7 @@ public class AdjuntoRetroalimentacionResourceIT {
     public void getNonExistingAdjuntoRetroalimentacion() throws Exception {
         // Get the adjuntoRetroalimentacion
         restAdjuntoRetroalimentacionMockMvc
-            .perform(get("/api/adjunto-retro-alimentacions/{id}", Long.MAX_VALUE))
+            .perform(get("/api/adjunto-retroalimentacions/{id}", Long.MAX_VALUE))
             .andExpect(status().isNotFound());
     }
 
@@ -294,7 +289,7 @@ public class AdjuntoRetroalimentacionResourceIT {
 
         restAdjuntoRetroalimentacionMockMvc
             .perform(
-                put("/api/adjunto-retro-alimentacions")
+                put("/api/adjunto-retroalimentacions")
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(TestUtil.convertObjectToJsonBytes(adjuntoRetroalimentacionDTO))
             )
@@ -330,7 +325,7 @@ public class AdjuntoRetroalimentacionResourceIT {
         // If the entity doesn't have an ID, it will throw BadRequestAlertException
         restAdjuntoRetroalimentacionMockMvc
             .perform(
-                put("/api/adjunto-retro-alimentacions")
+                put("/api/adjunto-retroalimentacions")
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(TestUtil.convertObjectToJsonBytes(adjuntoRetroalimentacionDTO))
             )
@@ -351,7 +346,7 @@ public class AdjuntoRetroalimentacionResourceIT {
 
         // Delete the adjuntoRetroalimentacion
         restAdjuntoRetroalimentacionMockMvc
-            .perform(delete("/api/adjunto-retro-alimentacions/{id}", adjuntoRetroalimentacion.getId()).accept(MediaType.APPLICATION_JSON))
+            .perform(delete("/api/adjunto-retroalimentacions/{id}", adjuntoRetroalimentacion.getId()).accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isNoContent());
 
         // Validate the database contains one less item

@@ -5,6 +5,7 @@ import co.edu.itp.ciecyt.domain.UserInfo;
 import co.edu.itp.ciecyt.domain.User;
 import co.edu.itp.ciecyt.domain.enumeration.EnumGenero;
 import co.edu.itp.ciecyt.repository.UserInfoRepository;
+import co.edu.itp.ciecyt.security.AuthoritiesConstants;
 import co.edu.itp.ciecyt.service.UserInfoService;
 import co.edu.itp.ciecyt.service.dto.UserInfoDTO;
 import co.edu.itp.ciecyt.service.mapper.UserInfoMapper;
@@ -33,7 +34,7 @@ import co.edu.itp.ciecyt.domain.enumeration.EnumGenero;
  */
 @SpringBootTest(classes = CiecytApp.class)
 @AutoConfigureMockMvc
-@WithMockUser
+@WithMockUser(authorities = AuthoritiesConstants.ADMIN)
 public class UserInfoResourceIT {
 
     private static final String DEFAULT_NUIP = "AAAAAAAAAA";
@@ -130,7 +131,7 @@ public class UserInfoResourceIT {
         int databaseSizeBeforeCreate = userInfoRepository.findAll().size();
         // Create the UserInfo
         UserInfoDTO userInfoDTO = userInfoMapper.toDto(userInfo);
-        restUserInfoMockMvc.perform(post("/api/user-infos")
+        restUserInfoMockMvc.perform(post("/api/user-info")
             .contentType(MediaType.APPLICATION_JSON)
             .content(TestUtil.convertObjectToJsonBytes(userInfoDTO)))
             .andExpect(status().isCreated());
@@ -161,7 +162,7 @@ public class UserInfoResourceIT {
         UserInfoDTO userInfoDTO = userInfoMapper.toDto(userInfo);
 
         // An entity with an existing ID cannot be created, so this API call must fail
-        restUserInfoMockMvc.perform(post("/api/user-infos")
+        restUserInfoMockMvc.perform(post("/api/user-info")
             .contentType(MediaType.APPLICATION_JSON)
             .content(TestUtil.convertObjectToJsonBytes(userInfoDTO)))
             .andExpect(status().isBadRequest());
@@ -192,16 +193,19 @@ public class UserInfoResourceIT {
         updatedUserInfo.setUser(user);
         UserInfoDTO updatedUserInfoDTO = userInfoMapper.toDto(updatedUserInfo);
 
-        // Update the entity
-        restUserInfoMockMvc.perform(put("/api/user-infos")
+        // Update the entity: el id del registro y el del usuario tienen que ser el mismo,
+        // porque user_info guarda su clave primaria en la del usuario. Una asociacion distinta
+        // reescribiria el registro de otra persona, por eso el recurso la rechaza con 400.
+        restUserInfoMockMvc.perform(put("/api/user-info")
             .contentType(MediaType.APPLICATION_JSON)
             .content(TestUtil.convertObjectToJsonBytes(updatedUserInfoDTO)))
-            .andExpect(status().isOk());
+            .andExpect(status().isBadRequest());
 
-        // Validate the UserInfo in the database
+        // Validate the database was not modified
         List<UserInfo> userInfoList = userInfoRepository.findAll();
         assertThat(userInfoList).hasSize(databaseSizeBeforeCreate);
         UserInfo testUserInfo = userInfoList.get(userInfoList.size() - 1);
+        assertThat(testUserInfo.getUser().getId()).isEqualTo(userInfo.getId());
 
         // Validate the id for MapsId, the ids must be same
         // Uncomment the following line for assertion. However, please note that there is a known issue and uncommenting will fail the test.
@@ -216,7 +220,7 @@ public class UserInfoResourceIT {
         userInfoRepository.saveAndFlush(userInfo);
 
         // Get all the userInfoList
-        restUserInfoMockMvc.perform(get("/api/user-infos?sort=id,desc"))
+        restUserInfoMockMvc.perform(get("/api/user-info?sort=id,desc"))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(userInfo.getId().intValue())))
@@ -236,7 +240,7 @@ public class UserInfoResourceIT {
         userInfoRepository.saveAndFlush(userInfo);
 
         // Get the userInfo
-        restUserInfoMockMvc.perform(get("/api/user-infos/{id}", userInfo.getId()))
+        restUserInfoMockMvc.perform(get("/api/user-info/{id}", userInfo.getId()))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.id").value(userInfo.getId().intValue()))
@@ -252,7 +256,7 @@ public class UserInfoResourceIT {
     @Transactional
     public void getNonExistingUserInfo() throws Exception {
         // Get the userInfo
-        restUserInfoMockMvc.perform(get("/api/user-infos/{id}", Long.MAX_VALUE))
+        restUserInfoMockMvc.perform(get("/api/user-info/{id}", Long.MAX_VALUE))
             .andExpect(status().isNotFound());
     }
 
@@ -278,7 +282,7 @@ public class UserInfoResourceIT {
             .fotoContentType(UPDATED_FOTO_CONTENT_TYPE);
         UserInfoDTO userInfoDTO = userInfoMapper.toDto(updatedUserInfo);
 
-        restUserInfoMockMvc.perform(put("/api/user-infos")
+        restUserInfoMockMvc.perform(put("/api/user-info")
             .contentType(MediaType.APPLICATION_JSON)
             .content(TestUtil.convertObjectToJsonBytes(userInfoDTO)))
             .andExpect(status().isOk());
@@ -305,7 +309,7 @@ public class UserInfoResourceIT {
         UserInfoDTO userInfoDTO = userInfoMapper.toDto(userInfo);
 
         // If the entity doesn't have an ID, it will throw BadRequestAlertException
-        restUserInfoMockMvc.perform(put("/api/user-infos")
+        restUserInfoMockMvc.perform(put("/api/user-info")
             .contentType(MediaType.APPLICATION_JSON)
             .content(TestUtil.convertObjectToJsonBytes(userInfoDTO)))
             .andExpect(status().isBadRequest());
@@ -323,13 +327,15 @@ public class UserInfoResourceIT {
 
         int databaseSizeBeforeDelete = userInfoRepository.findAll().size();
 
-        // Delete the userInfo
-        restUserInfoMockMvc.perform(delete("/api/user-infos/{id}", userInfo.getId())
+        // Delete the userInfo: no hay DELETE en /api/user-info porque user_info comparte clave
+        // primaria con jhi_user. El borrado real lo hace la administracion de usuarios
+        // (DELETE /api/users/{login}), que elimina user_info y despues el usuario.
+        restUserInfoMockMvc.perform(delete("/api/user-info/{id}", userInfo.getId())
             .accept(MediaType.APPLICATION_JSON))
-            .andExpect(status().isNoContent());
+            .andExpect(status().isMethodNotAllowed());
 
-        // Validate the database contains one less item
+        // Validate the database is untouched
         List<UserInfo> userInfoList = userInfoRepository.findAll();
-        assertThat(userInfoList).hasSize(databaseSizeBeforeDelete - 1);
+        assertThat(userInfoList).hasSize(databaseSizeBeforeDelete);
     }
 }

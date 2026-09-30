@@ -666,6 +666,9 @@ public class ProyectoAutorizacionService {
      */
     @Transactional(readOnly = true)
     public boolean puedeModificarAdjuntoRetroalimentacion(Long adjuntoId) {
+        if (esGestorGlobal()) {
+            return true;
+        }
         if (adjuntoId == null) {
             return false;
         }
