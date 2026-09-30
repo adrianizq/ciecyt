@@ -2,6 +2,8 @@ package co.edu.itp.ciecyt.web.rest;
 
 import co.edu.itp.ciecyt.CiecytApp;
 import co.edu.itp.ciecyt.domain.IntegranteProyecto;
+import co.edu.itp.ciecyt.domain.RolesModalidad;
+import co.edu.itp.ciecyt.domain.User;
 import co.edu.itp.ciecyt.repository.IntegranteProyectoRepository;
 import co.edu.itp.ciecyt.security.AuthoritiesConstants;
 import co.edu.itp.ciecyt.service.IntegranteProyectoService;
@@ -39,6 +41,8 @@ public class IntegranteProyectoResourceIT {
     private static final String DEFAULT_DESCRIPCION = "AAAAAAAAAA";
     private static final String UPDATED_DESCRIPCION = "BBBBBBBBBB";
 
+    private static final String DEFAULT_ROL = "AAAAAAAAAA";
+
     @Autowired
     private IntegranteProyectoRepository integranteProyectoRepository;
 
@@ -63,9 +67,15 @@ public class IntegranteProyectoResourceIT {
      * if they test an entity which requires the current entity.
      */
     public static IntegranteProyecto createEntity(EntityManager em) {
+        RolesModalidad cargo = new RolesModalidad()
+            .rol(DEFAULT_ROL);
+        em.persist(cargo);
+
         IntegranteProyecto integranteProyecto = new IntegranteProyecto()
             .integrante(DEFAULT_INTEGRANTE)
-            .descripcion(DEFAULT_DESCRIPCION);
+            .descripcion(DEFAULT_DESCRIPCION)
+            .integranteProyectoUser(em.find(User.class, 4L))
+            .integranteProyectoRolesModalidad(cargo);
         return integranteProyecto;
     }
     /**

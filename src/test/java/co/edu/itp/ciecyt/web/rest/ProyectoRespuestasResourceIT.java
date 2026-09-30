@@ -294,7 +294,6 @@ public class ProyectoRespuestasResourceIT {
             .respuestaTexto(UPDATED_RESPUESTA_TEXTO)
             .respuestaNumero(UPDATED_RESPUESTA_NUMERO)
             .faseId(UPDATED_FASE_ID)
-            .authority(UPDATED_AUTHORITY)
             .puntajeMaximo(UPDATED_PUNTAJE_MAXIMO);
         ProyectoRespuestasDTO proyectoRespuestasDTO = proyectoRespuestasMapper.toDto(updatedProyectoRespuestas);
 
@@ -320,7 +319,7 @@ public class ProyectoRespuestasResourceIT {
         assertThat(testProyectoRespuestas.getRespuestaTexto()).isEqualTo(UPDATED_RESPUESTA_TEXTO);
         assertThat(testProyectoRespuestas.getRespuestaNumero()).isEqualTo(UPDATED_RESPUESTA_NUMERO);
         assertThat(testProyectoRespuestas.getFaseId()).isEqualTo(UPDATED_FASE_ID);
-        assertThat(testProyectoRespuestas.getAuthority()).isEqualTo(UPDATED_AUTHORITY);
+        assertThat(testProyectoRespuestas.getAuthority()).isEqualTo(DEFAULT_AUTHORITY);
         assertThat(testProyectoRespuestas.getPuntajeMaximo()).isEqualTo(UPDATED_PUNTAJE_MAXIMO);
     }
 

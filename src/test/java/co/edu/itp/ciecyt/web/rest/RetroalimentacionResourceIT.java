@@ -1,6 +1,8 @@
 package co.edu.itp.ciecyt.web.rest;
 
 import co.edu.itp.ciecyt.CiecytApp;
+import co.edu.itp.ciecyt.domain.Proyecto;
+import co.edu.itp.ciecyt.domain.ProyectoFase;
 import co.edu.itp.ciecyt.domain.Retroalimentacion;
 import co.edu.itp.ciecyt.repository.RetroalimentacionRepository;
 import co.edu.itp.ciecyt.security.AuthoritiesConstants;
@@ -74,12 +76,20 @@ public class RetroalimentacionResourceIT {
      * if they test an entity which requires the current entity.
      */
     public static Retroalimentacion createEntity(EntityManager em) {
+        Proyecto proyecto = ProyectoResourceIT.createEntity(em);
+        em.persist(proyecto);
+
+        ProyectoFase proyectoFase = ProyectoFaseResourceIT.createEntity(em);
+        proyectoFase.proyectoFaseProyecto(proyecto);
+        em.persist(proyectoFase);
+
         Retroalimentacion retroalimentacion = new Retroalimentacion()
             .titulo(DEFAULT_TITULO)
             .retroalimentacion(DEFAULT_RETROALIMENTACION)
             .fechaRetroalimentacion(DEFAULT_FECHA_RETROALIMENTACION)
             .estadoRetroalimentacion(DEFAULT_ESTADO_RETROALIMENTACION)
-            .estadoProyectoFase(DEFAULT_ESTADO_PROYECTO_FASE);
+            .estadoProyectoFase(DEFAULT_ESTADO_PROYECTO_FASE)
+            .retroalimentacionProyectoFase(proyectoFase);
         return retroalimentacion;
     }
     /**

@@ -159,6 +159,9 @@ public class UserService {
         if (existingUser.getActivated()) {
             return false;
         }
+        userInfoService.findOne(existingUser.getId()).ifPresent(userInfo -> {
+            userInfoService.delete(existingUser.getId());
+        });
         userRepository.delete(existingUser);
         userRepository.flush();
         this.clearUserCaches(existingUser);
