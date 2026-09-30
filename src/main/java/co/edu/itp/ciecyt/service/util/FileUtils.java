@@ -4,12 +4,9 @@ import co.edu.itp.ciecyt.config.ApplicationProperties.DirPath;
 import co.edu.itp.ciecyt.config.Constants;
 import java.util.Optional;
 
-//import liquibase.util.file.FilenameUtils;
 import org.apache.commons.io.FilenameUtils;
 
 public class FileUtils {
-
-    private static liquibase.util.file.FilenameUtils FilenameUtils;
 
     public static Optional<String> getExtensionByStringHandling(String filename) {
         return Optional.ofNullable(filename)
