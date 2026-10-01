@@ -1,8 +1,7 @@
 package co.edu.itp.ciecyt.config;
 
 import ch.qos.logback.classic.LoggerContext;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.databind.ObjectMapper;
 import tech.jhipster.config.JHipsterProperties;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -22,7 +21,7 @@ public class LoggingConfiguration {
     public LoggingConfiguration(@Value("${spring.application.name}") String appName,
                                 @Value("${server.port}") String serverPort,
                                 JHipsterProperties jHipsterProperties,
-                                ObjectMapper mapper) throws JsonProcessingException {
+                                ObjectMapper mapper) {
 
         LoggerContext context = (LoggerContext) LoggerFactory.getILoggerFactory();
 

@@ -5,7 +5,7 @@ import tech.jhipster.config.JHipsterProperties;
 import tech.jhipster.web.filter.CachingHttpHeadersFilter;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.web.embedded.undertow.UndertowServletWebServerFactory;
+import org.springframework.boot.tomcat.servlet.TomcatServletWebServerFactory;
 import org.springframework.http.HttpHeaders;
 import org.springframework.mock.env.MockEnvironment;
 import org.springframework.mock.web.MockServletContext;
@@ -71,13 +71,13 @@ public class WebConfigurerTest {
     @Test
     public void testCustomizeServletContainer() {
         env.setActiveProfiles(JHipsterConstants.SPRING_PROFILE_PRODUCTION);
-        UndertowServletWebServerFactory container = new UndertowServletWebServerFactory();
+        TomcatServletWebServerFactory container = new TomcatServletWebServerFactory();
         webConfigurer.customize(container);
-        assertThat(container.getMimeMappings().get("abs")).isEqualTo("audio/x-mpeg");
-        assertThat(container.getMimeMappings().get("html")).isEqualTo("text/html;charset=utf-8");
-        assertThat(container.getMimeMappings().get("json")).isEqualTo("text/html;charset=utf-8");
-        if (container.getDocumentRoot() != null) {
-            assertThat(container.getDocumentRoot()).isEqualTo(new File("target/classes/static/"));
+        assertThat(container.getSettings().getMimeMappings().get("abs")).isEqualTo("audio/x-mpeg");
+        assertThat(container.getSettings().getMimeMappings().get("html")).isEqualTo("text/html;charset=utf-8");
+        assertThat(container.getSettings().getMimeMappings().get("json")).isEqualTo("text/html;charset=utf-8");
+        if (container.getSettings().getDocumentRoot() != null) {
+            assertThat(container.getSettings().getDocumentRoot()).isEqualTo(new File("target/classes/static/"));
         }
     }
 

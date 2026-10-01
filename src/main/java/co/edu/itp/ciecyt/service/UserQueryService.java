@@ -124,7 +124,7 @@ public class UserQueryService extends QueryService<User> {
      * @return the matching {@link Specification} of the entity.
      */
     protected Specification<User> createSpecification(UserCriteria criteria) {
-        Specification<User> specification = Specification.where(null);
+        Specification<User> specification = Specification.where((Specification<User>) null);
         if (criteria != null) {
             if (criteria.getId() != null) {
                 specification = specification.and(buildRangeSpecification(criteria.getId(), User_.id));

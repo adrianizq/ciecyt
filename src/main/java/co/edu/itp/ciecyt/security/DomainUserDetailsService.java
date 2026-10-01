@@ -2,7 +2,7 @@ package co.edu.itp.ciecyt.security;
 
 import co.edu.itp.ciecyt.domain.User;
 import co.edu.itp.ciecyt.repository.UserRepository;
-import org.hibernate.validator.internal.constraintvalidators.hv.EmailValidator;
+import org.hibernate.validator.internal.constraintvalidators.bv.EmailValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.GrantedAuthority;
