@@ -34,6 +34,9 @@ describe('Component Tests', () => {
     let wrapper: Wrapper<PreguntaClass>;
     let comp: PreguntaClass;
     let preguntaServiceStub: SinonStubbedInstance<PreguntaService>;
+    const fasesServiceStub = {
+      retrieve: jest.fn(() => Promise.resolve({ headers: {}, data: [] })),
+    };
 
     beforeEach(() => {
       preguntaServiceStub = sinon.createStubInstance<PreguntaService>(PreguntaService);
@@ -47,6 +50,7 @@ describe('Component Tests', () => {
         provide: {
           alertService: () => new AlertService(store),
           preguntaService: () => preguntaServiceStub,
+          fasesService: () => fasesServiceStub,
         },
       });
       comp = wrapper.vm;

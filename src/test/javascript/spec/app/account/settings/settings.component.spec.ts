@@ -21,6 +21,10 @@ jest.mock('axios', () => ({
 describe('Settings Component', () => {
   let wrapper: Wrapper<SettingsClass>;
   let settings: SettingsClass;
+  const userInfoServiceStub = {
+    update: jest.fn(() => Promise.resolve({})),
+    find: jest.fn(() => Promise.resolve({})),
+  };
   const account = {
     firstName: 'John',
     lastName: 'Doe',
@@ -37,6 +41,9 @@ describe('Settings Component', () => {
       store,
       i18n,
       localVue,
+      provide: {
+        userInfoService: () => userInfoServiceStub,
+      },
     });
     settings = wrapper.vm;
   });

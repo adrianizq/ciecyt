@@ -68,7 +68,7 @@ describe('Account Service test suite', () => {
   it('should init service and check for authority after retrieving account but getAccount failed', async () => {
     localStorage.setItem('jhi-authenticationToken', 'token');
 
-    mockedAxios.get = jest.fn(apiName => Promise.reject());
+    mockedAxios.get = jest.fn(apiName => (apiName === 'api/account' ? Promise.reject() : Promise.resolve({})));
     accountService = await new AccountService(store, new TranslationService(store, i18n), router);
 
     return accountService.hasAnyAuthorityAndCheckAuth('USER').then((value: boolean) => {
@@ -97,7 +97,11 @@ describe('Account Service test suite', () => {
   });
 
   it('should init service as not authentified and return authority user', async () => {
-    mockedAxios.get = jest.fn(apiName => (apiName === 'api/account' ? Promise.reject() : Promise.resolve({})));
+    localStorage.setItem('jhi-authenticationToken', 'token');
+
+    mockedAxios.get = jest.fn(apiName =>
+      apiName === 'api/account' ? Promise.resolve({ data: { authorities: ['USER'], langKey: 'en' } }) : Promise.resolve({})
+    );
     accountService = await new AccountService(store, new TranslationService(store, i18n), router);
 
     return accountService.hasAnyAuthorityAndCheckAuth('USER').then((value: boolean) => {

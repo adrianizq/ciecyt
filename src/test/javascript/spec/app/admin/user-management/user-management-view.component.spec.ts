@@ -26,13 +26,20 @@ jest.mock('axios', () => ({
 describe('UserManagementView Component', () => {
   let wrapper: Wrapper<UserManagementViewClass>;
   let userManagementView: UserManagementViewClass;
+  const userInfoServiceStub = {
+    update: jest.fn(() => Promise.resolve({})),
+    find: jest.fn(() => Promise.resolve({})),
+  };
 
   beforeEach(() => {
     wrapper = shallowMount<UserManagementViewClass>(UserManagementView, {
       store,
       i18n,
       localVue,
-      provide: { userService: () => new UserManagementService() },
+      provide: {
+        userService: () => new UserManagementService(),
+        userInfoService: () => userInfoServiceStub,
+      },
     });
     userManagementView = wrapper.vm;
   });

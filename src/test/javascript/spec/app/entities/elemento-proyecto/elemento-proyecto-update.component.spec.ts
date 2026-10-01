@@ -9,8 +9,6 @@ import ElementoProyectoUpdateComponent from '@/entities/elemento-proyecto/elemen
 import ElementoProyectoClass from '@/entities/elemento-proyecto/elemento-proyecto-update.component';
 import ElementoProyectoService from '@/entities/elemento-proyecto/elemento-proyecto.service';
 
-import ElementoService from '@/entities/elemento/elemento.service';
-
 import ProyectoService from '@/entities/proyecto/proyecto.service';
 
 const localVue = createLocalVue();
@@ -39,8 +37,6 @@ describe('Component Tests', () => {
         provide: {
           alertService: () => new AlertService(store),
           elementoProyectoService: () => elementoProyectoServiceStub,
-
-          elementoService: () => new ElementoService(),
 
           proyectoService: () => new ProyectoService(),
         },

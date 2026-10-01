@@ -11,6 +11,14 @@ import UserManagementService from '@/admin/user-management/user-management.servi
 const localVue = createLocalVue();
 const mockedAxios: any = axios;
 
+const bModalStub = {
+  render: () => {},
+  methods: {
+    hide: () => {},
+    show: () => {},
+  },
+};
+
 config.initVueApp(localVue);
 const i18n = config.initI18N(localVue);
 const store = config.initVueXStore(localVue);
@@ -39,7 +47,7 @@ describe('UserManagement Component', () => {
   beforeEach(() => {
     mockedAxios.put.mockReset();
     mockedAxios.get.mockReset();
-    mockedAxios.get.mockReturnValue(Promise.resolve({ headers: {} }));
+    mockedAxios.get.mockReturnValue(Promise.resolve({ headers: {}, data: [] }));
 
     store.commit('authenticated', account);
     wrapper = shallowMount<UserManagementClass>(UserManagement, {
@@ -49,7 +57,7 @@ describe('UserManagement Component', () => {
       stubs: {
         bPagination: true,
         jhiItemCount: true,
-        bModal: true,
+        bModal: bModalStub as any,
       },
       provide: {
         alertService: () => new AlertService(store),

@@ -23,8 +23,16 @@ describe('JhiNavbar', () => {
   let jhiNavbar: JhiNavbarClass;
   let wrapper: Wrapper<JhiNavbarClass>;
   const loginService = { openLogin: jest.fn() };
-  const accountService = { hasAnyAuthorityAndCheckAuth: jest.fn().mockImplementation(() => Promise.resolve(true)) };
+  const accountService = {
+    hasAnyAuthorityAndCheckAuth: jest.fn().mockImplementation(() => Promise.resolve(true)),
+    hasAnyAuthority: jest.fn().mockImplementation(() => true),
+  };
   const translationService = { refreshTranslation: jest.fn() };
+  const menuService = {
+    all: jest.fn(() => Promise.resolve([])),
+    allRoles: jest.fn(() => Promise.resolve([])),
+  };
+  const flushPromises = () => new Promise(resolve => setTimeout(resolve, 0));
 
   beforeEach(() => {
     wrapper = shallowMount<JhiNavbarClass>(JhiNavbar, {
@@ -36,11 +44,13 @@ describe('JhiNavbar', () => {
         loginService: () => loginService,
         translationService: () => translationService,
         accountService: () => accountService,
+        menuService: () => menuService,
       },
     });
     jhiNavbar = wrapper.vm;
   });
-  it('should refresh translations', () => {
+  it('should refresh translations', async () => {
+    await flushPromises();
     expect(translationService.refreshTranslation).toHaveBeenCalled();
   });
 

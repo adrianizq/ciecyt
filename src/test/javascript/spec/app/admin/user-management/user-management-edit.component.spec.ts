@@ -28,6 +28,10 @@ jest.mock('axios', () => ({
 describe('UserManagementEdit Component', () => {
   let wrapper: Wrapper<UserManagementEditClass>;
   let userManagementEdit: UserManagementEditClass;
+  const userInfoServiceStub = {
+    update: jest.fn(() => Promise.resolve({})),
+    find: jest.fn(() => Promise.resolve({})),
+  };
 
   beforeEach(() => {
     const router = new VueRouter();
@@ -39,6 +43,7 @@ describe('UserManagementEdit Component', () => {
       provide: {
         alertService: () => new AlertService(store),
         userService: () => new UserManagementService(),
+        userInfoService: () => userInfoServiceStub,
       },
     });
     userManagementEdit = wrapper.vm;
@@ -47,7 +52,7 @@ describe('UserManagementEdit Component', () => {
   describe('init', () => {
     it('Should load user', async () => {
       // GIVEN
-      mockedAxios.get.mockReturnValue(Promise.resolve({}));
+      mockedAxios.get.mockReturnValue(Promise.resolve({ data: { id: 123 } }));
 
       // WHEN
       userManagementEdit.init(123);
@@ -61,7 +66,7 @@ describe('UserManagementEdit Component', () => {
   describe('initAuthorities', () => {
     it('Should load authorities', async () => {
       // GIVEN
-      mockedAxios.get.mockReturnValue(Promise.resolve({}));
+      mockedAxios.get.mockReturnValue(Promise.resolve({ data: ['ROLE_ADMIN'] }));
 
       // WHEN
       userManagementEdit.initAuthorities();
@@ -83,7 +88,7 @@ describe('UserManagementEdit Component', () => {
       await userManagementEdit.$nextTick();
 
       // THEN
-      expect(mockedAxios.put).toHaveBeenCalledWith(`api/users`, { id: 123, authorities: [] });
+      expect(mockedAxios.put).toHaveBeenCalledWith(`api/users`, expect.objectContaining({ id: 123, authorities: ['ROLE_USER'] }));
       expect(userManagementEdit.isSaving).toEqual(false);
     });
 
@@ -97,7 +102,7 @@ describe('UserManagementEdit Component', () => {
       await userManagementEdit.$nextTick();
 
       // THEN
-      expect(mockedAxios.post).toHaveBeenCalledWith(`api/users`, { authorities: [] });
+      expect(mockedAxios.post).toHaveBeenCalledWith(`api/users`, expect.objectContaining({ authorities: ['ROLE_USER'] }));
       expect(userManagementEdit.isSaving).toEqual(false);
     });
   });
