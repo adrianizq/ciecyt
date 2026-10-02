@@ -2,9 +2,14 @@ import Vue from 'vue';
 import { Component, Inject } from 'vue-property-decorator';
 import UserManagementService from './user-management.service';
 import UserInfoService from '@/entities/user-info/user-info.service';
+import { formatDate as formatDateValue } from '@/shared/date/filters';
 
 @Component
 export default class JhiUserManagementView extends Vue {
+  public formatDate(value: any): string {
+    return formatDateValue(value);
+  }
+
   @Inject('userService') private userManagementService: () => UserManagementService;
   @Inject('userInfoService') private userInfoService: () => UserInfoService;
   public user: any = null;

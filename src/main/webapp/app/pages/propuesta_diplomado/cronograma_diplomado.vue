@@ -101,7 +101,6 @@ import { IProyecto, Proyecto } from '@/shared/model/proyecto.model';
 import ProyectoService from '@/entities/proyecto/proyecto.service';
 import AlertService from '@/shared/alert/alert.service';
 //import { mixins } from 'vue-class-component';
-//import Vue2Filters from 'vue2-filters';
 //import { CalendarPlugin } from 'bootstrap-vue';
 
 const validations: any = {

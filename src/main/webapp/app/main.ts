@@ -9,7 +9,6 @@ import { BootstrapVue, BootstrapVueIcons } from 'bootstrap-vue';
 /////////////////////////////77777
 
 import App from './app.vue';
-import Vue2Filters from 'vue2-filters';
 import router from './router';
 import * as config from './shared/config/config';
 import { setupAxiosInterceptors } from './shared/config/axios-interceptor';
@@ -91,7 +90,6 @@ Vue.config.productionTip = false;
 config.initVueApp(Vue);
 config.initFortAwesome(Vue);
 bootstrapVueConfig.initBootstrapVue(Vue);
-Vue.use(Vue2Filters);
 Vue.component('font-awesome-icon', FontAwesomeIcon);
 Vue.component('jhi-item-count', JhiItemCountComponent);
 

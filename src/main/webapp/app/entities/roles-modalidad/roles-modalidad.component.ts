@@ -1,16 +1,13 @@
 import { mixins } from 'vue-class-component';
 
 import { Component, Inject } from 'vue-property-decorator';
-import Vue2Filters from 'vue2-filters';
 import { IRolesModalidad } from '@/shared/model/roles-modalidad.model';
 //import AlertService from '@/shared/alert/alert.service';
 import AlertMixin from '@/shared/alert/alert.mixin';
 
 import RolesModalidadService from './roles-modalidad.service';
 
-@Component({
-  mixins: [Vue2Filters.mixin],
-})
+@Component({})
 export default class RolesModalidad extends mixins(AlertMixin) {
   //@Inject('alertService') private alertService: () => AlertService;
   @Inject('rolesModalidadService') private rolesModalidadService: () => RolesModalidadService;

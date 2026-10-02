@@ -1,16 +1,13 @@
 import { mixins } from 'vue-class-component';
 
 import { Component, Inject } from 'vue-property-decorator';
-import Vue2Filters from 'vue2-filters';
 import { IPrograma } from '@/shared/model/programa.model';
 //import AlertService from '@/shared/alert/alert.service';
 import AlertMixin from '@/shared/alert/alert.mixin';
 
 import ProgramaService from './programa.service';
 
-@Component({
-  mixins: [Vue2Filters.mixin],
-})
+@Component({})
 export default class Programa extends mixins(AlertMixin) {
   //@Inject('alertService') private alertService: () => AlertService;
   @Inject('programaService') private programaService: () => ProgramaService;

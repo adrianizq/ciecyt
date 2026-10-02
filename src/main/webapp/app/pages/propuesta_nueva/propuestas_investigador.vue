@@ -98,10 +98,6 @@
 
 
 import { mixins } from 'vue-class-component';
-
-
-import Vue2Filters from 'vue2-filters';
-
 import AlertService from '@/shared/alert/alert.service';
 
 

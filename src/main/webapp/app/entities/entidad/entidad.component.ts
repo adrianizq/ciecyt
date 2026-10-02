@@ -1,16 +1,13 @@
 import { mixins } from 'vue-class-component';
 
 import { Component, Inject } from 'vue-property-decorator';
-import Vue2Filters from 'vue2-filters';
 import { IEntidad } from '@/shared/model/entidad.model';
 //import AlertService from '@/shared/alert/alert.service';
 import AlertMixin from '@/shared/alert/alert.mixin';
 
 import EntidadService from './entidad.service';
 
-@Component({
-  mixins: [Vue2Filters.mixin],
-})
+@Component({})
 export default class Entidad extends mixins(AlertMixin) {
   //@Inject('alertService') private alertService: () => AlertService;
   @Inject('entidadService') private entidadService: () => EntidadService;

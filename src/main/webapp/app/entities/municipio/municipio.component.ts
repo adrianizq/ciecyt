@@ -1,15 +1,12 @@
 import { mixins } from 'vue-class-component';
 
 import { Component, Inject } from 'vue-property-decorator';
-import Vue2Filters from 'vue2-filters';
 import { IMunicipio } from '@/shared/model/municipio.model';
 //import AlertService from '@/shared/alert/alert.service';
 import AlertMixin from '@/shared/alert/alert.mixin';
 
 import MunicipioService from './municipio.service';
-@Component({
-  mixins: [Vue2Filters.mixin],
-})
+@Component({})
 export default class Municipio extends mixins(AlertMixin) {
   //@Inject('alertService') private alertService: () => AlertService;
   @Inject('municipioService') private municipioService: () => MunicipioService;

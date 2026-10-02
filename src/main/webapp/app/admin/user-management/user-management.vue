@@ -68,9 +68,9 @@
                             <span class="badge badge-info">{{ authority }}</span>
                         </div>
                     </td>
-                    <td>{{user.createdDate | formatDate}}</td>
+                    <td>{{ formatDate(user.createdDate) }}</td>
                     <td>{{user.lastModifiedBy}}</td>
-                    <td>{{user.lastModifiedDate | formatDate}}</td>
+                    <td>{{ formatDate(user.lastModifiedDate) }}</td>
                     <td class="text-right">
                         <div class="btn-group">
                             <router-link :to="{name: 'JhiUserView', params: {userId: user.login}}" tag="button" class="btn btn-info btn-sm details">

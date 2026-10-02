@@ -1,4 +1,5 @@
 import numeral from 'numeral';
+import { formatMillis as formatMillisValue } from '@/shared/date/filters';
 import JhiMetricsModal from './metrics-modal.vue';
 import MetricsService from './metrics.service';
 import { Component, Vue, Inject } from 'vue-property-decorator';
@@ -9,6 +10,10 @@ import { Component, Vue, Inject } from 'vue-property-decorator';
   },
 })
 export default class JhiMetrics extends Vue {
+  public formatMillis(value: any): string {
+    return formatMillisValue(value);
+  }
+
   public metrics: any = {};
   public threadData: any = null;
   public threadStats: any = {};

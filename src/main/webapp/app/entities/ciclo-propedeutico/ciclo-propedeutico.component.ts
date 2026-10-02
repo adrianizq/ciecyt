@@ -1,16 +1,13 @@
 import { mixins } from 'vue-class-component';
 
 import { Component, Inject } from 'vue-property-decorator';
-import Vue2Filters from 'vue2-filters';
 import { ICicloPropedeutico } from '@/shared/model/ciclo-propedeutico.model';
 //import AlertService from '@/shared/alert/alert.service';
 import AlertMixin from '@/shared/alert/alert.mixin';
 
 import CicloPropedeuticoService from './ciclo-propedeutico.service';
 
-@Component({
-  mixins: [Vue2Filters.mixin],
-})
+@Component({})
 export default class CicloPropedeutico extends mixins(AlertMixin) {
   //@Inject('alertService') private alertService: () => AlertService;
   @Inject('cicloPropedeuticoService') private cicloPropedeuticoService: () => CicloPropedeuticoService;

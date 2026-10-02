@@ -1,7 +1,6 @@
 import { mixins } from 'vue-class-component';
 
 import { Component, Inject } from 'vue-property-decorator';
-import Vue2Filters from 'vue2-filters';
 import { IPregunta } from '@/shared/model/pregunta.model';
 //import AlertService from '@/shared/alert/alert.service';
 import AlertMixin from '@/shared/alert/alert.mixin';
@@ -9,9 +8,7 @@ import FasesService from '../fases/fases.service';
 import { IFases } from '@/shared/model/fases.model';
 import PreguntaService from './pregunta.service';
 
-@Component({
-  mixins: [Vue2Filters.mixin],
-})
+@Component({})
 export default class Pregunta extends mixins(AlertMixin) {
   //@Inject('alertService') private alertService: () => AlertService;
   @Inject('preguntaService') private preguntaService: () => PreguntaService;

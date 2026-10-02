@@ -1,13 +1,14 @@
 import format from 'date-fns/format';
 import AuditsService from './audits.service';
+import { formatDate as formatDateValue } from '@/shared/date/filters';
 import { Component, Vue, Inject } from 'vue-property-decorator';
 import { mixins } from 'vue-class-component';
-import Vue2Filters from 'vue2-filters';
-
-@Component({
-  mixins: [Vue2Filters.mixin],
-})
+@Component({})
 export default class JhiAudits extends Vue {
+  public formatDate(value: any): string {
+    return formatDateValue(value);
+  }
+
   public audits: any = [];
   public fromDate: any = null;
   public itemsPerPage = 20;

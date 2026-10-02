@@ -34,7 +34,7 @@
                 </thead>
                 <tbody>
                 <tr v-for="audit in audits" :key="audit.timestamp">
-                    <td><span>{{audit.timestamp | formatDate}}</span></td>
+                    <td><span>{{ formatDate(audit.timestamp) }}</span></td>
                     <td><small>{{audit.principal}}</small></td>
                     <td>{{audit.type}}</td>
                     <td>

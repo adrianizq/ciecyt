@@ -1,16 +1,13 @@
 import { mixins } from 'vue-class-component';
 
 import { Component, Inject } from 'vue-property-decorator';
-import Vue2Filters from 'vue2-filters';
 import { ICronogramaCiecyt } from '@/shared/model/cronograma-ciecyt.model';
 //import AlertService from '@/shared/alert/alert.service';
 import AlertMixin from '@/shared/alert/alert.mixin';
 
 import CronogramaCiecytService from './cronograma-ciecyt.service';
 
-@Component({
-  mixins: [Vue2Filters.mixin],
-})
+@Component({})
 export default class CronogramaCiecyt extends mixins(AlertMixin) {
   //@Inject('alertService') private alertService: () => AlertService;
   @Inject('cronogramaCiecytService') private cronogramaCiecytService: () => CronogramaCiecytService;

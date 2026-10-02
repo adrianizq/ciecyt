@@ -25,11 +25,11 @@
                     <dt><span v-text="$t('userManagement.createdBy')">Created By</span></dt>
                     <dd>{{user.createdBy}}</dd>
                     <dt><span v-text="$t('userManagement.createdDate')">Created Date</span></dt>
-                    <dd>{{user.createdDate | formatDate }}</dd>
+                    <dd>{{ formatDate(user.createdDate) }}</dd>
                     <dt><span v-text="$t('userManagement.lastModifiedBy')">Last Modified By</span></dt>
                     <dd>{{user.lastModifiedBy}}</dd>
                     <dt><span v-text="$t('userManagement.lastModifiedDate')">Last Modified Date</span></dt>
-                    <dd>{{user.lastModifiedDate | formatDate}}</dd>
+                    <dd>{{ formatDate(user.lastModifiedDate) }}</dd>
                     <dt><span v-text="$t('userManagement.profiles')">Profiles</span></dt>
                     <dd>
                         <ul class="list-unstyled">

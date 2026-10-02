@@ -48,17 +48,10 @@ import { faClipboardList } from '@fortawesome/free-solid-svg-icons/faClipboardLi
 import { faArrowRight } from '@fortawesome/free-solid-svg-icons/faArrowRight';
 import { faEnvelope } from '@fortawesome/free-solid-svg-icons/faEnvelope';
 
-import VueCookie from 'vue-cookie';
 import Vuelidate from 'vuelidate';
-import Vue2Filters from 'vue2-filters';
-
-import * as filters from '@/shared/date/filters';
 
 export function initVueApp(vue) {
-  vue.use(VueCookie);
   vue.use(Vuelidate);
-  vue.use(Vue2Filters);
-  filters.initFilters();
 }
 
 export function initFortAwesome(vue) {

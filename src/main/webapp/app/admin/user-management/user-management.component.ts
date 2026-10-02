@@ -1,13 +1,15 @@
 import { Component, Vue, Inject } from 'vue-property-decorator';
 import { mixins } from 'vue-class-component';
-import Vue2Filters from 'vue2-filters';
 import UserManagementService from './user-management.service';
+import { formatDate as formatDateValue } from '@/shared/date/filters';
 import AlertService from '@/shared/alert/alert.service';
 
-@Component({
-  mixins: [Vue2Filters.mixin],
-})
+@Component({})
 export default class JhiUserManagementComponent extends Vue {
+  public formatDate(value: any): string {
+    return formatDateValue(value);
+  }
+
   @Inject('alertService') private alertService: () => AlertService;
   @Inject('userService') private userManagementService: () => UserManagementService;
   public error = '';

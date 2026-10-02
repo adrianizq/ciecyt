@@ -1,11 +1,16 @@
 import { Component, Vue, Prop } from 'vue-property-decorator';
-import { mixins } from 'vue-class-component';
-import Vue2Filters from 'vue2-filters';
+import { filterBy as filterByCollection, orderBy as orderByCollection } from '@/shared/filter/filter';
 
-@Component({
-  mixins: [Vue2Filters.mixin],
-})
+import { mixins } from 'vue-class-component';
+@Component({})
 export default class JhiMetricsModal extends Vue {
+  public filterBy(collection: any, search: any, ...keys: string[]): any {
+    return filterByCollection(collection, search, ...keys);
+  }
+  public orderBy(collection: any, ...args: any[]): any[] {
+    return orderByCollection(collection, ...args);
+  }
+
   @Prop()
   threadDump!: any;
 
