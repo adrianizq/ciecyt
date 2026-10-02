@@ -666,8 +666,8 @@ import DepartamentoService from '@/entities/departamento/departamento.service';
 
 import { numeric, required, minLength, maxLength, between, url, email, alpha, helpers } from 'vuelidate/lib/validators';
 const alphaAndSpaceValidator = helpers.regex('alphaAndSpace', /^[A-Za-z\u00C0-\u017F- ]+$/i);
-const digitsQuoteAndDotValidator = helpers.regex('digitsQuoteAndDot', /^[0-9\/.//'/]+$/i);
-const alphaDigitsSpaceQuoteAndDotValidator = helpers.regex('alphaDigitsSpaceQuoteAndDot', /^[A-Za-z0-9 \/.//'/]+$/i);
+const digitsQuoteAndDotValidator = helpers.regex('digitsQuoteAndDot', /^[0-9/.//'/]+$/i);
+const alphaDigitsSpaceQuoteAndDotValidator = helpers.regex('alphaDigitsSpaceQuoteAndDot', /^[A-Za-z0-9 /.//'/]+$/i);
 const digitsLineasValidator = helpers.regex('digitsLineas', /^[0-9 \u002D]+$/i);
 const nitValidator = helpers.regex('nit', /(^[0-9]+-{1}[0-9]{1})/);
 

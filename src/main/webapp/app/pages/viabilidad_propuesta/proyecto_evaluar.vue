@@ -592,7 +592,7 @@ export default class PropuestaEvaluar extends mixins(JhiDataUtils){
         public cambiarEstadoSegunSustentacion(): Promise<any> {
             const sustentar = this.proyecto.sustentar;
             let nuevoEstado: string | null = null;
-            let observacion = '';
+            let observacion;
             if (sustentar) {
                 if (requiereActoPublico(this.modalidadId)) {
                     nuevoEstado = estadoListoParaActo(this.modalidadId);

@@ -61,7 +61,7 @@
                             <option value="NO_APLICA" v-bind:label="$t('ciecytApp.EnumRespuestas.NO_APLICA')">NO_APLICA</option>
                         </select>
                         
-                        <select class="form-control" name="respuesta"  v-model.bool="ep.siNo"  disabled="true"
+                        <select class="form-control" name="respuesta"  v-model="ep.siNo"  disabled="true"
                           id="proyecto-respuestas-respuesta"
                           v-if="ep.preguntaTipoPreguntaTipoPregunta==`Si o No`" >
                             <option value="true" v-bind:label="$t('ciecytApp.EnumRespuestas.SI')">SI</option>
@@ -121,7 +121,7 @@
                      
                
               
-   <hr></hr>
+   <hr>
 
 <!--------------------------------------------------------->
              
@@ -150,7 +150,7 @@
                         
                     </div> 
                    </b-card>
-                  <hr></hr>
+                  <hr>
                 </div> 
 
 <!---Correciones propuesta
@@ -176,7 +176,7 @@
                         
                     </div> 
                    </b-card>
-                  <hr></hr>
+                  <hr>
                 </div> -->
                
 
@@ -354,7 +354,7 @@ export default class Retroalimentacion extends mixins(JhiDataUtils){
 
       
 /////////////////////////
-         res=  await this.adjuntoRetroalimentacionService()
+         await this.adjuntoRetroalimentacionService()
       .findAdjuntoRetroalimentacionProyectoFaseAuthority(this.proyId,  this.fase.id, this.authorityAsesor)
       .then(res => {
         this.adjuntoAsesorRetroalimentacions = res.data;

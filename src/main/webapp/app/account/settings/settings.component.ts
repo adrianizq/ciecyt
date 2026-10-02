@@ -85,7 +85,7 @@ export default class Settings extends Vue {
   }
 
   public async init() {
-    let res = await this.userInfoService()
+    const res = await this.userInfoService()
       //.find(this.userAccount.id)
       //.find( this.$store.getters.id)
       .find(this.userId)

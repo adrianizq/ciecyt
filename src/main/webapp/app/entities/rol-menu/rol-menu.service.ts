@@ -86,18 +86,16 @@ export default class RolMenuService {
     });
   }
 
-  public batchUpdate(entities: IRolMenu[]): Promise<boolean> {
-    return new Promise<boolean>(async resolve => {
-      console.log(entities);
-      for (const entity of entities) {
-        if (entity.id) {
-          await this.update(entity);
-        } else {
-          await this.create(entity);
-        }
+  public async batchUpdate(entities: IRolMenu[]): Promise<boolean> {
+    console.log(entities);
+    for (const entity of entities) {
+      if (entity.id) {
+        await this.update(entity);
+      } else {
+        await this.create(entity);
       }
+    }
 
-      resolve(true);
-    });
+    return true;
   }
 }

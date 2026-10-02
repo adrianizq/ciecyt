@@ -125,7 +125,7 @@ export default class PreguntaUpdate extends Vue {
     //3
     this.pregunta.preguntaModalidads = [];
     this.modalidadesAsignadas.forEach(element => {
-      var pr: IPreguntaModalidad = new PreguntaModalidad();
+      const pr: IPreguntaModalidad = new PreguntaModalidad();
       pr.preguntaId = this.preguntaId;
       pr.modalidad2Id = element.id;
       this.pregunta.preguntaModalidads.push(pr);
@@ -134,7 +134,7 @@ export default class PreguntaUpdate extends Vue {
     //4
     this.pregunta.authorities = [];
     this.authoritiesAsignadas.forEach(element => {
-      var pr: IPreguntaAuthority = new PreguntaAuthority();
+      const pr: IPreguntaAuthority = new PreguntaAuthority();
       pr.pregunta3Id = this.preguntaId;
       pr.authorityName = element.toString();
       this.pregunta.authorities.push(pr);
@@ -173,7 +173,7 @@ export default class PreguntaUpdate extends Vue {
   }
 
   setTipoPregunta(event) {
-    var seleccionadaId = event.target.value;
+    const seleccionadaId = event.target.value;
     this.tipoNota = false;
     this.tipoPreguntas.forEach(tp => {
       if (tp.tipoDato == 'nota' && seleccionadaId == tp.id) {
@@ -187,8 +187,7 @@ export default class PreguntaUpdate extends Vue {
     this.existeElemento = false;
   }
 
-  setFase(event) {
-  }
+  setFase(event) {}
 
   get Fases() {
     return this.fass;
@@ -213,7 +212,7 @@ export default class PreguntaUpdate extends Vue {
       .then(res => {
         this.tipoPreguntas = res.data;
         if (this.preguntaId) {
-          var seleccionadaId = this.pregunta.preguntaTipoPreguntaId;
+          const seleccionadaId = this.pregunta.preguntaTipoPreguntaId;
           this.tipoNota = false;
           this.tipoPreguntas.forEach(tp => {
             if (tp.tipoDato == 'nota' && seleccionadaId == tp.id) {

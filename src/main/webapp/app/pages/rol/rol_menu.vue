@@ -14,7 +14,7 @@
                                 <th>Permitir Eliminar</th>
                             </tr>
                             <template v-for="menu in menus" >
-                                <tr>
+                                <tr :key="menu.id">
                                     <td class="font-weight-bold">{{ menu.nombre }}</td>
                                     <td class="text-center">
                                         <input
@@ -49,7 +49,7 @@
                                 </tr>
 
                                 <tr v-for="submenu in menu.children" :key="submenu.id">
-                                    <td>&nbsp &nbsp{{ submenu.nombre }} </td>
+                                    <td>&nbsp;&nbsp;{{ submenu.nombre }} </td>
 
                                     <td class="text-center">
 

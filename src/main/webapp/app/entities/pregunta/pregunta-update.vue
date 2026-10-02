@@ -97,7 +97,7 @@
                         <label class="form-control-label" v-bind:value="$t('ciecytApp.pregunta.preguntaModalidad')" for="pregunta-preguntaModalidad">Modalidad</label>
                          <select class="form-control" multiple name="modalidad"  
                          v-model="modalidadesAsignadas" :disabled="existeElemento">
-                             <option v-for="modalidad of modalidads" 
+                             <option v-for="modalidad of modalidads" :key="modalidad.id" 
                              :value="modalidad"
                              >
                             
@@ -109,7 +109,7 @@
                     <div class="form-group">
                         <label class="form-control-label" v-bind:value="$t('ciecytApp.pregunta.authority')" for="pregunta-authority">Rol</label>
                          <select class="form-control" multiple name="authority"  v-model="authoritiesAsignadas" >
-                             <option v-for="authority of authorities" 
+                             <option v-for="authority of authorities" :key="authority.name" 
                              :value="authority"
                              >
                             

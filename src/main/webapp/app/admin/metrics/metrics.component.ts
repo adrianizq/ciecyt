@@ -99,7 +99,7 @@ export default class JhiMetrics extends Vue {
       second: 1000,
     };
     let time_string = '';
-    let plural = '';
+    let plural;
     for (const key in times) {
       if (Math.floor(ms / times[key]) > 0) {
         if (Math.floor(ms / times[key]) > 1) {

@@ -13,14 +13,14 @@
         <b-collapse is-nav id="header-tabs">
             <b-navbar-nav class="ml-auto">
                 <template v-for="menu in menus">
-                    <b-nav-item :to="menu.url" exact v-if="!menu.children.length">
+                    <b-nav-item :key="menu.id" :to="menu.url" exact v-if="!menu.children.length">
                         <span>
                             <font-awesome-icon :icon="menu.icono || 'asterisk'"/>
                             <span>{{ menu.nombre }}</span>
                         </span>
                     </b-nav-item>
 
-                    <b-nav-item-dropdown
+                    <b-nav-item-dropdown :key="menu.id"
                         right
                         href="javascript:void(0);"
                         :id="menu.id.toString()"
@@ -33,12 +33,12 @@
                         <span>{{ menu.nombre }}</span>
                     </span>
                         <template v-for="submenu in menu.children">
-                            <b-dropdown-item :to="submenu.url" tag="b-dropdown-item" v-if="isUrl(submenu.url)">
+                            <b-dropdown-item :key="submenu.id" :to="submenu.url" tag="b-dropdown-item" v-if="isUrl(submenu.url)">
                                 <font-awesome-icon :icon="submenu.icono || 'asterisk'"/>
                                 <span>{{ submenu.nombre }}</span>
                             </b-dropdown-item>
 
-                            <b-dropdown-item v-if="!isUrl(submenu.url)" @click="actionMenu(submenu.url)">
+                            <b-dropdown-item :key="submenu.id" v-if="!isUrl(submenu.url)" @click="actionMenu(submenu.url)">
                                 <font-awesome-icon :icon="submenu.icono || 'asterisk'"/>
                                 <span>{{ submenu.nombre }}</span>
                             </b-dropdown-item>

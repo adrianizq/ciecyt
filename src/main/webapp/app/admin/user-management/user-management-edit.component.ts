@@ -80,22 +80,22 @@ export default class JhiUserManagementEdit extends Vue {
       .then(_res => {
         this.authorities = _res.data;
 
-        var index = this.authorities.indexOf('ROLE_USER');
+        let index = this.authorities.indexOf('ROLE_USER');
         if (index > -1) {
           this.authorities.splice(index, 1);
         }
 
-        var index = this.authorities.indexOf('ROLE_ANONYMOUS');
+        index = this.authorities.indexOf('ROLE_ANONYMOUS');
         if (index > -1) {
           this.authorities.splice(index, 1);
         }
 
-        var index = this.authorities.indexOf('ROLE_DOCENTE');
+        index = this.authorities.indexOf('ROLE_DOCENTE');
         if (index > -1) {
           this.authorities.splice(index, 1);
         }
 
-        var index = this.authorities.indexOf('ROLE_ASESOR');
+        index = this.authorities.indexOf('ROLE_ASESOR');
         if (index > -1) {
           this.authorities.splice(index, 1);
         }
