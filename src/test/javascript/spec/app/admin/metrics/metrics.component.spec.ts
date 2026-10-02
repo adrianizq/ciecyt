@@ -20,8 +20,10 @@ localVue.directive('b-modal', {});
 localVue.directive('b-progress', {});
 localVue.directive('b-progress-bar', {});
 
-jest.mock('axios', () => ({
-  get: jest.fn(),
+vi.mock('axios', () => ({
+  default: {
+    get: vi.fn(),
+  },
 }));
 
 describe('Metrics Component', () => {

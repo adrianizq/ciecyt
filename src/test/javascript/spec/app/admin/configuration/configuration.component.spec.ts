@@ -13,8 +13,10 @@ config.initVueApp(localVue);
 const i18n = config.initI18N(localVue);
 const store = config.initVueXStore(localVue);
 
-jest.mock('axios', () => ({
-  get: jest.fn(),
+vi.mock('axios', () => ({
+  default: {
+    get: vi.fn(),
+  },
 }));
 
 describe('Configuration Component', () => {

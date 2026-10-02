@@ -28,10 +28,12 @@ localVue.component('router-link', {});
 localVue.component('jhi-sort-indicator', {});
 localVue.directive('b-modal', {});
 
-jest.mock('axios', () => ({
-  get: jest.fn(),
-  put: jest.fn(),
-  delete: jest.fn(),
+vi.mock('axios', () => ({
+  default: {
+    get: vi.fn(),
+    put: vi.fn(),
+    delete: vi.fn(),
+  },
 }));
 
 describe('UserManagement Component', () => {

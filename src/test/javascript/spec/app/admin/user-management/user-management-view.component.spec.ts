@@ -18,17 +18,19 @@ localVue.component('font-awesome-icon', FontAwesomeIcon);
 localVue.component('b-badge', {});
 localVue.component('router-link', {});
 
-jest.mock('axios', () => ({
-  get: jest.fn(),
-  put: jest.fn(),
+vi.mock('axios', () => ({
+  default: {
+    get: vi.fn(),
+    put: vi.fn(),
+  },
 }));
 
 describe('UserManagementView Component', () => {
   let wrapper: Wrapper<UserManagementViewClass>;
   let userManagementView: UserManagementViewClass;
   const userInfoServiceStub = {
-    update: jest.fn(() => Promise.resolve({})),
-    find: jest.fn(() => Promise.resolve({})),
+    update: vi.fn(() => Promise.resolve({})),
+    find: vi.fn(() => Promise.resolve({})),
   };
 
   beforeEach(() => {

@@ -16,9 +16,11 @@ const store = config.initVueXStore(localVue);
 localVue.component('font-awesome-icon', FontAwesomeIcon);
 localVue.component('jhi-sort-indicator', {});
 
-jest.mock('axios', () => ({
-  get: jest.fn(),
-  put: jest.fn(),
+vi.mock('axios', () => ({
+  default: {
+    get: vi.fn(),
+    put: vi.fn(),
+  },
 }));
 
 describe('Audits Component', () => {

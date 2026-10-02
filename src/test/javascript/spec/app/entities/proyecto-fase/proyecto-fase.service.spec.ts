@@ -17,11 +17,13 @@ const error = {
   },
 };
 
-jest.mock('axios', () => ({
-  get: jest.fn(),
-  post: jest.fn(),
-  put: jest.fn(),
-  delete: jest.fn(),
+vi.mock('axios', () => ({
+  default: {
+    get: vi.fn(),
+    post: vi.fn(),
+    put: vi.fn(),
+    delete: vi.fn(),
+  },
 }));
 
 describe('Service Tests', () => {

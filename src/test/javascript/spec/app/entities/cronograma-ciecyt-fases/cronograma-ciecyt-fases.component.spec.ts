@@ -62,7 +62,7 @@ describe('Component Tests', () => {
 
       // THEN
       expect(cronogramaCiecytFasesServiceStub.retrieve.called).toBeTruthy();
-      expect(comp.cronogramaCiecytFases[0]).toEqual(jasmine.objectContaining({ id: 123 }));
+      expect(comp.cronogramaCiecytFases[0]).toEqual(expect.objectContaining({ id: 123 }));
     });
 
     it('should load a page', async () => {
@@ -76,7 +76,7 @@ describe('Component Tests', () => {
 
       // THEN
       expect(cronogramaCiecytFasesServiceStub.retrieve.called).toBeTruthy();
-      expect(comp.cronogramaCiecytFases[0]).toEqual(jasmine.objectContaining({ id: 123 }));
+      expect(comp.cronogramaCiecytFases[0]).toEqual(expect.objectContaining({ id: 123 }));
     });
 
     it('should not load a page if the page is the same as the previous page', () => {
@@ -105,7 +105,7 @@ describe('Component Tests', () => {
       // THEN
       expect(cronogramaCiecytFasesServiceStub.retrieve.callCount).toEqual(3);
       expect(comp.page).toEqual(1);
-      expect(comp.cronogramaCiecytFases[0]).toEqual(jasmine.objectContaining({ id: 123 }));
+      expect(comp.cronogramaCiecytFases[0]).toEqual(expect.objectContaining({ id: 123 }));
     });
 
     it('should calculate the sort attribute for an id', () => {

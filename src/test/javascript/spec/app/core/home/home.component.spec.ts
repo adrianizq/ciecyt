@@ -12,7 +12,7 @@ localVue.component('router-link', {});
 describe('Home', () => {
   let home: HomeClass;
   let wrapper: Wrapper<HomeClass>;
-  const loginService = { openLogin: jest.fn() };
+  const loginService = { openLogin: vi.fn() };
 
   beforeEach(() => {
     wrapper = shallowMount<HomeClass>(Home, {

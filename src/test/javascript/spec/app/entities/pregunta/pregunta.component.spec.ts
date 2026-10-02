@@ -35,7 +35,7 @@ describe('Component Tests', () => {
     let comp: PreguntaClass;
     let preguntaServiceStub: SinonStubbedInstance<PreguntaService>;
     const fasesServiceStub = {
-      retrieve: jest.fn(() => Promise.resolve({ headers: {}, data: [] })),
+      retrieve: vi.fn(() => Promise.resolve({ headers: {}, data: [] })),
     };
 
     beforeEach(() => {
@@ -66,7 +66,7 @@ describe('Component Tests', () => {
 
       // THEN
       expect(preguntaServiceStub.retrieve.called).toBeTruthy();
-      expect(comp.preguntas[0]).toEqual(jasmine.objectContaining({ id: 123 }));
+      expect(comp.preguntas[0]).toEqual(expect.objectContaining({ id: 123 }));
     });
 
     it('should load a page', async () => {
@@ -80,7 +80,7 @@ describe('Component Tests', () => {
 
       // THEN
       expect(preguntaServiceStub.retrieve.called).toBeTruthy();
-      expect(comp.preguntas[0]).toEqual(jasmine.objectContaining({ id: 123 }));
+      expect(comp.preguntas[0]).toEqual(expect.objectContaining({ id: 123 }));
     });
 
     it('should not load a page if the page is the same as the previous page', () => {
@@ -109,7 +109,7 @@ describe('Component Tests', () => {
       // THEN
       expect(preguntaServiceStub.retrieve.callCount).toEqual(3);
       expect(comp.page).toEqual(1);
-      expect(comp.preguntas[0]).toEqual(jasmine.objectContaining({ id: 123 }));
+      expect(comp.preguntas[0]).toEqual(expect.objectContaining({ id: 123 }));
     });
 
     it('should calculate the sort attribute for an id', () => {

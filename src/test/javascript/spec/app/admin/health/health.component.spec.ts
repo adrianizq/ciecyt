@@ -18,8 +18,10 @@ localVue.component('font-awesome-icon', FontAwesomeIcon);
 localVue.component('health-modal', HealthModal);
 localVue.directive('b-modal', {});
 
-jest.mock('axios', () => ({
-  get: jest.fn(),
+vi.mock('axios', () => ({
+  default: {
+    get: vi.fn(),
+  },
 }));
 
 describe('Health Component', () => {

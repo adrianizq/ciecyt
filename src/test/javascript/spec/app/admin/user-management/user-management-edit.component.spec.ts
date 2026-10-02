@@ -19,18 +19,20 @@ const store = config.initVueXStore(localVue);
 localVue.component('font-awesome-icon', FontAwesomeIcon);
 localVue.component('b-alert', {});
 
-jest.mock('axios', () => ({
-  get: jest.fn(),
-  post: jest.fn(),
-  put: jest.fn(),
+vi.mock('axios', () => ({
+  default: {
+    get: vi.fn(),
+    post: vi.fn(),
+    put: vi.fn(),
+  },
 }));
 
 describe('UserManagementEdit Component', () => {
   let wrapper: Wrapper<UserManagementEditClass>;
   let userManagementEdit: UserManagementEditClass;
   const userInfoServiceStub = {
-    update: jest.fn(() => Promise.resolve({})),
-    find: jest.fn(() => Promise.resolve({})),
+    update: vi.fn(() => Promise.resolve({})),
+    find: vi.fn(() => Promise.resolve({})),
   };
 
   beforeEach(() => {

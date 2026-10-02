@@ -17,7 +17,7 @@ describe('Error component', () => {
   let loginService: LoginService;
 
   beforeEach(() => {
-    loginService = { openLogin: jest.fn() };
+    loginService = { openLogin: vi.fn() };
     wrapper = shallowMount<ErrorClass>(Error, {
       i18n,
       store,

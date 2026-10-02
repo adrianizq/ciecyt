@@ -8,7 +8,7 @@ config.initVueApp(localVue);
 const i18n = config.initI18N(localVue);
 const store = config.initVueXStore(localVue);
 localVue.component('font-awesome-icon', {});
-const healthsService = { getBaseName: jest.fn(), getSubSystemName: jest.fn() };
+const healthsService = { getBaseName: vi.fn(), getSubSystemName: vi.fn() };
 
 describe('Health Modal Component', () => {
   let wrapper: Wrapper<HealthModalClass>;

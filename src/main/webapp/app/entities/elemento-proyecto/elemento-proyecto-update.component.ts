@@ -22,6 +22,7 @@ const validations: any = {
 export default class ElementoProyectoUpdate extends Vue {
   @Inject('alertService') private alertService: () => AlertService;
   @Inject('elementoProyectoService') private elementoProyectoService: () => ElementoProyectoService;
+  @Inject('proyectoService') private proyectoService: () => ProyectoService;
   public elementoProyecto: IElementoProyecto = new ElementoProyecto();
 
   public proyectos: IProyecto[] = [];

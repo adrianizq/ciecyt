@@ -35,7 +35,7 @@ describe('Formatter i18n', () => {
 
   it('should open file', () => {
     let result = null;
-    window.open = jest.fn().mockImplementationOnce(() => {
+    window.open = vi.fn().mockImplementationOnce(() => {
       return { document: { write: data => (result = data) } };
     });
 

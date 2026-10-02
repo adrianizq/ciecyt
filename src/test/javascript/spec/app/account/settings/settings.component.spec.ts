@@ -13,17 +13,19 @@ config.initVueApp(localVue);
 const i18n = config.initI18N(localVue);
 const store = config.initVueXStore(localVue);
 
-jest.mock('axios', () => ({
-  get: jest.fn(),
-  post: jest.fn(),
+vi.mock('axios', () => ({
+  default: {
+    get: vi.fn(),
+    post: vi.fn(),
+  },
 }));
 
 describe('Settings Component', () => {
   let wrapper: Wrapper<SettingsClass>;
   let settings: SettingsClass;
   const userInfoServiceStub = {
-    update: jest.fn(() => Promise.resolve({})),
-    find: jest.fn(() => Promise.resolve({})),
+    update: vi.fn(() => Promise.resolve({})),
+    find: vi.fn(() => Promise.resolve({})),
   };
   const account = {
     firstName: 'John',

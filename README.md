@@ -113,7 +113,7 @@ To launch your application's tests, run:
 
 ### Client tests
 
-Unit tests are run by [Jest][] and written with [Jasmine][]. They're located in [src/test/javascript/](src/test/javascript/) and can be run with:
+Unit tests are run by [Vitest][] and written with [Jasmine][]. They're located in [src/test/javascript/](src/test/javascript/) and can be run with:
 npm test
 
 For more information, refer to the [Running tests page][].
@@ -175,7 +175,7 @@ To configure CI for your project, run the ci-cd sub-generator (`jhipster ci-cd`)
 [webpack]: https://webpack.github.io/
 [vue cli]: https://cli.vuejs.org/
 [browsersync]: https://www.browsersync.io/
-[jest]: https://facebook.github.io/jest/
+[vitest]: https://vitest.dev/
 [jasmine]: https://jasmine.github.io/2.0/introduction.html
 [protractor]: https://www.protractortest.org/
 [leaflet]: https://leafletjs.com/

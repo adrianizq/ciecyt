@@ -22,15 +22,15 @@ localVue.component('b-navbar-nav', {});
 describe('JhiNavbar', () => {
   let jhiNavbar: JhiNavbarClass;
   let wrapper: Wrapper<JhiNavbarClass>;
-  const loginService = { openLogin: jest.fn() };
+  const loginService = { openLogin: vi.fn() };
   const accountService = {
-    hasAnyAuthorityAndCheckAuth: jest.fn().mockImplementation(() => Promise.resolve(true)),
-    hasAnyAuthority: jest.fn().mockImplementation(() => true),
+    hasAnyAuthorityAndCheckAuth: vi.fn().mockImplementation(() => Promise.resolve(true)),
+    hasAnyAuthority: vi.fn().mockImplementation(() => true),
   };
-  const translationService = { refreshTranslation: jest.fn() };
+  const translationService = { refreshTranslation: vi.fn() };
   const menuService = {
-    all: jest.fn(() => Promise.resolve([])),
-    allRoles: jest.fn(() => Promise.resolve([])),
+    all: vi.fn(() => Promise.resolve([])),
+    allRoles: vi.fn(() => Promise.resolve([])),
   };
   const flushPromises = () => new Promise(resolve => setTimeout(resolve, 0));
 

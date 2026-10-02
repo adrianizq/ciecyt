@@ -40,7 +40,8 @@ export default class JhiDataUtils extends Vue {
    * Method to open file
    */
   openFile(contentType, data) {
-    if (window.navigator && window.navigator.msSaveOrOpenBlob) {
+    const msNavigator: any = window.navigator;
+    if (msNavigator && msNavigator.msSaveOrOpenBlob) {
       // To support IE and Edge
       const byteCharacters = atob(data);
       const byteNumbers = new Array(byteCharacters.length);
@@ -51,7 +52,7 @@ export default class JhiDataUtils extends Vue {
       const blob = new Blob([byteArray], {
         type: contentType,
       });
-      window.navigator.msSaveOrOpenBlob(blob);
+      msNavigator.msSaveOrOpenBlob(blob);
     } else {
       // Other browsers
       const fileURL = `data:${contentType};base64,${data}`;
