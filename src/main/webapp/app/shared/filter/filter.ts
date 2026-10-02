@@ -147,3 +147,7 @@ export function orderBy(collection: any, ...args: any[]): any[] {
 
   return source.slice().sort(comparator);
 }
+
+export function withPlaceholder(options: any[], placeholder: string): any[] {
+  return [{ value: null, text: placeholder, disabled: true }].concat(options || []);
+}

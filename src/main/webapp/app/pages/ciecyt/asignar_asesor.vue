@@ -11,27 +11,18 @@
                             :label="`Asesor # ${i + 1}`"
                             :label-for="`integrante-${i}`"
                         >
-                           <!-- <b-form-select
-                                :options="users"
-                                text-field="nombresApellidos"
-                                value-field="id" :id="`integrante-${i}`" v-model="integrante.integranteProyectoUserId">
-
-                            </b-form-select>-->
-                            <model-select 
-                            v-if="!integrante.esExterno"
-                            :options="options"
-                            @input="selectFromParentComponent"
-                            placeholder="busque por nombre o cedula"
-                            v-model="integrante.integranteProyectoUserId"
-                            >
-                        </model-select>
-                        <model-select 
-                            v-if="integrante.esExterno"
-                            :options="opcionesExternos"
-                            placeholder="profesional externo verificado por el CIECYT"
-                            v-model="integrante.integranteProyectoExternoId"
-                            >
-                        </model-select>
+                            <b-form-select
+                              v-if="!integrante.esExterno"
+                              :id="`integrante-${i}`"
+                              :options="withPlaceholder(options, 'busque por nombre o cedula')"
+                              v-model="integrante.integranteProyectoUserId"
+                            ></b-form-select>
+                        <b-form-select
+                          v-if="integrante.esExterno"
+                          :id="`integrante-${i}`"
+                          :options="withPlaceholder(opcionesExternos, 'profesional externo verificado por el CIECYT')"
+                          v-model="integrante.integranteProyectoExternoId"
+                        ></b-form-select>
                         <b-form-checkbox
                             class="mt-2"
                             v-model="integrante.esExterno"
@@ -78,19 +69,21 @@
     import { IAsesorExterno } from '@/shared/model/asesor-externo.model';
 
     import { IIntegranteProyecto, IntegranteProyecto } from '@/shared/model/integrante-proyecto.model';
+    import { withPlaceholder as withPlaceholderOptions } from '@/shared/filter/filter';
     import IntegranteProyectoService from '@/entities/integrante-proyecto/integrante-proyecto.service';
-     import 'vue-search-select/dist/VueSearchSelect.css'
  
-    import { ModelSelect} from 'vue-search-select'
 
     const validations: any = {};
 
     @Component({
-        components: { MenuLateralCiecyt, ModelSelect },
+        components: { MenuLateralCiecyt },
         validations
     })
 
     export default class PropuestaAsesores extends Vue {
+        public withPlaceholder(options: any[], placeholder: string): any[] {
+            return withPlaceholderOptions(options, placeholder);
+        }
         @Inject('usuarioService') private usuarioService: () => UsuarioService;
         @Inject('proyectoService') private proyectoService: () => ProyectoService;
         @Inject('integranteProyectoService') private integranteProyectoService: () => IntegranteProyectoService;

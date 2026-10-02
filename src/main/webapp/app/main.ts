@@ -81,7 +81,6 @@ import CicloService from '@/entities/ciclo/ciclo.service';
 // jhipster-needle-add-entity-service-to-main-import - JHipster will import entities services here
 
 //Complement model select
-import 'vue-search-select/dist/VueSearchSelect.css';
 import PreguntaModalidadService from '@/entities/pregunta-modalidad/pregunta-modalidad.service';
 
 import PreguntaAuthorityService from '@/entities/pregunta-authority/pregunta-authority.service';

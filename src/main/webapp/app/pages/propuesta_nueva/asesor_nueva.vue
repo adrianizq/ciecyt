@@ -11,12 +11,10 @@
                             label="Asesor del Proyecto"
                             label-for="asesor"
                         >
-                            <model-select 
-                            :options="options"
-                            placeholder="busque por nombre o cedula"
-                            v-model="integranteProyecto.integranteProyectoUserId"
-                            >
-                        </model-select>
+                            <b-form-select
+                              :options="withPlaceholder(options, 'busque por nombre o cedula')"
+                              v-model="integranteProyecto.integranteProyectoUserId"
+                            ></b-form-select>
                         </b-form-group>
                     </div>
                 </div>
@@ -55,18 +53,20 @@
     import { IDocenteHabilitado } from '@/shared/model/docente-habilitado.model';
 
     import { IIntegranteProyecto, IntegranteProyecto } from '@/shared/model/integrante-proyecto.model';
+    import { withPlaceholder as withPlaceholderOptions } from '@/shared/filter/filter';
     import IntegranteProyectoService from '@/entities/integrante-proyecto/integrante-proyecto.service';
-    import 'vue-search-select/dist/VueSearchSelect.css'
-    import { ModelSelect} from 'vue-search-select'
 
     const validations: any = {};
 
     @Component({
-        components: { MenuLateralNueva, ModelSelect },
+        components: { MenuLateralNueva },
         validations
     })
 
     export default class PropuestaAsesor extends Vue {
+        public withPlaceholder(options: any[], placeholder: string): any[] {
+            return withPlaceholderOptions(options, placeholder);
+        }
         @Inject('usuarioService') private usuarioService: () => UsuarioService;
         @Inject('proyectoService') private proyectoService: () => ProyectoService;
         @Inject('integranteProyectoService') private integranteProyectoService: () => IntegranteProyectoService;

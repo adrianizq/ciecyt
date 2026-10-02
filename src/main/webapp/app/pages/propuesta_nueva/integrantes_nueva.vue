@@ -5,20 +5,16 @@
         </div>
         <div class="col-sm-8">
             <form @submit.prevent="save('continuar')">
-               <!-- https://github.com/moreta/vue-search-select -->
                 <div class="row">
                     <div class="col-12" v-for="(integrante, i) in integrantesProyecto" :key="i">
                     <b-form-group
                         label="Busca los integrantes"
                         label-for="search-integrantes"
                     >
-                        <model-select 
-                            :options="options"
-                            @input="selectFromParentComponent"
-                            placeholder="busque por nombre o cedula"
-                            v-model="integrante.integranteProyectoUserId"
-                            >
-                        </model-select>
+                        <b-form-select
+                          :options="withPlaceholder(options, 'busque por nombre o cedula')"
+                          v-model="integrante.integranteProyectoUserId"
+                        ></b-form-select>
                     </b-form-group>
                     </div>
                 </div>
@@ -56,22 +52,24 @@
     import ProyectoService from '@/entities/proyecto/proyecto.service';
 
     import { IIntegranteProyecto, IntegranteProyecto } from '@/shared/model/integrante-proyecto.model';
+    import { withPlaceholder as withPlaceholderOptions } from '@/shared/filter/filter';
     import IntegranteProyectoService from '@/entities/integrante-proyecto/integrante-proyecto.service';
    
-    import 'vue-search-select/dist/VueSearchSelect.css'
  
-    import { ModelSelect} from 'vue-search-select'
 import { userInfo } from 'os';
 
 
     const validations: any = {};
 
     @Component({
-        components: { MenuLateralNueva, ModelSelect},
+        components: { MenuLateralNueva },
         validations
     })
 
     export default class PropuestaIntegrantes extends Vue {
+        public withPlaceholder(options: any[], placeholder: string): any[] {
+            return withPlaceholderOptions(options, placeholder);
+        }
         @Inject('usuarioService') private usuarioService: () => UsuarioService;
         @Inject('proyectoService') private proyectoService: () => ProyectoService;
         @Inject('integranteProyectoService') private integranteProyectoService: () => IntegranteProyectoService;
@@ -89,11 +87,7 @@ import { userInfo } from 'os';
         public n: number = 0;
         public cantEstudiantes: number = 0;
         public rolModalidadId?: number =0;
-
-        //attributes search select
         public options : any = [];
-        public searchText: any = ''; // If value is falsy, reset searchText & searchItem
-       public items: any = [];
       
 //public proyId: string = null;
 
@@ -110,9 +104,6 @@ import { userInfo } from 'os';
         }
         
         /*Methods for multi select*/
-        //https://vue-search-select.netlify.app/#/model
-       
-   
         public back() {
             this.$router.push({ name: 'PropuestaInformacionGeneralNuevaEditView', params: { proyectoId: this.proyId } });
         }
