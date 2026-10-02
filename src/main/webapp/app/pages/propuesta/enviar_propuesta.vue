@@ -85,7 +85,7 @@
 
         <div>
           <button type="button" id="cancel-save" class="btn btn-secondary" v-on:click="previousState()">
-            <font-awesome-icon icon="ban"></font-awesome-icon>&nbsp;<span v-text="$t('entity.action.cancel')">Cancel</span>
+            <font-awesome-icon icon="ban"></font-awesome-icon>&nbsp;<span v-text="$t('entity.action.cancel')"></span>
           </button>
 
           <button type="submit" id="save-entity" class="btn btn-primary" :disabled='isDisabled'>
@@ -102,7 +102,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Inject, Vue } from 'vue-property-decorator';
+import { Component, Inject, Vue, Hook } from 'vue-facing-decorator';
 
 import MenuLateral from '@/components/propuesta/menu_lateral.vue';
 import { IProyecto, Proyecto } from '@/shared/model/proyecto.model';
@@ -118,10 +118,10 @@ import FasesService from '@/entities/fases/fases.service';
   components: { MenuLateral },
 })
 export default class EnviarPropuesta extends Vue {
-  @Inject('proyectoService') private proyectoService: () => ProyectoService;
-  @Inject('adjuntoProyectoFaseService') private adjuntoProyectoFaseService: () => AdjuntoProyectoFaseService;
-  @Inject('fasesService') private fasesService: () => FasesService;
-  @Inject('alertService') private alertService: () => AlertService;
+  @Inject  private proyectoService: () => ProyectoService;
+  @Inject  private adjuntoProyectoFaseService: () => AdjuntoProyectoFaseService;
+  @Inject  private fasesService: () => FasesService;
+  @Inject  private alertService: () => AlertService;
 
   public integrants: IIntegranteProyecto[] = [];
   public terms: Boolean = false;
@@ -169,6 +169,7 @@ export default class EnviarPropuesta extends Vue {
     window.history.back();
   }
 
+  @Hook
   beforeRouteEnter(to, from, next) {
     next(vm => {
       vm.initRelationships();

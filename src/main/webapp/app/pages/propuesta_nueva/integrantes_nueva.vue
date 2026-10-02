@@ -40,7 +40,7 @@
 
 <script lang="ts">
 
-    import { Component, Inject, Vue } from 'vue-property-decorator';
+    import { Component, Inject, Vue, Hook } from 'vue-facing-decorator';
     import AlertService from '@/shared/alert/alert.service';
 
     import MenuLateralNueva from '@/components/propuesta_nueva/menu_lateral_nueva.vue';
@@ -56,6 +56,7 @@
     import IntegranteProyectoService from '@/entities/integrante-proyecto/integrante-proyecto.service';
    
  
+import { useVuelidate } from '@vuelidate/core';
 import { userInfo } from 'os';
 
 
@@ -70,11 +71,11 @@ import { userInfo } from 'os';
         public withPlaceholder(options: any[], placeholder: string): any[] {
             return withPlaceholderOptions(options, placeholder);
         }
-        @Inject('usuarioService') private usuarioService: () => UsuarioService;
-        @Inject('proyectoService') private proyectoService: () => ProyectoService;
-        @Inject('integranteProyectoService') private integranteProyectoService: () => IntegranteProyectoService;
-        @Inject('rolesModalidadService') private rolesModalidadService: () => RolesModalidadService;
-        @Inject('alertService') private alertService: () => AlertService;
+        @Inject  private usuarioService: () => UsuarioService;
+        @Inject  private proyectoService: () => ProyectoService;
+        @Inject  private integranteProyectoService: () => IntegranteProyectoService;
+        @Inject  private rolesModalidadService: () => RolesModalidadService;
+        @Inject  private alertService: () => AlertService;
 
         public users: IUser[] = [];
         public rolesModalidad: IRolesModalidad;
@@ -91,6 +92,7 @@ import { userInfo } from 'os';
       
 //public proyId: string = null;
 
+        @Hook
         beforeRouteEnter(to, from, next) {
             next(async vm => {
                 vm.initRelationships();
@@ -213,3 +215,4 @@ import { userInfo } from 'os';
 </script>
 
 <style scoped>
+</style>

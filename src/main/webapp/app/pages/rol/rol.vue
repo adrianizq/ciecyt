@@ -2,12 +2,10 @@
     <div>
         <h2 id="page-heading">
             <span id="rol-heading">Roles</span>
-            <!--<router-link :to="{name: 'AcuerdoCreate'}" tag="button" id="jh-create-entity" class="btn btn-primary float-right jh-create-entity create-acuerdo">
+            <!--<router-link custom v-slot="{ navigate }" :to="{name: 'AcuerdoCreate'}"><button id="jh-create-entity" class="btn btn-primary float-right jh-create-entity create-acuerdo" @click="navigate">
                 <font-awesome-icon icon="plus"></font-awesome-icon>
-                <span  v-text="$t('ciecytApp.acuerdo.home.createLabel')">
-                    Create a new Acuerdo
-                </span>
-            </router-link>-->
+                <span  v-text="$t('ciecytApp.acuerdo.home.createLabel')"></span>
+            </button></router-link>-->
         </h2>
         <br/>
 

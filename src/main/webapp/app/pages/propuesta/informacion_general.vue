@@ -7,96 +7,105 @@
       <form @submit.prevent="save('continuar')">
         <div class="row">
           <div class="col-12">
-
-           <div class="mb-3 form-group">
+            <div class="mb-3 form-group">
               <label class="form-control-label" for="encabezado">
-               <h2>Información General</h2>
-               </label>
-           </div>
+                <h2>Información General</h2>
+              </label>
+            </div>
 
             <div class="mb-3 form-group" v-if="proyecto.id">
-              <label for="id" v-text="$t('global.field.id')">ID</label>
+              <label for="id" v-text="$t('global.field.id')"></label>
               <input type="text" class="form-control" id="id" name="id" v-model="proyecto.id" readonly />
             </div>
 
-            <div class="mb-3 form-group" :class="{ 'form-group--error': $v.proyecto.titulo.$error }">
-              <label class="form-control-label" v-text="$t('ciecytApp.proyecto.titulo')" for="proyecto-titulo">Titulo</label>
-              <input disabled="true"
+            <div class="mb-3 form-group" :class="{ 'form-group--error': v$.proyecto.titulo.$error }">
+              <label class="form-control-label" v-text="$t('ciecytApp.proyecto.titulo')" for="proyecto-titulo"></label>
+              <input
+                disabled="true"
                 type="text"
                 class="form-control"
                 name="titulo"
                 id="proyecto-titulo"
                 v-model="proyecto.titulo"
                 :class="{
-                  'is-invalid': $v.proyecto.titulo.$error,
-                  'is-valid': !$v.proyecto.titulo.$invalid,
+                  'is-invalid': v$.proyecto.titulo.$error,
+                  'is-valid': !v$.proyecto.titulo.$invalid,
                 }"
                 placeholder="Ingrese el Titulo del Proyecto"
               />
               <div class="valid-feedback"></div>
-              <div class="text-danger" v-if="!$v.proyecto.titulo.required">Este campo es requerido</div>
-              <div class="text-danger" v-if="!$v.proyecto.titulo.minLength">
-                Este campo debe tener al menos {{ $v.proyecto.titulo.$params.minLength.min }} caracteres.
+              <div class="text-danger" v-if="!v$.proyecto.titulo.required">Este campo es requerido</div>
+              <div class="text-danger" v-if="!v$.proyecto.titulo.minLength">
+                Este campo debe tener al menos {{ v$.proyecto.titulo.$params.minLength.min }} caracteres.
               </div>
-              <div class="text-danger" v-if="!$v.proyecto.titulo.maxLength">
-                Este campo no debe tener más de {{ $v.proyecto.titulo.$params.maxLength.max }} caracteres.
+              <div class="text-danger" v-if="!v$.proyecto.titulo.maxLength">
+                Este campo no debe tener más de {{ v$.proyecto.titulo.$params.maxLength.max }} caracteres.
               </div>
             </div>
-           <div class="mb-3 form-group" :class="{ 'form-group--error': $v.proyecto.fechaIni.$error }">  
+            <div class="mb-3 form-group" :class="{ 'form-group--error': v$.proyecto.fechaIni.$error }">
               <label for="datepicker-sm">Fecha de Inicio</label>
-              <b-form-datepicker size="sm-6" local="ESP" id="fecha-inicio" name="fecha-inicio" value="value" v-model="proyecto.fechaIni"
-              :class="{
-                  'is-invalid': $v.proyecto.fechaIni.$error,
-                  'is-valid': !$v.proyecto.fechaIni.$invalid,
-                }"  
-                placeholder="Fecha de inicio"     
-                disabled="true"            >
-              
+              <b-form-datepicker
+                size="sm-6"
+                local="ESP"
+                id="fecha-inicio"
+                name="fecha-inicio"
+                value="value"
+                v-model="proyecto.fechaIni"
+                :class="{
+                  'is-invalid': v$.proyecto.fechaIni.$error,
+                  'is-valid': !v$.proyecto.fechaIni.$invalid,
+                }"
+                placeholder="Fecha de inicio"
+                disabled="true"
+              >
               </b-form-datepicker>
-              <div class="text-danger" v-if="!$v.proyecto.fechaIni.required">Este campo es requerido</div>
+              <div class="text-danger" v-if="!v$.proyecto.fechaIni.required">Este campo es requerido</div>
             </div>
 
-            <div class="mb-3 form-group" :class="{ 'form-group--error': $v.proyecto.fechaFin.$error }">  
+            <div class="mb-3 form-group" :class="{ 'form-group--error': v$.proyecto.fechaFin.$error }">
               <label for="datepicker-sm">Fecha final</label>
-              <b-form-datepicker size="sm-6" local="ESP" id="fecha-fin" name="fecha-fin" value="value" v-model="proyecto.fechaFin"
-              :class="{
-                  'is-invalid': $v.proyecto.fechaFin.$error,
-                  'is-valid': !$v.proyecto.fechaFin.$invalid,
-                }"  
-                placeholder="Fecha de finalización"      disabled="true"          >
-               
+              <b-form-datepicker
+                size="sm-6"
+                local="ESP"
+                id="fecha-fin"
+                name="fecha-fin"
+                value="value"
+                v-model="proyecto.fechaFin"
+                :class="{
+                  'is-invalid': v$.proyecto.fechaFin.$error,
+                  'is-valid': !v$.proyecto.fechaFin.$invalid,
+                }"
+                placeholder="Fecha de finalización"
+                disabled="true"
+              >
               </b-form-datepicker>
-              <div class="text-danger" v-if="!$v.proyecto.fechaFin.required">Este campo es requerido</div>
+              <div class="text-danger" v-if="!v$.proyecto.fechaFin.required">Este campo es requerido</div>
             </div>
- 
-         
-            <div class="mb-3 form-group" :class="{ 'form-group--error': $v.proyecto.proyectoModalidadId.$error }">
+
+            <div class="mb-3 form-group" :class="{ 'form-group--error': v$.proyecto.proyectoModalidadId.$error }">
               <label class="form-control-label" v-text="$t('ciecytApp.proyecto.proyectoModalidad')" for="proyecto-modalidad"
-                >Modalidad</label
+                ></label
               >
               <b-form-select
                 :options="modalidads"
                 text-field="modalidad"
                 value-field="id"
                 id="modalidad"
-                v-model="proyecto.proyectoModalidadId"                
+                v-model="proyecto.proyectoModalidadId"
                 @input="setModalidad"
                 :class="{
-                  'is-invalid': $v.proyecto.proyectoModalidadId.$error,
-                  'is-valid': !$v.proyecto.proyectoModalidadId.$invalid
+                  'is-invalid': v$.proyecto.proyectoModalidadId.$error,
+                  'is-valid': !v$.proyecto.proyectoModalidadId.$invalid,
                 }"
-                 disabled="true"  
+                disabled="true"
               >
               </b-form-select>
 
-             <div class="text-danger" v-if="!$v.proyecto.proyectoModalidadId.required">Este campo es requerido</div>
+              <div class="text-danger" v-if="!v$.proyecto.proyectoModalidadId.required">Este campo es requerido</div>
             </div>
-          
-        
-        
-          
-            <div class="mb-3 form-group" :class="{ 'form-group--error': $v.proyecto.facultadId }">
-              <label class="form-control-label" v-text="$t('ciecytApp.proyecto.facultad')" for="proyecto-facultad">Facultad</label>
+
+            <div class="mb-3 form-group" :class="{ 'form-group--error': v$.proyecto.facultadId }">
+              <label class="form-control-label" v-text="$t('ciecytApp.proyecto.facultad')" for="proyecto-facultad"></label>
               <b-form-select
                 :options="facultades"
                 text-field="facultad"
@@ -104,47 +113,45 @@
                 id="facultad"
                 v-model="proyecto.facultadId"
                 @input="setFacultad"
-              :class="{
-                  'is-invalid': $v.proyecto.facultadId.$error,
-                  'is-valid': !$v.proyecto.facultadId.$invalid
+                :class="{
+                  'is-invalid': v$.proyecto.facultadId.$error,
+                  'is-valid': !v$.proyecto.facultadId.$invalid,
                 }"
-                 disabled="true"  
+                disabled="true"
               >
               </b-form-select>
 
-             <div class="text-danger" v-if="!$v.proyecto.facultadId.required">Este campo es requerido</div>
+              <div class="text-danger" v-if="!v$.proyecto.facultadId.required">Este campo es requerido</div>
             </div>
-         
 
             <!-- ////////////Programa -->
-         
+
             <div class="mb-3 form-group">
-              <label class="form-control-label" v-text="$t('ciecytApp.programa.programa')" for="proyecto-programa">Programa</label>
+              <label class="form-control-label" v-text="$t('ciecytApp.programa.programa')" for="proyecto-programa"></label>
               <b-form-select
                 text-field="programa"
                 value-field="id"
                 id="programa"
                 v-model="proyecto.proyectoProgramaId"
                 :class="{
-                  'is-invalid': $v.proyecto.proyectoProgramaId.$error,
-                  'is-valid': !$v.proyecto.proyectoProgramaId.$invalid,
+                  'is-invalid': v$.proyecto.proyectoProgramaId.$error,
+                  'is-valid': !v$.proyecto.proyectoProgramaId.$invalid,
                 }"
-                 disabled="true"  
+                disabled="true"
               >
                 <option v-for="(selectOption, indexOpt) in Programas" :key="indexOpt" :value="selectOption.id">
                   ({{ selectOption.id }}) {{ selectOption.programa }}
                 </option>
               </b-form-select>
-              <div class="text-danger" v-if="!$v.proyecto.proyectoProgramaId.required">Este campo es requerido</div>
+              <div class="text-danger" v-if="!v$.proyecto.proyectoProgramaId.required">Este campo es requerido</div>
             </div>
-         
 
-            <div class="mb-3 form-group" :class="{ 'form-group--error': $v.proyecto.proyectoLineaInvestigacionId }">
+            <div class="mb-3 form-group" :class="{ 'form-group--error': v$.proyecto.proyectoLineaInvestigacionId }">
               <label
                 class="form-control-label"
                 v-text="$t('ciecytApp.proyecto.proyectoLineaInvestigacion')"
                 for="proyecto-linea-investigacion"
-                >Linea de Investigación</label
+                ></label
               >
               <b-form-select
                 text-field="linea"
@@ -152,25 +159,22 @@
                 id="linea_investigacion"
                 v-model="proyecto.proyectoLineaInvestigacionId"
                 @input="setLinea"
-              :class="{
-                  'is-invalid': $v.proyecto.proyectoLineaInvestigacionId.$error,
-                  'is-valid': !$v.proyecto.proyectoLineaInvestigacionId.$invalid
+                :class="{
+                  'is-invalid': v$.proyecto.proyectoLineaInvestigacionId.$error,
+                  'is-valid': !v$.proyecto.proyectoLineaInvestigacionId.$invalid,
                 }"
-                  
               >
-              <option v-for="(selectOption, indexOpt) in LineasInvestigacion" :key="indexOpt" :value="selectOption.id">
+                <option v-for="(selectOption, indexOpt) in LineasInvestigacion" :key="indexOpt" :value="selectOption.id">
                   ({{ selectOption.codigoLinea }}) {{ selectOption.linea }}
                 </option>
               </b-form-select>
 
-             <div class="text-danger" v-if="!$v.proyecto.proyectoLineaInvestigacionId.required">Este campo es requerido</div>
+              <div class="text-danger" v-if="!v$.proyecto.proyectoLineaInvestigacionId.required">Este campo es requerido</div>
             </div>
-     
 
-         
-            <div class="mb-3 form-group" :class="{ 'form-group--error': $v.proyecto.subLineaLineaInvestigacionId }">
+            <div class="mb-3 form-group" :class="{ 'form-group--error': v$.proyecto.subLineaLineaInvestigacionId }">
               <label class="form-control-label" v-text="$t('ciecytApp.proyecto.subLineaLineaInvestigacion')" for="sub-linea-investigacion"
-                >Sublinea de Investigación</label
+                ></label
               >
               <b-form-select
                 text-field="linea"
@@ -178,23 +182,22 @@
                 id="sub_linea_linea_investigacion"
                 v-model="proyecto.subLineaLineaInvestigacionId"
                 @input="setSubLinea"
-                 :class="{
-                  'is-invalid': $v.proyecto.subLineaLineaInvestigacionId.$error,
-                  'is-valid': !$v.proyecto.subLineaLineaInvestigacionId.$invalid
+                :class="{
+                  'is-invalid': v$.proyecto.subLineaLineaInvestigacionId.$error,
+                  'is-valid': !v$.proyecto.subLineaLineaInvestigacionId.$invalid,
                 }"
-                  
               >
                 <option v-for="(selectOption, indexOpt) in SubLineas" :key="indexOpt" :value="selectOption.id">
                   ({{ selectOption.codigoLinea }}) {{ selectOption.linea }}
                 </option>
               </b-form-select>
-              <div class="text-danger" v-if="!$v.proyecto.subLineaLineaInvestigacionId.required">Este campo es requerido</div>
+              <div class="text-danger" v-if="!v$.proyecto.subLineaLineaInvestigacionId.required">Este campo es requerido</div>
             </div>
-        
-          <!-- ADR   -->
-          
-            <div class="mb-3 form-group" :class="{ 'form-group--error': $v.integranteProyecto.integranteProyectoUserId }">
-              <label class="form-control-label" v-text="$t('ciecytApp.proyecto.asesor')" for="asesor">Asesor</label>
+
+            <!-- ADR   -->
+
+            <div class="mb-3 form-group" :class="{ 'form-group--error': v$.integranteProyecto.integranteProyectoUserId }">
+              <label class="form-control-label" v-text="$t('ciecytApp.proyecto.asesor')" for="asesor"></label>
               <b-form-select
                 :options="users"
                 text-field="nombresApellidos"
@@ -203,26 +206,40 @@
                 v-model="proyecto.asesorId"
                 @input="setAsesor"
                 :class="{
-                  'is-invalid': $v.proyecto.asesorId.$error,
-                  'is-valid': !$v.proyecto.asesorId.$invalid
+                  'is-invalid': v$.proyecto.asesorId.$error,
+                  'is-valid': !v$.proyecto.asesorId.$invalid,
                 }"
-                  disabled="true"  
+                disabled="true"
               >
               </b-form-select>
-              <div class="text-danger" v-if="!$v.proyecto.asesorId.required">Este campo es requerido</div>
+              <div class="text-danger" v-if="!v$.proyecto.asesorId.required">Este campo es requerido</div>
             </div>
 
             <div class="mb-3 form-group">
-                        <label class="form-control-label" v-bind:value="$t('ciecytApp.proyecto.proyectoGrupoSemillero')" for="proyecto-proyectoGrupoSemillero">Proyecto Grupo Semillero</label>
-                        <select class="form-control" id="proyecto-proyectoGrupoSemillero" name="proyectoGrupoSemillero" v-model="proyecto.proyectoGrupoSemilleroId">
-                            <option v-bind:value="null"></option>
-                            <option v-bind:value="grupoSemilleroOption.id" v-for="grupoSemilleroOption in grupoSemilleros" :key="grupoSemilleroOption.id">{{grupoSemilleroOption.nombre}}</option>
-                        </select>
-                    </div>
-      
+              <label
+                class="form-control-label"
+                v-bind:value="$t('ciecytApp.proyecto.proyectoGrupoSemillero')"
+                for="proyecto-proyectoGrupoSemillero"
+                >Proyecto Grupo Semillero</label
+              >
+              <select
+                class="form-control"
+                id="proyecto-proyectoGrupoSemillero"
+                name="proyectoGrupoSemillero"
+                v-model="proyecto.proyectoGrupoSemilleroId"
+              >
+                <option v-bind:value="null"></option>
+                <option
+                  v-bind:value="grupoSemilleroOption.id"
+                  v-for="grupoSemilleroOption in grupoSemilleros"
+                  :key="grupoSemilleroOption.id"
+                  >{{ grupoSemilleroOption.nombre }}</option
+                >
+              </select>
+            </div>
 
-            <div class="mb-3 form-group" :class="{ 'form-group--error': $v.proyecto.url.$error }">
-              <label class="form-control-label" v-text="$t('ciecytApp.proyecto.url')" for="proyecto-url">Url</label>
+            <div class="mb-3 form-group" :class="{ 'form-group--error': v$.proyecto.url.$error }">
+              <label class="form-control-label" v-text="$t('ciecytApp.proyecto.url')" for="proyecto-url"></label>
               <input
                 type="text"
                 class="form-control"
@@ -230,37 +247,34 @@
                 id="proyecto-url"
                 v-model="proyecto.url"
                 :class="{
-                  'is-invalid': $v.proyecto.url.$error,
-                  'is-valid': !$v.proyecto.url.$invalid,
+                  'is-invalid': v$.proyecto.url.$error,
+                  'is-valid': !v$.proyecto.url.$invalid,
                 }"
                 placeholder="Ingrese la Url del proyecto si existe"
               />
-              <div class="text-danger" v-if="!$v.proyecto.url.url">La URL no es válida, ej: http://www.itp.edu.co</div>              
+              <div class="text-danger" v-if="!v$.proyecto.url.url">La URL no es válida, ej: http://www.itp.edu.co</div>
             </div>
 
- 
-      <!--/tipo investigacion//////////////////////////////////////7 ///////////////////7-->
-        
-              <div class="mb-3 form-group">
-                <label class="form-control-label " for="proyecto-facultad">Tipo de Investigacion</label>
-                <b-form-select
-                  :options="investTipos"
-                  v-model="proyecto.tipo"
-                  :class="{
-                    'is-invalid': $v.proyecto.tipo.$error,
-                    'is-valid': !$v.proyecto.tipo.$invalid
-                  }"
-                >
-                </b-form-select>
-                <div class="valid-feedback"></div>
-                <div class="text-danger" v-if="!$v.proyecto.tipo.required">Este campo es requerido</div>
-              </div>
-           
-            
+            <!--/tipo investigacion//////////////////////////////////////7 ///////////////////7-->
 
-            <div class="mb-3 form-group" :class="{ 'form-group--error': $v.proyecto.palabrasClave.$error }">
+            <div class="mb-3 form-group">
+              <label class="form-control-label" for="proyecto-facultad">Tipo de Investigacion</label>
+              <b-form-select
+                :options="investTipos"
+                v-model="proyecto.tipo"
+                :class="{
+                  'is-invalid': v$.proyecto.tipo.$error,
+                  'is-valid': !v$.proyecto.tipo.$invalid,
+                }"
+              >
+              </b-form-select>
+              <div class="valid-feedback"></div>
+              <div class="text-danger" v-if="!v$.proyecto.tipo.required">Este campo es requerido</div>
+            </div>
+
+            <div class="mb-3 form-group" :class="{ 'form-group--error': v$.proyecto.palabrasClave.$error }">
               <label class="form-control-label" v-text="$t('ciecytApp.proyecto.palabrasClave')" for="proyecto-palabras-clave"
-                >Palabras Clave</label
+                ></label
               >
               <textarea
                 rows="3"
@@ -271,16 +285,16 @@
                 v-model="proyecto.palabrasClave"
                 @input="setPalabrasClave($event.target.value)"
                 :class="{
-                  'is-invalid': $v.proyecto.palabrasClave.$error,
-                  'is-valid': !$v.proyecto.palabrasClave.$invalid,
-                }"  
+                  'is-invalid': v$.proyecto.palabrasClave.$error,
+                  'is-valid': !v$.proyecto.palabrasClave.$invalid,
+                }"
                 placeholder="Ingrese las palabras clave separadas por comas"
               />
-              <div class="text-danger" v-if="!$v.proyecto.palabrasClave.required">Este campo es requerido</div>             
+              <div class="text-danger" v-if="!v$.proyecto.palabrasClave.required">Este campo es requerido</div>
             </div>
 
-            <div class="mb-3 form-group" :class="{ 'form-group--error': $v.proyecto.referencias.$error }">
-              <label class="form-control-label" v-text="$t('ciecytApp.proyecto.referencias')" for="proyecto-referencias">Referencias</label>
+            <div class="mb-3 form-group" :class="{ 'form-group--error': v$.proyecto.referencias.$error }">
+              <label class="form-control-label" v-text="$t('ciecytApp.proyecto.referencias')" for="proyecto-referencias"></label>
               <textarea
                 rows="3"
                 cols="6"
@@ -289,29 +303,26 @@
                 id="proyecto-referencias"
                 v-model="proyecto.referencias"
                 :class="{
-                  'is-invalid': $v.proyecto.referencias.$error,
-                  'is-valid': !$v.proyecto.referencias.$invalid,
-                }"  
+                  'is-invalid': v$.proyecto.referencias.$error,
+                  'is-valid': !v$.proyecto.referencias.$invalid,
+                }"
                 placeholder="Ingrese las referencias bibliográficas"
               />
             </div>
-             <div class="text-danger" v-if="!$v.proyecto.referencias.required">Este campo es requerido</div>      
+            <div class="text-danger" v-if="!v$.proyecto.referencias.required">Este campo es requerido</div>
           </div>
-
-         
-
         </div>
 
         <div>
           <button type="button" id="cancel-save" class="btn btn-secondary" v-on:click="previousState()">
-            <font-awesome-icon icon="ban"></font-awesome-icon>&nbsp;<span v-text="$t('entity.action.cancel')">Cancel</span>
+            <font-awesome-icon icon="ban"></font-awesome-icon>&nbsp;<span v-text="$t('entity.action.cancel')"></span>
           </button>
 
           <button type="button" id="save-borrador" class="btn btn-outline-secondary" v-on:click="save('borrador')">
             <font-awesome-icon icon="save"></font-awesome-icon>&nbsp;<span>Guardar borrador</span>
           </button>
 
-          <button type="submit" id="save-entity" class="btn btn-primary" >
+          <button type="submit" id="save-entity" class="btn btn-primary">
             <font-awesome-icon icon="save"></font-awesome-icon>&nbsp;<span>Guardar y continuar</span>
           </button>
 
@@ -323,7 +334,8 @@
 </template>
 
 <script lang="ts">
-import { Component, Inject, Vue } from 'vue-property-decorator';
+import { useVuelidate } from '@vuelidate/core';
+import { Component, Inject, Vue, Hook } from 'vue-facing-decorator';
 import AlertService from '@/shared/alert/alert.service';
 
 import MenuLateral from '@/components/propuesta/menu_lateral.vue';
@@ -347,7 +359,7 @@ import { IDocenteHabilitado } from '@/shared/model/docente-habilitado.model';
 import ProgramaService from '@/entities/programa/programa.service';
 import { IPrograma, Programa } from '@/shared/model/programa.model';
 
-import { numeric, required, minLength, maxLength, between, url } from 'vuelidate/lib/validators';
+import { numeric, required, minLength, maxLength, between, url } from '@vuelidate/validators';
 import { id } from 'date-fns/esm/locale';
 import { IIntegranteProyecto, IntegranteProyecto } from '@/shared/model/integrante-proyecto.model';
 import { IInvestigacionTipo } from '@/shared/model/investigacion-tipo.model';
@@ -361,9 +373,9 @@ const validations: any = {
     titulo: { required, maxLength: maxLength(1000), minLength: minLength(5) },
     url: { url },
     //lugarEjecucion: {required, maxLength: maxLength(128)},
-    tipo: {required, maxLength: maxLength(128)},
-    fechaIni: {required},
-    fechaFin: {required},
+    tipo: { required, maxLength: maxLength(128) },
+    fechaIni: { required },
+    fechaFin: { required },
     palabrasClave: { required, maxLength: maxLength(100000) },
 
     proyectoModalidadId: { required },
@@ -371,13 +383,11 @@ const validations: any = {
     proyectoProgramaId: { required },
     proyectoLineaInvestigacionId: { required },
     subLineaLineaInvestigacionId: { required },
-    asesorId:  { required},
-   
-   
+    asesorId: { required },
+
     duracion: { required, between: between(3, 6) },
-    
-    
-    referencias: {required},
+
+    referencias: { required },
     //contrapartidaPesos: {},
     //contrapartidaEspecie: {},
     //convocatoria: {},
@@ -387,33 +397,34 @@ const validations: any = {
   },
 };
 
-
 @Component({
   components: { MenuLateral },
-
-  validations,
+  options: {
+    validations,
+  },
+  setup() {
+    return { v$: useVuelidate() };
+  },
 })
 export default class PropuestaInformacionGeneral extends Vue {
-
   // El template llamaba previousState() pero el metodo no existia, asi que el boton
   // Cancel/atrás fallaba con un TypeError y no hacia nada.
   previousState() {
     window.history.back();
   }
-  @Inject('modalidadService') private modalidadService: () => ModalidadService;
-  @Inject('facultadService') private facultadService: () => FacultadService;
-  @Inject('lineaInvestigacionService') private lineaInvestigacionService: () => LineaInvestigacionService;
-  @Inject('usuarioService') private usuarioService: () => UsuarioService;
-  @Inject('proyectoService') private proyectoService: () => ProyectoService;
-  @Inject('docenteHabilitadoService') private docenteHabilitadoService: () => DocenteHabilitadoService;
-  @Inject('programaService') private programaService: () => ProgramaService;
-    @Inject('investigacionTipoService') private investigacionTipoService: () => InvestigacionTipoService;
+  @Inject private modalidadService: () => ModalidadService;
+  @Inject private facultadService: () => FacultadService;
+  @Inject private lineaInvestigacionService: () => LineaInvestigacionService;
+  @Inject private usuarioService: () => UsuarioService;
+  @Inject private proyectoService: () => ProyectoService;
+  @Inject private docenteHabilitadoService: () => DocenteHabilitadoService;
+  @Inject private programaService: () => ProgramaService;
+  @Inject private investigacionTipoService: () => InvestigacionTipoService;
 
-@Inject('grupoSemilleroService') private grupoSemilleroService: () => GrupoSemilleroService;
+  @Inject private grupoSemilleroService: () => GrupoSemilleroService;
   public grupoSemilleros: IGrupoSemillero[] = [];
 
-
-  @Inject('alertService') private alertService: () => AlertService;
+  @Inject private alertService: () => AlertService;
 
   public modalidads: IModalidad[] = [];
   public facultades: IFacultad[] = [];
@@ -423,7 +434,7 @@ export default class PropuestaInformacionGeneral extends Vue {
 
   public linea_investigacion: number = null;
 
-  public  investigacionTips: IInvestigacionTipo[] = [];
+  public investigacionTips: IInvestigacionTipo[] = [];
   public investTipos: String[] = [];
 
   public facultad: number = null;
@@ -437,7 +448,8 @@ export default class PropuestaInformacionGeneral extends Vue {
   public isSaving = false;
 
   public submitStatus: string = 'PENDING';
-  
+
+  @Hook
   beforeRouteEnter(to, from, next) {
     next(vm => {
       if (to.params.proyectoId) {
@@ -450,47 +462,47 @@ export default class PropuestaInformacionGeneral extends Vue {
   public save(accion: 'borrador' | 'continuar' = 'continuar'): void {
     this.isSaving = true;
 
-    //this.$v.$touch();
-    //if (this.$v.$invalid) {
-          //this.submitStatus = 'ERROR';
+    //this.v$.$touch();
+    //if (this.v$.$invalid) {
+    //this.submitStatus = 'ERROR';
     //} else {
-      if (this.proyecto.id) {
-        this.proyectoService()
-          .updateProyecto(this.proyecto)
-          .then(param => {
-            this.isSaving = false;
-            if (accion === 'borrador') {
-              this.alertService().showAlert('Borrador guardado. Aún puedes continuar más tarde.', 'info');
-              return;
-            }
-            this.$router.push({ name: 'PropuestaIntegrantesView', params: { proyectoId: this.proyecto.id.toString() } });
-            const message = this.$t('ciecytApp.proyecto.updated', { param: param.id });
-            this.alertService().showAlert(message, 'info');
-          });
-      } else {
-        this.proyectoService()
-          .createProyecto(this.proyecto)
-          .then(param => {
-            this.isSaving = false;
+    if (this.proyecto.id) {
+      this.proyectoService()
+        .updateProyecto(this.proyecto)
+        .then(param => {
+          this.isSaving = false;
+          if (accion === 'borrador') {
+            this.alertService().showAlert('Borrador guardado. Aún puedes continuar más tarde.', 'info');
+            return;
+          }
+          this.$router.push({ name: 'PropuestaIntegrantesView', params: { proyectoId: this.proyecto.id.toString() } });
+          const message = this.$t('ciecytApp.proyecto.updated', { param: param.id });
+          this.alertService().showAlert(message, 'info');
+        });
+    } else {
+      this.proyectoService()
+        .createProyecto(this.proyecto)
+        .then(param => {
+          this.isSaving = false;
 
-            this.proyId = String(param.id);
-            this.proyecto.id = param.id;
+          this.proyId = String(param.id);
+          this.proyecto.id = param.id;
 
-            if (accion === 'borrador') {
-              this.alertService().showAlert('Borrador guardado. Aún puedes continuar más tarde.', 'info');
-              return;
-            }
+          if (accion === 'borrador') {
+            this.alertService().showAlert('Borrador guardado. Aún puedes continuar más tarde.', 'info');
+            return;
+          }
 
-            this.$router.push({ name: 'PropuestaIntegrantesView', params: { proyectoId: this.proyId } });
+          this.$router.push({ name: 'PropuestaIntegrantesView', params: { proyectoId: this.proyId } });
 
-            const message = 'Se ha creado un nuevo proyecto';
-            this.alertService().showAlert(message, 'success');
-          });
-      }
-      //this.submitStatus = 'PENDING';
-      //setTimeout(() => {
-      //  this.submitStatus = 'OK';
-      //}, 500);
+          const message = 'Se ha creado un nuevo proyecto';
+          this.alertService().showAlert(message, 'success');
+        });
+    }
+    //this.submitStatus = 'PENDING';
+    //setTimeout(() => {
+    //  this.submitStatus = 'OK';
+    //}, 500);
     //}
     console.log(this.submitStatus);
   }
@@ -498,7 +510,7 @@ export default class PropuestaInformacionGeneral extends Vue {
   get LineasInvestigacion() {
     return this.lineas_investigacion.filter(linea => {
       //return !linea.lineaPadreId && linea.lineaInvestigacionProgramaId == this.proyecto.proyectoProgramaId;
-      return !linea.lineaPadreId ;
+      return !linea.lineaPadreId;
     });
   }
 
@@ -508,12 +520,11 @@ export default class PropuestaInformacionGeneral extends Vue {
     });
   }
 
-   get Programas() {
+  get Programas() {
     return this.programs.filter(programa => {
       return programa.programaFacultadId == this.proyecto.facultadId;
     });
   }
-
 
   retrieveProyecto() {
     this.proyectoService()
@@ -533,18 +544,16 @@ export default class PropuestaInformacionGeneral extends Vue {
         //console.log(this.modalidads);
       });
 
-       this.investigacionTipoService()
+    this.investigacionTipoService()
       .retrieve()
       .then(res => {
         this.investigacionTips = res.data;
-         res.data.forEach(element => {
-           this.investTipos.push(element.investigacionTipo);
-         });
- 
+        res.data.forEach(element => {
+          this.investTipos.push(element.investigacionTipo);
+        });
       });
 
-
-   this.programaService()
+    this.programaService()
       .retrieve()
       .then(res => {
         this.programs = res.data;
@@ -578,20 +587,18 @@ export default class PropuestaInformacionGeneral extends Vue {
     //remite la decanatura, no del directorio completo de la institucion.
     this.cargarAsesoresDeLaFacultad();
 
-
-       this.grupoSemilleroService()
+    this.grupoSemilleroService()
       .retrieve()
       .then(res => {
         this.grupoSemilleros = res.data;
       });
   }
-  
+
   setAsesor(value) {
     console.log(value);
     //this.integranteProyecto.integranteProyectoUserId = value;
-    this.proyecto.asesorId =  value;
-   
-}
+    this.proyecto.asesorId = value;
+  }
 
   setFacultad(value) {
     this.iniciandoFacultad = false;
@@ -618,7 +625,7 @@ export default class PropuestaInformacionGeneral extends Vue {
           const nombre = ((u.firstName || '') + ' ' + (u.lastName || '')).trim();
           this.users.push({
             id: u.id,
-            nombresApellidos: nombre ? nombre + ' (' + (u.login || '') + ')' : u.login
+            nombresApellidos: nombre ? nombre + ' (' + (u.login || '') + ')' : u.login,
           });
         });
       })
@@ -629,5 +636,4 @@ export default class PropuestaInformacionGeneral extends Vue {
 }
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>

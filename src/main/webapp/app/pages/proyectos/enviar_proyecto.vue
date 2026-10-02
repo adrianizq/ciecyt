@@ -43,7 +43,7 @@
 
         <div>
           <button type="button" id="cancel-save" class="btn btn-secondary" v-on:click="previousState()">
-            <font-awesome-icon icon="ban"></font-awesome-icon>&nbsp;<span v-text="$t('entity.action.cancel')">Cancel</span>
+            <font-awesome-icon icon="ban"></font-awesome-icon>&nbsp;<span v-text="$t('entity.action.cancel')"></span>
           </button>
 
           <button type="submit" id="save-entity" class="btn btn-primary" :disabled='isDisabled'>
@@ -60,7 +60,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Inject, Vue } from 'vue-property-decorator';
+import { Component, Inject, Vue, Hook } from 'vue-facing-decorator';
 
 import MenuLateralProyecto from '@/components/proyecto/menu_lateral_proyecto.vue';
 import { IProyecto, Proyecto } from '@/shared/model/proyecto.model';
@@ -81,8 +81,8 @@ export default class EnviarProyecto extends Vue {
   previousState() {
     window.history.back();
   }
-  @Inject('proyectoService') private proyectoService: () => ProyectoService;
-  @Inject('alertService') private alertService: () => AlertService;
+  @Inject  private proyectoService: () => ProyectoService;
+  @Inject  private alertService: () => AlertService;
 
   public integrants:IIntegranteProyecto[]= [];
   public terms:Boolean=false;
@@ -92,6 +92,7 @@ export default class EnviarProyecto extends Vue {
   public proyId: string = null;
   public isSaving = false;
 
+  @Hook
   beforeRouteEnter(to, from, next) {
     next(vm => {
       if (to.params.proyectoId) {

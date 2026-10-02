@@ -1,4 +1,4 @@
-import { Component, Vue, Inject } from 'vue-property-decorator';
+import { Component, Vue, Inject } from 'vue-facing-decorator';
 
 import RolMenuService from '@/entities/rol-menu/rol-menu.service';
 import MenuService from '@/entities/menu/menu.service';
@@ -8,9 +8,9 @@ import AlertService from '@/shared/alert/alert.service';
 
 @Component
 export default class RolMenu extends Vue {
-  @Inject('alertService') private alertService: () => AlertService;
-  @Inject('rolMenuService') private rolMenuService: () => RolMenuService;
-  @Inject('menuService') private menuService: () => MenuService;
+  @Inject private alertService: () => AlertService;
+  @Inject private rolMenuService: () => RolMenuService;
+  @Inject private menuService: () => MenuService;
 
   menus: MenuBar[] = [];
   rolMenu: IRolMenu[] = [];
@@ -61,13 +61,13 @@ export default class RolMenu extends Vue {
       .fromRol(rol)
       .then(res => {
         res.forEach(r => {
-          Vue.set(this.rolMenu, r.rolMenuMenuId, r);
+          this.rolMenu[r.rolMenuMenuId] = r;
         });
       });
   }
 
   get rolName() {
-    return this.$route.params.rol;
+    return this.$route.params.rol as string;
   }
 
   public selectAllSubmenu(menu, action) {

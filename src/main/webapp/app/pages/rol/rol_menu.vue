@@ -13,8 +13,8 @@
                                 <th>Permitir Editar</th>
                                 <th>Permitir Eliminar</th>
                             </tr>
-                            <template v-for="menu in menus" >
-                                <tr :key="menu.id">
+                            <template v-for="menu in menus" :key="menu.id">
+                                <tr>
                                     <td class="font-weight-bold">{{ menu.nombre }}</td>
                                     <td class="text-center">
                                         <input
@@ -77,10 +77,10 @@
                 </div>
                 <div>
                     <button type="button" id="cancel-save" class="btn btn-secondary" v-on:click="previousState()">
-                        <font-awesome-icon icon="ban"></font-awesome-icon>&nbsp;<span v-text="$t('entity.action.cancel')">Cancel</span>
+                        <font-awesome-icon icon="ban"></font-awesome-icon>&nbsp;<span v-text="$t('entity.action.cancel')"></span>
                     </button>
                     <button type="submit" id="save-entity" :disabled="isSaving" class="btn btn-primary">
-                        <font-awesome-icon icon="save"></font-awesome-icon>&nbsp;<span v-text="$t('entity.action.save')">Save</span>
+                        <font-awesome-icon icon="save"></font-awesome-icon>&nbsp;<span v-text="$t('entity.action.save')"></span>
                     </button>
                 </div>
             </form>

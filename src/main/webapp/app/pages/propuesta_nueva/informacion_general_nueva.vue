@@ -5,21 +5,19 @@
     </div>
     <div class="col-sm-8">
       <div class="page-header mb-3">
-        <h4 style="color:#003366; font-weight:600;">
-          <font-awesome-icon icon="edit" />&nbsp; Información General
-        </h4>
-        <p class="text-muted mb-0" style="font-size:0.85rem;">Complete los datos básicos de su propuesta de grado</p>
+        <h4 style="color: #003366; font-weight: 600;"><font-awesome-icon icon="edit" />&nbsp; Información General</h4>
+        <p class="text-muted mb-0" style="font-size: 0.85rem;">Complete los datos básicos de su propuesta de grado</p>
       </div>
       <form @submit.prevent="save('continuar')">
         <div class="row">
           <div class="col-12">
             <div class="mb-3 form-group" v-if="proyecto.id">
-              <label for="id" v-text="$t('global.field.id')">ID</label>
+              <label for="id" v-text="$t('global.field.id')"></label>
               <input type="text" class="form-control" id="id" name="id" v-model="proyecto.id" readonly />
             </div>
 
             <div class="mb-3 form-group">
-              <label class="form-control-label" v-text="$t('ciecytApp.proyecto.titulo')" for="proyecto-titulo">Titulo</label>
+              <label class="form-control-label" v-text="$t('ciecytApp.proyecto.titulo')" for="proyecto-titulo"></label>
               <input
                 type="text"
                 class="form-control"
@@ -27,17 +25,17 @@
                 id="proyecto-titulo"
                 v-model="proyecto.titulo"
                 :class="{
-                  'is-invalid': $v.proyecto.titulo.$error,
-                  'is-valid': !$v.proyecto.titulo.$invalid,
+                  'is-invalid': v$.proyecto.titulo.$error,
+                  'is-valid': !v$.proyecto.titulo.$invalid,
                 }"
                 placeholder="Ingrese el Titulo del Proyecto"
               />
-              <div class="text-danger" v-if="!$v.proyecto.titulo.required">Este campo es requerido</div>
+              <div class="text-danger" v-if="!v$.proyecto.titulo.required">Este campo es requerido</div>
             </div>
-         
+
             <div class="mb-3 form-group">
               <label class="form-control-label" v-text="$t('ciecytApp.proyecto.lugarEjecucion')" for="proyecto-url"
-                >Lugar de Ejecución</label
+                ></label
               >
               <input
                 type="text"
@@ -45,15 +43,15 @@
                 name="lugar-ejecucion"
                 id="proyecto-lugar-ejecucion"
                 :class="{
-                  'is-invalid': $v.proyecto.lugarEjecucion.$error,
-                  'is-valid': !$v.proyecto.lugarEjecucion.$invalid,
+                  'is-invalid': v$.proyecto.lugarEjecucion.$error,
+                  'is-valid': !v$.proyecto.lugarEjecucion.$invalid,
                 }"
                 v-model="proyecto.lugarEjecucion"
                 placeholder="Ingrese el lugar (ciudad, ubicación) donde se ejecutará el proyecto"
               />
-              <div class="text-danger" v-if="!$v.proyecto.lugarEjecucion.required">Este campo es requerido</div>
+              <div class="text-danger" v-if="!v$.proyecto.lugarEjecucion.required">Este campo es requerido</div>
             </div>
-          
+
             <div class="mb-3 form-group">
               <label for="datepicker-sm">Fecha de Inicio</label>
               <b-form-datepicker
@@ -63,13 +61,13 @@
                 name="fecha-inicio"
                 value="value"
                 :class="{
-                  'is-invalid': $v.proyecto.fechaIni.$error,
-                  'is-valid': !$v.proyecto.fechaIni.$invalid,
+                  'is-invalid': v$.proyecto.fechaIni.$error,
+                  'is-valid': !v$.proyecto.fechaIni.$invalid,
                 }"
                 v-model="proyecto.fechaIni"
               >
               </b-form-datepicker>
-              <div class="text-danger" v-if="!$v.proyecto.fechaIni.required">Este campo es requerido</div>
+              <div class="text-danger" v-if="!v$.proyecto.fechaIni.required">Este campo es requerido</div>
 
               <label for="datepicker-lg">Fecha de Finalización</label>
               <b-form-datepicker
@@ -79,15 +77,14 @@
                 name="fecha-fin"
                 value="value"
                 :class="{
-                  'is-invalid': $v.proyecto.fechaFin.$error,
-                  'is-valid': !$v.proyecto.fechaFin.$invalid,
+                  'is-invalid': v$.proyecto.fechaFin.$error,
+                  'is-valid': !v$.proyecto.fechaFin.$invalid,
                 }"
                 v-model="proyecto.fechaFin"
               >
               </b-form-datepicker>
-              <div class="text-danger" v-if="!$v.proyecto.fechaFin.required">Este campo es requerido</div>
+              <div class="text-danger" v-if="!v$.proyecto.fechaFin.required">Este campo es requerido</div>
             </div>
-
           </div>
 
           <div class="col-md-6 col-12">
@@ -101,19 +98,19 @@
                 v-model="proyecto.proyectoCicloId"
                 @change="onCicloChange"
                 :class="{
-                  'is-invalid': $v.proyecto.proyectoCicloId.$error,
-                  'is-valid': !$v.proyecto.proyectoCicloId.$invalid,
+                  'is-invalid': v$.proyecto.proyectoCicloId.$error,
+                  'is-valid': !v$.proyecto.proyectoCicloId.$invalid,
                 }"
               >
               </b-form-select>
-              <div class="text-danger" v-if="!$v.proyecto.proyectoCicloId.required">Este campo es requerido</div>
+              <div class="text-danger" v-if="!v$.proyecto.proyectoCicloId.required">Este campo es requerido</div>
             </div>
           </div>
 
           <div class="col-md-6 col-12">
             <div class="mb-3 form-group">
               <label class="form-control-label" v-text="$t('ciecytApp.proyecto.proyectoModalidad')" for="proyecto-modalidad"
-                >Modalidad</label
+                ></label
               >
               <b-form-select
                 :options="modalidadsFiltradas"
@@ -121,22 +118,22 @@
                 value-field="id"
                 id="modalidad"
                 v-model="proyecto.proyectoModalidadId"
-                 @input="setModalidad"
+                @input="setModalidad"
                 :disabled="!proyecto.proyectoCicloId"
                 :class="{
-                  'is-invalid': $v.proyecto.proyectoModalidadId.$error,
-                  'is-valid': !$v.proyecto.proyectoModalidadId.$invalid,
+                  'is-invalid': v$.proyecto.proyectoModalidadId.$error,
+                  'is-valid': !v$.proyecto.proyectoModalidadId.$invalid,
                 }"
               >
               </b-form-select>
-              <div class="text-danger" v-if="!$v.proyecto.proyectoModalidadId.required">Este campo es requerido</div>
+              <div class="text-danger" v-if="!v$.proyecto.proyectoModalidadId.required">Este campo es requerido</div>
               <small class="text-muted" v-if="!proyecto.proyectoCicloId">Seleccione un ciclo primero</small>
             </div>
           </div>
 
           <div class="col-md-6 col-12">
             <div class="mb-3 form-group">
-              <label class="form-control-label" v-text="$t('ciecytApp.proyecto.facultad')" for="proyecto-facultad">Facultad</label>
+              <label class="form-control-label" v-text="$t('ciecytApp.proyecto.facultad')" for="proyecto-facultad"></label>
               <b-form-select
                 :options="facultades"
                 text-field="facultad"
@@ -144,34 +141,34 @@
                 id="facultad"
                 v-model="proyecto.facultadId"
                 :class="{
-                  'is-invalid': $v.proyecto.facultadId.$error,
-                  'is-valid': !$v.proyecto.facultadId.$invalid,
+                  'is-invalid': v$.proyecto.facultadId.$error,
+                  'is-valid': !v$.proyecto.facultadId.$invalid,
                 }"
               >
               </b-form-select>
-              <div class="text-danger" v-if="!$v.proyecto.facultadId.required">Este campo es requerido</div>
+              <div class="text-danger" v-if="!v$.proyecto.facultadId.required">Este campo es requerido</div>
             </div>
           </div>
 
           <!-- Programa -->
           <div class="col-md-6 col-12">
             <div class="mb-3 form-group">
-              <label class="form-control-label" v-text="$t('ciecytApp.programa.programa')" for="proyecto-programa">Programa</label>
+              <label class="form-control-label" v-text="$t('ciecytApp.programa.programa')" for="proyecto-programa"></label>
               <b-form-select
                 text-field="programa"
                 value-field="id"
                 id="programa"
                 v-model="proyecto.proyectoProgramaId"
                 :class="{
-                  'is-invalid': $v.proyecto.proyectoProgramaId.$error,
-                  'is-valid': !$v.proyecto.proyectoProgramaId.$invalid,
+                  'is-invalid': v$.proyecto.proyectoProgramaId.$error,
+                  'is-valid': !v$.proyecto.proyectoProgramaId.$invalid,
                 }"
               >
                 <option v-for="(selectOption, indexOpt) in Programas" :key="indexOpt" :value="selectOption.id">
                   ({{ selectOption.id }}) {{ selectOption.programa }}
                 </option>
               </b-form-select>
-              <div class="text-danger" v-if="!$v.proyecto.proyectoProgramaId.required">Este campo es requerido</div>
+              <div class="text-danger" v-if="!v$.proyecto.proyectoProgramaId.required">Este campo es requerido</div>
             </div>
           </div>
 
@@ -182,11 +179,16 @@
                 class="form-control-label"
                 v-text="$t('ciecytApp.proyecto.proyectoLineaInvestigacion')"
                 for="proyecto-linea-investigacion"
-                >Linea de Investigación</label
+                ></label
               >
-              <b-form-select :disabled="!modalidad.contieneLinea"
-              text-field="linea" value-field="id" id="linea_investigacion" v-model="proyecto.proyectoLineaInvestigacionId"
-              :options="LineasInvestigacionOptions">
+              <b-form-select
+                :disabled="!modalidad.contieneLinea"
+                text-field="linea"
+                value-field="id"
+                id="linea_investigacion"
+                v-model="proyecto.proyectoLineaInvestigacionId"
+                :options="LineasInvestigacionOptions"
+              >
               </b-form-select>
             </div>
           </div>
@@ -194,24 +196,23 @@
           <div class="col-md-6 col-12">
             <div class="mb-3 form-group">
               <label class="form-control-label" v-text="$t('ciecytApp.proyecto.subLineaLineaInvestigacion')" for="sub-linea-investigacion"
-                >Sublinea de Investigación</label
+                ></label
               >
-              <b-form-select :disabled="!modalidad.contieneLinea"
+              <b-form-select
+                :disabled="!modalidad.contieneLinea"
                 text-field="linea"
                 value-field="id"
                 id="sub_linea_linea_investigacion"
                 v-model="proyecto.subLineaLineaInvestigacionId"
-                :options="SubLineasOptions">
+                :options="SubLineasOptions"
+              >
               </b-form-select>
             </div>
           </div>
-
-
-
         </div>
         <div class="form-actions mt-3">
           <button type="button" id="cancel-save" class="btn btn-outline-secondary" v-on:click="previousState()">
-            <font-awesome-icon icon="ban"></font-awesome-icon>&nbsp;<span v-text="$t('entity.action.cancel')">Cancel</span>
+            <font-awesome-icon icon="ban"></font-awesome-icon>&nbsp;<span v-text="$t('entity.action.cancel')"></span>
           </button>
 
           <button type="button" id="save-borrador" class="btn btn-outline-secondary" v-on:click="save('borrador')">
@@ -230,7 +231,8 @@
 </template>
 
 <script lang="ts">
-import { Component, Inject, Vue } from 'vue-property-decorator';
+import { useVuelidate } from '@vuelidate/core';
+import { Component, Inject, Vue, Hook } from 'vue-facing-decorator';
 import AlertService from '@/shared/alert/alert.service';
 
 import MenuLateralNueva from '@/components/propuesta_nueva/menu_lateral_nueva.vue';
@@ -248,7 +250,7 @@ import { IPrograma, Programa } from '@/shared/model/programa.model';
 import CicloService from '@/entities/ciclo/ciclo.service';
 import { ICiclo } from '@/shared/model/ciclo.model';
 
-import { numeric, required, minLength, maxLength, between, url } from 'vuelidate/lib/validators';
+import { numeric, required, minLength, maxLength, between, url } from '@vuelidate/validators';
 import { IIntegranteProyecto, IntegranteProyecto } from '@/shared/model/integrante-proyecto.model';
 
 const validations: any = {
@@ -278,18 +280,22 @@ const validations: any = {
 
 @Component({
   components: { MenuLateralNueva },
-
-  validations,
+  options: {
+    validations,
+  },
+  setup() {
+    return { v$: useVuelidate() };
+  },
 })
 export default class PropuestaInformacionGeneral extends Vue {
-  @Inject('modalidadService') private modalidadService: () => ModalidadService;
-  @Inject('facultadService') private facultadService: () => FacultadService;
-  @Inject('lineaInvestigacionService') private lineaInvestigacionService: () => LineaInvestigacionService;
-  @Inject('proyectoService') private proyectoService: () => ProyectoService;
-  @Inject('programaService') private programaService: () => ProgramaService;
-  @Inject('cicloService') private cicloService: () => CicloService;
+  @Inject private modalidadService: () => ModalidadService;
+  @Inject private facultadService: () => FacultadService;
+  @Inject private lineaInvestigacionService: () => LineaInvestigacionService;
+  @Inject private proyectoService: () => ProyectoService;
+  @Inject private programaService: () => ProgramaService;
+  @Inject private cicloService: () => CicloService;
 
-  @Inject('alertService') private alertService: () => AlertService;
+  @Inject private alertService: () => AlertService;
 
   public modalidads: IModalidad[] = [];
   public modalidad: IModalidad = new Modalidad();
@@ -317,6 +323,7 @@ export default class PropuestaInformacionGeneral extends Vue {
     window.history.back();
   }
 
+  @Hook
   beforeRouteEnter(to, from, next) {
     next(vm => {
       vm.initRelationships();
@@ -327,29 +334,29 @@ export default class PropuestaInformacionGeneral extends Vue {
     this.isSaving = true;
     console.log('Guardando proyecto:', JSON.stringify(this.proyecto));
 
-    // this.$v.$touch();
-    /* if (this.$v.$invalid) {
+    // this.v$.$touch();
+    /* if (this.v$.$invalid) {
             
-                if(this.$v.proyecto.titulo.$invalid){
+                if(this.v$.proyecto.titulo.$invalid){
                     this.setTitulo("");
                 }
-                if(this.$v.proyecto.palabrasClave.$invalid){
+                if(this.v$.proyecto.palabrasClave.$invalid){
                     this.setPalabrasClave("");
                 }
-                if(this.$v.proyecto.proyectoModalidadId.$invalid){
+                if(this.v$.proyecto.proyectoModalidadId.$invalid){
                     this.setModalidad(0);
                 }
-                if(this.$v.proyecto.facultadId.$invalid){
+                if(this.v$.proyecto.facultadId.$invalid){
                     this.setFacultad(0);
                 }
-                if(this.$v.proyecto.proyectoLineaInvestigacionId.$invalid){
+                if(this.v$.proyecto.proyectoLineaInvestigacionId.$invalid){
                     this.setLinea(0);
                 }
-                 if(this.$v.proyecto.subLineaLineaInvestigacionId.$invalid){
+                 if(this.v$.proyecto.subLineaLineaInvestigacionId.$invalid){
                     this.setSubLinea(0);
                 }
-                  if(this.$v.integranteProyecto.integranteProyectoUserId.$invalid){
-                    console.log(this.$v);
+                  if(this.v$.integranteProyecto.integranteProyectoUserId.$invalid){
+                    console.log(this.v$);
                     this.setAsesor("");
                     
                 }
@@ -421,14 +428,14 @@ export default class PropuestaInformacionGeneral extends Vue {
 
   get LineasInvestigacion() {
     return this.lineas_investigacion.filter(linea => {
-      return !linea.lineaPadreId ;
+      return !linea.lineaPadreId;
     });
   }
 
   get LineasInvestigacionOptions() {
     return this.LineasInvestigacion.map(l => ({
       id: l.id,
-      linea: (l.codigoLinea ? '(' + l.codigoLinea + ') ' : '') + l.linea
+      linea: (l.codigoLinea ? '(' + l.codigoLinea + ') ' : '') + l.linea,
     }));
   }
 
@@ -441,11 +448,11 @@ export default class PropuestaInformacionGeneral extends Vue {
   get SubLineasOptions() {
     return this.SubLineas.map(l => ({
       id: l.id,
-      linea: (l.codigoLinea ? '(' + l.codigoLinea + ') ' : '') + l.linea
+      linea: (l.codigoLinea ? '(' + l.codigoLinea + ') ' : '') + l.linea,
     }));
   }
 
-/*get Modalidad() {
+  /*get Modalidad() {
     return this.modalidads.filter(modalidad => {
       return modalidad.id == this.proyecto.proyectoModalidadId;
     });
@@ -541,33 +548,33 @@ export default class PropuestaInformacionGeneral extends Vue {
              this.submitStatus='ERROR';
           }
 */
-  setModalidad(value){
-      if (!value) {
-        this.modalidad = new Modalidad();
-        this.proyecto.proyectoLineaInvestigacionId = null;
-        this.proyecto.subLineaLineaInvestigacionId = null;
-        this.proyecto.proyectoLineaInvestigacionLinea = null;
-        this.proyecto.subLineaLineaInvestigacionLinea = null;
-        return;
-      }
-      // Si la modalidad no cambio realmente, no limpiar la linea/sublinea ya cargada
-      if (value === this.proyecto.proyectoModalidadId) {
-        this.modalidadService()
-          .find(value)
-          .then(res => {
-            this.modalidad = res;
-          });
-        return;
-      }
+  setModalidad(value) {
+    if (!value) {
+      this.modalidad = new Modalidad();
+      this.proyecto.proyectoLineaInvestigacionId = null;
+      this.proyecto.subLineaLineaInvestigacionId = null;
+      this.proyecto.proyectoLineaInvestigacionLinea = null;
+      this.proyecto.subLineaLineaInvestigacionLinea = null;
+      return;
+    }
+    // Si la modalidad no cambio realmente, no limpiar la linea/sublinea ya cargada
+    if (value === this.proyecto.proyectoModalidadId) {
       this.modalidadService()
         .find(value)
         .then(res => {
           this.modalidad = res;
         });
-      this.proyecto.proyectoLineaInvestigacionId = null;
-      this.proyecto.subLineaLineaInvestigacionId = null;
-      this.proyecto.proyectoLineaInvestigacionLinea = null;
-      this.proyecto.subLineaLineaInvestigacionLinea = null;
+      return;
+    }
+    this.modalidadService()
+      .find(value)
+      .then(res => {
+        this.modalidad = res;
+      });
+    this.proyecto.proyectoLineaInvestigacionId = null;
+    this.proyecto.subLineaLineaInvestigacionId = null;
+    this.proyecto.proyectoLineaInvestigacionLinea = null;
+    this.proyecto.subLineaLineaInvestigacionLinea = null;
   }
 
   onCicloChange(cicloId: number) {
@@ -612,12 +619,12 @@ export default class PropuestaInformacionGeneral extends Vue {
 }
 
 ::v-deep .form-control:focus {
-  border-color: #C4A94D;
+  border-color: #c4a94d;
   box-shadow: 0 0 0 0.2rem rgba(196, 169, 77, 0.25);
 }
 
 ::v-deep .custom-select:focus {
-  border-color: #C4A94D;
+  border-color: #c4a94d;
   box-shadow: 0 0 0 0.2rem rgba(196, 169, 77, 0.25);
 }
 

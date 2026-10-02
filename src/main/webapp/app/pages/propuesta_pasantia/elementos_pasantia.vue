@@ -51,14 +51,14 @@
                 <div>
 
                     <button type="button" id="cancel-save" class="btn btn-secondary" v-on:click="previousState()">
-                        <font-awesome-icon icon="ban"></font-awesome-icon>&nbsp;<span v-text="$t('entity.action.cancel')">Cancel</span>
+                        <font-awesome-icon icon="ban"></font-awesome-icon>&nbsp;<span v-text="$t('entity.action.cancel')"></span>
                     </button>
 
 <!--
-                    <router-link :to="{name: 'PropuestaIntegrantesView', query: {proyectoId: this.proyecto.id}}"  tag="button" class="btn btn-primary">
+                    <router-link custom v-slot="{ navigate }" :to="{name: 'PropuestaIntegrantesView', query: {proyectoId: this.proyecto.id}}"><button class="btn btn-primary" @click="navigate">
                                 <font-awesome-icon icon="save"></font-awesome-icon>
-                                <span class="d-none d-md-inline" v-text="$t('entity.action.save')">Save</span>
-                            </router-link>
+                                <span class="d-none d-md-inline" v-text="$t('entity.action.save')"></span>
+                            </button></router-link>
 -->
 
                     <button type="button" id="save-borrador" class="btn btn-outline-secondary" v-on:click="save('borrador')">
@@ -78,7 +78,8 @@
 </template>
 
 <script lang="ts">
-import { Component, Inject, Vue } from 'vue-property-decorator';
+import { useVuelidate } from '@vuelidate/core';
+import { Component, Inject, Vue, Hook } from 'vue-facing-decorator';
 import MenuLateralPasantia from '@/components/propuesta_pasantia/menu_lateral_pasantia.vue';
 import AlertService from '@/shared/alert/alert.service';
 import ElementoProyectoService from '@/entities/elemento-proyecto/elemento-proyecto.service';
@@ -107,10 +108,10 @@ export default class Elementos extends Vue {
   }
 
 
-   @Inject('proyectoService') private proyectoService: () => ProyectoService;
-   @Inject('elementoProyectoService') private elementoProyectoService: () => ElementoProyectoService;
-   @Inject('fasesService') private fasesService: () => FasesService;
-   @Inject('alertService') private alertService: () => AlertService;
+   @Inject  private proyectoService: () => ProyectoService;
+   @Inject  private elementoProyectoService: () => ElementoProyectoService;
+   @Inject  private fasesService: () => FasesService;
+   @Inject  private alertService: () => AlertService;
 
 
     public elementosProyecto: IElementoProyecto[] =[];
@@ -123,6 +124,7 @@ export default class Elementos extends Vue {
     public isSaving = false;
 
 
+        @Hook
         beforeRouteEnter(to, from, next) {
             next(vm => {
 

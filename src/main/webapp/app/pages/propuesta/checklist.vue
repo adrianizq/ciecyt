@@ -89,8 +89,8 @@
 </template>
 
 <script lang="ts">
-import { Component, Inject } from 'vue-property-decorator';
-import { mixins } from 'vue-class-component';
+import { Component, Inject } from 'vue-facing-decorator';
+import { mixins } from 'vue-facing-decorator';
 import JhiDataUtils from '@/shared/data/data-utils.service';
 
 import MenuLateral from '@/components/propuesta/menu_lateral.vue';
@@ -112,11 +112,11 @@ const FASE_DOCUMENTOS = 'Documentos';
   components: { MenuLateral },
 })
 export default class ChecklistPropuesta extends mixins(JhiDataUtils) {
-  @Inject('proyectoService') private proyectoService: () => ProyectoService;
-  @Inject('alertService') private alertService: () => AlertService;
-  @Inject('fasesService') private fasesService: () => FasesService;
-  @Inject('adjuntoProyectoFaseService') private adjuntoProyectoFaseService: () => AdjuntoProyectoFaseService;
-  @Inject('requisitoProyectoService') private requisitoProyectoService: () => RequisitoProyectoService;
+  @Inject  private proyectoService: () => ProyectoService;
+  @Inject  private alertService: () => AlertService;
+  @Inject  private fasesService: () => FasesService;
+  @Inject  private adjuntoProyectoFaseService: () => AdjuntoProyectoFaseService;
+  @Inject  private requisitoProyectoService: () => RequisitoProyectoService;
 
   public requisitos: IRequisitoProyecto[] = [];
   public adjuntos: IAdjuntoProyectoFase[] = [];

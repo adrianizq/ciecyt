@@ -41,10 +41,10 @@
                 <thead>
                 <tr>
                   
-                    <th  v-on:click="changeOrder('id')"><span v-text="$t('global.field.id')">ID</span> <font-awesome-icon icon="sort"></font-awesome-icon></th>
+                    <th  v-on:click="changeOrder('id')"><span v-text="$t('global.field.id')"></span> <font-awesome-icon icon="sort"></font-awesome-icon></th>
                 
                   
-                    <th  v-on:click="changeOrder('titulo')"><span v-text="$t('ciecytApp.proyecto.titulo')">Titulo</span> <font-awesome-icon icon="sort"></font-awesome-icon></th>
+                    <th  v-on:click="changeOrder('titulo')"><span v-text="$t('ciecytApp.proyecto.titulo')"></span> <font-awesome-icon icon="sort"></font-awesome-icon></th>
                      <th  v-on:click="changeOrder('modalidad')"><span >Modalidad</span> <font-awesome-icon icon="sort"></font-awesome-icon></th>
                      <th ><span >Estudiante</span></th>
                      <th ><span >Jurado</span></th>
@@ -54,14 +54,14 @@
                      <th ><span >Requisitos</span></th>
 
                      <!--
-                         <th class="col-md-1" v-on:click="changeOrder('id')"><span v-text="$t('global.field.id')">ID</span> <font-awesome-icon icon="sort"></font-awesome-icon></th>
-                    <th class="col-md-3" v-on:click="changeOrder('titulo')"><span v-text="$t('ciecytApp.proyecto.titulo')">Titulo</span> <font-awesome-icon icon="sort"></font-awesome-icon></th>
+                         <th class="col-md-1" v-on:click="changeOrder('id')"><span v-text="$t('global.field.id')"></span> <font-awesome-icon icon="sort"></font-awesome-icon></th>
+                    <th class="col-md-3" v-on:click="changeOrder('titulo')"><span v-text="$t('ciecytApp.proyecto.titulo')"></span> <font-awesome-icon icon="sort"></font-awesome-icon></th>
                      <th class="col-md-2" v-on:click="changeOrder('modalidad')"><span >Modalidad</span> <font-awesome-icon icon="sort"></font-awesome-icon></th>
                      <th class="col-md-2"><span>Jurado Viabilidad</span></th>
                      <th class="col-md-2"><span >Jurado</span></th>
                      <th class="col-md-2"><span >Asesor</span></th>
                      -->
-                    <!-- <th v-on:click="changeOrder('tipo')"><span v-text="$t('ciecytApp.proyecto.tipo')">Tipo</span> <font-awesome-icon icon="sort"></font-awesome-icon></th> -->
+                    <!-- <th v-on:click="changeOrder('tipo')"><span v-text="$t('ciecytApp.proyecto.tipo')"></span> <font-awesome-icon icon="sort"></font-awesome-icon></th> -->
                    
                 </tr>
                 </thead>
@@ -88,33 +88,33 @@
                     <!------ Jurado ---->
                      <td class="text-right">
                         <div class="btn-group" v-if="!proyecto.tieneJurado&&proyecto.enviado">
-                            <router-link :to="{name: 'AsignarJuradoView', params: {proyectoId: proyecto.id}}" tag="button" class="btn btn-info btn-sm details">
-                                <b-icon-people-fill></b-icon-people-fill>&nbsp;
+                            <router-link custom v-slot="{ navigate }" :to="{name: 'AsignarJuradoView', params: {proyectoId: proyecto.id}}"><button class="btn btn-info btn-sm details" @click="navigate">
+                                <font-awesome-icon icon="users" />&nbsp;
                                 <span class="d-none d-md-inline" >Asignar</span>
-                            </router-link>
+                            </button></router-link>
                          </div>
 
                          <div class="btn-group" v-if="proyecto.tieneJurado&&proyecto.enviado">
-                            <router-link :to="{name: 'AsignarJuradoView', params: {proyectoId: proyecto.id}}" tag="button" class="btn btn-secondary btn-sm">
-                               <b-icon-people-fill></b-icon-people-fill>&nbsp;
+                            <router-link custom v-slot="{ navigate }" :to="{name: 'AsignarJuradoView', params: {proyectoId: proyecto.id}}"><button class="btn btn-secondary btn-sm" @click="navigate">
+                               <font-awesome-icon icon="users" />&nbsp;
                                 <span  class="d-none d-md-inline">Cambiar </span>
-                            </router-link>
+                            </button></router-link>
                          </div>
                     </td>
                     <!---ASESor -->
                     <td class="text-right">
                         <div class="btn-group" v-if="!proyecto.tieneAsesor">
-                            <router-link :to="{name: 'AsignarAsesorView', params: {proyectoId: proyecto.id}}" tag="button" class="btn btn-info btn-sm details">
-                               <b-icon-person></b-icon-person>&nbsp;
+                            <router-link custom v-slot="{ navigate }" :to="{name: 'AsignarAsesorView', params: {proyectoId: proyecto.id}}"><button class="btn btn-info btn-sm details" @click="navigate">
+                               <font-awesome-icon icon="user" />&nbsp;
                                 <span class="d-none d-md-inline" >Asignar</span>
-                            </router-link>
+                            </button></router-link>
                          </div>
 
                          <div class="btn-group" v-if="proyecto.tieneAsesor">
-                            <router-link :to="{name: 'AsignarAsesorView', params: {proyectoId: proyecto.id}}" tag="button" class="btn btn-secondary btn-sm">
-                                <b-icon-person></b-icon-person>&nbsp;
+                            <router-link custom v-slot="{ navigate }" :to="{name: 'AsignarAsesorView', params: {proyectoId: proyecto.id}}"><button class="btn btn-secondary btn-sm" @click="navigate">
+                                <font-awesome-icon icon="user" />&nbsp;
                                 <span class="d-none d-md-inline" >Cambiar </span>
-                            </router-link>
+                            </button></router-link>
                          </div>
                     </td>
 
@@ -201,10 +201,10 @@
                     <!-------------------------------------------------
                      <td class="text-right">
                         <div class="btn-group" >
-                            <router-link :to="{name: 'AsignarAsesorView', params: {proyectoId: proyecto.id}}" tag="button" class="btn btn-info btn-sm details">
-                               <b-icon-pencil-square></b-icon-pencil-square>&nbsp;
+                            <router-link custom v-slot="{ navigate }" :to="{name: 'AsignarAsesorView', params: {proyectoId: proyecto.id}}"><button class="btn btn-info btn-sm details" @click="navigate">
+                               <font-awesome-icon icon="pencil-alt" />&nbsp;
                                 <span class="d-none d-md-inline" >Asesor</span>
-                            </router-link>
+                            </button></router-link>
                          </div>
                     </td>
                     --> 
@@ -293,12 +293,13 @@
 <script lang="ts">
 
 
-import { mixins } from 'vue-class-component';
+import { useVuelidate } from '@vuelidate/core';
+import { mixins, Hook } from 'vue-facing-decorator';
 import AlertService from '@/shared/alert/alert.service';
 
 
 
-import { Component, Inject, Vue } from 'vue-property-decorator';
+import { Component, Inject, Vue } from 'vue-facing-decorator';
 import MenuLateralCiecyt from '@/components/ciecyt/menu_lateral_ciecyt.vue';
 
 import ProgramaService from '../../entities/programa/programa.service';
@@ -329,17 +330,17 @@ import { TipoRequisito } from '@/shared/model/enumerations/tipo-requisito.model'
     })
 
 export default class ListadoCiecyt extends Vue {
-   @Inject('proyectoService') private proyectoService: () => ProyectoService;
+   @Inject  private proyectoService: () => ProyectoService;
 
-    @Inject('integranteProyectoService') private integranteProyectoService: () => IntegranteProyectoService;
+    @Inject  private integranteProyectoService: () => IntegranteProyectoService;
 
-    @Inject('userService') private userManagementService: () => UserManagementService;
+    @Inject({ from: 'userService' }) private userManagementService: () => UserManagementService;
 
-    @Inject('programaService') private programaService: () => ProgramaService;
+    @Inject  private programaService: () => ProgramaService;
  
-   @Inject('alertService') private alertService: () => AlertService;
+   @Inject  private alertService: () => AlertService;
 
-   @Inject('requisitoProyectoService') private requisitoProyectoService: () => RequisitoProyectoService;
+   @Inject  private requisitoProyectoService: () => RequisitoProyectoService;
 
    //doc = new jsPDF();
    
@@ -809,6 +810,7 @@ public continuidadTexto(proyecto: IProyecto): string {
     public isSaving = false;
 
 
+        @Hook
         beforeRouteEnter(to, from, next) {
             next(vm => {
 

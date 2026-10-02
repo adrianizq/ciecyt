@@ -93,14 +93,14 @@
 
 <script lang="ts">
 
-import { Component, Inject, Vue } from 'vue-property-decorator';
+import { useVuelidate } from '@vuelidate/core';
+import { Component, Inject, Vue, Hook } from 'vue-facing-decorator';
 import MenuLateralDiplomado from '@/components/propuesta_diplomado/menu_lateral_diplomado.vue';
 import CronogramaService from '@/entities/cronograma/cronograma.service';
 import { ICronograma, Cronograma } from '@/shared/model/cronograma.model';
 import { IProyecto, Proyecto } from '@/shared/model/proyecto.model';
 import ProyectoService from '@/entities/proyecto/proyecto.service';
 import AlertService from '@/shared/alert/alert.service';
-//import { mixins } from 'vue-class-component';
 //import { CalendarPlugin } from 'bootstrap-vue';
 
 const validations: any = {
@@ -117,9 +117,9 @@ const validations: any = {
   validations
 })
 export default class CronogramaDiplomado extends Vue {
-   @Inject('alertService') private alertService: () => AlertService;
-  @Inject('proyectoService') private proyectoService: () => ProyectoService;
-  @Inject('cronogramaService') private cronogramaService: () => CronogramaService;
+   @Inject  private alertService: () => AlertService;
+  @Inject  private proyectoService: () => ProyectoService;
+  @Inject  private cronogramaService: () => CronogramaService;
   
   
 //cronogramas = [];
@@ -139,6 +139,7 @@ public cronograms: ICronograma[] = [];
   public  value: any= '';
   public context: any= null;
 
+  @Hook
   beforeRouteEnter(to, from, next) {
             next(vm => {
               

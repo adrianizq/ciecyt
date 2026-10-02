@@ -15,10 +15,10 @@
             </div>
 
             <div class="mb-3 form-group">
-              <label class="form-control-label" v-text="$t('ciecytApp.adjuntoProyectoFase.archivo')" for="adjunto-proyecto-fase-archivo">Archivo</label>
+              <label class="form-control-label" v-text="$t('ciecytApp.adjuntoProyectoFase.archivo')" for="adjunto-proyecto-fase-archivo"></label>
               <div>
                 <div v-if="adjuntoProyectoFase.file" class="form-text clearfix">
-                  <a class="pull-left" v-on:click="this.descargar" v-text="$t('entity.action.open')">open</a>
+                  <a class="pull-left" v-on:click="this.descargar" v-text="$t('entity.action.open')"></a>
                   <span class="pull-left">{{ adjuntoProyectoFase.nombreArchivoOriginal }}</span>
                   <button type="button" class="btn btn-secondary btn-xs pull-right" v-on:click="this.eliminar">
                     <font-awesome-icon icon="times"></font-awesome-icon>
@@ -36,7 +36,7 @@
 
         <div>
           <button type="button" id="cancel-save" class="btn btn-secondary" v-on:click="volver()">
-            <font-awesome-icon icon="ban"></font-awesome-icon>&nbsp;<span v-text="$t('entity.action.cancel')">Cancel</span>
+            <font-awesome-icon icon="ban"></font-awesome-icon>&nbsp;<span v-text="$t('entity.action.cancel')"></span>
           </button>
 
           <button type="submit" id="save-entity" class="btn btn-primary" :disabled='isDisabled'>
@@ -49,8 +49,8 @@
 </template>
 
 <script lang="ts">
-import { Component, Inject, Vue } from 'vue-property-decorator';
-import { mixins } from 'vue-class-component';
+import { Component, Inject, Vue, Hook } from 'vue-facing-decorator';
+import { mixins } from 'vue-facing-decorator';
 import JhiDataUtils from '@/shared/data/data-utils.service';
 
 import MenuLateral from '@/components/propuesta/menu_lateral.vue';
@@ -89,10 +89,10 @@ const DOCUMENTOS: any = {
   components: { MenuLateral },
 })
 export default class DocumentoPropuesta extends mixins(JhiDataUtils) {
-  @Inject('proyectoService') private proyectoService: () => ProyectoService;
-  @Inject('adjuntoProyectoFaseService') private adjuntoProyectoFaseService: () => AdjuntoProyectoFaseService;
-  @Inject('fasesService') private fasesService: () => FasesService;
-  @Inject('alertService') private alertService: () => AlertService;
+  @Inject  private proyectoService: () => ProyectoService;
+  @Inject  private adjuntoProyectoFaseService: () => AdjuntoProyectoFaseService;
+  @Inject  private fasesService: () => FasesService;
+  @Inject  private alertService: () => AlertService;
 
   public adjuntoProyectoFase: IAdjuntoProyectoFase = new AdjuntoProyectoFase();
   public fase: IFases = new Fases();
@@ -107,6 +107,7 @@ export default class DocumentoPropuesta extends mixins(JhiDataUtils) {
     return DOCUMENTOS[this.tipo] || { titulo: 'Documento', descripcion: '' };
   }
 
+  @Hook
   beforeRouteEnter(to, from, next) {
     next(vm => {
       vm.tipo = vm.resolveTipo(to.path);

@@ -1,3 +1,4 @@
+import { useVuelidate } from '@vuelidate/core';
 <template>
     <div class="row">
         <div class="col-sm-4">
@@ -38,7 +39,7 @@
 </template>
 
 <script lang="ts">
-    import { Component, Inject, Vue } from 'vue-property-decorator';
+    import { Component, Inject, Vue, Hook } from 'vue-facing-decorator';
     import AlertService from '@/shared/alert/alert.service';
 
     import MenuLateralNueva from '@/components/propuesta_nueva/menu_lateral_nueva.vue';
@@ -58,10 +59,10 @@
     })
 
     export default class JuradosNueva extends Vue {
-        @Inject('proyectoService') private proyectoService: () => ProyectoService;
-        @Inject('integranteProyectoService') private integranteProyectoService: () => IntegranteProyectoService;
-        @Inject('rolesModalidadService') private rolesModalidadService: () => RolesModalidadService;
-        @Inject('alertService') private alertService: () => AlertService;
+        @Inject  private proyectoService: () => ProyectoService;
+        @Inject  private integranteProyectoService: () => IntegranteProyectoService;
+        @Inject  private rolesModalidadService: () => RolesModalidadService;
+        @Inject  private alertService: () => AlertService;
 
         public rolesModalidad: IRolesModalidad;
         public integrantesProyecto: IIntegranteProyecto[] = [];
@@ -71,6 +72,7 @@
         public modalidadId: number = 0;
         public rolModalidadId?: number = 0;
 
+        @Hook
         beforeRouteEnter(to, from, next) {
             next(async vm => {
                 vm.initRelationships();
@@ -160,3 +162,4 @@
 </script>
 
 <style scoped>
+</style>

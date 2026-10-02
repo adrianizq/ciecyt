@@ -1,3 +1,4 @@
+import { useVuelidate } from '@vuelidate/core';
 <template>
     <div class="row">
         <div class="col-sm-4">
@@ -39,7 +40,7 @@
 </template>
 
 <script lang="ts">
-    import { Component, Inject, Vue } from 'vue-property-decorator';
+    import { Component, Inject, Vue, Hook } from 'vue-facing-decorator';
     import AlertService from '@/shared/alert/alert.service';
 
     import MenuLateralNueva from '@/components/propuesta_nueva/menu_lateral_nueva.vue';
@@ -67,12 +68,12 @@
         public withPlaceholder(options: any[], placeholder: string): any[] {
             return withPlaceholderOptions(options, placeholder);
         }
-        @Inject('usuarioService') private usuarioService: () => UsuarioService;
-        @Inject('proyectoService') private proyectoService: () => ProyectoService;
-        @Inject('integranteProyectoService') private integranteProyectoService: () => IntegranteProyectoService;
-        @Inject('rolesModalidadService') private rolesModalidadService: () => RolesModalidadService;
-        @Inject('docenteHabilitadoService') private docenteHabilitadoService: () => DocenteHabilitadoService;
-        @Inject('alertService') private alertService: () => AlertService;
+        @Inject  private usuarioService: () => UsuarioService;
+        @Inject  private proyectoService: () => ProyectoService;
+        @Inject  private integranteProyectoService: () => IntegranteProyectoService;
+        @Inject  private rolesModalidadService: () => RolesModalidadService;
+        @Inject  private docenteHabilitadoService: () => DocenteHabilitadoService;
+        @Inject  private alertService: () => AlertService;
 
         public users: IUser[] = [];
         public rolesModalidad: IRolesModalidad;
@@ -84,6 +85,7 @@
         public rolModalidadId?: number = 0;
         public options: any = [];
 
+        @Hook
         beforeRouteEnter(to, from, next) {
             next(async vm => {
                 vm.initRelationships();
@@ -185,3 +187,4 @@
 </script>
 
 <style scoped>
+</style>

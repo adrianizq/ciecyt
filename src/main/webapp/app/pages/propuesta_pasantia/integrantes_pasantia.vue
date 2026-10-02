@@ -1,3 +1,4 @@
+import { useVuelidate } from '@vuelidate/core';
 <template>
     <div class="row">
         <div class="col-sm-4">
@@ -37,7 +38,7 @@
                             <font-awesome-icon icon="arrow-left"></font-awesome-icon>&nbsp;Volver
                         </button>
                         <button type="button" id="save" class="btn btn-primary" v-on:click="save()">
-                            <font-awesome-icon icon="save"></font-awesome-icon>&nbsp;<span v-text="$t('entity.action.save')">Guardar</span>
+                            <font-awesome-icon icon="save"></font-awesome-icon>&nbsp;<span v-text="$t('entity.action.save')"></span>
                         </button>-->
                     </div>
                 </div>
@@ -48,7 +49,7 @@
 </template>
 
 <script lang="ts">
-    import { Component, Inject, Vue } from 'vue-property-decorator';
+    import { Component, Inject, Vue, Hook } from 'vue-facing-decorator';
     import AlertService from '@/shared/alert/alert.service';
 
     import MenuLateralPasantia from '@/components/propuesta_pasantia/menu_lateral_pasantia.vue';
@@ -70,11 +71,11 @@
     })
 
     export default class PropuestaIntegrantes extends Vue {
-        @Inject('usuarioService') private usuarioService: () => UsuarioService;
-        @Inject('proyectoService') private proyectoService: () => ProyectoService;
-        @Inject('integranteProyectoService') private integranteProyectoService: () => IntegranteProyectoService;
-        @Inject('rolesModalidadService') private rolesModalidadService: () => RolesModalidadService;
-        @Inject('alertService') private alertService: () => AlertService;
+        @Inject  private usuarioService: () => UsuarioService;
+        @Inject  private proyectoService: () => ProyectoService;
+        @Inject  private integranteProyectoService: () => IntegranteProyectoService;
+        @Inject  private rolesModalidadService: () => RolesModalidadService;
+        @Inject  private alertService: () => AlertService;
 
         public users: IUser[] = [];
         public rolesModalidad: IRolesModalidad;
@@ -90,6 +91,7 @@
 
 //public proyId: string = null;
 
+        @Hook
         beforeRouteEnter(to, from, next) {
             next(async vm => {
 
@@ -217,3 +219,4 @@
 </script>
 
 <style scoped>
+</style>

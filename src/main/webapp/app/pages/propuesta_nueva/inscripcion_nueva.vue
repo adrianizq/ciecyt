@@ -1,3 +1,4 @@
+import { useVuelidate } from '@vuelidate/core';
 <template>
     <div class="row">
         <div class="col-sm-4">
@@ -131,9 +132,9 @@
                     <button type="button" class="btn btn-outline-secondary" v-on:click="back">
                         <font-awesome-icon icon="arrow-left"></font-awesome-icon>&nbsp;Volver
                     </button>
-                    <router-link :to="{name: 'PropuestasInvestigadorEditView'}" tag="button" class="btn btn-primary">
+                    <router-link custom v-slot="{ navigate }" :to="{name: 'PropuestasInvestigadorEditView'}"><button class="btn btn-primary" @click="navigate">
                         <font-awesome-icon icon="list"></font-awesome-icon>&nbsp;Ver mis propuestas
-                    </router-link>
+                    </button></router-link>
                 </div>
             </div>
         </div>
@@ -141,7 +142,7 @@
 </template>
 
 <script lang="ts">
-    import { Component, Inject, Vue } from 'vue-property-decorator';
+    import { Component, Inject, Vue, Hook } from 'vue-facing-decorator';
     import AlertService from '@/shared/alert/alert.service';
     import MenuLateralNueva from '@/components/propuesta_nueva/menu_lateral_nueva.vue';
     import { IProyecto, Proyecto } from '@/shared/model/proyecto.model';
@@ -158,10 +159,10 @@
     })
 
     export default class PropuestaInscripcionNueva extends Vue {
-        @Inject('proyectoService') private proyectoService: () => ProyectoService;
-        @Inject('integranteProyectoService') private integranteProyectoService: () => IntegranteProyectoService;
-        @Inject('rolesModalidadService') private rolesModalidadService: () => RolesModalidadService;
-        @Inject('alertService') private alertService: () => AlertService;
+        @Inject  private proyectoService: () => ProyectoService;
+        @Inject  private integranteProyectoService: () => IntegranteProyectoService;
+        @Inject  private rolesModalidadService: () => RolesModalidadService;
+        @Inject  private alertService: () => AlertService;
 
         public proyecto: IProyecto = new Proyecto();
         public estudiantes: IIntegranteProyecto[] = [];
@@ -170,6 +171,7 @@
 
         public proyId?: any;
 
+        @Hook
         beforeRouteEnter(to, from, next) {
             next(async vm => {
                 vm.initRelationships();

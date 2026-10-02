@@ -18,9 +18,9 @@
             <table class="table table-striped">
                 <thead>
                 <tr>
-                    <th v-on:click="changeOrder('id')"><span v-text="$t('global.field.id')">ID</span> <font-awesome-icon icon="sort"></font-awesome-icon></th>
-                    <th v-on:click="changeOrder('titulo')"><span v-text="$t('ciecytApp.proyecto.titulo')">Titulo</span> <font-awesome-icon icon="sort"></font-awesome-icon></th>
-                    <th v-on:click="changeOrder('tipo')"><span v-text="$t('ciecytApp.proyecto.tipo')">Tipo</span> <font-awesome-icon icon="sort"></font-awesome-icon></th>
+                    <th v-on:click="changeOrder('id')"><span v-text="$t('global.field.id')"></span> <font-awesome-icon icon="sort"></font-awesome-icon></th>
+                    <th v-on:click="changeOrder('titulo')"><span v-text="$t('ciecytApp.proyecto.titulo')"></span> <font-awesome-icon icon="sort"></font-awesome-icon></th>
+                    <th v-on:click="changeOrder('tipo')"><span v-text="$t('ciecytApp.proyecto.tipo')"></span> <font-awesome-icon icon="sort"></font-awesome-icon></th>
                     <th></th>
                 </tr>
                 </thead>
@@ -40,36 +40,36 @@
                   
                    <td class="text-right" v-if="buscarAuthorithy(proyecto.proyectoModalidadId)==='Tesis'">
                    <div class="btn-group" >
-                  <router-link :to="{name: 'PropuestaInformacionGeneraEditlView', params: {proyectoId: proyecto.id}}"  tag="button" class="btn btn-info btn-sm details">
-                  <b-icon-check2-square></b-icon-check2-square>&nbsp;
-                                <span class="d-none d-md-inline" v-text="$t('entity.action.edit')">Editar</span>
-                                </router-link>
+                  <router-link custom v-slot="{ navigate }" :to="{name: 'PropuestaInformacionGeneraEditlView', params: {proyectoId: proyecto.id}}"><button class="btn btn-info btn-sm details" @click="navigate">
+                  <font-awesome-icon icon="check-circle" />&nbsp;
+                                <span class="d-none d-md-inline" v-text="$t('entity.action.edit')"></span>
+                                </button></router-link>
                   </div>
                   </td>
                    <td class="text-right" v-if="buscarAuthorithy(proyecto.proyectoModalidadId) && buscarAuthorithy(proyecto.proyectoModalidadId).includes('Pasantia')">
                    <div class="btn-group" >
-                  <router-link :to="{name: 'PropuestaPasantiaInformacionGeneraEditlView', params: {proyectoId: proyecto.id}}"  tag="button" class="btn btn-info btn-sm details">
-                   <b-icon-check2-square></b-icon-check2-square>&nbsp;
-                                <span class="d-none d-md-inline" v-text="$t('entity.action.edit')">Editar</span>
-                                </router-link>
+                  <router-link custom v-slot="{ navigate }" :to="{name: 'PropuestaPasantiaInformacionGeneraEditlView', params: {proyectoId: proyecto.id}}"><button class="btn btn-info btn-sm details" @click="navigate">
+                   <font-awesome-icon icon="check-circle" />&nbsp;
+                                <span class="d-none d-md-inline" v-text="$t('entity.action.edit')"></span>
+                                </button></router-link>
                    </div>
                   </td>
                    <td class="text-right" v-if="buscarAuthorithy(proyecto.proyectoModalidadId)=='Publicacion de Articulo'">
                    <div class="btn-group" >
-                  <router-link :to="{name: 'PropuestaDiplomadoInformacionGeneralEditView', params: {proyectoId: proyecto.id}}"  tag="button" class="btn btn-info btn-sm details">
-                   <b-icon-check2-square></b-icon-check2-square>&nbsp;
-                                <span class="d-none d-md-inline" v-text="$t('entity.action.edit')">Editar</span>
-                                </router-link>
+                  <router-link custom v-slot="{ navigate }" :to="{name: 'PropuestaDiplomadoInformacionGeneralEditView', params: {proyectoId: proyecto.id}}"><button class="btn btn-info btn-sm details" @click="navigate">
+                   <font-awesome-icon icon="check-circle" />&nbsp;
+                                <span class="d-none d-md-inline" v-text="$t('entity.action.edit')"></span>
+                                </button></router-link>
                    </div>
                   </td>
                 
                     <!--
                     <td class="text-right">
                         <div class="btn-group" >
-                            <router-link :to="{name: 'PropuestaEvaluarView', params: {proyectoId: proyecto.id}}" tag="button" class="btn btn-info btn-sm details">
-                               <b-icon-check2-square></b-icon-check2-square>&nbsp;
-                                <span class="d-none d-md-inline" v-text="$t('entity.action.eval')">Evaluar</span>
-                            </router-link>
+                            <router-link custom v-slot="{ navigate }" :to="{name: 'PropuestaEvaluarView', params: {proyectoId: proyecto.id}}"><button class="btn btn-info btn-sm details" @click="navigate">
+                               <font-awesome-icon icon="check-circle" />&nbsp;
+                                <span class="d-none d-md-inline" v-text="$t('entity.action.eval')"></span>
+                            </button></router-link>
   
                         </div>
                     </td>
@@ -97,12 +97,13 @@
 <script lang="ts">
 
 
-import { mixins } from 'vue-class-component';
+import { useVuelidate } from '@vuelidate/core';
+import { mixins, Hook } from 'vue-facing-decorator';
 import AlertService from '@/shared/alert/alert.service';
 
 
 
-import { Component, Inject, Vue } from 'vue-property-decorator';
+import { Component, Inject, Vue } from 'vue-facing-decorator';
 import MenuLateralNueva from '@/components/propuesta_nueva/menu_lateral_nueva.vue';
 
 
@@ -122,10 +123,10 @@ import ModalidadService from '@/entities/modalidad/modalidad.service';
     })
 
 export default class Listado extends Vue {
-   @Inject('proyectoService') private proyectoService: () => ProyectoService;
-   @Inject('modalidadService') private modalidadService: () => ModalidadService;
+   @Inject  private proyectoService: () => ProyectoService;
+   @Inject  private modalidadService: () => ModalidadService;
  
-   @Inject('alertService') private alertService: () => AlertService;
+   @Inject  private alertService: () => AlertService;
 
 
     
@@ -262,6 +263,7 @@ public getAlertFromStore() {
     public isSaving = false;
 
 
+        @Hook
         beforeRouteEnter(to, from, next) {
             next(async vm => {
 

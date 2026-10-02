@@ -55,7 +55,7 @@
 </template>
 
 <script lang="ts">
-    import { Component, Inject, Vue } from 'vue-property-decorator';
+    import { Component, Inject, Vue } from 'vue-facing-decorator';
 
     import AlertService from '@/shared/alert/alert.service';
     import DecanoFacultadService from '@/entities/decano-facultad/decano-facultad.service';
@@ -64,9 +64,9 @@
 
     @Component
     export default class RemisionPadron extends Vue {
-        @Inject('alertService') private alertService: () => AlertService;
-        @Inject('decanoFacultadService') private decanoFacultadService: () => DecanoFacultadService;
-        @Inject('remisionPadronService') private remisionPadronService: () => RemisionPadronService;
+        @Inject  private alertService: () => AlertService;
+        @Inject  private decanoFacultadService: () => DecanoFacultadService;
+        @Inject  private remisionPadronService: () => RemisionPadronService;
 
         public facultadId: number = null;
         public remisiones: any[] = [];

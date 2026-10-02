@@ -31,7 +31,8 @@
 </template>
 
 <script lang="ts">
-import { Component, Inject, Vue } from 'vue-property-decorator';
+import { useVuelidate } from '@vuelidate/core';
+import { Component, Inject, Vue, Hook } from 'vue-facing-decorator';
 import AlertService from '@/shared/alert/alert.service';
 
 //programa, modalidad, facultad, tipo
@@ -49,16 +50,21 @@ import InvestigacionTipoService from '@/entities/investigacion-tipo/investigacio
 const validations: any = {};
 
 @Component({
-  validations,
+  options: {
+        validations,
+    },
+  setup() {
+      return { v$: useVuelidate() };
+    },
 })
 export default class Predicciones1 extends Vue {
-  @Inject('prediccionesService') private prediccionesService: () => PrediccionesService;
-  @Inject('investigacionTipoService') private investigacionTipoService: () => InvestigacionTipoService;
-  //@Inject('lineaInvestigacionService') private lineaInvestigacionService: () => LineaInvestigacionService;
+  @Inject  private prediccionesService: () => PrediccionesService;
+  @Inject  private investigacionTipoService: () => InvestigacionTipoService;
+  //@Inject  private lineaInvestigacionService: () => LineaInvestigacionService;
 
-  //@Inject('investigacionTipoService') private investigacionTipoService: () => InvestigacionTipoService;
+  //@Inject  private investigacionTipoService: () => InvestigacionTipoService;
 
-  @Inject('alertService') private alertService: () => AlertService;
+  @Inject  private alertService: () => AlertService;
 
   //public modalidads: IModalidad[] = [];
   //public facultades: IFacultad[] = [];
@@ -71,6 +77,7 @@ export default class Predicciones1 extends Vue {
 
   public prediccions: String[] = [];
 
+  @Hook
   beforeRouteEnter(to, from, next) {
     next(async vm => {
       vm.initRelationships();
@@ -104,3 +111,4 @@ export default class Predicciones1 extends Vue {
 </script>
 
 <style scoped>
+</style>

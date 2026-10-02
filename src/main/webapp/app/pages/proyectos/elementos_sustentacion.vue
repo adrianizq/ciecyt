@@ -37,7 +37,7 @@
                     <b-form-group class="mb-3" 
                     description="Comentarios o sugerencias adicionales sobre el proyecto">
                     <label class="form-control-label" 
-                    v-text="$t('ciecytApp.proyecto.nota')" for="proyecto-recomendaciones">nota</label>
+                    v-text="$t('ciecytApp.proyecto.nota')" for="proyecto-recomendaciones"></label>
                        
                      <div class="mb-3 form-group" >
                        <b-form-textarea  class="form-control" name="proyecto-recomendaciones"
@@ -54,7 +54,7 @@
                 <div>
 
                     <button type="button" id="cancel-save" class="btn btn-secondary" v-on:click="previousState()">
-                        <font-awesome-icon icon="ban"></font-awesome-icon>&nbsp;<span v-text="$t('entity.action.cancel')">Cancel</span>
+                        <font-awesome-icon icon="ban"></font-awesome-icon>&nbsp;<span v-text="$t('entity.action.cancel')"></span>
                     </button>
 
 
@@ -72,7 +72,8 @@
 </template>
 
 <script lang="ts">
-import { Component, Inject, Vue } from 'vue-property-decorator';
+import { useVuelidate } from '@vuelidate/core';
+import { Component, Inject, Vue, Hook } from 'vue-facing-decorator';
 import MenuLateralProyecto from '@/components/proyecto/menu_lateral_proyecto.vue';
 import AlertService from '@/shared/alert/alert.service';
 import ElementoProyectoService from '@/entities/elemento-proyecto/elemento-proyecto.service';
@@ -102,11 +103,11 @@ export default class Elementos extends Vue {
   }
 
 
-   @Inject('proyectoService') private proyectoService: () => ProyectoService;
-   @Inject('elementoProyectoService') private elementoProyectoService: () => ElementoProyectoService;
-   @Inject('fasesService') private fasesService: () => FasesService;
-   @Inject('formatoService') private formatoService: () => FormatoService;
-   @Inject('alertService') private alertService: () => AlertService;
+   @Inject  private proyectoService: () => ProyectoService;
+   @Inject  private elementoProyectoService: () => ElementoProyectoService;
+   @Inject  private fasesService: () => FasesService;
+   @Inject  private formatoService: () => FormatoService;
+   @Inject  private alertService: () => AlertService;
 
 
     public elementosProyecto: IElementoProyecto[] =[];
@@ -119,6 +120,7 @@ export default class Elementos extends Vue {
     public isSaving = false;
 
 
+        @Hook
         beforeRouteEnter(to, from, next) {
             next(vm => {
 

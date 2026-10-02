@@ -1,307 +1,301 @@
 <template>
-
-    <div class="asesoria-evaluar">
-        <form @submit.prevent="save('borrador')">
-
-            <!-- Cabecera del proyecto -->
-            <div class="evaluacion-header mb-4">
-                <div class="d-flex align-items-center justify-content-between flex-wrap">
-                    <div class="d-flex align-items-center">
-                        <div class="header-icon">
-                            <font-awesome-icon icon="tasks" />
-                        </div>
-                        <div>
-                            <h2 class="mb-1">Revisión de la Propuesta — Asesor</h2>
-                            <div class="header-meta">
-                                <span class="meta-item" v-if="proyecto.titulo">
-                                    <font-awesome-icon icon="book" /> {{ proyecto.titulo }}
-                                </span>
-                                <span class="meta-item" v-if="proyecto.programa">
-                                    <font-awesome-icon icon="user" /> {{ proyecto.programa }}
-                                </span>
-                                <span class="meta-item" v-if="proyecto.proyectoModalidadModalidad">
-                                    <font-awesome-icon icon="th-list" /> {{ proyecto.proyectoModalidadModalidad }}
-                                </span>
-                            </div>
-                        </div>
-                    </div>
-                    <b-badge pill :variant="estadoVariant(proyecto.estado)" class="estado-badge">
-                        {{ estadoLabel(proyecto.estado) }}
-                    </b-badge>
-                </div>
+  <div class="asesoria-evaluar">
+    <form @submit.prevent="save('borrador')">
+      <!-- Cabecera del proyecto -->
+      <div class="evaluacion-header mb-4">
+        <div class="d-flex align-items-center justify-content-between flex-wrap">
+          <div class="d-flex align-items-center">
+            <div class="header-icon">
+              <font-awesome-icon icon="tasks" />
             </div>
-
-            <div class="row">
-                <div class="col-12">
-
-                    <!-- Propuesta adjunta -->
-                    <div class="evaluacion-card mb-3" v-if="adjuntoProyectoFase.id">
-                        <div class="card-head">
-                            <div class="head-title">
-                                <font-awesome-icon icon="paperclip" class="head-icon" />
-                                Propuesta adjunta
-                            </div>
-                        </div>
-                        <div class="card-body-custom d-flex align-items-center justify-content-between flex-wrap">
-                            <div class="d-flex align-items-center">
-                                <div class="file-icon">
-                                    <font-awesome-icon icon="file-alt" />
-                                </div>
-                                <div>
-                                    <div class="file-name">{{ adjuntoProyectoFase.nombreArchivoOriginal }}</div>
-                                    <div class="file-meta">{{ adjuntoProyectoFase.archivoContentType }} · {{ byteSize(adjuntoProyectoFase.file) }}</div>
-                                </div>
-                            </div>
-                            <button type="button" class="btn btn-outline-primary btn-sm" v-on:click="descargar()">
-                                <font-awesome-icon icon="download" /> Descargar
-                            </button>
-                        </div>
-                    </div>
-
-                    <!-- Elementos / Preguntas -->
-                    <div class="elemento-item mb-3" v-for="(ep, i) in proyectoRespuests" :key="i">
-                        <div class="evaluacion-card">
-                            <div class="card-head">
-                                <div class="head-title">
-                                    <span class="head-index">{{ i + 1 }}</span>
-                                    <span v-if="ep.encabezado">{{ ep.encabezado }}</span>
-                                    <span v-else>Elemento</span>
-                                </div>
-                                <span v-if="ep.preguntaTipoPreguntaTipoPregunta" class="tipo-badge">
-                                    {{ ep.preguntaTipoPreguntaTipoPregunta }}
-                                </span>
-                            </div>
-                            <div class="card-body-custom">
-                                <div class="elemento-nombre">{{ ep.elemento }}</div>
-                                <div class="elemento-descripcion" v-if="ep.proyectoRespuestasPreguntaPregunta">
-                                    {{ ep.proyectoRespuestasPreguntaPregunta }}
-                                </div>
-
-                                <!-- Contenido diligenciado por el estudiante -->
-                                <div class="contenido-estudiante" v-if="ep.dato">
-                                    <div class="contenido-label">
-                                        <font-awesome-icon icon="eye" /> Contenido de la propuesta
-                                    </div>
-                                    <div class="contenido-texto">{{ ep.dato }}</div>
-                                </div>
-
-                                <!-- Evaluación del asesor -->
-                                <div class="respuesta-section" v-if="ep.preguntaTipoPreguntaTipoPregunta">
-                                    <label class="respuesta-label">Evaluación del asesor</label>
-
-                                    <div v-if="ep.preguntaTipoPreguntaTipoPregunta === 'Cumple NoCumple NoAplica'">
-                                        <b-form-radio-group
-                                          v-model="ep.respuesta"
-                                          buttons
-                                          button-variant="outline-success"
-                                          size="sm"
-                                          :name="`respuesta-${i}`"
-                                        >
-                                            <b-form-radio value="CUMPLE">Cumple</b-form-radio>
-                                            <b-form-radio value="NO_CUMPLE">No cumple</b-form-radio>
-                                            <b-form-radio value="NO_APLICA">No aplica</b-form-radio>
-                                        </b-form-radio-group>
-                                    </div>
-
-                                    <div v-else-if="ep.preguntaTipoPreguntaTipoPregunta === 'Si o No'">
-                                        <b-form-radio-group
-                                          v-model="ep.siNo"
-                                          buttons
-                                          button-variant="outline-primary"
-                                          size="sm"
-                                          :name="`sinorespuesta-${i}`"
-                                        >
-                                            <b-form-radio :value="true">Sí</b-form-radio>
-                                            <b-form-radio :value="false">No</b-form-radio>
-                                        </b-form-radio-group>
-                                    </div>
-
-                                    <div v-else-if="ep.preguntaTipoPreguntaTipoPregunta === 'Nota (con puntaje)'" class="d-flex align-items-center">
-                                        <input
-                                          type="number"
-                                          class="form-control nota-input"
-                                          min="0"
-                                          :max="ep.puntajeMaximo"
-                                          step="0.1"
-                                          v-model="ep.respuestaNumero"
-                                        />
-                                        <small class="text-muted ml-2" v-if="ep.puntajeMaximo">Máximo: {{ ep.puntajeMaximo }}</small>
-                                    </div>
-
-                                    <b-form-textarea
-                                      v-else-if="ep.preguntaTipoPreguntaTipoPregunta === 'Libre (sin puntaje ni viabilidad)'"
-                                      v-model="ep.respuestaTexto"
-                                      rows="3"
-                                      max-rows="6"
-                                      placeholder="Escriba aquí su respuesta..."
-                                    />
-                                </div>
-
-                                <!-- Observaciones -->
-                                <div class="observaciones-section">
-                                    <label class="respuesta-label">
-                                        <font-awesome-icon icon="comment-dots" /> Observaciones
-                                    </label>
-                                    <b-form-textarea
-                                      v-model="ep.observaciones"
-                                      rows="2"
-                                      max-rows="5"
-                                      placeholder="Escriba aquí sus observaciones..."
-                                    />
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Cronograma -->
-                    <div class="evaluacion-card mb-3">
-                        <div class="card-head">
-                            <div class="head-title">
-                                <font-awesome-icon icon="calendar-alt" class="head-icon" />
-                                Cronograma de Actividades
-                            </div>
-                        </div>
-                        <div class="card-body-custom table-responsive">
-                            <table class="table table-sm table-striped mb-0">
-                                <thead>
-                                    <tr>
-                                        <th>Actividad</th>
-                                        <th>Duración</th>
-                                        <th>Inicio</th>
-                                        <th>Fin</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr v-for="(cr, c) in cronograms" :key="c">
-                                        <td>{{ cr.actividad }}</td>
-                                        <td>{{ cr.duracion }}</td>
-                                        <td>{{ cr.fechaInicio }}</td>
-                                        <td>{{ cr.fechaFin }}</td>
-                                    </tr>
-                                    <tr v-if="!cronograms || cronograms.length === 0">
-                                        <td colspan="4" class="text-center text-muted py-3">
-                                            Sin actividades registradas
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-
-                    <!-- Recomendaciones -->
-                    <div class="evaluacion-card mb-3">
-                        <div class="card-head">
-                            <div class="head-title">
-                                <font-awesome-icon icon="info-circle" class="head-icon" />
-                                Recomendaciones
-                            </div>
-                        </div>
-                        <div class="card-body-custom">
-                            <small class="text-muted d-block mb-2">
-                                Si tiene comentarios o sugerencias adicionales sobre el proyecto, diligencie este apartado.
-                            </small>
-                            <b-form-textarea
-                              class="form-control"
-                              name="proyecto-recomendaciones"
-                              v-model="proyecto.recomendacionesAsesorPropuesta"
-                              rows="3"
-                              max-rows="6"
-                              placeholder="Escriba aquí sus recomendaciones..."
-                            />
-                        </div>
-                    </div>
-
-                    <!-- Adjunto de retroalimentación -->
-                    <div class="evaluacion-card mb-3">
-                        <div class="card-head">
-                            <div class="head-title">
-                                <font-awesome-icon icon="paperclip" class="head-icon" />
-                                Documento de retroalimentación
-                            </div>
-                        </div>
-                        <div class="card-body-custom">
-                            <div v-if="adjuntoRetroalimentacion.id" class="d-flex align-items-center justify-content-between flex-wrap">
-                                <div class="d-flex align-items-center">
-                                    <div class="file-icon">
-                                        <font-awesome-icon icon="file-alt" />
-                                    </div>
-                                    <div>
-                                        <div class="file-name">{{ adjuntoRetroalimentacion.nombreArchivoOriginal }}</div>
-                                        <div class="file-meta">{{ adjuntoRetroalimentacion.archivoContentType }} · {{ byteSize(adjuntoRetroalimentacion.file) }}</div>
-                                    </div>
-                                </div>
-                                <div class="d-flex">
-                                    <button type="button" class="btn btn-outline-primary btn-sm mr-2" v-on:click="descargarRetro()">
-                                        <font-awesome-icon icon="download" /> Descargar
-                                    </button>
-                                    <button type="button" class="btn btn-outline-danger btn-sm" v-on:click="eliminarRetro()">
-                                        <font-awesome-icon icon="times" /> Eliminar
-                                    </button>
-                                </div>
-                            </div>
-                            <div v-if="adjuntoRetroalimentacion.file == null" class="upload-zone">
-                                <input type="file" ref="file_archivo" id="file_archivo" v-on:change="asignarDataRetro($event, adjuntoRetroalimentacion, 'archivo', false)" />
-                                <div class="upload-zone-text">
-                                    <font-awesome-icon icon="paperclip" class="mr-2" />
-                                    Seleccione un archivo para adjuntar
-                                </div>
-                            </div>
-                            <small v-else class="text-muted">Si desea subir otro adjunto, deberá eliminar el archivo actual</small>
-                            <input type="hidden" class="form-control" name="archivo" id="adjunto-retroalimentacion-archivo"
-                                :class="{ 'valid': !$v.adjuntoRetroalimentacion.archivo.$invalid, 'invalid': $v.adjuntoRetroalimentacion.archivo.$invalid }" v-model="$v.adjuntoRetroalimentacion.archivo.$model" />
-                            <input type="hidden" class="form-control" name="archivoContentType" id="adjunto-retroalimentacion-archivoContentType"
-                                v-model="adjuntoRetroalimentacion.archivoContentType" />
-                            <input type="hidden" class="form-control" name="fileName" id="adjunto-retroalimentacion-fileName"
-                                v-model="adjuntoRetroalimentacion.nombreArchivoOriginal" />
-                        </div>
-                    </div>
-
-                    <!-- Acciones -->
-                    <div class="evaluacion-card mb-3">
-                        <div class="card-head">
-                            <div class="head-title">
-                                <font-awesome-icon icon="clipboard-list" class="head-icon" />
-                                Finalizar evaluación
-                            </div>
-                        </div>
-                        <div class="card-body-custom">
-                            <ul class="mb-3 acciones-ayuda">
-                                <li>
-                                    <strong>Guardar borrador:</strong> guarda el avance de la evaluación sin que el estudiante pueda verla todavía.
-                                </li>
-                                <li>
-                                    <strong>Enviar correcciones al estudiante:</strong> publica las observaciones y recomendaciones para que el estudiante las corrija.
-                                </li>
-                                <li>
-                                    <strong>{{ textoEnvioRevision }}:</strong> {{ textoEnvioRevisionDescripcion }}
-                                </li>
-                            </ul>
-                            <div class="acciones-footer">
-                                <button type="button" id="cancel-save" class="btn btn-light" v-on:click="previousState()">
-                                    <font-awesome-icon icon="undo" />&nbsp;<span>Cancelar</span>
-                                </button>
-                                <button type="button" id="save-borrador" class="btn btn-outline-secondary" v-on:click="save('borrador')">
-                                    <font-awesome-icon icon="save" />&nbsp;<span>Guardar borrador</span>
-                                </button>
-                                <button type="button" id="save-correcciones" class="btn btn-warning" v-on:click="save('correcciones')">
-                                    <font-awesome-icon icon="envelope" />&nbsp;<span>Enviar correcciones al estudiante</span>
-                                </button>
-                                <button type="button" id="save-jurado" class="btn btn-primary" v-on:click="save('jurado')">
-                                    <font-awesome-icon icon="paper-plane" />&nbsp;<span>{{ textoEnvioRevision }}</span>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
+            <div>
+              <h2 class="mb-1">Revisión de la Propuesta — Asesor</h2>
+              <div class="header-meta">
+                <span class="meta-item" v-if="proyecto.titulo"> <font-awesome-icon icon="book" /> {{ proyecto.titulo }} </span>
+                <span class="meta-item" v-if="proyecto.programa"> <font-awesome-icon icon="user" /> {{ proyecto.programa }} </span>
+                <span class="meta-item" v-if="proyecto.proyectoModalidadModalidad">
+                  <font-awesome-icon icon="th-list" /> {{ proyecto.proyectoModalidadModalidad }}
+                </span>
+              </div>
             </div>
-        </form>
-    </div>
+          </div>
+          <b-badge pill :variant="estadoVariant(proyecto.estado)" class="estado-badge">
+            {{ estadoLabel(proyecto.estado) }}
+          </b-badge>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-12">
+          <!-- Propuesta adjunta -->
+          <div class="evaluacion-card mb-3" v-if="adjuntoProyectoFase.id">
+            <div class="card-head">
+              <div class="head-title">
+                <font-awesome-icon icon="paperclip" class="head-icon" />
+                Propuesta adjunta
+              </div>
+            </div>
+            <div class="card-body-custom d-flex align-items-center justify-content-between flex-wrap">
+              <div class="d-flex align-items-center">
+                <div class="file-icon">
+                  <font-awesome-icon icon="file-alt" />
+                </div>
+                <div>
+                  <div class="file-name">{{ adjuntoProyectoFase.nombreArchivoOriginal }}</div>
+                  <div class="file-meta">{{ adjuntoProyectoFase.archivoContentType }} · {{ byteSize(adjuntoProyectoFase.file) }}</div>
+                </div>
+              </div>
+              <button type="button" class="btn btn-outline-primary btn-sm" v-on:click="descargar()">
+                <font-awesome-icon icon="download" /> Descargar
+              </button>
+            </div>
+          </div>
+
+          <!-- Elementos / Preguntas -->
+          <div class="elemento-item mb-3" v-for="(ep, i) in proyectoRespuests" :key="i">
+            <div class="evaluacion-card">
+              <div class="card-head">
+                <div class="head-title">
+                  <span class="head-index">{{ i + 1 }}</span>
+                  <span v-if="ep.encabezado">{{ ep.encabezado }}</span>
+                  <span v-else>Elemento</span>
+                </div>
+                <span v-if="ep.preguntaTipoPreguntaTipoPregunta" class="tipo-badge">
+                  {{ ep.preguntaTipoPreguntaTipoPregunta }}
+                </span>
+              </div>
+              <div class="card-body-custom">
+                <div class="elemento-nombre">{{ ep.elemento }}</div>
+                <div class="elemento-descripcion" v-if="ep.proyectoRespuestasPreguntaPregunta">
+                  {{ ep.proyectoRespuestasPreguntaPregunta }}
+                </div>
+
+                <!-- Contenido diligenciado por el estudiante -->
+                <div class="contenido-estudiante" v-if="ep.dato">
+                  <div class="contenido-label"><font-awesome-icon icon="eye" /> Contenido de la propuesta</div>
+                  <div class="contenido-texto">{{ ep.dato }}</div>
+                </div>
+
+                <!-- Evaluación del asesor -->
+                <div class="respuesta-section" v-if="ep.preguntaTipoPreguntaTipoPregunta">
+                  <label class="respuesta-label">Evaluación del asesor</label>
+
+                  <div v-if="ep.preguntaTipoPreguntaTipoPregunta === 'Cumple NoCumple NoAplica'">
+                    <b-form-radio-group v-model="ep.respuesta" buttons button-variant="outline-success" size="sm" :name="`respuesta-${i}`">
+                      <b-form-radio value="CUMPLE">Cumple</b-form-radio>
+                      <b-form-radio value="NO_CUMPLE">No cumple</b-form-radio>
+                      <b-form-radio value="NO_APLICA">No aplica</b-form-radio>
+                    </b-form-radio-group>
+                  </div>
+
+                  <div v-else-if="ep.preguntaTipoPreguntaTipoPregunta === 'Si o No'">
+                    <b-form-radio-group v-model="ep.siNo" buttons button-variant="outline-primary" size="sm" :name="`sinorespuesta-${i}`">
+                      <b-form-radio :value="true">Sí</b-form-radio>
+                      <b-form-radio :value="false">No</b-form-radio>
+                    </b-form-radio-group>
+                  </div>
+
+                  <div v-else-if="ep.preguntaTipoPreguntaTipoPregunta === 'Nota (con puntaje)'" class="d-flex align-items-center">
+                    <input
+                      type="number"
+                      class="form-control nota-input"
+                      min="0"
+                      :max="ep.puntajeMaximo"
+                      step="0.1"
+                      v-model="ep.respuestaNumero"
+                    />
+                    <small class="text-muted ml-2" v-if="ep.puntajeMaximo">Máximo: {{ ep.puntajeMaximo }}</small>
+                  </div>
+
+                  <b-form-textarea
+                    v-else-if="ep.preguntaTipoPreguntaTipoPregunta === 'Libre (sin puntaje ni viabilidad)'"
+                    v-model="ep.respuestaTexto"
+                    rows="3"
+                    max-rows="6"
+                    placeholder="Escriba aquí su respuesta..."
+                  />
+                </div>
+
+                <!-- Observaciones -->
+                <div class="observaciones-section">
+                  <label class="respuesta-label"> <font-awesome-icon icon="comment-dots" /> Observaciones </label>
+                  <b-form-textarea v-model="ep.observaciones" rows="2" max-rows="5" placeholder="Escriba aquí sus observaciones..." />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Cronograma -->
+          <div class="evaluacion-card mb-3">
+            <div class="card-head">
+              <div class="head-title">
+                <font-awesome-icon icon="calendar-alt" class="head-icon" />
+                Cronograma de Actividades
+              </div>
+            </div>
+            <div class="card-body-custom table-responsive">
+              <table class="table table-sm table-striped mb-0">
+                <thead>
+                  <tr>
+                    <th>Actividad</th>
+                    <th>Duración</th>
+                    <th>Inicio</th>
+                    <th>Fin</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr v-for="(cr, c) in cronograms" :key="c">
+                    <td>{{ cr.actividad }}</td>
+                    <td>{{ cr.duracion }}</td>
+                    <td>{{ cr.fechaInicio }}</td>
+                    <td>{{ cr.fechaFin }}</td>
+                  </tr>
+                  <tr v-if="!cronograms || cronograms.length === 0">
+                    <td colspan="4" class="text-center text-muted py-3">
+                      Sin actividades registradas
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Recomendaciones -->
+          <div class="evaluacion-card mb-3">
+            <div class="card-head">
+              <div class="head-title">
+                <font-awesome-icon icon="info-circle" class="head-icon" />
+                Recomendaciones
+              </div>
+            </div>
+            <div class="card-body-custom">
+              <small class="text-muted d-block mb-2">
+                Si tiene comentarios o sugerencias adicionales sobre el proyecto, diligencie este apartado.
+              </small>
+              <b-form-textarea
+                class="form-control"
+                name="proyecto-recomendaciones"
+                v-model="proyecto.recomendacionesAsesorPropuesta"
+                rows="3"
+                max-rows="6"
+                placeholder="Escriba aquí sus recomendaciones..."
+              />
+            </div>
+          </div>
+
+          <!-- Adjunto de retroalimentación -->
+          <div class="evaluacion-card mb-3">
+            <div class="card-head">
+              <div class="head-title">
+                <font-awesome-icon icon="paperclip" class="head-icon" />
+                Documento de retroalimentación
+              </div>
+            </div>
+            <div class="card-body-custom">
+              <div v-if="adjuntoRetroalimentacion.id" class="d-flex align-items-center justify-content-between flex-wrap">
+                <div class="d-flex align-items-center">
+                  <div class="file-icon">
+                    <font-awesome-icon icon="file-alt" />
+                  </div>
+                  <div>
+                    <div class="file-name">{{ adjuntoRetroalimentacion.nombreArchivoOriginal }}</div>
+                    <div class="file-meta">
+                      {{ adjuntoRetroalimentacion.archivoContentType }} · {{ byteSize(adjuntoRetroalimentacion.file) }}
+                    </div>
+                  </div>
+                </div>
+                <div class="d-flex">
+                  <button type="button" class="btn btn-outline-primary btn-sm mr-2" v-on:click="descargarRetro()">
+                    <font-awesome-icon icon="download" /> Descargar
+                  </button>
+                  <button type="button" class="btn btn-outline-danger btn-sm" v-on:click="eliminarRetro()">
+                    <font-awesome-icon icon="times" /> Eliminar
+                  </button>
+                </div>
+              </div>
+              <div v-if="adjuntoRetroalimentacion.file == null" class="upload-zone">
+                <input
+                  type="file"
+                  ref="file_archivo"
+                  id="file_archivo"
+                  v-on:change="asignarDataRetro($event, adjuntoRetroalimentacion, 'archivo', false)"
+                />
+                <div class="upload-zone-text">
+                  <font-awesome-icon icon="paperclip" class="mr-2" />
+                  Seleccione un archivo para adjuntar
+                </div>
+              </div>
+              <small v-else class="text-muted">Si desea subir otro adjunto, deberá eliminar el archivo actual</small>
+              <input
+                type="hidden"
+                class="form-control"
+                name="archivo"
+                id="adjunto-retroalimentacion-archivo"
+                :class="{ valid: !v$.adjuntoRetroalimentacion.archivo.$invalid, invalid: v$.adjuntoRetroalimentacion.archivo.$invalid }"
+                v-model="v$.adjuntoRetroalimentacion.archivo.$model"
+              />
+              <input
+                type="hidden"
+                class="form-control"
+                name="archivoContentType"
+                id="adjunto-retroalimentacion-archivoContentType"
+                v-model="adjuntoRetroalimentacion.archivoContentType"
+              />
+              <input
+                type="hidden"
+                class="form-control"
+                name="fileName"
+                id="adjunto-retroalimentacion-fileName"
+                v-model="adjuntoRetroalimentacion.nombreArchivoOriginal"
+              />
+            </div>
+          </div>
+
+          <!-- Acciones -->
+          <div class="evaluacion-card mb-3">
+            <div class="card-head">
+              <div class="head-title">
+                <font-awesome-icon icon="clipboard-list" class="head-icon" />
+                Finalizar evaluación
+              </div>
+            </div>
+            <div class="card-body-custom">
+              <ul class="mb-3 acciones-ayuda">
+                <li><strong>Guardar borrador:</strong> guarda el avance de la evaluación sin que el estudiante pueda verla todavía.</li>
+                <li>
+                  <strong>Enviar correcciones al estudiante:</strong> publica las observaciones y recomendaciones para que el estudiante las
+                  corrija.
+                </li>
+                <li>
+                  <strong>{{ textoEnvioRevision }}:</strong> {{ textoEnvioRevisionDescripcion }}
+                </li>
+              </ul>
+              <div class="acciones-footer">
+                <button type="button" id="cancel-save" class="btn btn-light" v-on:click="previousState()">
+                  <font-awesome-icon icon="undo" />&nbsp;<span>Cancelar</span>
+                </button>
+                <button type="button" id="save-borrador" class="btn btn-outline-secondary" v-on:click="save('borrador')">
+                  <font-awesome-icon icon="save" />&nbsp;<span>Guardar borrador</span>
+                </button>
+                <button type="button" id="save-correcciones" class="btn btn-warning" v-on:click="save('correcciones')">
+                  <font-awesome-icon icon="envelope" />&nbsp;<span>Enviar correcciones al estudiante</span>
+                </button>
+                <button type="button" id="save-jurado" class="btn btn-primary" v-on:click="save('jurado')">
+                  <font-awesome-icon icon="paper-plane" />&nbsp;<span>{{ textoEnvioRevision }}</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
 </template>
 
 <script lang="ts">
-import { Component, Inject, Vue } from 'vue-property-decorator';
-import { mixins } from 'vue-class-component';
+import { useVuelidate } from '@vuelidate/core';
+import { Component, Inject, Vue, Hook } from 'vue-facing-decorator';
+import { mixins } from 'vue-facing-decorator';
 import MenuLateral from '@/components/propuesta/menu_lateral.vue';
 import AlertService from '@/shared/alert/alert.service';
 import ProyectoRespuestasService from '@/entities/proyecto-respuestas/proyecto-respuestas.service';
@@ -325,12 +319,8 @@ import AdjuntoRetroalimentacionService from '@/entities/adjunto-retroalimentacio
 import JhiDataUtils from '@/shared/data/data-utils.service';
 import { ESTADO_APROBADA_POR_ASESOR, ESTADO_CORRECCIONES_ASESOR, tieneJurado, textoEnvioRevision } from '@/shared/config/opcion_grado';
 
-
-
-
-    const validations: any = {
-
-    adjuntoProyectoFase: {
+const validations: any = {
+  adjuntoProyectoFase: {
     nombreAdjunto: {},
     fechaCreacion: {},
     fechaModificacion: {},
@@ -342,7 +332,7 @@ import { ESTADO_APROBADA_POR_ASESOR, ESTADO_CORRECCIONES_ASESOR, tieneJurado, te
     fechaFin: {},
     file: {},
   },
-   adjuntoRetroalimentacion: {
+  adjuntoRetroalimentacion: {
     nombreAdjunto: {},
     fechaCreacion: {},
     fechaModificacion: {},
@@ -354,439 +344,414 @@ import { ESTADO_APROBADA_POR_ASESOR, ESTADO_CORRECCIONES_ASESOR, tieneJurado, te
     fechaFin: {},
     file: {},
   },
-   proyecto:{
-     enviado: {},
-   },
+  proyecto: {
+    enviado: {},
+  },
+};
+
+@Component({
+  components: { MenuLateral },
+  options: {
+    validations,
+  },
+  setup() {
+    return { v$: useVuelidate() };
+  },
+})
+export default class PropuestaEvaluar extends mixins(JhiDataUtils) {
+  @Inject private proyectoService: () => ProyectoService;
+  @Inject private proyectoRespuestasService: () => ProyectoRespuestasService;
+  @Inject private preguntaService: () => PreguntaService;
+  @Inject private fasesService: () => FasesService;
+  @Inject private cronogramaService: () => CronogramaService;
+  @Inject private elementoProyectoService: () => ElementoProyectoService;
+  @Inject private adjuntoProyectoFaseService: () => AdjuntoProyectoFaseService;
+  @Inject private adjuntoRetroalimentacionService: () => AdjuntoRetroalimentacionService;
+
+  @Inject private alertService: () => AlertService;
+
+  public adjuntoProyectoFass: IAdjuntoProyectoFase[] = [];
+  public adjuntoProyectoFase: IAdjuntoProyectoFase = new AdjuntoProyectoFase();
+
+  public adjuntoRetroalimentacions: IAdjuntoRetroalimentacion[] = [];
+  public adjuntoRetroalimentacion: IAdjuntoRetroalimentacion = new AdjuntoRetroalimentacion();
+
+  public pregunts: IPregunta[] = [];
+  public fase: IFases = new Fases();
+  public proyectoRespuests: IProyectoRespuestas[] = [];
+  public elementoProyects: IElementoProyecto[] = [];
+  public elemProy: ElementoProyecto;
+  public proyecto: IProyecto = new Proyecto();
+  public proyId: any = null;
+
+  public modalidadId: number = 0;
+  public enumRespuestas: EnumRespuestas;
+
+  public get textoEnvioRevision(): string {
+    return textoEnvioRevision(this.modalidadId);
+  }
+
+  public get textoEnvioRevisionDescripcion(): string {
+    return tieneJurado(this.modalidadId)
+      ? 'publica la evaluación y continúa el flujo hacia el jurado de la propuesta.'
+      : 'publica la evaluación, registra el concepto favorable del asesor y habilita el desarrollo del proyecto.';
+  }
+
+  public isSaving = false;
+  public proyectoRespuestasDatos: boolean = false;
+  public authority: any = 'ROLE_ASESOR';
+  public nombreFase: any = 'Propuesta';
+  public cronograms: ICronograma[] = [];
+
+  public dismissCountDown: number = this.$store.getters.dismissCountDown;
+  public dismissSecs: number = this.$store.getters.dismissSecs;
+  public alertType: string = this.$store.getters.alertType;
+  public alertMessage: any = this.$store.getters.alertMessage;
+
+  public getAlertFromStore() {
+    this.dismissCountDown = this.$store.getters.dismissCountDown;
+    this.dismissSecs = this.$store.getters.dismissSecs;
+    this.alertType = this.$store.getters.alertType;
+    this.alertMessage = this.$store.getters.alertMessage;
+  }
+
+  public countDownChanged(dismissCountDown: number) {
+    this.alertService().countDownChanged(dismissCountDown);
+    this.getAlertFromStore();
+  }
+
+  public mounted(): void {}
+
+  public estadoLabel(estado: string | undefined): string {
+    const estados: any = {
+      EN_ELABORACION_PROPUESTA: 'En elaboración de propuesta',
+      EN_ELABORACION_PROYECTO: 'En elaboración de proyecto',
+      EN_REVISION_ASESOR: 'En revisión del asesor',
+      EN_REVISION_JURADO_PROPUESTA: 'En revisión del jurado (propuesta)',
+      CORRECCIONES_ASESOR: 'Correcciones del asesor',
+      CORRECCIONES_JURADO_PROPUESTA: 'Correcciones del jurado (propuesta)',
+      EN_REVISION_JURADO_PROYECTO: 'En revisión del jurado (proyecto)',
+      CORRECCIONES_JURADO_PROYECTO: 'Correcciones del jurado (proyecto)',
+      APROBADA_POR_ASESOR: 'Concepto favorable del asesor',
+      EN_REVISION_ASESOR_PROYECTO: 'En revisión del asesor (proyecto)',
+      CORRECCIONES_ASESOR_PROYECTO: 'Correcciones del asesor (proyecto)',
+      VIABLE: 'Propuesta viable',
+      NO_VIABLE: 'Propuesta no viable',
+      LISTO_PARA_SUSTENTAR: 'Listo para sustentar',
+      LISTO_PARA_SOCIALIZAR: 'Listo para socializar',
+      SOCIALIZACION_PROGRAMADA: 'Socialización programada',
+      SOCIALIZACION_REALIZADA: 'Socialización realizada',
+      EN_EVALUACION_SOCIALIZACION: 'Evaluación de socialización',
+      EN_SUSTENTACION: 'En sustentación',
+      NOTA_DEFINITIVA: 'Nota definitiva',
     };
+    return estado ? estados[estado] || estado : '';
+  }
 
-   @Component({
-        components: { MenuLateral },
-        validations
-    })
+  public estadoVariant(estado: string | undefined): string {
+    const variants: any = {
+      EN_ELABORACION_PROPUESTA: 'secondary',
+      EN_ELABORACION_PROYECTO: 'secondary',
+      EN_REVISION_ASESOR: 'info',
+      EN_REVISION_JURADO_PROPUESTA: 'info',
+      CORRECCIONES_ASESOR: 'warning',
+      CORRECCIONES_JURADO_PROPUESTA: 'warning',
+      EN_REVISION_JURADO_PROYECTO: 'info',
+      CORRECCIONES_JURADO_PROYECTO: 'warning',
+      APROBADA_POR_ASESOR: 'success',
+      EN_REVISION_ASESOR_PROYECTO: 'info',
+      CORRECCIONES_ASESOR_PROYECTO: 'warning',
+      VIABLE: 'success',
+      NO_VIABLE: 'danger',
+      LISTO_PARA_SUSTENTAR: 'success',
+      LISTO_PARA_SOCIALIZAR: 'success',
+      SOCIALIZACION_PROGRAMADA: 'primary',
+      SOCIALIZACION_REALIZADA: 'primary',
+      EN_EVALUACION_SOCIALIZACION: 'info',
+      EN_SUSTENTACION: 'primary',
+      NOTA_DEFINITIVA: 'success',
+    };
+    return estado ? variants[estado] || 'secondary' : 'secondary';
+  }
 
+  @Hook
+  beforeRouteEnter(to, from, next) {
+    next(vm => {
+      vm.initRelationships();
+    });
+  }
 
-export default class PropuestaEvaluar extends mixins(JhiDataUtils){
+  descargar() {
+    //console.log('se hizo clic');
+    this.adjuntoProyectoFaseService().downloadFile(this.adjuntoProyectoFase.id, this.adjuntoProyectoFase.nombreArchivoOriginal);
+  }
 
+  descargarRetro() {
+    //console.log('se hizo clic');
+    this.adjuntoRetroalimentacionService().downloadFile(
+      this.adjuntoRetroalimentacion.id,
+      this.adjuntoRetroalimentacion.nombreArchivoOriginal
+    );
+  }
 
-   @Inject('proyectoService') private proyectoService: () => ProyectoService;
-   @Inject('proyectoRespuestasService') private proyectoRespuestasService: () => ProyectoRespuestasService;
-   @Inject('preguntaService') private preguntaService: () => PreguntaService;
-   @Inject('fasesService') private fasesService: () => FasesService;
-   @Inject('cronogramaService') private cronogramaService: () => CronogramaService;
-   @Inject('elementoProyectoService') private elementoProyectoService: () => ElementoProyectoService;
-   @Inject('adjuntoProyectoFaseService') private adjuntoProyectoFaseService: () => AdjuntoProyectoFaseService;
-   @Inject('adjuntoRetroalimentacionService') private adjuntoRetroalimentacionService: () => AdjuntoRetroalimentacionService;
-
-   @Inject('alertService') private alertService: () => AlertService;
-
-    public adjuntoProyectoFass:IAdjuntoProyectoFase[] =[];
-    public adjuntoProyectoFase: IAdjuntoProyectoFase = new AdjuntoProyectoFase();
-
-    public adjuntoRetroalimentacions:IAdjuntoRetroalimentacion[] =[];
-    public adjuntoRetroalimentacion: IAdjuntoRetroalimentacion = new AdjuntoRetroalimentacion();
-
-    public pregunts: IPregunta[] = [];
-    public fase: IFases = new Fases();
-    public proyectoRespuests: IProyectoRespuestas[] =[];
-    public elementoProyects: IElementoProyecto[]=[];
-    public elemProy: ElementoProyecto;
-    public proyecto: IProyecto = new Proyecto();
-    public proyId: any = null;
-  
-  
-    public modalidadId: number = 0;
-    public enumRespuestas: EnumRespuestas;
-
-    public get textoEnvioRevision(): string {
-        return textoEnvioRevision(this.modalidadId);
-    }
-
-    public get textoEnvioRevisionDescripcion(): string {
-        return tieneJurado(this.modalidadId)
-            ? 'publica la evaluación y continúa el flujo hacia el jurado de la propuesta.'
-            : 'publica la evaluación, registra el concepto favorable del asesor y habilita el desarrollo del proyecto.';
-    }
-
-    public isSaving = false;
-    public proyectoRespuestasDatos: boolean = false;
-    public  authority: any="ROLE_ASESOR";
-     public nombreFase: any = "Propuesta";
-    public cronograms: ICronograma[]=[];
-
-    public dismissCountDown: number = this.$store.getters.dismissCountDown;
-    public dismissSecs: number = this.$store.getters.dismissSecs;
-    public alertType: string = this.$store.getters.alertType;
-    public alertMessage: any = this.$store.getters.alertMessage;
-
-    public getAlertFromStore() {
-        this.dismissCountDown = this.$store.getters.dismissCountDown;
-        this.dismissSecs = this.$store.getters.dismissSecs;
-        this.alertType = this.$store.getters.alertType;
-        this.alertMessage = this.$store.getters.alertMessage;
-    }
-
-    public countDownChanged(dismissCountDown: number) {
-        this.alertService().countDownChanged(dismissCountDown);
-        this.getAlertFromStore();
-    }
-
-    public mounted(): void {
-    }
-
-    public estadoLabel(estado: string | undefined): string {
-        const estados: any = {
-            EN_ELABORACION_PROPUESTA: 'En elaboración de propuesta',
-            EN_ELABORACION_PROYECTO: 'En elaboración de proyecto',
-            EN_REVISION_ASESOR: 'En revisión del asesor',
-            EN_REVISION_JURADO_PROPUESTA: 'En revisión del jurado (propuesta)',
-            CORRECCIONES_ASESOR: 'Correcciones del asesor',
-            CORRECCIONES_JURADO_PROPUESTA: 'Correcciones del jurado (propuesta)',
-            EN_REVISION_JURADO_PROYECTO: 'En revisión del jurado (proyecto)',
-            CORRECCIONES_JURADO_PROYECTO: 'Correcciones del jurado (proyecto)',
-            APROBADA_POR_ASESOR: 'Concepto favorable del asesor',
-            EN_REVISION_ASESOR_PROYECTO: 'En revisión del asesor (proyecto)',
-            CORRECCIONES_ASESOR_PROYECTO: 'Correcciones del asesor (proyecto)',
-            VIABLE: 'Propuesta viable',
-            NO_VIABLE: 'Propuesta no viable',
-            LISTO_PARA_SUSTENTAR: 'Listo para sustentar',
-            LISTO_PARA_SOCIALIZAR: 'Listo para socializar',
-            SOCIALIZACION_PROGRAMADA: 'Socialización programada',
-            SOCIALIZACION_REALIZADA: 'Socialización realizada',
-            EN_EVALUACION_SOCIALIZACION: 'Evaluación de socialización',
-            EN_SUSTENTACION: 'En sustentación',
-            NOTA_DEFINITIVA: 'Nota definitiva'
-        };
-        return estado ? (estados[estado] || estado) : '';
-    }
-
-    public estadoVariant(estado: string | undefined): string {
-        const variants: any = {
-            EN_ELABORACION_PROPUESTA: 'secondary',
-            EN_ELABORACION_PROYECTO: 'secondary',
-            EN_REVISION_ASESOR: 'info',
-            EN_REVISION_JURADO_PROPUESTA: 'info',
-            CORRECCIONES_ASESOR: 'warning',
-            CORRECCIONES_JURADO_PROPUESTA: 'warning',
-            EN_REVISION_JURADO_PROYECTO: 'info',
-            CORRECCIONES_JURADO_PROYECTO: 'warning',
-            APROBADA_POR_ASESOR: 'success',
-            EN_REVISION_ASESOR_PROYECTO: 'info',
-            CORRECCIONES_ASESOR_PROYECTO: 'warning',
-            VIABLE: 'success',
-            NO_VIABLE: 'danger',
-            LISTO_PARA_SUSTENTAR: 'success',
-            LISTO_PARA_SOCIALIZAR: 'success',
-            SOCIALIZACION_PROGRAMADA: 'primary',
-            SOCIALIZACION_REALIZADA: 'primary',
-            EN_EVALUACION_SOCIALIZACION: 'info',
-            EN_SUSTENTACION: 'primary',
-            NOTA_DEFINITIVA: 'success'
-        };
-        return estado ? (variants[estado] || 'secondary') : 'secondary';
-    }
-
-        beforeRouteEnter(to, from, next) {
-            next(vm => {
-                    
-                    vm.initRelationships();
-            });
-        }
-
-
-     descargar() {
-        //console.log('se hizo clic');
-        this.adjuntoProyectoFaseService().downloadFile(this.adjuntoProyectoFase.id, this.adjuntoProyectoFase.nombreArchivoOriginal);
-     }
-
-     descargarRetro() {
-        //console.log('se hizo clic');
-        this.adjuntoRetroalimentacionService().downloadFile(this.adjuntoRetroalimentacion.id, this.adjuntoRetroalimentacion.nombreArchivoOriginal);
-     }
-
-     eliminarRetro(ob) {
+  eliminarRetro(ob) {
     //console.log('entro a eliminar');
     this.adjuntoRetroalimentacionService().delete(this.adjuntoRetroalimentacion.id);
     //this.adjuntoProyectoFass=null;
     this.adjuntoRetroalimentacions = null;
-        //this.isSaving = false;
-           (<any>this).$router.go(0);
+    //this.isSaving = false;
+    (<any>this).$router.go(0);
   }
 
-
-     asignarData(event, entity, field, isImage){
-     var fileData =  event.target.files[0];
-    this.adjuntoProyectoFase.nombreArchivoOriginal= fileData.name;
+  asignarData(event, entity, field, isImage) {
+    var fileData = event.target.files[0];
+    this.adjuntoProyectoFase.nombreArchivoOriginal = fileData.name;
     //console.log(this.adjuntoProyectoFase.nombreArchivoOriginal);
 
-    this.setFileData(event, entity, field, isImage)
-    
+    this.setFileData(event, entity, field, isImage);
   }
 
-  asignarDataRetro(event, entity, field, isImage){
-     var fileData =  event.target.files[0];
-    this.adjuntoRetroalimentacion.nombreArchivoOriginal= fileData.name;
+  asignarDataRetro(event, entity, field, isImage) {
+    var fileData = event.target.files[0];
+    this.adjuntoRetroalimentacion.nombreArchivoOriginal = fileData.name;
     //console.log(this.adjuntoRetroalimentacion.nombreArchivoOriginal);
 
-    this.setFileData(event, entity, field, isImage)
-    
+    this.setFileData(event, entity, field, isImage);
   }
-        public save(accion: 'borrador' | 'correcciones' | 'jurado'): void {
-            this.isSaving = true;
+  public save(accion: 'borrador' | 'correcciones' | 'jurado'): void {
+    this.isSaving = true;
 
-            try {
-                const operaciones: Promise<any>[] = [];
+    try {
+      const operaciones: Promise<any>[] = [];
 
-                // Adjunto: solo se guarda si ya existe uno o el usuario seleccionó un archivo
-                const tieneAdjunto: boolean =
-                    !!this.adjuntoRetroalimentacion.id ||
-                    (this.adjuntoRetroalimentacion.archivo != null && this.adjuntoRetroalimentacion.archivo.length > 0);
+      // Adjunto: solo se guarda si ya existe uno o el usuario seleccionó un archivo
+      const tieneAdjunto: boolean =
+        !!this.adjuntoRetroalimentacion.id ||
+        (this.adjuntoRetroalimentacion.archivo != null && this.adjuntoRetroalimentacion.archivo.length > 0);
 
-                if (tieneAdjunto) {
-                    this.adjuntoRetroalimentacion.adjuntoRetroalimentacionProyectoId = this.proyecto.id;
-                    this.adjuntoRetroalimentacion.adjuntoRetroalimentacionFaseId = this.fase.id;
-                    this.adjuntoRetroalimentacion.authority = this.authority;
-                    this.adjuntoRetroalimentacion.fechaCreacion = new Date();
+      if (tieneAdjunto) {
+        this.adjuntoRetroalimentacion.adjuntoRetroalimentacionProyectoId = this.proyecto.id;
+        this.adjuntoRetroalimentacion.adjuntoRetroalimentacionFaseId = this.fase.id;
+        this.adjuntoRetroalimentacion.authority = this.authority;
+        this.adjuntoRetroalimentacion.fechaCreacion = new Date();
 
-                    operaciones.push(
-                        this.adjuntoRetroalimentacion.id
-                            ? this.adjuntoRetroalimentacionService().update(this.adjuntoRetroalimentacion)
-                            : this.adjuntoRetroalimentacionService()
-                                .create(this.adjuntoRetroalimentacion)
-                                .then(param => {
-                                    this.adjuntoRetroalimentacion.id = param.id;
-                                })
-                    );
-                }
-
-                // Respuestas: se omiten las filas de solo visualización (elementos del estudiante sin pregunta)
-                this.proyectoRespuests.forEach(e => {
-                    if (!e.id && !e.proyectoRespuestasPreguntaId) {
-                        return;
-                    }
-                    e.faseId = this.fase.id;
-                    e.authority = this.authority;
-                    if (e.id) {
-                        operaciones.push(this.proyectoRespuestasService().update(e));
-                    } else {
-                        operaciones.push(
-                            this.proyectoRespuestasService()
-                                .create(e)
-                                .then(param => {
-                                    e.id = param.id;
-                                })
-                        );
-                    }
-                });
-
-                // El proyecto siempre se actualiza (recomendaciones, decisiones, etc.)
-                operaciones.push(this.proyectoService().updateProyecto(this.proyecto));
-
-                Promise.all(operaciones)
-                    .then(() => {
-                        if (accion === 'borrador') {
-                            this.isSaving = false;
-                            this.alertService().showAlert('Borrador guardado. El estudiante aún no puede ver la evaluación.', 'info');
-                            this.getAlertFromStore();
-                            return null;
-                        }
-                        if (accion === 'correcciones') {
-                            this.proyecto.enviado = false;
-                        } else {
-                            this.proyecto.enviado = true;
-                        }
-                        return this.cambiarEstadoSegunAsesoria(accion);
-                    })
-                    .then(() => {
-                        if (accion !== 'borrador') {
-                            this.previousState();
-                        }
-                    })
-                    .catch(err => {
-                        this.isSaving = false;
-                        this.alertService().showAlert('Error al guardar la evaluación: ' + (err && err.message ? err.message : err), 'danger');
-                        this.getAlertFromStore();
-                    });
-            } catch (e) {
-                this.isSaving = false;
-            }
-        }
-
-        public cambiarEstadoSegunAsesoria(accion: 'correcciones' | 'jurado'): Promise<any> {
-            const enviado = this.proyecto.enviado;
-            const conJurado = tieneJurado(this.modalidadId);
-            const nuevoEstado = !enviado
-                ? ESTADO_CORRECCIONES_ASESOR
-                : conJurado
-                ? 'EN_REVISION_JURADO_PROPUESTA'
-                : ESTADO_APROBADA_POR_ASESOR;
-            const observacion = !enviado
-                ? 'Asesor solicita correcciones en la propuesta'
-                : conJurado
-                ? 'Asesor aprueba y envía la propuesta al jurado'
-                : 'Asesor emite concepto favorable de la propuesta (Acuerdo 025, art. 24, literal b)';
-            return this.proyectoService()
-                .cambiarEstado(this.proyecto.id, nuevoEstado, observacion)
-                .then(() => {
-                    this.isSaving = false;
-                    const message = !enviado
-                        ? 'Correcciones enviadas al estudiante.'
-                        : conJurado
-                        ? 'Propuesta enviada al jurado.'
-                        : 'Concepto favorable registrado. El estudiante puede iniciar el desarrollo del proyecto.';
-                    this.alertService().showAlert(message, 'success');
-                    this.getAlertFromStore();
+        operaciones.push(
+          this.adjuntoRetroalimentacion.id
+            ? this.adjuntoRetroalimentacionService().update(this.adjuntoRetroalimentacion)
+            : this.adjuntoRetroalimentacionService()
+                .create(this.adjuntoRetroalimentacion)
+                .then(param => {
+                  this.adjuntoRetroalimentacion.id = param.id;
                 })
-                .catch(err => {
-                    this.isSaving = false;
-                    this.alertService().showAlert('Error al actualizar estado: ' + err.message, 'danger');
-                    this.getAlertFromStore();
-                });
+        );
+      }
+
+      // Respuestas: se omiten las filas de solo visualización (elementos del estudiante sin pregunta)
+      this.proyectoRespuests.forEach(e => {
+        if (!e.id && !e.proyectoRespuestasPreguntaId) {
+          return;
         }
-
-        async initRelationships() {
-           try {
-               this.proyId = parseInt(this.$route.params.proyectoId);
-               this.proyecto = await this.proyectoService().find(this.proyId);
-               this.modalidadId = this.proyecto.proyectoModalidadId;
-
-                let res= await this.fasesService()
-                .retrieveFase(this.nombreFase)   
-                 this.fase = res.data;
-               
-                res= await this.elementoProyectoService()
-                .retrieveElementoProyecto(this.proyId, this.fase.id)   //recup los ElementosProyecto con un idproy
-                 this.elementoProyects = res.data;
-
-               
-
-                res= await this.proyectoRespuestasService()
-                .retrieveProyectoRespuestas(this.proyId, this.fase.id, this.authority)   //recup los proyresp con un idproy
-                this.proyectoRespuests = res.data.filter(r => r.proyectoRespuestasPreguntaId != null);
-                if (this.proyectoRespuests.length>0){
-                        this.proyectoRespuestasDatos=true;
-                    }
-                else{
-                        this.proyectoRespuestasDatos=false;
-                    }
-                    //console.log(this.proyectoRespuestasDatos);
-               
-                
-
-              //Obtenienedo los elementos de acuerdo a la modalidad
-              res = await  this.preguntaService()
-               .retrievePreguntasModalidadyFaseyAuthority(this.modalidadId, this.fase.id, this.authority);
-
-              this.pregunts = res.data;
-              const elementosCubiertos: number[] = [];
-
-              const preguntasPorId: any = {};
-              this.pregunts.forEach(e => {
-                preguntasPorId[e.id] = e;
-              });
-
-              this.pregunts.forEach(e => {
-                var proyResp: IProyectoRespuestas = new ProyectoRespuestas();
-                proyResp.proyectoRespuestasPreguntaPregunta = e.pregunta;
-                proyResp.proyectoRespuestasPreguntaId = e.id;
-                proyResp.proyectoRespuestasProyectoId = this.proyId;
-                //ubicar un elemento, no esta en proyectoRespuestas
-                proyResp.elemento = (e as any).preguntaElementoElemento;
-                proyResp.preguntaTipoPreguntaId = e.preguntaTipoPreguntaId;
-                proyResp.preguntaTipoPreguntaTipoPregunta = e.preguntaTipoPreguntaTipoPregunta;
-                proyResp.encabezado = e.encabezado;
-                proyResp.puntajeMaximo = e.puntajeMaximo;
-                this.elementoProyects.forEach(x => {
-                  if (x.elementoProyectoElementoId == e.preguntaElementoId){
-                     proyResp.dato = x.dato;
-                     elementosCubiertos.push(x.elementoProyectoElementoId);
-                  }
-                });
-                if (!this.proyectoRespuestasDatos){
-                 this.proyectoRespuests.push(proyResp);
-                }
-              }); //fin del foreach pregunts
-
-              // Refrescar los datos vivos de la pregunta en las respuestas ya guardadas.
-              // El tipo de pregunta, encabezado y puntaje no deben depender de la columna
-              // desnormalizada de proyecto_respuestas (puede estar vacía o desactualizada,
-              // lo que rompía el radio de evaluación de la fila).
-              if (this.proyectoRespuestasDatos) {
-                this.proyectoRespuests.forEach(r => {
-                  const p = preguntasPorId[r.proyectoRespuestasPreguntaId];
-                  if (p) {
-                    r.preguntaTipoPreguntaId = p.preguntaTipoPreguntaId;
-                    r.preguntaTipoPreguntaTipoPregunta = p.preguntaTipoPreguntaTipoPregunta;
-                    r.encabezado = p.encabezado;
-                    r.puntajeMaximo = p.puntajeMaximo;
-                    r.proyectoRespuestasPreguntaPregunta = p.pregunta;
-                    r.elemento = (p as any).preguntaElementoElemento;
-                  }
-                });
-              }
-
-              //Mostrar siempre los elementos que diligenció el estudiante
-              this.elementoProyects.forEach(x => {
-                if (!elementosCubiertos.includes(x.elementoProyectoElementoId)) {
-                  const proyRespElem: IProyectoRespuestas = new ProyectoRespuestas();
-                  proyRespElem.elemento = x.elementoProyectoElementoElemento;
-                  proyRespElem.proyectoRespuestasPreguntaPregunta = x.elementoProyectoProyectoDescripcion;
-                  proyRespElem.proyectoRespuestasProyectoId = this.proyId;
-                  proyRespElem.encabezado = x.elementoProyectoElementoElemento;
-                  proyRespElem.dato = x.dato;
-                  this.proyectoRespuests.push(proyRespElem);
-                }
-              });
-
-          
-       res=  await this.adjuntoProyectoFaseService()
-      .findAdjuntoProyectoFase(this.proyId,  this.fase.id)
-      .then(res => {
-        this.adjuntoProyectoFass = res.data;
-        if(this.adjuntoProyectoFass.length==0){
-         this.adjuntoProyectoFase =  new AdjuntoProyectoFase();
+        e.faseId = this.fase.id;
+        e.authority = this.authority;
+        if (e.id) {
+          operaciones.push(this.proyectoRespuestasService().update(e));
+        } else {
+          operaciones.push(
+            this.proyectoRespuestasService()
+              .create(e)
+              .then(param => {
+                e.id = param.id;
+              })
+          );
         }
-        else{
-          this.adjuntoProyectoFase = this.adjuntoProyectoFass[0];
-        }
-         //console.log(this.adjuntoProyectoFass);
-        
       });
 
-      res=  await this.adjuntoRetroalimentacionService()
-      .findAdjuntoRetroalimentacionProyectoFaseAuthority(this.proyId,  this.fase.id, this.authority)
-      .then(res => {
-        this.adjuntoRetroalimentacions = res.data;
-        if(this.adjuntoRetroalimentacions.length==0){
-         this.adjuntoRetroalimentacion =  new AdjuntoRetroalimentacion();
-        }
-        else{
-          this.adjuntoRetroalimentacion = this.adjuntoRetroalimentacions[0];
-        }
-        // console.log(this.adjuntoRetroalimentacions);
-        // console.log(this.adjuntoRetroalimentacion);
+      // El proyecto siempre se actualiza (recomendaciones, decisiones, etc.)
+      operaciones.push(this.proyectoService().updateProyecto(this.proyecto));
+
+      Promise.all(operaciones)
+        .then(() => {
+          if (accion === 'borrador') {
+            this.isSaving = false;
+            this.alertService().showAlert('Borrador guardado. El estudiante aún no puede ver la evaluación.', 'info');
+            this.getAlertFromStore();
+            return null;
+          }
+          if (accion === 'correcciones') {
+            this.proyecto.enviado = false;
+          } else {
+            this.proyecto.enviado = true;
+          }
+          return this.cambiarEstadoSegunAsesoria(accion);
+        })
+        .then(() => {
+          if (accion !== 'borrador') {
+            this.previousState();
+          }
+        })
+        .catch(err => {
+          this.isSaving = false;
+          this.alertService().showAlert('Error al guardar la evaluación: ' + (err && err.message ? err.message : err), 'danger');
+          this.getAlertFromStore();
+        });
+    } catch (e) {
+      this.isSaving = false;
+    }
+  }
+
+  public cambiarEstadoSegunAsesoria(accion: 'correcciones' | 'jurado'): Promise<any> {
+    const enviado = this.proyecto.enviado;
+    const conJurado = tieneJurado(this.modalidadId);
+    const nuevoEstado = !enviado ? ESTADO_CORRECCIONES_ASESOR : conJurado ? 'EN_REVISION_JURADO_PROPUESTA' : ESTADO_APROBADA_POR_ASESOR;
+    const observacion = !enviado
+      ? 'Asesor solicita correcciones en la propuesta'
+      : conJurado
+      ? 'Asesor aprueba y envía la propuesta al jurado'
+      : 'Asesor emite concepto favorable de la propuesta (Acuerdo 025, art. 24, literal b)';
+    return this.proyectoService()
+      .cambiarEstado(this.proyecto.id, nuevoEstado, observacion)
+      .then(() => {
+        this.isSaving = false;
+        const message = !enviado
+          ? 'Correcciones enviadas al estudiante.'
+          : conJurado
+          ? 'Propuesta enviada al jurado.'
+          : 'Concepto favorable registrado. El estudiante puede iniciar el desarrollo del proyecto.';
+        this.alertService().showAlert(message, 'success');
+        this.getAlertFromStore();
+      })
+      .catch(err => {
+        this.isSaving = false;
+        this.alertService().showAlert('Error al actualizar estado: ' + err.message, 'danger');
+        this.getAlertFromStore();
+      });
+  }
+
+  async initRelationships() {
+    try {
+      this.proyId = parseInt(this.$route.params.proyectoId);
+      this.proyecto = await this.proyectoService().find(this.proyId);
+      this.modalidadId = this.proyecto.proyectoModalidadId;
+
+      let res = await this.fasesService().retrieveFase(this.nombreFase);
+      this.fase = res.data;
+
+      res = await this.elementoProyectoService().retrieveElementoProyecto(this.proyId, this.fase.id); //recup los ElementosProyecto con un idproy
+      this.elementoProyects = res.data;
+
+      res = await this.proyectoRespuestasService().retrieveProyectoRespuestas(this.proyId, this.fase.id, this.authority); //recup los proyresp con un idproy
+      this.proyectoRespuests = res.data.filter(r => r.proyectoRespuestasPreguntaId != null);
+      if (this.proyectoRespuests.length > 0) {
+        this.proyectoRespuestasDatos = true;
+      } else {
+        this.proyectoRespuestasDatos = false;
+      }
+      //console.log(this.proyectoRespuestasDatos);
+
+      //Obtenienedo los elementos de acuerdo a la modalidad
+      res = await this.preguntaService().retrievePreguntasModalidadyFaseyAuthority(this.modalidadId, this.fase.id, this.authority);
+
+      this.pregunts = res.data;
+      const elementosCubiertos: number[] = [];
+
+      const preguntasPorId: any = {};
+      this.pregunts.forEach(e => {
+        preguntasPorId[e.id] = e;
       });
 
-       res= await this.cronogramaService()
-       .retrieveCronograma(this.proyId)   //recup los ElementosProyecto con un idproy
-        this.cronograms = res.data;
-     
-            }
-            catch(e){
-              //console.log("error al recuperar la informacion de elemento ");
-            }
+      this.pregunts.forEach(e => {
+        var proyResp: IProyectoRespuestas = new ProyectoRespuestas();
+        proyResp.proyectoRespuestasPreguntaPregunta = e.pregunta;
+        proyResp.proyectoRespuestasPreguntaId = e.id;
+        proyResp.proyectoRespuestasProyectoId = this.proyId;
+        //ubicar un elemento, no esta en proyectoRespuestas
+        proyResp.elemento = (e as any).preguntaElementoElemento;
+        proyResp.preguntaTipoPreguntaId = e.preguntaTipoPreguntaId;
+        proyResp.preguntaTipoPreguntaTipoPregunta = e.preguntaTipoPreguntaTipoPregunta;
+        proyResp.encabezado = e.encabezado;
+        proyResp.puntajeMaximo = e.puntajeMaximo;
+        this.elementoProyects.forEach(x => {
+          if (x.elementoProyectoElementoId == e.preguntaElementoId) {
+            proyResp.dato = x.dato;
+            elementosCubiertos.push(x.elementoProyectoElementoId);
+          }
+        });
+        if (!this.proyectoRespuestasDatos) {
+          this.proyectoRespuests.push(proyResp);
         }
-public previousState() {
+      }); //fin del foreach pregunts
+
+      // Refrescar los datos vivos de la pregunta en las respuestas ya guardadas.
+      // El tipo de pregunta, encabezado y puntaje no deben depender de la columna
+      // desnormalizada de proyecto_respuestas (puede estar vacía o desactualizada,
+      // lo que rompía el radio de evaluación de la fila).
+      if (this.proyectoRespuestasDatos) {
+        this.proyectoRespuests.forEach(r => {
+          const p = preguntasPorId[r.proyectoRespuestasPreguntaId];
+          if (p) {
+            r.preguntaTipoPreguntaId = p.preguntaTipoPreguntaId;
+            r.preguntaTipoPreguntaTipoPregunta = p.preguntaTipoPreguntaTipoPregunta;
+            r.encabezado = p.encabezado;
+            r.puntajeMaximo = p.puntajeMaximo;
+            r.proyectoRespuestasPreguntaPregunta = p.pregunta;
+            r.elemento = (p as any).preguntaElementoElemento;
+          }
+        });
+      }
+
+      //Mostrar siempre los elementos que diligenció el estudiante
+      this.elementoProyects.forEach(x => {
+        if (!elementosCubiertos.includes(x.elementoProyectoElementoId)) {
+          const proyRespElem: IProyectoRespuestas = new ProyectoRespuestas();
+          proyRespElem.elemento = x.elementoProyectoElementoElemento;
+          proyRespElem.proyectoRespuestasPreguntaPregunta = x.elementoProyectoProyectoDescripcion;
+          proyRespElem.proyectoRespuestasProyectoId = this.proyId;
+          proyRespElem.encabezado = x.elementoProyectoElementoElemento;
+          proyRespElem.dato = x.dato;
+          this.proyectoRespuests.push(proyRespElem);
+        }
+      });
+
+      res = await this.adjuntoProyectoFaseService()
+        .findAdjuntoProyectoFase(this.proyId, this.fase.id)
+        .then(res => {
+          this.adjuntoProyectoFass = res.data;
+          if (this.adjuntoProyectoFass.length == 0) {
+            this.adjuntoProyectoFase = new AdjuntoProyectoFase();
+          } else {
+            this.adjuntoProyectoFase = this.adjuntoProyectoFass[0];
+          }
+          //console.log(this.adjuntoProyectoFass);
+        });
+
+      res = await this.adjuntoRetroalimentacionService()
+        .findAdjuntoRetroalimentacionProyectoFaseAuthority(this.proyId, this.fase.id, this.authority)
+        .then(res => {
+          this.adjuntoRetroalimentacions = res.data;
+          if (this.adjuntoRetroalimentacions.length == 0) {
+            this.adjuntoRetroalimentacion = new AdjuntoRetroalimentacion();
+          } else {
+            this.adjuntoRetroalimentacion = this.adjuntoRetroalimentacions[0];
+          }
+          // console.log(this.adjuntoRetroalimentacions);
+          // console.log(this.adjuntoRetroalimentacion);
+        });
+
+      res = await this.cronogramaService().retrieveCronograma(this.proyId); //recup los ElementosProyecto con un idproy
+      this.cronograms = res.data;
+    } catch (e) {
+      //console.log("error al recuperar la informacion de elemento ");
+    }
+  }
+  public previousState() {
     this.$router.go(-1);
   }
-        
 
-public saveAndPreviousState() {
+  public saveAndPreviousState() {
     //this.save();
     this.$router.go(-1);
   }
-        
 }
-
 </script>
 
 <style scoped>

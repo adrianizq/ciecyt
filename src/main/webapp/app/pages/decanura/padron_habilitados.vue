@@ -78,7 +78,7 @@
 </template>
 
 <script lang="ts">
-    import { Component, Inject, Vue } from 'vue-property-decorator';
+    import { Component, Inject, Vue } from 'vue-facing-decorator';
 
     import AlertService from '@/shared/alert/alert.service';
     import DocenteHabilitadoService from '@/entities/docente-habilitado/docente-habilitado.service';
@@ -88,10 +88,10 @@
 
     @Component
     export default class PadronDocentesHabilitados extends Vue {
-        @Inject('alertService') private alertService: () => AlertService;
-        @Inject('docenteHabilitadoService') private docenteHabilitadoService: () => DocenteHabilitadoService;
-        @Inject('decanoFacultadService') private decanoFacultadService: () => DecanoFacultadService;
-        @Inject('facultadService') private facultadService: () => FacultadService;
+        @Inject  private alertService: () => AlertService;
+        @Inject  private docenteHabilitadoService: () => DocenteHabilitadoService;
+        @Inject  private decanoFacultadService: () => DecanoFacultadService;
+        @Inject  private facultadService: () => FacultadService;
 
         public facultades: any[] = [];
         public facultadId: number = null;

@@ -53,7 +53,7 @@
 
                         <!-- TIPOS Pregunta--------------------------------------------->
                         <div class="mb-3 form-group">
-                        <label class="form-control-label" v-text="$t('ciecytApp.proyectoRespuestas.respuesta')" for="proyecto-respuestas-respuesta">Respuesta</label>
+                        <label class="form-control-label" v-text="$t('ciecytApp.proyectoRespuestas.respuesta')" for="proyecto-respuestas-respuesta"></label>
                         <select class="form-control" c  v-model="ep.respuesta"   disabled="true"
                           id="proyecto-respuestas-respuesta"
                           v-if="ep.preguntaTipoPreguntaTipoPregunta==`Cumple NoCumple NoAplica`" >
@@ -85,7 +85,7 @@
                         </div>
                                  <!-------------observaciones ------------->
                      <div class="mb-3 form-group">
-                        <label class="form-control-label" v-text="$t('ciecytApp.proyectoRespuestas.observaciones')" for="proyecto-respuestas-respuesta">observaciones</label>
+                        <label class="form-control-label" v-text="$t('ciecytApp.proyectoRespuestas.observaciones')" for="proyecto-respuestas-respuesta"></label>
                      <b-form-textarea  
                          
                          v-model="ep.observaciones" readonly="true">
@@ -107,7 +107,7 @@
                     <b-form-group class="mb-3" 
                     description="Si tiene comentarios o sugerencias adicionales sobre el proyecto, diligencie este apartado">
                     <label class="form-control-label" 
-                    v-text="$t('ciecytApp.proyecto.recomendaciones')" for="proyecto-recomendaciones">Recomendaciones</label>
+                    v-text="$t('ciecytApp.proyecto.recomendaciones')" for="proyecto-recomendaciones"></label>
                        
                      <div class="mb-3 form-group" >
                        <b-form-textarea  class="form-control" name="proyecto-recomendaciones"
@@ -138,11 +138,11 @@
                 
                   
                        <div class="mb-3 form-group">
-                        <label class="form-control-label" v-text="$t('ciecytApp.adjuntoRetroalimentacion.correcionesPropuesta')" for="adjunto-proyecto-fase-archivo">Archivo</label>
+                        <label class="form-control-label" v-text="$t('ciecytApp.adjuntoRetroalimentacion.correcionesPropuesta')" for="adjunto-proyecto-fase-archivo"></label>
                         
                         <div>
                             <div v-if="adjuntoRetroalimentacion.id"  class="form-text text-danger clearfix">
-                               <a class="pull-left" v-on:click="this.descargarRetro" v-text="$t('entity.action.open')">open </a>
+                               <a class="pull-left" v-on:click="this.descargarRetro" v-text="$t('entity.action.open')"></a>
                                 <span class="pull-left">{{adjuntoRetroalimentacion.nombreArchivoOriginal }} <br /> {{adjuntoRetroalimentacion.archivoContentType}}, {{byteSize(adjuntoRetroalimentacion.file)}}</span>
                                 
                             </div> 
@@ -177,8 +177,9 @@
 </template>
 
 <script lang="ts">
-import { Component, Inject, Vue } from 'vue-property-decorator';
-import { mixins } from 'vue-class-component';
+import { useVuelidate } from '@vuelidate/core';
+import { Component, Inject, Vue, Hook } from 'vue-facing-decorator';
+import { mixins } from 'vue-facing-decorator';
 
 import MenuLateralPasantia from '@/components/propuesta_pasantia/menu_lateral_pasantia.vue';
 import { IProyecto, Proyecto } from '@/shared/model/proyecto.model';
@@ -238,14 +239,14 @@ const validations: any = {
   
 })
 export default class Retroalimentacion extends mixins(JhiDataUtils){
-  @Inject('proyectoService') private proyectoService: () => ProyectoService;
-  @Inject('adjuntoProyectoFaseService') private adjuntoProyectoFaseService: () => AdjuntoProyectoFaseService;
-  @Inject('adjuntoRetroalimentacionService') private adjuntoRetroalimentacionService: () => AdjuntoRetroalimentacionService;
-  @Inject('fasesService') private fasesService: () => FasesService;
-  @Inject('proyectoRespuestasService') private proyectoRespuestasService: () => ProyectoRespuestasService;
+  @Inject  private proyectoService: () => ProyectoService;
+  @Inject  private adjuntoProyectoFaseService: () => AdjuntoProyectoFaseService;
+  @Inject  private adjuntoRetroalimentacionService: () => AdjuntoRetroalimentacionService;
+  @Inject  private fasesService: () => FasesService;
+  @Inject  private proyectoRespuestasService: () => ProyectoRespuestasService;
 
 
-  @Inject('alertService') private alertService: () => AlertService;
+  @Inject  private alertService: () => AlertService;
 
  
 
@@ -273,6 +274,7 @@ export default class Retroalimentacion extends mixins(JhiDataUtils){
     //public nombreFasePropuesta: any = "Propuesta";
     //public nombreFaseProyecto: any = "Proyecto";
 
+  @Hook
   beforeRouteEnter(to, from, next) {
     next(vm => {
       if (to.params.proyectoId) {

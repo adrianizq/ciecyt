@@ -1,3 +1,4 @@
+import { useVuelidate } from '@vuelidate/core';
 <template>
     <div class="row">
         <div class="col-sm-4">
@@ -42,7 +43,7 @@
                             <font-awesome-icon icon="arrow-left"></font-awesome-icon>&nbsp;Volver
                         </button>
                         <button type="button" id="save" class="btn btn-primary" v-on:click="save()">
-                            <font-awesome-icon icon="save"></font-awesome-icon>&nbsp;<span v-text="$t('entity.action.save')">Guardar</span>
+                            <font-awesome-icon icon="save"></font-awesome-icon>&nbsp;<span v-text="$t('entity.action.save')"></span>
                         </button>
                     </div>
                 </div>
@@ -53,7 +54,7 @@
 </template>
 
 <script lang="ts">
-    import { Component, Inject, Vue } from 'vue-property-decorator';
+    import { Component, Inject, Vue, Hook } from 'vue-facing-decorator';
     import AlertService from '@/shared/alert/alert.service';
 
     import MenuLateralCiecyt from '@/components/ciecyt/menu_lateral_ciecyt.vue';
@@ -84,13 +85,13 @@
         public withPlaceholder(options: any[], placeholder: string): any[] {
             return withPlaceholderOptions(options, placeholder);
         }
-        @Inject('usuarioService') private usuarioService: () => UsuarioService;
-        @Inject('proyectoService') private proyectoService: () => ProyectoService;
-        @Inject('integranteProyectoService') private integranteProyectoService: () => IntegranteProyectoService;
-        @Inject('rolesModalidadService') private rolesModalidadService: () => RolesModalidadService;
-        @Inject('docenteHabilitadoService') private docenteHabilitadoService: () => DocenteHabilitadoService;
-        @Inject('asesorExternoService') private asesorExternoService: () => AsesorExternoService;
-        @Inject('alertService') private alertService: () => AlertService;
+        @Inject  private usuarioService: () => UsuarioService;
+        @Inject  private proyectoService: () => ProyectoService;
+        @Inject  private integranteProyectoService: () => IntegranteProyectoService;
+        @Inject  private rolesModalidadService: () => RolesModalidadService;
+        @Inject  private docenteHabilitadoService: () => DocenteHabilitadoService;
+        @Inject  private asesorExternoService: () => AsesorExternoService;
+        @Inject  private alertService: () => AlertService;
 
         public users: IUser[] = [];
         public rolesModalidad: IRolesModalidad;
@@ -109,6 +110,7 @@
 
 //public proyId: string = null;
 
+        @Hook
         beforeRouteEnter(to, from, next) {
             next(async vm => {
 
@@ -270,7 +272,7 @@
              for (const integrante of this.integrantesProyecto) {
                  const extId = integrante.integranteProyectoExternoId;
                  if (extId != null) {
-                     this.$set(integrante, 'esExterno', true);
+                     integrante.esExterno = true;
                      if (!yaExternos.has(extId)) {
                          this.opcionesExternos.push({
                              value: extId,
@@ -279,7 +281,7 @@
                          yaExternos.add(extId);
                      }
                  } else {
-                     this.$set(integrante, 'esExterno', false);
+                     integrante.esExterno = false;
                  }
                  const u: any = (integrante as any).integranteProyectoUser || {};
                  const userId = integrante.integranteProyectoUserId;
@@ -359,3 +361,4 @@
 </script>
 
 <style scoped>
+</style>

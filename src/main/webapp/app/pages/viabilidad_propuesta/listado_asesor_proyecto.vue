@@ -18,10 +18,10 @@
             <table class="table table-striped">
                 <thead>
                 <tr>
-                    <th v-on:click="changeOrder('id')"><span v-text="$t('global.field.id')">ID</span> <font-awesome-icon icon="sort"></font-awesome-icon></th>
-                    <th v-on:click="changeOrder('titulo')"><span v-text="$t('ciecytApp.proyecto.titulo')">Titulo</span> <font-awesome-icon icon="sort"></font-awesome-icon></th>
+                    <th v-on:click="changeOrder('id')"><span v-text="$t('global.field.id')"></span> <font-awesome-icon icon="sort"></font-awesome-icon></th>
+                    <th v-on:click="changeOrder('titulo')"><span v-text="$t('ciecytApp.proyecto.titulo')"></span> <font-awesome-icon icon="sort"></font-awesome-icon></th>
                     <th v-on:click="changeOrder('modalidad')">
-                <span v-text="$t('ciecytApp.proyecto.modalidad')">Modalidad</span> <font-awesome-icon icon="sort"></font-awesome-icon>
+                <span v-text="$t('ciecytApp.proyecto.modalidad')"></span> <font-awesome-icon icon="sort"></font-awesome-icon>
               </th>
                     
                     <th></th>
@@ -42,19 +42,17 @@
                     
                     <td class="text-right">
                         <div class="btn-group" >
-                            <router-link :to="{name: 'AsesoriaEvaluarProyectoView', 
-                            params: {proyectoId: proyecto.id}}" tag="button" class="btn btn-info btn-sm details"
-                            v-if="proyecto.estado=='EN_REVISION_ASESOR_PROYECTO' || (proyecto.viabilidad=='VIABLE' && !esEstadoActoPublico(proyecto))">
-                               <b-icon-eye-fill  ></b-icon-eye-fill>&nbsp;
-                                <span class="d-none d-md-inline" v-text="$t('entity.action.revisar')">Revisar</span>
-                            </router-link>
+                            <router-link custom v-slot="{ navigate }" v-if="proyecto.estado=='EN_REVISION_ASESOR_PROYECTO' || (proyecto.viabilidad=='VIABLE' && !esEstadoActoPublico(proyecto))" :to="{name: 'AsesoriaEvaluarProyectoView', 
+                            params: {proyectoId: proyecto.id}}"><button class="btn btn-info btn-sm details" @click="navigate">
+                               <font-awesome-icon icon="eye" />&nbsp;
+                                <span class="d-none d-md-inline" v-text="$t('entity.action.revisar')"></span>
+                            </button></router-link>
 
-                            <router-link :to="{name: 'ProyectoEvaluarSustentacionView',
-                            params: {proyectoId: proyecto.id}}" tag="button" class="btn btn-primary btn-sm details"
-                            v-if="esEstadoActoPublico(proyecto)">
-                               <b-icon-eye-fill  ></b-icon-eye-fill>&nbsp;
+                            <router-link custom v-slot="{ navigate }" v-if="esEstadoActoPublico(proyecto)" :to="{name: 'ProyectoEvaluarSustentacionView',
+                            params: {proyectoId: proyecto.id}}"><button class="btn btn-primary btn-sm details" @click="navigate">
+                               <font-awesome-icon icon="eye" />&nbsp;
                                 <span class="d-none d-md-inline">{{ etiquetaActo() }}</span>
-                            </router-link>
+                            </button></router-link>
   
                         </div>
 
@@ -81,10 +79,11 @@
 </template>
 
 <script lang="ts">
-import { mixins } from 'vue-class-component';
+import { useVuelidate } from '@vuelidate/core';
+import { mixins, Hook } from 'vue-facing-decorator';
 import AlertService from '@/shared/alert/alert.service';
 
-import { Component, Inject, Vue } from 'vue-property-decorator';
+import { Component, Inject, Vue } from 'vue-facing-decorator';
 import MenuLateralListado from '@/components/propuesta_listado/menu_lateral_listado.vue';
 
 import { IProyecto, Proyecto } from '@/shared/model/proyecto.model';
@@ -98,9 +97,9 @@ const validations: any = {};
   validations
 })
 export default class Listado extends Vue {
-  @Inject('proyectoService') private proyectoService: () => ProyectoService;
+  @Inject  private proyectoService: () => ProyectoService;
 
-  @Inject('alertService') private alertService: () => AlertService;
+  @Inject  private alertService: () => AlertService;
 
   //  public elementosProyecto: IElementoProyecto[] =[];
   public proyects: IProyecto[] = [];
@@ -253,6 +252,7 @@ export default class Listado extends Vue {
   public isSaving = false;
 
   /*
+  @Hook
   beforeRouteEnter(to, from, next) {
     next(vm => {
       vm.initRelationships();
