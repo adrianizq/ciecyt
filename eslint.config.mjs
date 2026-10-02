@@ -8,7 +8,7 @@ export default tseslint.config(
   { ignores: ['node_modules/**', 'target/**', 'record_academico/**', 'src/main/webapp/content/**', 'src/main/webapp/i18n/**'] },
   js.configs.recommended,
   ...tseslint.configs.recommended,
-  ...vue.configs['flat/vue2-recommended'],
+  ...vue.configs['flat/recommended'],
   {
     files: ['**/*.vue'],
     languageOptions: { parserOptions: { parser: tseslint.parser } },

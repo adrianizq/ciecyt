@@ -3,7 +3,7 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import { defineConfig } from 'vitest/config';
 import type { Plugin } from 'vitest/config';
-import vue from '@vitejs/plugin-vue2';
+import vue from '@vitejs/plugin-vue';
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const webapp = path.resolve(here, 'src/main/webapp');
@@ -34,6 +34,20 @@ function walk(abs: string, rel: string, out: Array<{ rel: string; abs: string }>
   out.push({ rel, abs });
 }
 
+// vue-i18n 9 interpola con {nombre}; los mensajes de JHipster llegan con {{nombre}}.
+function vueI18nInterpolation(value: unknown): unknown {
+  if (typeof value === 'string') {
+    return value.replace(/\{\{\s*([A-Za-z_$][\w$]*)\s*\}\}/g, '{$1}');
+  }
+  if (Array.isArray(value)) {
+    return value.map(vueI18nInterpolation);
+  }
+  if (value && typeof value === 'object') {
+    return Object.fromEntries(Object.entries(value as Record<string, unknown>).map(([k, v]) => [k, vueI18nInterpolation(v)]));
+  }
+  return value;
+}
+
 function mergeLanguage(lang: string): string {
   const dir = path.join(webapp, 'i18n', lang);
   const merged = {};
@@ -43,7 +57,7 @@ function mergeLanguage(lang: string): string {
     .sort()) {
     Object.assign(merged, JSON.parse(fs.readFileSync(path.join(dir, file), 'utf8')));
   }
-  return JSON.stringify(merged, null, 2);
+  return JSON.stringify(vueI18nInterpolation(merged), null, 2);
 }
 
 function envDefine(): Plugin {
@@ -125,7 +139,7 @@ export default defineConfig(({ mode }) => ({
   resolve: {
     extensions: ['.ts', '.js', '.vue', '.json', '.mjs'],
     alias: {
-      vue$: 'vue/dist/vue.esm.js',
+      vue$: 'vue/dist/vue.esm-bundler.js',
       '@': path.resolve(webapp, 'app'),
     },
   },
