@@ -1,14 +1,14 @@
 import axios from 'axios';
-import VueI18n from 'vue-i18n';
+import type { I18n, VueI18n } from 'vue-i18n';
 import { Store } from 'vuex';
 
 export default class TranslationService {
   private store: Store<{}>;
   private i18n: VueI18n;
 
-  constructor(store: Store<{}>, i18n: VueI18n) {
+  constructor(store: Store<{}>, i18n: I18n) {
     this.store = store;
-    this.i18n = i18n;
+    this.i18n = i18n.global as VueI18n;
   }
 
   public refreshTranslation(newLanguage: string) {

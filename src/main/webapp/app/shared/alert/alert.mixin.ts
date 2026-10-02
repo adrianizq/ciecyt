@@ -1,9 +1,9 @@
-import { Component, Inject, Vue } from 'vue-property-decorator';
+import { Component, Inject, Vue } from 'vue-facing-decorator';
 import AlertService from '@/shared/alert/alert.service';
 
 @Component
 export default class AlertMixin extends Vue {
-  @Inject('alertService') protected alertService: () => AlertService;
+  @Inject public alertService: () => AlertService;
 
   public dismissCountDown: number = this.$store.getters.dismissCountDown;
   public dismissSecs: number = this.$store.getters.dismissSecs;

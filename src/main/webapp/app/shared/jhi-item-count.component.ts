@@ -1,5 +1,5 @@
-import Component from 'vue-class-component';
-import { Prop, Vue } from 'vue-property-decorator';
+import { Component } from 'vue-facing-decorator';
+import { Prop, Vue } from 'vue-facing-decorator';
 
 @Component
 export default class JhiItemCountComponent extends Vue {

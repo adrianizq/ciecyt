@@ -1,12 +1,4 @@
-import Vue from 'vue';
-import Component from 'vue-class-component';
-
-Component.registerHooks([
-  'beforeRouteEnter',
-  'beforeRouteLeave',
-  'beforeRouteUpdate', // for vue-router 2.2+
-]);
-import Router from 'vue-router';
+import { createRouter, createWebHistory } from 'vue-router';
 //import { User } from '@/shared/model/user.model';
 import UserManagementService from '@/admin/user-management/user-management.service';
 
@@ -324,11 +316,9 @@ const ListadoProyecto = () => import('../pages/estudiante/listado_proyecto.vue')
 
 const PropuestasInvestigador = () => import('../pages/propuesta_nueva/propuestas_investigador.vue');
 
-Vue.use(Router);
-
 // prettier-ignore
-export default new Router({
-  mode: 'history',
+export default createRouter({
+  history: createWebHistory(),
   routes: [
     {
       path: '/',
@@ -1348,12 +1338,6 @@ export default new Router({
       meta: { authorities: ['ROLE_USER'] }
     }
     ,
-    {
-      path: '/entity/user',
-      name: 'User',
-      //component: User,
-      meta: { authorities: ['ROLE_USER'] }
-    },
     {
       path: '/entity/usuario',
       name: 'Usuario',

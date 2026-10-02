@@ -1,18 +1,11 @@
-// The Vue build version to load with the `import` command
-// (runtime-only or standalone) has been set in webpack.common with an alias.
-import Vue from 'vue';
+import { createApp } from 'vue';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
-
-////////////////////////777
-import { BootstrapVue, BootstrapVueIcons } from 'bootstrap-vue';
-
-/////////////////////////////77777
 
 import App from './app.vue';
 import router from './router';
 import * as config from './shared/config/config';
 import { setupAxiosInterceptors } from './shared/config/axios-interceptor';
-import * as bootstrapVueConfig from './shared/config/config-bootstrap-vue';
+import { initBootstrapVue } from './shared/config/config-bootstrap-vue';
 import JhiItemCountComponent from './shared/jhi-item-count.vue';
 import AuditsService from './admin/audits/audits.service';
 
@@ -27,6 +20,7 @@ import LoginService from './account/login.service';
 import AccountService from './account/account.service';
 
 import '../content/scss/vendor.scss';
+import 'bootstrap-vue-next/dist/bootstrap-vue-next.css';
 import '../content/scss/global.scss';
 import AlertService from '@/shared/alert/alert.service';
 import TranslationService from '@/locale/translation.service';
@@ -85,18 +79,8 @@ import PreguntaModalidadService from '@/entities/pregunta-modalidad/pregunta-mod
 
 import PreguntaAuthorityService from '@/entities/pregunta-authority/pregunta-authority.service';
 
-Vue.config.productionTip = false;
-config.initVueApp(Vue);
-config.initFortAwesome(Vue);
-bootstrapVueConfig.initBootstrapVue(Vue);
-Vue.component('font-awesome-icon', FontAwesomeIcon);
-Vue.component('jhi-item-count', JhiItemCountComponent);
-
-Vue.use(BootstrapVue);
-Vue.use(BootstrapVueIcons);
-
-const i18n = config.initI18N(Vue);
-const store = config.initVueXStore(Vue);
+const i18n = config.initI18N();
+const store = config.initVueXStore();
 
 const alertService = new AlertService(store);
 const translationService = new TranslationService(store, i18n);
@@ -113,106 +97,111 @@ setupAxiosInterceptors(status => {
     }
     store.commit('logout');
     alertService.showAlert('Su sesión ha expirado. Vuelva a iniciar sesión para continuar.', 'warning');
-    if (router.currentRoute.path !== '/') {
-      router.push('/');
+    if (router.currentRoute.value.path !== '/') {
+      router.push('/').catch(() => {});
     }
     return;
   }
   alertService.showAlert('No tiene permisos para realizar esta acción.', 'danger');
 });
 
-router.beforeEach((to, from, next) => {
+const provide: Record<string, unknown> = {
+  loginService: () => loginService,
+  activateService: () => new ActivateService(),
+  registerService: () => new RegisterService(),
+  userService: () => new UserManagementService(),
+
+  auditsService: () => new AuditsService(),
+
+  healthService: () => new HealthService(),
+
+  configurationService: () => new ConfigurationService(),
+  logsService: () => new LogsService(),
+  metricsService: () => new MetricsService(),
+  alertService: () => alertService,
+  translationService: () => translationService,
+  proyectoService: () => new ProyectoService(),
+  docenteHabilitadoService: () => new DocenteHabilitadoService(),
+  asesorExternoService: () => new AsesorExternoService(),
+  decanoFacultadService: () => new DecanoFacultadService(),
+  remisionPadronService: () => new RemisionPadronService(),
+  prediccionesService: () => new PrediccionesService(),
+  lineaInvestigacionService: () => new LineaInvestigacionService(),
+
+  grupoSemilleroService: () => new GrupoSemilleroService(),
+  facultadService: () => new FacultadService(),
+  modalidadService: () => new ModalidadService(),
+  acuerdoService: () => new AcuerdoService(),
+  municipioService: () => new MunicipioService(),
+  departamentoService: () => new DepartamentoService(),
+  cicloPropedeuticoService: () => new CicloPropedeuticoService(),
+  productoService: () => new ProductoService(),
+  productoProyectoService: () => new ProductoProyectoService(),
+  impactosEsperadosService: () => new ImpactosEsperadosService(),
+  cronogramaService: () => new CronogramaService(),
+  rubroService: () => new RubroService(),
+  entidadService: () => new EntidadService(),
+  elementoProyectoService: () => new ElementoProyectoService(),
+  formatoService: () => new FormatoService(),
+  tipoPreguntaService: () => new TipoPreguntaService(),
+  preguntaService: () => new PreguntaService(),
+  proyectoRespuestasService: () => new ProyectoRespuestasService(),
+  rolesModalidadService: () => new RolesModalidadService(),
+  fasesService: () => new FasesService(),
+  proyectoFaseService: () => new ProyectoFaseService(),
+  cronogramaCiecytService: () => new CronogramaCiecytService(),
+  cronogramaCiecytFasesService: () => new CronogramaCiecytFasesService(),
+  integranteProyectoService: () => new IntegranteProyectoService(),
+  informacionPasantiaService: () => new InformacionPasantiaService(),
+  solicitudService: () => new SolicitudService(),
+  adjuntoProyectoFaseService: () => new AdjuntoProyectoFaseService(),
+  requisitoProyectoService: () => new RequisitoProyectoService(),
+  retroalimentacionService: () => new RetroalimentacionService(),
+  adjuntoRetroalimentacionService: () => new AdjuntoRetroalimentacionService(),
+  fichaTecnicaService: () => new FichaTecnicaService(),
+  categorizacionService: () => new CategorizacionService(),
+  usuarioService: () => new UsuarioService(),
+  userInfoService: () => new UserInfoService(),
+  menuService: () => new MenuService(),
+  rolMenuService: () => new RolMenuService(),
+  investigacionTipoService: () => new InvestigacionTipoService(),
+  preguntaModalidadService: () => new PreguntaModalidadService(),
+  preguntaAuthorityService: () => new PreguntaAuthorityService(),
+
+  programaService: () => new ProgramaService(),
+  cicloService: () => new CicloService(),
+  // jhipster-needle-add-entity-service-to-main - JHipster will import entities services here
+  accountService: () => accountService,
+};
+
+const app = createApp(App);
+for (const [token, value] of Object.entries(provide)) {
+  app.provide(token, value);
+}
+
+config.initFortAwesome();
+initBootstrapVue(app);
+app.component('font-awesome-icon', FontAwesomeIcon);
+app.component('jhi-item-count', JhiItemCountComponent);
+app.use(store);
+app.use(i18n);
+app.use(router);
+
+router.beforeEach((to, _from, next) => {
   if (!to.matched.length) {
     next('/not-found');
+    return;
   }
 
-  if (to.meta && to.meta.authorities && to.meta.authorities.length > 0) {
-    if (!accountService.hasAnyAuthority(to.meta.authorities)) {
+  const authorities = to.meta && (to.meta.authorities as string[] | undefined);
+  if (authorities && authorities.length > 0) {
+    if (!accountService.hasAnyAuthority(authorities)) {
       sessionStorage.setItem('requested-url', to.fullPath);
       next('/forbidden');
-    } else {
-      next();
+      return;
     }
-  } else {
-    // no authorities, so just proceed
-    next();
   }
+  next();
 });
 
-/*tslint:disable */
-new Vue({
-  el: '#app',
-  components: { App },
-  template: '<App/>',
-  router,
-  provide: {
-    loginService: () => loginService,
-    activateService: () => new ActivateService(),
-    registerService: () => new RegisterService(),
-    userService: () => new UserManagementService(),
-
-    auditsService: () => new AuditsService(),
-
-    healthService: () => new HealthService(),
-
-    configurationService: () => new ConfigurationService(),
-    logsService: () => new LogsService(),
-    metricsService: () => new MetricsService(),
-    alertService: () => alertService,
-    translationService: () => translationService,
-    proyectoService: () => new ProyectoService(),
-    docenteHabilitadoService: () => new DocenteHabilitadoService(),
-    asesorExternoService: () => new AsesorExternoService(),
-    decanoFacultadService: () => new DecanoFacultadService(),
-    remisionPadronService: () => new RemisionPadronService(),
-    prediccionesService: () => new PrediccionesService(),
-    lineaInvestigacionService: () => new LineaInvestigacionService(),
-
-    grupoSemilleroService: () => new GrupoSemilleroService(),
-    facultadService: () => new FacultadService(),
-    modalidadService: () => new ModalidadService(),
-    acuerdoService: () => new AcuerdoService(),
-    municipioService: () => new MunicipioService(),
-    departamentoService: () => new DepartamentoService(),
-    cicloPropedeuticoService: () => new CicloPropedeuticoService(),
-    productoService: () => new ProductoService(),
-    productoProyectoService: () => new ProductoProyectoService(),
-    impactosEsperadosService: () => new ImpactosEsperadosService(),
-    cronogramaService: () => new CronogramaService(),
-    rubroService: () => new RubroService(),
-    entidadService: () => new EntidadService(),
-    elementoProyectoService: () => new ElementoProyectoService(),
-    formatoService: () => new FormatoService(),
-    tipoPreguntaService: () => new TipoPreguntaService(),
-    preguntaService: () => new PreguntaService(),
-    proyectoRespuestasService: () => new ProyectoRespuestasService(),
-    rolesModalidadService: () => new RolesModalidadService(),
-    fasesService: () => new FasesService(),
-    proyectoFaseService: () => new ProyectoFaseService(),
-    cronogramaCiecytService: () => new CronogramaCiecytService(),
-    cronogramaCiecytFasesService: () => new CronogramaCiecytFasesService(),
-    integranteProyectoService: () => new IntegranteProyectoService(),
-    informacionPasantiaService: () => new InformacionPasantiaService(),
-    solicitudService: () => new SolicitudService(),
-    adjuntoProyectoFaseService: () => new AdjuntoProyectoFaseService(),
-    requisitoProyectoService: () => new RequisitoProyectoService(),
-    retroalimentacionService: () => new RetroalimentacionService(),
-    adjuntoRetroalimentacionService: () => new AdjuntoRetroalimentacionService(),
-    fichaTecnicaService: () => new FichaTecnicaService(),
-    categorizacionService: () => new CategorizacionService(),
-    usuarioService: () => new UsuarioService(),
-    userInfoService: () => new UserInfoService(),
-    menuService: () => new MenuService(),
-    rolMenuService: () => new RolMenuService(),
-    investigacionTipoService: () => new InvestigacionTipoService(),
-    preguntaModalidadService: () => new PreguntaModalidadService(),
-    preguntaAuthorityService: () => new PreguntaAuthorityService(),
-
-    programaService: () => new ProgramaService(),
-    cicloService: () => new CicloService(),
-    // jhipster-needle-add-entity-service-to-main - JHipster will import entities services here
-    accountService: () => accountService,
-  },
-  i18n,
-  store,
-});
+app.mount('#app');
