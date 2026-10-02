@@ -1,13 +1,14 @@
-import { Component, Vue, Inject } from 'vue-property-decorator';
+import { Component, Vue, Inject, Hook } from 'vue-facing-decorator';
 
 import { ISolicitud } from '@/shared/model/solicitud.model';
 import SolicitudService from './solicitud.service';
 
 @Component
 export default class SolicitudDetails extends Vue {
-  @Inject('solicitudService') private solicitudService: () => SolicitudService;
+  @Inject private solicitudService: () => SolicitudService;
   public solicitud: ISolicitud = {};
 
+  @Hook
   beforeRouteEnter(to, from, next) {
     next(vm => {
       if (to.params.solicitudId) {

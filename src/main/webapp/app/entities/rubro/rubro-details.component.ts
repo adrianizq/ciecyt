@@ -1,13 +1,14 @@
-import { Component, Vue, Inject } from 'vue-property-decorator';
+import { Component, Vue, Inject, Hook } from 'vue-facing-decorator';
 
 import { IRubro } from '@/shared/model/rubro.model';
 import RubroService from './rubro.service';
 
 @Component
 export default class RubroDetails extends Vue {
-  @Inject('rubroService') private rubroService: () => RubroService;
+  @Inject private rubroService: () => RubroService;
   public rubro: IRubro = {};
 
+  @Hook
   beforeRouteEnter(to, from, next) {
     next(vm => {
       if (to.params.rubroId) {

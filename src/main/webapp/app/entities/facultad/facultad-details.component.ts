@@ -1,13 +1,14 @@
-import { Component, Vue, Inject } from 'vue-property-decorator';
+import { Component, Vue, Inject, Hook } from 'vue-facing-decorator';
 
 import { IFacultad } from '@/shared/model/facultad.model';
 import FacultadService from './facultad.service';
 
 @Component
 export default class FacultadDetails extends Vue {
-  @Inject('facultadService') private facultadService: () => FacultadService;
+  @Inject private facultadService: () => FacultadService;
   public facultad: IFacultad = {};
 
+  @Hook
   beforeRouteEnter(to, from, next) {
     next(vm => {
       if (to.params.facultadId) {

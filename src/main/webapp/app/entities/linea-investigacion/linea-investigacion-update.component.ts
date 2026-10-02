@@ -1,6 +1,7 @@
-import { Component, Vue, Inject } from 'vue-property-decorator';
+import { useVuelidate } from '@vuelidate/core';
+import { Component, Vue, Inject, Hook } from 'vue-facing-decorator';
 
-import { numeric, required, minLength, maxLength } from 'vuelidate/lib/validators';
+import { numeric, required, minLength, maxLength } from '@vuelidate/validators';
 
 import ProgramaService from '../programa/programa.service';
 import { IPrograma } from '@/shared/model/programa.model';
@@ -17,20 +18,26 @@ const validations: any = {
 };
 
 @Component({
-  validations,
+  options: {
+    validations,
+  },
+  setup() {
+    return { v$: useVuelidate() };
+  },
 })
 export default class LineaInvestigacionUpdate extends Vue {
-  @Inject('alertService') private alertService: () => AlertService;
-  @Inject('lineaInvestigacionService') private lineaInvestigacionService: () => LineaInvestigacionService;
+  @Inject private alertService: () => AlertService;
+  @Inject private lineaInvestigacionService: () => LineaInvestigacionService;
   public lineaInvestigacion: ILineaInvestigacion = new LineaInvestigacion();
 
   public lineaInvestigacions: ILineaInvestigacion[] = [];
 
-  @Inject('programaService') private programaService: () => ProgramaService;
+  @Inject private programaService: () => ProgramaService;
 
   public programas: IPrograma[] = [];
   public isSaving = false;
 
+  @Hook
   beforeRouteEnter(to, from, next) {
     next(vm => {
       if (to.params.lineaInvestigacionId) {

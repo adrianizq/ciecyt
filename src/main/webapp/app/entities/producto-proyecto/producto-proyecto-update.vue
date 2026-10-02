@@ -2,22 +2,22 @@
     <div class="row justify-content-center">
         <div class="col-8">
             <form name="editForm" role="form" novalidate v-on:submit.prevent="save()" >
-                <h2 id="ciecytApp.productoProyecto.home.createOrEditLabel" v-text="$t('ciecytApp.productoProyecto.home.createOrEditLabel')">Create or edit a ProductoProyecto</h2>
+                <h2 id="ciecytApp.productoProyecto.home.createOrEditLabel" v-text="$t('ciecytApp.productoProyecto.home.createOrEditLabel')"></h2>
                 <div>
                     <div class="mb-3 form-group" v-if="productoProyecto.id">
-                        <label for="id" v-text="$t('global.field.id')">ID</label>
+                        <label for="id" v-text="$t('global.field.id')"></label>
                         <input type="text" class="form-control" id="id" name="id"
                                v-model="productoProyecto.id" readonly />
                     </div>
                     <div class="mb-3 form-group">
-                        <label class="form-control-label" v-text="$t('ciecytApp.productoProyecto.aplica')" for="producto-proyecto-aplica">Aplica</label>
+                        <label class="form-control-label" v-text="$t('ciecytApp.productoProyecto.aplica')" for="producto-proyecto-aplica"></label>
                         <input type="checkbox" class="form-check" name="aplica" id="producto-proyecto-aplica"
-                            :class="{'valid': !$v.productoProyecto.aplica.$invalid, 'invalid': $v.productoProyecto.aplica.$invalid }" v-model="$v.productoProyecto.aplica.$model" />
+                            :class="{'valid': !v$.productoProyecto.aplica.$invalid, 'invalid': v$.productoProyecto.aplica.$invalid }" v-model="v$.productoProyecto.aplica.$model" />
                     </div>
                     <div class="mb-3 form-group">
-                        <label class="form-control-label" v-text="$t('ciecytApp.productoProyecto.descripcion')" for="producto-proyecto-descripcion">Descripcion</label>
+                        <label class="form-control-label" v-text="$t('ciecytApp.productoProyecto.descripcion')" for="producto-proyecto-descripcion"></label>
                         <input type="text" class="form-control" name="descripcion" id="producto-proyecto-descripcion"
-                            :class="{'valid': !$v.productoProyecto.descripcion.$invalid, 'invalid': $v.productoProyecto.descripcion.$invalid }" v-model="$v.productoProyecto.descripcion.$model" />
+                            :class="{'valid': !v$.productoProyecto.descripcion.$invalid, 'invalid': v$.productoProyecto.descripcion.$invalid }" v-model="v$.productoProyecto.descripcion.$model" />
                     </div>
                     <div class="mb-3 form-group">
                         <label class="form-control-label" v-bind:value="$t('ciecytApp.productoProyecto.productoProyectoProducto')" for="producto-proyecto-productoProyectoProducto">Producto Proyecto Producto</label>
@@ -36,10 +36,10 @@
                 </div>
                 <div>
                     <button type="button" id="cancel-save" class="btn btn-secondary" v-on:click="previousState()">
-                        <font-awesome-icon icon="ban"></font-awesome-icon>&nbsp;<span v-text="$t('entity.action.cancel')">Cancel</span>
+                        <font-awesome-icon icon="ban"></font-awesome-icon>&nbsp;<span v-text="$t('entity.action.cancel')"></span>
                     </button>
-                    <button type="submit" id="save-entity" :disabled="$v.productoProyecto.$invalid || isSaving" class="btn btn-primary">
-                        <font-awesome-icon icon="save"></font-awesome-icon>&nbsp;<span v-text="$t('entity.action.save')">Save</span>
+                    <button type="submit" id="save-entity" :disabled="v$.productoProyecto.$invalid || isSaving" class="btn btn-primary">
+                        <font-awesome-icon icon="save"></font-awesome-icon>&nbsp;<span v-text="$t('entity.action.save')"></span>
                     </button>
                 </div>
             </form>

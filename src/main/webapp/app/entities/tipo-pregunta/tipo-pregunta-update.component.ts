@@ -1,6 +1,7 @@
-import { Component, Vue, Inject } from 'vue-property-decorator';
+import { useVuelidate } from '@vuelidate/core';
+import { Component, Vue, Inject, Hook } from 'vue-facing-decorator';
 
-import { numeric, required, minLength, maxLength } from 'vuelidate/lib/validators';
+import { numeric, required, minLength, maxLength } from '@vuelidate/validators';
 
 import AlertService from '@/shared/alert/alert.service';
 import { ITipoPregunta, TipoPregunta } from '@/shared/model/tipo-pregunta.model';
@@ -14,14 +15,20 @@ const validations: any = {
 };
 
 @Component({
-  validations,
+  options: {
+    validations,
+  },
+  setup() {
+    return { v$: useVuelidate() };
+  },
 })
 export default class TipoPreguntaUpdate extends Vue {
-  @Inject('alertService') private alertService: () => AlertService;
-  @Inject('tipoPreguntaService') private tipoPreguntaService: () => TipoPreguntaService;
+  @Inject private alertService: () => AlertService;
+  @Inject private tipoPreguntaService: () => TipoPreguntaService;
   public tipoPregunta: ITipoPregunta = new TipoPregunta();
   public isSaving = false;
 
+  @Hook
   beforeRouteEnter(to, from, next) {
     next(vm => {
       if (to.params.tipoPreguntaId) {

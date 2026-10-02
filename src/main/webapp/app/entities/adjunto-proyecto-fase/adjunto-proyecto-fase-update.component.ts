@@ -1,8 +1,9 @@
-import { Component, Vue, Inject } from 'vue-property-decorator';
-import { mixins } from 'vue-class-component';
+import { useVuelidate } from '@vuelidate/core';
+import { Component, Vue, Inject, Hook } from 'vue-facing-decorator';
+import { mixins } from 'vue-facing-decorator';
 import JhiDataUtils from '@/shared/data/data-utils.service';
 
-import { numeric, required, minLength, maxLength } from 'vuelidate/lib/validators';
+import { numeric, required, minLength, maxLength } from '@vuelidate/validators';
 
 import FasesService from '../fases/fases.service';
 import { IFases, Fases } from '@/shared/model/fases.model';
@@ -28,13 +29,18 @@ const validations: any = {
 };
 
 @Component({
-  validations,
+  options: {
+    validations,
+  },
+  setup() {
+    return { v$: useVuelidate() };
+  },
 })
 export default class AdjuntoProyectoFaseUpdate extends mixins(JhiDataUtils) {
-  @Inject('alertService') private alertService: () => AlertService;
-  @Inject('adjuntoProyectoFaseService') private adjuntoProyectoFaseService: () => AdjuntoProyectoFaseService;
-  @Inject('fasesService') private fasesService: () => FasesService;
-  @Inject('proyectoService') private proyectoService: () => ProyectoService;
+  @Inject private alertService: () => AlertService;
+  @Inject private adjuntoProyectoFaseService: () => AdjuntoProyectoFaseService;
+  @Inject private fasesService: () => FasesService;
+  @Inject private proyectoService: () => ProyectoService;
 
   public adjuntoProyectoFase: IAdjuntoProyectoFase = new AdjuntoProyectoFase();
 
@@ -48,6 +54,7 @@ export default class AdjuntoProyectoFaseUpdate extends mixins(JhiDataUtils) {
     //console.log('se hizo clic');
     this.adjuntoProyectoFaseService().downloadFile(this.adjuntoProyectoFase.id);
   }
+  @Hook
   beforeRouteEnter(to, from, next) {
     next(vm => {
       if (to.params.adjuntoProyectoFaseId) {
@@ -93,7 +100,7 @@ export default class AdjuntoProyectoFaseUpdate extends mixins(JhiDataUtils) {
   }
 
   initRelationships() {
-    this.proyId = this.$route.params.proyectoId;
+    this.proyId = this.$route.params.proyectoId as string;
 
     /*let res = await this.proyectoService()
     .findProyectoIntegrantes(parseInt(this.$route.params.proyectoId))

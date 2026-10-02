@@ -1,6 +1,6 @@
-import { mixins } from 'vue-class-component';
+import { mixins } from 'vue-facing-decorator';
 
-import { Component, Inject } from 'vue-property-decorator';
+import { Component, Inject } from 'vue-facing-decorator';
 import { IInformacionPasantia } from '@/shared/model/informacion-pasantia.model';
 //import AlertService from '@/shared/alert/alert.service';
 import AlertMixin from '@/shared/alert/alert.mixin';
@@ -9,8 +9,8 @@ import InformacionPasantiaService from './informacion-pasantia.service';
 
 @Component({})
 export default class InformacionPasantia extends mixins(AlertMixin) {
-  // @Inject('alertService') private alertService: () => AlertService;
-  @Inject('informacionPasantiaService') private informacionPasantiaService: () => InformacionPasantiaService;
+  // @Inject  private alertService: () => AlertService;
+  @Inject private informacionPasantiaService: () => InformacionPasantiaService;
 
   private removeId: number = null;
   public itemsPerPage = 20;
@@ -28,18 +28,6 @@ export default class InformacionPasantia extends mixins(AlertMixin) {
   public dismissSecs: number = this.$store.getters.dismissSecs;
   public alertType: string = this.$store.getters.alertType;
   public alertMessage: any = this.$store.getters.alertMessage;
-
-  public getAlertFromStore() {
-    this.dismissCountDown = this.$store.getters.dismissCountDown;
-    this.dismissSecs = this.$store.getters.dismissSecs;
-    this.alertType = this.$store.getters.alertType;
-    this.alertMessage = this.$store.getters.alertMessage;
-  }
-
-  public countDownChanged(dismissCountDown: number) {
-    this.alertService().countDownChanged(dismissCountDown);
-    this.getAlertFromStore();
-  }
 
   public mounted(): void {
     this.retrieveAllInformacionPasantias();

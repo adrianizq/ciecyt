@@ -1,13 +1,11 @@
 <template>
     <div>
         <h2 id="page-heading">
-            <span v-text="$t('ciecytVueApp.informacionPasantia.home.title')" id="informacion-pasantia-heading">Informacion Pasantias</span>
-            <router-link :to="{name: 'InformacionPasantiaCreate'}" tag="button" id="jh-create-entity" class="btn btn-primary float-right jh-create-entity create-informacion-pasantia">
+            <span v-text="$t('ciecytVueApp.informacionPasantia.home.title')" id="informacion-pasantia-heading"></span>
+            <router-link custom v-slot="{ navigate }" :to="{name: 'InformacionPasantiaCreate'}"><button id="jh-create-entity" class="btn btn-primary float-right jh-create-entity create-informacion-pasantia" @click="navigate">
                 <font-awesome-icon icon="plus"></font-awesome-icon>
-                <span  v-text="$t('ciecytVueApp.informacionPasantia.home.createLabel')">
-                    Create a new Informacion Pasantia
-                </span>
-            </router-link>
+                <span  v-text="$t('ciecytVueApp.informacionPasantia.home.createLabel')"></span>
+            </button></router-link>
         </h2>
         <b-alert :show="dismissCountDown"
             dismissible
@@ -18,45 +16,45 @@
         </b-alert>
         <br/>
         <div class="alert alert-warning" v-if="!isFetching && informacionPasantias && informacionPasantias.length === 0">
-            <span v-text="$t('ciecytVueApp.informacionPasantia.home.notFound')">No informacionPasantias found</span>
+            <span v-text="$t('ciecytVueApp.informacionPasantia.home.notFound')"></span>
         </div>
         <div class="table-responsive" v-if="informacionPasantias && informacionPasantias.length > 0">
             <table class="table table-striped">
                 <thead>
                 <tr>
-                    <th><span v-text="$t('global.field.id')">ID</span></th>
-                    <th><span v-text="$t('ciecytVueApp.informacionPasantia.duracionHoras')">Duracion Horas</span></th>
-                    <th><span v-text="$t('ciecytVueApp.informacionPasantia.direccion')">Direccion</span></th>
-                    <th><span v-text="$t('ciecytVueApp.informacionPasantia.email')">Email</span></th>
-                    <th><span v-text="$t('ciecytVueApp.informacionPasantia.lunes')">Lunes</span></th>
-                    <th><span v-text="$t('ciecytVueApp.informacionPasantia.martes')">Martes</span></th>
-                    <th><span v-text="$t('ciecytVueApp.informacionPasantia.miercoles')">Miercoles</span></th>
-                    <th><span v-text="$t('ciecytVueApp.informacionPasantia.jueves')">Jueves</span></th>
-                    <th><span v-text="$t('ciecytVueApp.informacionPasantia.viernes')">Viernes</span></th>
-                    <th><span v-text="$t('ciecytVueApp.informacionPasantia.sabado')">Sabado</span></th>
-                    <th><span v-text="$t('ciecytVueApp.informacionPasantia.domingo')">Domingo</span></th>
-                    <th><span v-text="$t('ciecytVueApp.informacionPasantia.horasMes')">Horas Mes</span></th>
-                    <th><span v-text="$t('ciecytVueApp.informacionPasantia.bonoAlimenticio')">Bono Alimenticio</span></th>
-                    <th><span v-text="$t('ciecytVueApp.informacionPasantia.apoyoEconomico')">Apoyo Economico</span></th>
-                    <th><span v-text="$t('ciecytVueApp.informacionPasantia.auxilioTransporte')">Auxilio Transporte</span></th>
-                    <th><span v-text="$t('ciecytVueApp.informacionPasantia.capacitacion')">Capacitacion</span></th>
-                    <th><span v-text="$t('ciecytVueApp.informacionPasantia.otroApoyo')">Otro Apoyo</span></th>
-                    <th><span v-text="$t('ciecytVueApp.informacionPasantia.nombreEmpresa')">Nombre Empresa</span></th>
-                    <th><span v-text="$t('ciecytVueApp.informacionPasantia.nitEmpresa')">Nit Empresa</span></th>
-                    <th><span v-text="$t('ciecytVueApp.informacionPasantia.direccionEmpresa')">Direccion Empresa</span></th>
-                    <th><span v-text="$t('ciecytVueApp.informacionPasantia.sectorEconomicoEmpresa')">Sector Economico Empresa</span></th>
-                    <th><span v-text="$t('ciecytVueApp.informacionPasantia.representanteLegalEmpresa')">Representante Legal Empresa</span></th>
-                    <th><span v-text="$t('ciecytVueApp.informacionPasantia.asesorEmpresa')">Asesor Empresa</span></th>
-                    <th><span v-text="$t('ciecytVueApp.informacionPasantia.cargoAsesorEmpresa')">Cargo Asesor Empresa</span></th>
-                    <th><span v-text="$t('ciecytVueApp.informacionPasantia.emailAsesorEmpresa')">Email Asesor Empresa</span></th>
-                    <th><span v-text="$t('ciecytVueApp.informacionPasantia.municipioEmpresa')">Municipio Empresa</span></th>
-                    <th><span v-text="$t('ciecytVueApp.informacionPasantia.telefonoContactoEmpresa')">Telefono Contacto Empresa</span></th>
-                    <th><span v-text="$t('ciecytVueApp.informacionPasantia.emailEmpresa')">Email Empresa</span></th>
-                    <th><span v-text="$t('ciecytVueApp.informacionPasantia.departamentoEmpresa')">Departamento Empresa</span></th>
-                    <th><span v-text="$t('ciecytVueApp.informacionPasantia.identificacionRepresentanteLegal')">Identificacion Representante Legal</span></th>
-                    <th><span v-text="$t('ciecytVueApp.informacionPasantia.profesionAsesorEmpresa')">Profesion Asesor Empresa</span></th>
-                    <th><span v-text="$t('ciecytVueApp.informacionPasantia.celularAsesorEmpresa')">Celular Asesor Empresa</span></th>
-                    <th><span v-text="$t('ciecytVueApp.informacionPasantia.informacionPasantiaProyecto')">Informacion Pasantia Proyecto</span></th>
+                    <th><span v-text="$t('global.field.id')"></span></th>
+                    <th><span v-text="$t('ciecytVueApp.informacionPasantia.duracionHoras')"></span></th>
+                    <th><span v-text="$t('ciecytVueApp.informacionPasantia.direccion')"></span></th>
+                    <th><span v-text="$t('ciecytVueApp.informacionPasantia.email')"></span></th>
+                    <th><span v-text="$t('ciecytVueApp.informacionPasantia.lunes')"></span></th>
+                    <th><span v-text="$t('ciecytVueApp.informacionPasantia.martes')"></span></th>
+                    <th><span v-text="$t('ciecytVueApp.informacionPasantia.miercoles')"></span></th>
+                    <th><span v-text="$t('ciecytVueApp.informacionPasantia.jueves')"></span></th>
+                    <th><span v-text="$t('ciecytVueApp.informacionPasantia.viernes')"></span></th>
+                    <th><span v-text="$t('ciecytVueApp.informacionPasantia.sabado')"></span></th>
+                    <th><span v-text="$t('ciecytVueApp.informacionPasantia.domingo')"></span></th>
+                    <th><span v-text="$t('ciecytVueApp.informacionPasantia.horasMes')"></span></th>
+                    <th><span v-text="$t('ciecytVueApp.informacionPasantia.bonoAlimenticio')"></span></th>
+                    <th><span v-text="$t('ciecytVueApp.informacionPasantia.apoyoEconomico')"></span></th>
+                    <th><span v-text="$t('ciecytVueApp.informacionPasantia.auxilioTransporte')"></span></th>
+                    <th><span v-text="$t('ciecytVueApp.informacionPasantia.capacitacion')"></span></th>
+                    <th><span v-text="$t('ciecytVueApp.informacionPasantia.otroApoyo')"></span></th>
+                    <th><span v-text="$t('ciecytVueApp.informacionPasantia.nombreEmpresa')"></span></th>
+                    <th><span v-text="$t('ciecytVueApp.informacionPasantia.nitEmpresa')"></span></th>
+                    <th><span v-text="$t('ciecytVueApp.informacionPasantia.direccionEmpresa')"></span></th>
+                    <th><span v-text="$t('ciecytVueApp.informacionPasantia.sectorEconomicoEmpresa')"></span></th>
+                    <th><span v-text="$t('ciecytVueApp.informacionPasantia.representanteLegalEmpresa')"></span></th>
+                    <th><span v-text="$t('ciecytVueApp.informacionPasantia.asesorEmpresa')"></span></th>
+                    <th><span v-text="$t('ciecytVueApp.informacionPasantia.cargoAsesorEmpresa')"></span></th>
+                    <th><span v-text="$t('ciecytVueApp.informacionPasantia.emailAsesorEmpresa')"></span></th>
+                    <th><span v-text="$t('ciecytVueApp.informacionPasantia.municipioEmpresa')"></span></th>
+                    <th><span v-text="$t('ciecytVueApp.informacionPasantia.telefonoContactoEmpresa')"></span></th>
+                    <th><span v-text="$t('ciecytVueApp.informacionPasantia.emailEmpresa')"></span></th>
+                    <th><span v-text="$t('ciecytVueApp.informacionPasantia.departamentoEmpresa')"></span></th>
+                    <th><span v-text="$t('ciecytVueApp.informacionPasantia.identificacionRepresentanteLegal')"></span></th>
+                    <th><span v-text="$t('ciecytVueApp.informacionPasantia.profesionAsesorEmpresa')"></span></th>
+                    <th><span v-text="$t('ciecytVueApp.informacionPasantia.celularAsesorEmpresa')"></span></th>
+                    <th><span v-text="$t('ciecytVueApp.informacionPasantia.informacionPasantiaProyecto')"></span></th>
                     <th></th>
                 </tr>
                 </thead>
@@ -104,20 +102,20 @@
                     </td>
                     <td class="text-right">
                         <div class="btn-group">
-                            <router-link :to="{name: 'InformacionPasantiaView', params: {informacionPasantiaId: informacionPasantia.id}}" tag="button" class="btn btn-info btn-sm details">
+                            <router-link custom v-slot="{ navigate }" :to="{name: 'InformacionPasantiaView', params: {informacionPasantiaId: informacionPasantia.id}}"><button class="btn btn-info btn-sm details" @click="navigate">
                                 <font-awesome-icon icon="eye"></font-awesome-icon>
-                                <span class="d-none d-md-inline" v-text="$t('entity.action.view')">View</span>
-                            </router-link>
-                            <router-link :to="{name: 'InformacionPasantiaEdit', params: {informacionPasantiaId: informacionPasantia.id}}"  tag="button" class="btn btn-primary btn-sm edit">
+                                <span class="d-none d-md-inline" v-text="$t('entity.action.view')"></span>
+                            </button></router-link>
+                            <router-link custom v-slot="{ navigate }" :to="{name: 'InformacionPasantiaEdit', params: {informacionPasantiaId: informacionPasantia.id}}"><button class="btn btn-primary btn-sm edit" @click="navigate">
                                 <font-awesome-icon icon="pencil-alt"></font-awesome-icon>
-                                <span class="d-none d-md-inline" v-text="$t('entity.action.edit')">Edit</span>
-                            </router-link>
+                                <span class="d-none d-md-inline" v-text="$t('entity.action.edit')"></span>
+                            </button></router-link>
                             <b-button v-on:click="prepareRemove(informacionPasantia)"
                                    variant="danger"
                                    class="btn btn-sm"
                                    v-b-modal.removeEntity>
                                 <font-awesome-icon icon="times"></font-awesome-icon>
-                                <span class="d-none d-md-inline" v-text="$t('entity.action.delete')">Delete</span>
+                                <span class="d-none d-md-inline" v-text="$t('entity.action.delete')"></span>
                             </b-button>
                         </div>
                     </td>
@@ -126,14 +124,18 @@
             </table>
         </div>
         <b-modal ref="removeEntity" id="removeEntity" >
-            <span slot="modal-title"><span id="ciecytVueApp.informacionPasantia.delete.question" v-text="$t('entity.delete.title')">Confirm delete operation</span></span>
+            <template #modal-title>
+<span ><span id="ciecytVueApp.informacionPasantia.delete.question" v-text="$t('entity.delete.title')"></span></span>
+</template>
             <div class="modal-body">
-                <p id="jhi-delete-informacionPasantia-heading" v-text="$t('ciecytVueApp.informacionPasantia.delete.question', {'id': removeId})">Are you sure you want to delete this Informacion Pasantia?</p>
+                <p id="jhi-delete-informacionPasantia-heading" v-text="$t('ciecytVueApp.informacionPasantia.delete.question', {'id': removeId})"></p>
             </div>
-            <div slot="modal-footer">
-                <button type="button" class="btn btn-secondary" v-text="$t('entity.action.cancel')" v-on:click="closeDialog()">Cancel</button>
-                <button type="button" class="btn btn-primary" id="jhi-confirm-delete-informacionPasantia" v-text="$t('entity.action.delete')" v-on:click="removeInformacionPasantia()">Delete</button>
+            <template #modal-footer>
+<div >
+                <button type="button" class="btn btn-secondary" v-text="$t('entity.action.cancel')" v-on:click="closeDialog()"></button>
+                <button type="button" class="btn btn-primary" id="jhi-confirm-delete-informacionPasantia" v-text="$t('entity.action.delete')" v-on:click="removeInformacionPasantia()"></button>
             </div>
+</template>
         </b-modal>
     </div>
 </template>

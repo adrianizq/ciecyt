@@ -1,6 +1,7 @@
-import { Component, Vue, Inject } from 'vue-property-decorator';
+import { useVuelidate } from '@vuelidate/core';
+import { Component, Vue, Inject, Hook } from 'vue-facing-decorator';
 
-import { numeric, required, minLength, maxLength } from 'vuelidate/lib/validators';
+import { numeric, required, minLength, maxLength } from '@vuelidate/validators';
 
 import ProyectoFaseService from '../proyecto-fase/proyecto-fase.service';
 import { IProyectoFase } from '@/shared/model/proyecto-fase.model';
@@ -22,22 +23,28 @@ const validations: any = {
 };
 
 @Component({
-  validations,
+  options: {
+    validations,
+  },
+  setup() {
+    return { v$: useVuelidate() };
+  },
 })
 export default class RetroalimentacionUpdate extends Vue {
-  @Inject('alertService') private alertService: () => AlertService;
-  @Inject('retroalimentacionService') private retroalimentacionService: () => RetroalimentacionService;
+  @Inject private alertService: () => AlertService;
+  @Inject private retroalimentacionService: () => RetroalimentacionService;
   public retroalimentacion: IRetroalimentacion = new Retroalimentacion();
 
-  @Inject('proyectoFaseService') private proyectoFaseService: () => ProyectoFaseService;
+  @Inject private proyectoFaseService: () => ProyectoFaseService;
 
   public proyectoFases: IProyectoFase[] = [];
 
-  @Inject('userService') private userService: () => UserService;
+  @Inject private userService: () => UserService;
 
   public users: Array<any> = [];
   public isSaving = false;
 
+  @Hook
   beforeRouteEnter(to, from, next) {
     next(vm => {
       if (to.params.retroalimentacionId) {

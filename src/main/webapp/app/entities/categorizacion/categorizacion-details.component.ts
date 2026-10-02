@@ -1,13 +1,14 @@
-import { Component, Vue, Inject } from 'vue-property-decorator';
+import { Component, Vue, Inject, Hook } from 'vue-facing-decorator';
 
 import { ICategorizacion } from '@/shared/model/categorizacion.model';
 import CategorizacionService from './categorizacion.service';
 
 @Component
 export default class CategorizacionDetails extends Vue {
-  @Inject('categorizacionService') private categorizacionService: () => CategorizacionService;
+  @Inject private categorizacionService: () => CategorizacionService;
   public categorizacion: ICategorizacion = {};
 
+  @Hook
   beforeRouteEnter(to, from, next) {
     next(vm => {
       if (to.params.categorizacionId) {

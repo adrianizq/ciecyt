@@ -2,34 +2,34 @@
     <div class="row justify-content-center">
         <div class="col-8">
             <form name="editForm" role="form" novalidate v-on:submit.prevent="save()" >
-                <h2 id="ciecytApp.proyectoFase.home.createOrEditLabel" v-text="$t('ciecytApp.proyectoFase.home.createOrEditLabel')">Create or edit a ProyectoFase</h2>
+                <h2 id="ciecytApp.proyectoFase.home.createOrEditLabel" v-text="$t('ciecytApp.proyectoFase.home.createOrEditLabel')"></h2>
                 <div>
                     <div class="mb-3 form-group" v-if="proyectoFase.id">
-                        <label for="id" v-text="$t('global.field.id')">ID</label>
+                        <label for="id" v-text="$t('global.field.id')"></label>
                         <input type="text" class="form-control" id="id" name="id"
                                v-model="proyectoFase.id" readonly />
                     </div>
                     <div class="mb-3 form-group">
-                        <label class="form-control-label" v-text="$t('ciecytApp.proyectoFase.titulo')" for="proyecto-fase-titulo">Titulo</label>
+                        <label class="form-control-label" v-text="$t('ciecytApp.proyectoFase.titulo')" for="proyecto-fase-titulo"></label>
                         <input type="text" class="form-control" name="titulo" id="proyecto-fase-titulo"
-                            :class="{'valid': !$v.proyectoFase.titulo.$invalid, 'invalid': $v.proyectoFase.titulo.$invalid }" v-model="$v.proyectoFase.titulo.$model" />
+                            :class="{'valid': !v$.proyectoFase.titulo.$invalid, 'invalid': v$.proyectoFase.titulo.$invalid }" v-model="v$.proyectoFase.titulo.$model" />
                     </div>
                     <div class="mb-3 form-group">
-                        <label class="form-control-label" v-text="$t('ciecytApp.proyectoFase.cumplida')" for="proyecto-fase-cumplida">Cumplida</label>
+                        <label class="form-control-label" v-text="$t('ciecytApp.proyectoFase.cumplida')" for="proyecto-fase-cumplida"></label>
                         <input type="checkbox" class="form-check" name="cumplida" id="proyecto-fase-cumplida"
-                            :class="{'valid': !$v.proyectoFase.cumplida.$invalid, 'invalid': $v.proyectoFase.cumplida.$invalid }" v-model="$v.proyectoFase.cumplida.$model" />
+                            :class="{'valid': !v$.proyectoFase.cumplida.$invalid, 'invalid': v$.proyectoFase.cumplida.$invalid }" v-model="v$.proyectoFase.cumplida.$model" />
                     </div>
                     <div class="mb-3 form-group">
-                        <label class="form-control-label" v-text="$t('ciecytApp.proyectoFase.fechaCumplimiento')" for="proyecto-fase-fechaCumplimiento">Fecha Cumplimiento</label>
+                        <label class="form-control-label" v-text="$t('ciecytApp.proyectoFase.fechaCumplimiento')" for="proyecto-fase-fechaCumplimiento"></label>
                         <div class="input-group">
-                            <input id="proyecto-fase-fechaCumplimiento" type="date" class="form-control" name="fechaCumplimiento"  :class="{'valid': !$v.proyectoFase.fechaCumplimiento.$invalid, 'invalid': $v.proyectoFase.fechaCumplimiento.$invalid }"
-                            v-model="$v.proyectoFase.fechaCumplimiento.$model"  />
+                            <input id="proyecto-fase-fechaCumplimiento" type="date" class="form-control" name="fechaCumplimiento"  :class="{'valid': !v$.proyectoFase.fechaCumplimiento.$invalid, 'invalid': v$.proyectoFase.fechaCumplimiento.$invalid }"
+                            v-model="v$.proyectoFase.fechaCumplimiento.$model"  />
                         </div>
                     </div>
                     <div class="mb-3 form-group">
-                        <label class="form-control-label" v-text="$t('ciecytApp.proyectoFase.observaciones')" for="proyecto-fase-observaciones">Observaciones</label>
+                        <label class="form-control-label" v-text="$t('ciecytApp.proyectoFase.observaciones')" for="proyecto-fase-observaciones"></label>
                         <input type="text" class="form-control" name="observaciones" id="proyecto-fase-observaciones"
-                            :class="{'valid': !$v.proyectoFase.observaciones.$invalid, 'invalid': $v.proyectoFase.observaciones.$invalid }" v-model="$v.proyectoFase.observaciones.$model" />
+                            :class="{'valid': !v$.proyectoFase.observaciones.$invalid, 'invalid': v$.proyectoFase.observaciones.$invalid }" v-model="v$.proyectoFase.observaciones.$model" />
                     </div>
                     <div class="mb-3 form-group">
                         <label class="form-control-label" v-bind:value="$t('ciecytApp.proyectoFase.proyectoFaseFases')" for="proyecto-fase-proyectoFaseFases">Proyecto Fase Fases</label>
@@ -48,10 +48,10 @@
                 </div>
                 <div>
                     <button type="button" id="cancel-save" class="btn btn-secondary" v-on:click="previousState()">
-                        <font-awesome-icon icon="ban"></font-awesome-icon>&nbsp;<span v-text="$t('entity.action.cancel')">Cancel</span>
+                        <font-awesome-icon icon="ban"></font-awesome-icon>&nbsp;<span v-text="$t('entity.action.cancel')"></span>
                     </button>
-                    <button type="submit" id="save-entity" :disabled="$v.proyectoFase.$invalid || isSaving" class="btn btn-primary">
-                        <font-awesome-icon icon="save"></font-awesome-icon>&nbsp;<span v-text="$t('entity.action.save')">Save</span>
+                    <button type="submit" id="save-entity" :disabled="v$.proyectoFase.$invalid || isSaving" class="btn btn-primary">
+                        <font-awesome-icon icon="save"></font-awesome-icon>&nbsp;<span v-text="$t('entity.action.save')"></span>
                     </button>
                 </div>
             </form>

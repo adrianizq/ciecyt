@@ -1,5 +1,5 @@
-import { Component, Vue, Inject } from 'vue-property-decorator';
-import { mixins } from 'vue-class-component';
+import { Component, Vue, Inject, Hook } from 'vue-facing-decorator';
+import { mixins } from 'vue-facing-decorator';
 
 import { IAdjuntoProyectoFase } from '@/shared/model/adjunto-proyecto-fase.model';
 import AdjuntoProyectoFaseService from './adjunto-proyecto-fase.service';
@@ -7,9 +7,10 @@ import JhiDataUtils from '@/shared/data/data-utils.service';
 
 @Component
 export default class AdjuntoProyectoFaseDetails extends mixins(JhiDataUtils) {
-  @Inject('adjuntoProyectoFaseService') private adjuntoProyectoFaseService: () => AdjuntoProyectoFaseService;
+  @Inject private adjuntoProyectoFaseService: () => AdjuntoProyectoFaseService;
   public adjuntoProyectoFase: IAdjuntoProyectoFase = {};
 
+  @Hook
   beforeRouteEnter(to, from, next) {
     next(vm => {
       if (to.params.adjuntoProyectoFaseId) {

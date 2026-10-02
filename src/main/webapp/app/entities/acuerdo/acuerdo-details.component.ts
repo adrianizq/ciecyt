@@ -1,13 +1,14 @@
-import { Component, Vue, Inject } from 'vue-property-decorator';
+import { Component, Vue, Inject, Hook } from 'vue-facing-decorator';
 
 import { IAcuerdo } from '@/shared/model/acuerdo.model';
 import AcuerdoService from './acuerdo.service';
 
 @Component
 export default class AcuerdoDetails extends Vue {
-  @Inject('acuerdoService') private acuerdoService: () => AcuerdoService;
+  @Inject private acuerdoService: () => AcuerdoService;
   public acuerdo: IAcuerdo = {};
 
+  @Hook
   beforeRouteEnter(to, from, next) {
     next(vm => {
       if (to.params.acuerdoId) {

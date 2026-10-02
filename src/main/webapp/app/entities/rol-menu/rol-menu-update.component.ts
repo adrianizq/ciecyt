@@ -1,6 +1,7 @@
-import { Component, Vue, Inject } from 'vue-property-decorator';
+import { useVuelidate } from '@vuelidate/core';
+import { Component, Vue, Inject, Hook } from 'vue-facing-decorator';
 
-import { numeric, required, minLength, maxLength } from 'vuelidate/lib/validators';
+import { numeric, required, minLength, maxLength } from '@vuelidate/validators';
 
 import MenuService from '../menu/menu.service';
 import { IMenu } from '@/shared/model/menu.model';
@@ -20,18 +21,24 @@ const validations: any = {
 };
 
 @Component({
-  validations,
+  options: {
+    validations,
+  },
+  setup() {
+    return { v$: useVuelidate() };
+  },
 })
 export default class RolMenuUpdate extends Vue {
-  @Inject('alertService') private alertService: () => AlertService;
-  @Inject('rolMenuService') private rolMenuService: () => RolMenuService;
+  @Inject private alertService: () => AlertService;
+  @Inject private rolMenuService: () => RolMenuService;
   public rolMenu: IRolMenu = new RolMenu();
 
-  @Inject('menuService') private menuService: () => MenuService;
+  @Inject private menuService: () => MenuService;
 
   public menus: IMenu[] = [];
   public isSaving = false;
 
+  @Hook
   beforeRouteEnter(to, from, next) {
     next(vm => {
       if (to.params.rolMenuId) {

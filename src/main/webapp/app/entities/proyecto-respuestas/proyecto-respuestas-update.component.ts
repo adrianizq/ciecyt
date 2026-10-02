@@ -1,6 +1,7 @@
-import { Component, Vue, Inject } from 'vue-property-decorator';
+import { useVuelidate } from '@vuelidate/core';
+import { Component, Vue, Inject, Hook } from 'vue-facing-decorator';
 
-import { numeric, required, minLength, maxLength } from 'vuelidate/lib/validators';
+import { numeric, required, minLength, maxLength } from '@vuelidate/validators';
 
 import PreguntaService from '../pregunta/pregunta.service';
 import { IPregunta } from '@/shared/model/pregunta.model';
@@ -21,22 +22,28 @@ const validations: any = {
 };
 
 @Component({
-  validations,
+  options: {
+    validations,
+  },
+  setup() {
+    return { v$: useVuelidate() };
+  },
 })
 export default class ProyectoRespuestasUpdate extends Vue {
-  @Inject('alertService') private alertService: () => AlertService;
-  @Inject('proyectoRespuestasService') private proyectoRespuestasService: () => ProyectoRespuestasService;
+  @Inject private alertService: () => AlertService;
+  @Inject private proyectoRespuestasService: () => ProyectoRespuestasService;
   public proyectoRespuestas: IProyectoRespuestas = new ProyectoRespuestas();
 
-  @Inject('preguntaService') private preguntaService: () => PreguntaService;
+  @Inject private preguntaService: () => PreguntaService;
 
   public preguntas: IPregunta[] = [];
 
-  @Inject('proyectoService') private proyectoService: () => ProyectoService;
+  @Inject private proyectoService: () => ProyectoService;
 
   public proyectos: IProyecto[] = [];
   public isSaving = false;
 
+  @Hook
   beforeRouteEnter(to, from, next) {
     next(vm => {
       if (to.params.proyectoRespuestasId) {

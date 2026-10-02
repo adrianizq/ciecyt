@@ -1,13 +1,14 @@
-import { Component, Vue, Inject } from 'vue-property-decorator';
+import { Component, Vue, Inject, Hook } from 'vue-facing-decorator';
 
 import { IRetroalimentacion } from '@/shared/model/retroalimentacion.model';
 import RetroalimentacionService from './retroalimentacion.service';
 
 @Component
 export default class RetroalimentacionDetails extends Vue {
-  @Inject('retroalimentacionService') private retroalimentacionService: () => RetroalimentacionService;
+  @Inject private retroalimentacionService: () => RetroalimentacionService;
   public retroalimentacion: IRetroalimentacion = {};
 
+  @Hook
   beforeRouteEnter(to, from, next) {
     next(vm => {
       if (to.params.retroalimentacionId) {

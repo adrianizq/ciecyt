@@ -1,13 +1,14 @@
-import { Component, Vue, Inject } from 'vue-property-decorator';
+import { Component, Vue, Inject, Hook } from 'vue-facing-decorator';
 
 import { IProyecto } from '@/shared/model/proyecto.model';
 import ProyectoService from './proyecto.service';
 
 @Component
 export default class ProyectoDetails extends Vue {
-  @Inject('proyectoService') private proyectoService: () => ProyectoService;
+  @Inject private proyectoService: () => ProyectoService;
   public proyecto: IProyecto = {};
 
+  @Hook
   beforeRouteEnter(to, from, next) {
     next(vm => {
       if (to.params.proyectoId) {

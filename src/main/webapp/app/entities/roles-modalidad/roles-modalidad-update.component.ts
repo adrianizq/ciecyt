@@ -1,6 +1,7 @@
-import { Component, Vue, Inject } from 'vue-property-decorator';
+import { useVuelidate } from '@vuelidate/core';
+import { Component, Vue, Inject, Hook } from 'vue-facing-decorator';
 
-import { numeric, required, minLength, maxLength } from 'vuelidate/lib/validators';
+import { numeric, required, minLength, maxLength } from '@vuelidate/validators';
 
 import ModalidadService from '../modalidad/modalidad.service';
 import { IModalidad } from '@/shared/model/modalidad.model';
@@ -20,20 +21,26 @@ const validations: any = {
 };
 
 @Component({
-  validations,
+  options: {
+    validations,
+  },
+  setup() {
+    return { v$: useVuelidate() };
+  },
 })
 export default class RolesModalidadUpdate extends Vue {
-  @Inject('alertService') private alertService: () => AlertService;
-  @Inject('rolesModalidadService') private rolesModalidadService: () => RolesModalidadService;
+  @Inject private alertService: () => AlertService;
+  @Inject private rolesModalidadService: () => RolesModalidadService;
   public rolesModalidad: IRolesModalidad = new RolesModalidad();
 
-  @Inject('modalidadService') private modalidadService: () => ModalidadService;
-  @Inject('userService') private userManagementService: () => UserManagementService;
+  @Inject private modalidadService: () => ModalidadService;
+  @Inject({ from: 'userService' }) private userManagementService: () => UserManagementService;
 
   public modalidads: IModalidad[] = [];
   public authorities: any[] = [];
   public isSaving = false;
 
+  @Hook
   beforeRouteEnter(to, from, next) {
     next(vm => {
       if (to.params.rolesModalidadId) {

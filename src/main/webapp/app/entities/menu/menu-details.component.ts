@@ -1,13 +1,14 @@
-import { Component, Vue, Inject } from 'vue-property-decorator';
+import { Component, Vue, Inject, Hook } from 'vue-facing-decorator';
 
 import { IMenu } from '@/shared/model/menu.model';
 import MenuService from './menu.service';
 
 @Component
 export default class MenuDetails extends Vue {
-  @Inject('menuService') private menuService: () => MenuService;
+  @Inject private menuService: () => MenuService;
   public menu: IMenu = {};
 
+  @Hook
   beforeRouteEnter(to, from, next) {
     next(vm => {
       if (to.params.menuId) {

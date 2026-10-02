@@ -1,6 +1,7 @@
-import { Component, Vue, Inject } from 'vue-property-decorator';
+import { useVuelidate } from '@vuelidate/core';
+import { Component, Vue, Inject, Hook } from 'vue-facing-decorator';
 
-import { numeric, required, minLength, maxLength } from 'vuelidate/lib/validators';
+import { numeric, required, minLength, maxLength } from '@vuelidate/validators';
 
 import RetroalimentacionService from '../retroalimentacion/retroalimentacion.service';
 import { IRetroalimentacion } from '@/shared/model/retroalimentacion.model';
@@ -23,18 +24,24 @@ const validations: any = {
 };
 
 @Component({
-  validations,
+  options: {
+    validations,
+  },
+  setup() {
+    return { v$: useVuelidate() };
+  },
 })
 export default class AdjuntoRetroalimentacionUpdate extends Vue {
-  @Inject('alertService') private alertService: () => AlertService;
-  @Inject('adjuntoRetroalimentacionService') private adjuntoRetroalimentacionService: () => AdjuntoRetroalimentacionService;
+  @Inject private alertService: () => AlertService;
+  @Inject private adjuntoRetroalimentacionService: () => AdjuntoRetroalimentacionService;
   public adjuntoRetroalimentacion: IAdjuntoRetroalimentacion = new AdjuntoRetroalimentacion();
 
-  @Inject('retroalimentacionService') private retroalimentacionService: () => RetroalimentacionService;
+  @Inject private retroalimentacionService: () => RetroalimentacionService;
 
   public retroalimentacions: IRetroalimentacion[] = [];
   public isSaving = false;
 
+  @Hook
   beforeRouteEnter(to, from, next) {
     next(vm => {
       if (to.params.adjuntoRetroalimentacionId) {

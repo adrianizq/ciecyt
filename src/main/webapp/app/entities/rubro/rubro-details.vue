@@ -2,10 +2,10 @@
     <div class="row justify-content-center">
         <div class="col-8">
             <div v-if="rubro">
-                <h2 class="jh-entity-heading"><span v-text="$t('ciecytApp.rubro.detail.title')">Rubro</span> {{rubro.id}}</h2>
+                <h2 class="jh-entity-heading"><span v-text="$t('ciecytApp.rubro.detail.title')"></span> {{rubro.id}}</h2>
                 <dl class="row jh-entity-details">
                     <dt>
-                        <span v-text="$t('ciecytApp.rubro.rubro')">Rubro</span>
+                        <span v-text="$t('ciecytApp.rubro.rubro')"></span>
                     </dt>
                     <dd>
                         <span>{{rubro.rubro}}</span>
@@ -14,11 +14,11 @@
                 <button type="submit"
                         v-on:click.prevent="previousState()"
                         class="btn btn-info">
-                    <font-awesome-icon icon="arrow-left"></font-awesome-icon>&nbsp;<span v-text="$t('entity.action.back')"> Back</span>
+                    <font-awesome-icon icon="arrow-left"></font-awesome-icon>&nbsp;<span v-text="$t('entity.action.back')"></span>
                 </button>
-                <router-link v-if="rubro.id" :to="{name: 'RubroEdit', params: {rubroId: rubro.id}}" tag="button" class="btn btn-primary">
-                    <font-awesome-icon icon="pencil-alt"></font-awesome-icon>&nbsp;<span v-text="$t('entity.action.edit')"> Edit</span>
-                </router-link>
+                <router-link custom v-slot="{ navigate }" v-if="rubro.id" :to="{name: 'RubroEdit', params: {rubroId: rubro.id}}"><button class="btn btn-primary" @click="navigate">
+                    <font-awesome-icon icon="pencil-alt"></font-awesome-icon>&nbsp;<span v-text="$t('entity.action.edit')"></span>
+                </button></router-link>
             </div>
         </div>
     </div>

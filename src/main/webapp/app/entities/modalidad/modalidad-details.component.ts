@@ -1,13 +1,14 @@
-import { Component, Vue, Inject } from 'vue-property-decorator';
+import { Component, Vue, Inject, Hook } from 'vue-facing-decorator';
 
 import { IModalidad } from '@/shared/model/modalidad.model';
 import ModalidadService from './modalidad.service';
 
 @Component
 export default class ModalidadDetails extends Vue {
-  @Inject('modalidadService') private modalidadService: () => ModalidadService;
+  @Inject private modalidadService: () => ModalidadService;
   public modalidad: IModalidad = {};
 
+  @Hook
   beforeRouteEnter(to, from, next) {
     next(vm => {
       if (to.params.modalidadId) {

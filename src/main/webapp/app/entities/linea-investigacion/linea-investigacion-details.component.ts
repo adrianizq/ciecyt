@@ -1,13 +1,14 @@
-import { Component, Vue, Inject } from 'vue-property-decorator';
+import { Component, Vue, Inject, Hook } from 'vue-facing-decorator';
 
 import { ILineaInvestigacion } from '@/shared/model/linea-investigacion.model';
 import LineaInvestigacionService from './linea-investigacion.service';
 
 @Component
 export default class LineaInvestigacionDetails extends Vue {
-  @Inject('lineaInvestigacionService') private lineaInvestigacionService: () => LineaInvestigacionService;
+  @Inject private lineaInvestigacionService: () => LineaInvestigacionService;
   public lineaInvestigacion: ILineaInvestigacion = {};
 
+  @Hook
   beforeRouteEnter(to, from, next) {
     next(vm => {
       if (to.params.lineaInvestigacionId) {

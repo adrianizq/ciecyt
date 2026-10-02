@@ -2,69 +2,69 @@
     <div class="row justify-content-center">
         <div class="col-8">
             <form name="editForm" role="form" novalidate v-on:submit.prevent="save()" >
-                <h2 id="ciecytApp.proyecto.home.createOrEditLabel" v-text="$t('ciecytApp.proyecto.home.createOrEditLabel')">Create or edit a Proyecto</h2>
+                <h2 id="ciecytApp.proyecto.home.createOrEditLabel" v-text="$t('ciecytApp.proyecto.home.createOrEditLabel')"></h2>
                 <div>
                     <div class="mb-3 form-group" v-if="proyecto.id">
-                        <label for="id" v-text="$t('global.field.id')">ID</label>
+                        <label for="id" v-text="$t('global.field.id')"></label>
                         <input type="text" class="form-control" id="id" name="id"
                                v-model="proyecto.id" readonly />
                     </div>
                     <div class="mb-3 form-group">
-                        <label class="form-control-label" v-text="$t('ciecytApp.proyecto.titulo')" for="proyecto-titulo">Titulo</label>
+                        <label class="form-control-label" v-text="$t('ciecytApp.proyecto.titulo')" for="proyecto-titulo"></label>
                         <input type="text" class="form-control" name="titulo" id="proyecto-titulo"
-                            :class="{'valid': !$v.proyecto.titulo.$invalid, 'invalid': $v.proyecto.titulo.$invalid }" v-model="$v.proyecto.titulo.$model" />
+                            :class="{'valid': !v$.proyecto.titulo.$invalid, 'invalid': v$.proyecto.titulo.$invalid }" v-model="v$.proyecto.titulo.$model" />
                     </div>
                     <div class="mb-3 form-group">
-                        <label class="form-control-label" v-text="$t('ciecytApp.proyecto.url')" for="proyecto-url">Url</label>
+                        <label class="form-control-label" v-text="$t('ciecytApp.proyecto.url')" for="proyecto-url"></label>
                         <input type="text" class="form-control" name="url" id="proyecto-url"
-                            :class="{'valid': !$v.proyecto.url.$invalid, 'invalid': $v.proyecto.url.$invalid }" v-model="$v.proyecto.url.$model" />
+                            :class="{'valid': !v$.proyecto.url.$invalid, 'invalid': v$.proyecto.url.$invalid }" v-model="v$.proyecto.url.$model" />
                     </div>
                     <div class="mb-3 form-group">
-                        <label class="form-control-label" v-text="$t('ciecytApp.proyecto.lugarEjecucion')" for="proyecto-lugarEjecucion">Lugar Ejecucion</label>
+                        <label class="form-control-label" v-text="$t('ciecytApp.proyecto.lugarEjecucion')" for="proyecto-lugarEjecucion"></label>
                         <input type="text" class="form-control" name="lugarEjecucion" id="proyecto-lugarEjecucion"
-                            :class="{'valid': !$v.proyecto.lugarEjecucion.$invalid, 'invalid': $v.proyecto.lugarEjecucion.$invalid }" v-model="$v.proyecto.lugarEjecucion.$model" />
+                            :class="{'valid': !v$.proyecto.lugarEjecucion.$invalid, 'invalid': v$.proyecto.lugarEjecucion.$invalid }" v-model="v$.proyecto.lugarEjecucion.$model" />
                     </div>
                     <div class="mb-3 form-group">
-                        <label class="form-control-label" v-text="$t('ciecytApp.proyecto.duracion')" for="proyecto-duracion">Duracion</label>
+                        <label class="form-control-label" v-text="$t('ciecytApp.proyecto.duracion')" for="proyecto-duracion"></label>
                         <input type="text" class="form-control" name="duracion" id="proyecto-duracion"
-                            :class="{'valid': !$v.proyecto.duracion.$invalid, 'invalid': $v.proyecto.duracion.$invalid }" v-model="$v.proyecto.duracion.$model" />
+                            :class="{'valid': !v$.proyecto.duracion.$invalid, 'invalid': v$.proyecto.duracion.$invalid }" v-model="v$.proyecto.duracion.$model" />
                     </div>
                     <div class="mb-3 form-group">
-                        <label class="form-control-label" v-text="$t('ciecytApp.proyecto.fechaIni')" for="proyecto-fechaIni">Fecha Ini</label>
+                        <label class="form-control-label" v-text="$t('ciecytApp.proyecto.fechaIni')" for="proyecto-fechaIni"></label>
                         <div class="input-group">
-                            <input id="proyecto-fechaIni" type="date" class="form-control" name="fechaIni"  :class="{'valid': !$v.proyecto.fechaIni.$invalid, 'invalid': $v.proyecto.fechaIni.$invalid }"
-                            v-model="$v.proyecto.fechaIni.$model"  />
+                            <input id="proyecto-fechaIni" type="date" class="form-control" name="fechaIni"  :class="{'valid': !v$.proyecto.fechaIni.$invalid, 'invalid': v$.proyecto.fechaIni.$invalid }"
+                            v-model="v$.proyecto.fechaIni.$model"  />
                         </div>
                     </div>
                     <div class="mb-3 form-group">
-                        <label class="form-control-label" v-text="$t('ciecytApp.proyecto.fechaFin')" for="proyecto-fechaFin">Fecha Fin</label>
+                        <label class="form-control-label" v-text="$t('ciecytApp.proyecto.fechaFin')" for="proyecto-fechaFin"></label>
                         <div class="input-group">
-                            <input id="proyecto-fechaFin" type="date" class="form-control" name="fechaFin"  :class="{'valid': !$v.proyecto.fechaFin.$invalid, 'invalid': $v.proyecto.fechaFin.$invalid }"
-                            v-model="$v.proyecto.fechaFin.$model"  />
+                            <input id="proyecto-fechaFin" type="date" class="form-control" name="fechaFin"  :class="{'valid': !v$.proyecto.fechaFin.$invalid, 'invalid': v$.proyecto.fechaFin.$invalid }"
+                            v-model="v$.proyecto.fechaFin.$model"  />
                         </div>
                     </div>
                    <!-- <div class="mb-3 form-group">
-                        <label class="form-control-label" v-text="$t('ciecytApp.proyecto.contrapartidaPesos')" for="proyecto-contrapartidaPesos">Contrapartida Pesos</label>
+                        <label class="form-control-label" v-text="$t('ciecytApp.proyecto.contrapartidaPesos')" for="proyecto-contrapartidaPesos"></label>
                         <input type="number" class="form-control" name="contrapartidaPesos" id="proyecto-contrapartidaPesos"
-                            :class="{'valid': !$v.proyecto.contrapartidaPesos.$invalid, 'invalid': $v.proyecto.contrapartidaPesos.$invalid }" v-model.number="$v.proyecto.contrapartidaPesos.$model" />
+                            :class="{'valid': !v$.proyecto.contrapartidaPesos.$invalid, 'invalid': v$.proyecto.contrapartidaPesos.$invalid }" v-model.number="v$.proyecto.contrapartidaPesos.$model" />
                     </div>
                     -->
                     <!--
                     <div class="mb-3 form-group">
-                        <label class="form-control-label" v-text="$t('ciecytApp.proyecto.contrapartidaEspecie')" for="proyecto-contrapartidaEspecie">Contrapartida Especie</label>
+                        <label class="form-control-label" v-text="$t('ciecytApp.proyecto.contrapartidaEspecie')" for="proyecto-contrapartidaEspecie"></label>
                         <input type="number" class="form-control" name="contrapartidaEspecie" id="proyecto-contrapartidaEspecie"
-                            :class="{'valid': !$v.proyecto.contrapartidaEspecie.$invalid, 'invalid': $v.proyecto.contrapartidaEspecie.$invalid }" v-model.number="$v.proyecto.contrapartidaEspecie.$model" />
+                            :class="{'valid': !v$.proyecto.contrapartidaEspecie.$invalid, 'invalid': v$.proyecto.contrapartidaEspecie.$invalid }" v-model.number="v$.proyecto.contrapartidaEspecie.$model" />
                     </div>-->
                     <div class="mb-3 form-group">
-                        <label class="form-control-label" v-text="$t('ciecytApp.proyecto.palabrasClave')" for="proyecto-palabrasClave">Palabras Clave</label>
+                        <label class="form-control-label" v-text="$t('ciecytApp.proyecto.palabrasClave')" for="proyecto-palabrasClave"></label>
                         <input type="text" class="form-control" name="palabrasClave" id="proyecto-palabrasClave"
-                            :class="{'valid': !$v.proyecto.palabrasClave.$invalid, 'invalid': $v.proyecto.palabrasClave.$invalid }" v-model="$v.proyecto.palabrasClave.$model" />
+                            :class="{'valid': !v$.proyecto.palabrasClave.$invalid, 'invalid': v$.proyecto.palabrasClave.$invalid }" v-model="v$.proyecto.palabrasClave.$model" />
                     </div>
                     <!--
                     <div class="mb-3 form-group">
-                        <label class="form-control-label" v-text="$t('ciecytApp.proyecto.convocatoria')" for="proyecto-convocatoria">Convocatoria</label>
+                        <label class="form-control-label" v-text="$t('ciecytApp.proyecto.convocatoria')" for="proyecto-convocatoria"></label>
                         <input type="text" class="form-control" name="convocatoria" id="proyecto-convocatoria"
-                            :class="{'valid': !$v.proyecto.convocatoria.$invalid, 'invalid': $v.proyecto.convocatoria.$invalid }" v-model="$v.proyecto.convocatoria.$model" />
+                            :class="{'valid': !v$.proyecto.convocatoria.$invalid, 'invalid': v$.proyecto.convocatoria.$invalid }" v-model="v$.proyecto.convocatoria.$model" />
                     </div>
                     -->
                     <div class="mb-3 form-group">
@@ -105,10 +105,10 @@
                 </div>
                 <div>
                     <button type="button" id="cancel-save" class="btn btn-secondary" v-on:click="previousState()">
-                        <font-awesome-icon icon="ban"></font-awesome-icon>&nbsp;<span v-text="$t('entity.action.cancel')">Cancel</span>
+                        <font-awesome-icon icon="ban"></font-awesome-icon>&nbsp;<span v-text="$t('entity.action.cancel')"></span>
                     </button>
-                    <button type="submit" id="save-entity" :disabled="$v.proyecto.$invalid || isSaving" class="btn btn-primary">
-                        <font-awesome-icon icon="save"></font-awesome-icon>&nbsp;<span v-text="$t('entity.action.save')">Save</span>
+                    <button type="submit" id="save-entity" :disabled="v$.proyecto.$invalid || isSaving" class="btn btn-primary">
+                        <font-awesome-icon icon="save"></font-awesome-icon>&nbsp;<span v-text="$t('entity.action.save')"></span>
                     </button>
                 </div>
             </form>

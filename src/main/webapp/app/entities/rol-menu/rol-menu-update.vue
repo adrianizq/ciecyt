@@ -2,37 +2,37 @@
     <div class="row justify-content-center">
         <div class="col-8">
             <form name="editForm" role="form" novalidate v-on:submit.prevent="save()" >
-                <h2 id="ciecytApp.rolMenu.home.createOrEditLabel" v-text="$t('ciecytApp.rolMenu.home.createOrEditLabel')">Create or edit a RolMenu</h2>
+                <h2 id="ciecytApp.rolMenu.home.createOrEditLabel" v-text="$t('ciecytApp.rolMenu.home.createOrEditLabel')"></h2>
                 <div>
                     <div class="mb-3 form-group" v-if="rolMenu.id">
-                        <label for="id" v-text="$t('global.field.id')">ID</label>
+                        <label for="id" v-text="$t('global.field.id')"></label>
                         <input type="text" class="form-control" id="id" name="id"
                                v-model="rolMenu.id" readonly />
                     </div>
                     <div class="mb-3 form-group">
-                        <label class="form-control-label" v-text="$t('ciecytApp.rolMenu.permitirAcceso')" for="rol-menu-permitirAcceso">Permitir Acceso</label>
+                        <label class="form-control-label" v-text="$t('ciecytApp.rolMenu.permitirAcceso')" for="rol-menu-permitirAcceso"></label>
                         <input type="checkbox" class="form-check" name="permitirAcceso" id="rol-menu-permitirAcceso"
-                            :class="{'valid': !$v.rolMenu.permitirAcceso.$invalid, 'invalid': $v.rolMenu.permitirAcceso.$invalid }" v-model="$v.rolMenu.permitirAcceso.$model" />
+                            :class="{'valid': !v$.rolMenu.permitirAcceso.$invalid, 'invalid': v$.rolMenu.permitirAcceso.$invalid }" v-model="v$.rolMenu.permitirAcceso.$model" />
                     </div>
                     <div class="mb-3 form-group">
-                        <label class="form-control-label" v-text="$t('ciecytApp.rolMenu.permitirCrear')" for="rol-menu-permitirCrear">Permitir Crear</label>
+                        <label class="form-control-label" v-text="$t('ciecytApp.rolMenu.permitirCrear')" for="rol-menu-permitirCrear"></label>
                         <input type="checkbox" class="form-check" name="permitirCrear" id="rol-menu-permitirCrear"
-                            :class="{'valid': !$v.rolMenu.permitirCrear.$invalid, 'invalid': $v.rolMenu.permitirCrear.$invalid }" v-model="$v.rolMenu.permitirCrear.$model" />
+                            :class="{'valid': !v$.rolMenu.permitirCrear.$invalid, 'invalid': v$.rolMenu.permitirCrear.$invalid }" v-model="v$.rolMenu.permitirCrear.$model" />
                     </div>
                     <div class="mb-3 form-group">
-                        <label class="form-control-label" v-text="$t('ciecytApp.rolMenu.permitirEditar')" for="rol-menu-permitirEditar">Permitir Editar</label>
+                        <label class="form-control-label" v-text="$t('ciecytApp.rolMenu.permitirEditar')" for="rol-menu-permitirEditar"></label>
                         <input type="checkbox" class="form-check" name="permitirEditar" id="rol-menu-permitirEditar"
-                            :class="{'valid': !$v.rolMenu.permitirEditar.$invalid, 'invalid': $v.rolMenu.permitirEditar.$invalid }" v-model="$v.rolMenu.permitirEditar.$model" />
+                            :class="{'valid': !v$.rolMenu.permitirEditar.$invalid, 'invalid': v$.rolMenu.permitirEditar.$invalid }" v-model="v$.rolMenu.permitirEditar.$model" />
                     </div>
                     <div class="mb-3 form-group">
-                        <label class="form-control-label" v-text="$t('ciecytApp.rolMenu.permitirEliminar')" for="rol-menu-permitirEliminar">Permitir Eliminar</label>
+                        <label class="form-control-label" v-text="$t('ciecytApp.rolMenu.permitirEliminar')" for="rol-menu-permitirEliminar"></label>
                         <input type="checkbox" class="form-check" name="permitirEliminar" id="rol-menu-permitirEliminar"
-                            :class="{'valid': !$v.rolMenu.permitirEliminar.$invalid, 'invalid': $v.rolMenu.permitirEliminar.$invalid }" v-model="$v.rolMenu.permitirEliminar.$model" />
+                            :class="{'valid': !v$.rolMenu.permitirEliminar.$invalid, 'invalid': v$.rolMenu.permitirEliminar.$invalid }" v-model="v$.rolMenu.permitirEliminar.$model" />
                     </div>
                     <div class="mb-3 form-group">
-                        <label class="form-control-label" v-text="$t('ciecytApp.rolMenu.authName')" for="rol-menu-authName">Auth Name</label>
+                        <label class="form-control-label" v-text="$t('ciecytApp.rolMenu.authName')" for="rol-menu-authName"></label>
                         <input type="text" class="form-control" name="authName" id="rol-menu-authName"
-                            :class="{'valid': !$v.rolMenu.authName.$invalid, 'invalid': $v.rolMenu.authName.$invalid }" v-model="$v.rolMenu.authName.$model" />
+                            :class="{'valid': !v$.rolMenu.authName.$invalid, 'invalid': v$.rolMenu.authName.$invalid }" v-model="v$.rolMenu.authName.$model" />
                     </div>
                     <div class="mb-3 form-group">
                         <label class="form-control-label" v-bind:value="$t('ciecytApp.rolMenu.rolMenuMenu')" for="rol-menu-rolMenuMenu">Rol Menu Menu</label>
@@ -44,10 +44,10 @@
                 </div>
                 <div>
                     <button type="button" id="cancel-save" class="btn btn-secondary" v-on:click="previousState()">
-                        <font-awesome-icon icon="ban"></font-awesome-icon>&nbsp;<span v-text="$t('entity.action.cancel')">Cancel</span>
+                        <font-awesome-icon icon="ban"></font-awesome-icon>&nbsp;<span v-text="$t('entity.action.cancel')"></span>
                     </button>
-                    <button type="submit" id="save-entity" :disabled="$v.rolMenu.$invalid || isSaving" class="btn btn-primary">
-                        <font-awesome-icon icon="save"></font-awesome-icon>&nbsp;<span v-text="$t('entity.action.save')">Save</span>
+                    <button type="submit" id="save-entity" :disabled="v$.rolMenu.$invalid || isSaving" class="btn btn-primary">
+                        <font-awesome-icon icon="save"></font-awesome-icon>&nbsp;<span v-text="$t('entity.action.save')"></span>
                     </button>
                 </div>
             </form>

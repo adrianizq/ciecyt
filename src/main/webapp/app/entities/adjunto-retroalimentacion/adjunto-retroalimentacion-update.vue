@@ -2,59 +2,59 @@
     <div class="row justify-content-center">
         <div class="col-8">
             <form name="editForm" role="form" novalidate v-on:submit.prevent="save()" >
-                <h2 id="ciecytApp.adjuntoRetroalimentacion.home.createOrEditLabel" v-text="$t('ciecytApp.adjuntoRetroalimentacion.home.createOrEditLabel')">Create or edit a AdjuntoRetroalimentacion</h2>
+                <h2 id="ciecytApp.adjuntoRetroalimentacion.home.createOrEditLabel" v-text="$t('ciecytApp.adjuntoRetroalimentacion.home.createOrEditLabel')"></h2>
                 <div>
                     <div class="mb-3 form-group" v-if="adjuntoRetroalimentacion.id">
-                        <label for="id" v-text="$t('global.field.id')">ID</label>
+                        <label for="id" v-text="$t('global.field.id')"></label>
                         <input type="text" class="form-control" id="id" name="id"
                                v-model="adjuntoRetroalimentacion.id" readonly />
                     </div>
                     <div class="mb-3 form-group">
-                        <label class="form-control-label" v-text="$t('ciecytApp.adjuntoRetroalimentacion.nombreAdjunto')" for="adjunto-retroalimentacion-nombreAdjunto">Nombre Adjunto</label>
+                        <label class="form-control-label" v-text="$t('ciecytApp.adjuntoRetroalimentacion.nombreAdjunto')" for="adjunto-retroalimentacion-nombreAdjunto"></label>
                         <input type="text" class="form-control" name="nombreAdjunto" id="adjunto-retroalimentacion-nombreAdjunto"
-                            :class="{'valid': !$v.adjuntoRetroalimentacion.nombreAdjunto.$invalid, 'invalid': $v.adjuntoRetroalimentacion.nombreAdjunto.$invalid }" v-model="$v.adjuntoRetroalimentacion.nombreAdjunto.$model" />
+                            :class="{'valid': !v$.adjuntoRetroalimentacion.nombreAdjunto.$invalid, 'invalid': v$.adjuntoRetroalimentacion.nombreAdjunto.$invalid }" v-model="v$.adjuntoRetroalimentacion.nombreAdjunto.$model" />
                     </div>
                     <div class="mb-3 form-group">
-                        <label class="form-control-label" v-text="$t('ciecytApp.adjuntoRetroalimentacion.fechaCreacion')" for="adjunto-retroalimentacion-fechaCreacion">Fecha Creacion</label>
+                        <label class="form-control-label" v-text="$t('ciecytApp.adjuntoRetroalimentacion.fechaCreacion')" for="adjunto-retroalimentacion-fechaCreacion"></label>
                         <div class="input-group">
-                            <input id="adjunto-retroalimentacion-fechaCreacion" type="date" class="form-control" name="fechaCreacion"  :class="{'valid': !$v.adjuntoRetroalimentacion.fechaCreacion.$invalid, 'invalid': $v.adjuntoRetroalimentacion.fechaCreacion.$invalid }"
-                            v-model="$v.adjuntoRetroalimentacion.fechaCreacion.$model"  />
+                            <input id="adjunto-retroalimentacion-fechaCreacion" type="date" class="form-control" name="fechaCreacion"  :class="{'valid': !v$.adjuntoRetroalimentacion.fechaCreacion.$invalid, 'invalid': v$.adjuntoRetroalimentacion.fechaCreacion.$invalid }"
+                            v-model="v$.adjuntoRetroalimentacion.fechaCreacion.$model"  />
                         </div>
                     </div>
                     <div class="mb-3 form-group">
-                        <label class="form-control-label" v-text="$t('ciecytApp.adjuntoRetroalimentacion.fechaModificacion')" for="adjunto-retroalimentacion-fechaModificacion">Fecha Modificacion</label>
+                        <label class="form-control-label" v-text="$t('ciecytApp.adjuntoRetroalimentacion.fechaModificacion')" for="adjunto-retroalimentacion-fechaModificacion"></label>
                         <div class="input-group">
-                            <input id="adjunto-retroalimentacion-fechaModificacion" type="date" class="form-control" name="fechaModificacion"  :class="{'valid': !$v.adjuntoRetroalimentacion.fechaModificacion.$invalid, 'invalid': $v.adjuntoRetroalimentacion.fechaModificacion.$invalid }"
-                            v-model="$v.adjuntoRetroalimentacion.fechaModificacion.$model"  />
+                            <input id="adjunto-retroalimentacion-fechaModificacion" type="date" class="form-control" name="fechaModificacion"  :class="{'valid': !v$.adjuntoRetroalimentacion.fechaModificacion.$invalid, 'invalid': v$.adjuntoRetroalimentacion.fechaModificacion.$invalid }"
+                            v-model="v$.adjuntoRetroalimentacion.fechaModificacion.$model"  />
                         </div>
                     </div>
                     <div class="mb-3 form-group">
-                        <label class="form-control-label" v-text="$t('ciecytApp.adjuntoRetroalimentacion.estadoAdjunto')" for="adjunto-retroalimentacion-estadoAdjunto">Estado Adjunto</label>
+                        <label class="form-control-label" v-text="$t('ciecytApp.adjuntoRetroalimentacion.estadoAdjunto')" for="adjunto-retroalimentacion-estadoAdjunto"></label>
                         <input type="number" class="form-control" name="estadoAdjunto" id="adjunto-retroalimentacion-estadoAdjunto"
-                            :class="{'valid': !$v.adjuntoRetroalimentacion.estadoAdjunto.$invalid, 'invalid': $v.adjuntoRetroalimentacion.estadoAdjunto.$invalid }" v-model.number="$v.adjuntoRetroalimentacion.estadoAdjunto.$model" />
+                            :class="{'valid': !v$.adjuntoRetroalimentacion.estadoAdjunto.$invalid, 'invalid': v$.adjuntoRetroalimentacion.estadoAdjunto.$invalid }" v-model.number="v$.adjuntoRetroalimentacion.estadoAdjunto.$model" />
                     </div>
                     <div class="mb-3 form-group">
-                        <label class="form-control-label" v-text="$t('ciecytApp.adjuntoRetroalimentacion.adjuntoRetroalimentacion')" for="adjunto-retroalimentacion-adjuntoRetroalimentacion">Adjunto Retroalimentacion</label>
+                        <label class="form-control-label" v-text="$t('ciecytApp.adjuntoRetroalimentacion.adjuntoRetroalimentacion')" for="adjunto-retroalimentacion-adjuntoRetroalimentacion"></label>
                         <input type="text" class="form-control" name="adjuntoRetroalimentacion" id="adjunto-retroalimentacion-adjuntoRetroalimentacion"
-                            :class="{'valid': !$v.adjuntoRetroalimentacion.adjuntoRetroalimentacion.$invalid, 'invalid': $v.adjuntoRetroalimentacion.adjuntoRetroalimentacion.$invalid }" v-model="$v.adjuntoRetroalimentacion.adjuntoRetroalimentacion.$model" />
+                            :class="{'valid': !v$.adjuntoRetroalimentacion.adjuntoRetroalimentacion.$invalid, 'invalid': v$.adjuntoRetroalimentacion.adjuntoRetroalimentacion.$invalid }" v-model="v$.adjuntoRetroalimentacion.adjuntoRetroalimentacion.$model" />
                     </div>
                     <div class="mb-3 form-group">
-                        <label class="form-control-label" v-text="$t('ciecytApp.adjuntoRetroalimentacion.nombreArchivoOriginal')" for="adjunto-retroalimentacion-nombreArchivoOriginal">Nombre Archivo Original</label>
+                        <label class="form-control-label" v-text="$t('ciecytApp.adjuntoRetroalimentacion.nombreArchivoOriginal')" for="adjunto-retroalimentacion-nombreArchivoOriginal"></label>
                         <input type="text" class="form-control" name="nombreArchivoOriginal" id="adjunto-retroalimentacion-nombreArchivoOriginal"
-                            :class="{'valid': !$v.adjuntoRetroalimentacion.nombreArchivoOriginal.$invalid, 'invalid': $v.adjuntoRetroalimentacion.nombreArchivoOriginal.$invalid }" v-model="$v.adjuntoRetroalimentacion.nombreArchivoOriginal.$model" />
+                            :class="{'valid': !v$.adjuntoRetroalimentacion.nombreArchivoOriginal.$invalid, 'invalid': v$.adjuntoRetroalimentacion.nombreArchivoOriginal.$invalid }" v-model="v$.adjuntoRetroalimentacion.nombreArchivoOriginal.$model" />
                     </div>
                     <div class="mb-3 form-group">
-                        <label class="form-control-label" v-text="$t('ciecytApp.adjuntoRetroalimentacion.fechaInicio')" for="adjunto-retroalimentacion-fechaInicio">Fecha Inicio</label>
+                        <label class="form-control-label" v-text="$t('ciecytApp.adjuntoRetroalimentacion.fechaInicio')" for="adjunto-retroalimentacion-fechaInicio"></label>
                         <div class="input-group">
-                            <input id="adjunto-retroalimentacion-fechaInicio" type="date" class="form-control" name="fechaInicio"  :class="{'valid': !$v.adjuntoRetroalimentacion.fechaInicio.$invalid, 'invalid': $v.adjuntoRetroalimentacion.fechaInicio.$invalid }"
-                            v-model="$v.adjuntoRetroalimentacion.fechaInicio.$model"  />
+                            <input id="adjunto-retroalimentacion-fechaInicio" type="date" class="form-control" name="fechaInicio"  :class="{'valid': !v$.adjuntoRetroalimentacion.fechaInicio.$invalid, 'invalid': v$.adjuntoRetroalimentacion.fechaInicio.$invalid }"
+                            v-model="v$.adjuntoRetroalimentacion.fechaInicio.$model"  />
                         </div>
                     </div>
                     <div class="mb-3 form-group">
-                        <label class="form-control-label" v-text="$t('ciecytApp.adjuntoRetroalimentacion.fechaFin')" for="adjunto-retroalimentacion-fechaFin">Fecha Fin</label>
+                        <label class="form-control-label" v-text="$t('ciecytApp.adjuntoRetroalimentacion.fechaFin')" for="adjunto-retroalimentacion-fechaFin"></label>
                         <div class="input-group">
-                            <input id="adjunto-retroalimentacion-fechaFin" type="date" class="form-control" name="fechaFin"  :class="{'valid': !$v.adjuntoRetroalimentacion.fechaFin.$invalid, 'invalid': $v.adjuntoRetroalimentacion.fechaFin.$invalid }"
-                            v-model="$v.adjuntoRetroalimentacion.fechaFin.$model"  />
+                            <input id="adjunto-retroalimentacion-fechaFin" type="date" class="form-control" name="fechaFin"  :class="{'valid': !v$.adjuntoRetroalimentacion.fechaFin.$invalid, 'invalid': v$.adjuntoRetroalimentacion.fechaFin.$invalid }"
+                            v-model="v$.adjuntoRetroalimentacion.fechaFin.$model"  />
                         </div>
                     </div>
                     <div class="mb-3 form-group">
@@ -67,10 +67,10 @@
                 </div>
                 <div>
                     <button type="button" id="cancel-save" class="btn btn-secondary" v-on:click="previousState()">
-                        <font-awesome-icon icon="ban"></font-awesome-icon>&nbsp;<span v-text="$t('entity.action.cancel')">Cancel</span>
+                        <font-awesome-icon icon="ban"></font-awesome-icon>&nbsp;<span v-text="$t('entity.action.cancel')"></span>
                     </button>
-                    <button type="submit" id="save-entity" :disabled="$v.adjuntoRetroalimentacion.$invalid || isSaving" class="btn btn-primary">
-                        <font-awesome-icon icon="save"></font-awesome-icon>&nbsp;<span v-text="$t('entity.action.save')">Save</span>
+                    <button type="submit" id="save-entity" :disabled="v$.adjuntoRetroalimentacion.$invalid || isSaving" class="btn btn-primary">
+                        <font-awesome-icon icon="save"></font-awesome-icon>&nbsp;<span v-text="$t('entity.action.save')"></span>
                     </button>
                 </div>
             </form>

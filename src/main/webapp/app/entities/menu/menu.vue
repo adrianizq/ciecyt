@@ -2,12 +2,10 @@
     <div>
         <h2 id="page-heading">
             <span  id="menu-heading">Aplicaciones</span>
-            <router-link :to="{name: 'MenuCreate'}" tag="button" id="jh-create-entity" class="btn btn-primary float-right jh-create-entity create-menu">
+            <router-link custom v-slot="{ navigate }" :to="{name: 'MenuCreate'}"><button id="jh-create-entity" class="btn btn-primary float-right jh-create-entity create-menu" @click="navigate">
                 <font-awesome-icon icon="plus"></font-awesome-icon>
-                <span  v-text="$t('ciecytApp.menu.home.createLabel')">
-                    Create a new Menu
-                </span>
-            </router-link>
+                <span  v-text="$t('ciecytApp.menu.home.createLabel')"></span>
+            </button></router-link>
         </h2>
         <b-alert :show="dismissCountDown"
             dismissible
@@ -18,20 +16,20 @@
         </b-alert>
         <br/>
         <div class="alert alert-warning" v-if="!isFetching && menus && menus.length === 0">
-            <span v-text="$t('ciecytApp.general.notFound')">No menus found</span>
+            <span v-text="$t('ciecytApp.general.notFound')"></span>
         </div>
         <div class="table-responsive" v-if="menus && menus.length > 0">
             <table class="table table-striped">
                 <thead>
                 <tr>
-                    <th v-on:click="changeOrder('id')"><span v-text="$t('global.field.id')">ID</span> <font-awesome-icon icon="sort"></font-awesome-icon></th>
-                    <th v-on:click="changeOrder('nombre')"><span v-text="$t('ciecytApp.menu.nombre')">Nombre</span> <font-awesome-icon icon="sort"></font-awesome-icon></th>
-                    <th v-on:click="changeOrder('url')"><span v-text="$t('ciecytApp.menu.url')">Url</span> <font-awesome-icon icon="sort"></font-awesome-icon></th>
-                    <th v-on:click="changeOrder('icono')"><span v-text="$t('ciecytApp.menu.icono')">Icono</span> <font-awesome-icon icon="sort"></font-awesome-icon></th>
-                    <th v-on:click="changeOrder('activo')"><span v-text="$t('ciecytApp.menu.activo')">Activo</span> <font-awesome-icon icon="sort"></font-awesome-icon></th>
-                    <th v-on:click="changeOrder('es_publico')"><span v-text="$t('ciecytApp.menu.es_publico')">Alcance</span> <font-awesome-icon icon="sort"></font-awesome-icon></th>
-                    <th v-on:click="changeOrder('orden')"><span v-text="$t('ciecytApp.menu.orden')">Orden</span> <font-awesome-icon icon="sort"></font-awesome-icon></th>
-                    <th v-on:click="changeOrder('menuPadreNombre')"><span v-text="$t('ciecytApp.menu.menuPadre')">Menu Padre</span> <font-awesome-icon icon="sort"></font-awesome-icon></th>
+                    <th v-on:click="changeOrder('id')"><span v-text="$t('global.field.id')"></span> <font-awesome-icon icon="sort"></font-awesome-icon></th>
+                    <th v-on:click="changeOrder('nombre')"><span v-text="$t('ciecytApp.menu.nombre')"></span> <font-awesome-icon icon="sort"></font-awesome-icon></th>
+                    <th v-on:click="changeOrder('url')"><span v-text="$t('ciecytApp.menu.url')"></span> <font-awesome-icon icon="sort"></font-awesome-icon></th>
+                    <th v-on:click="changeOrder('icono')"><span v-text="$t('ciecytApp.menu.icono')"></span> <font-awesome-icon icon="sort"></font-awesome-icon></th>
+                    <th v-on:click="changeOrder('activo')"><span v-text="$t('ciecytApp.menu.activo')"></span> <font-awesome-icon icon="sort"></font-awesome-icon></th>
+                    <th v-on:click="changeOrder('es_publico')"><span v-text="$t('ciecytApp.menu.es_publico')"></span> <font-awesome-icon icon="sort"></font-awesome-icon></th>
+                    <th v-on:click="changeOrder('orden')"><span v-text="$t('ciecytApp.menu.orden')"></span> <font-awesome-icon icon="sort"></font-awesome-icon></th>
+                    <th v-on:click="changeOrder('menuPadreNombre')"><span v-text="$t('ciecytApp.menu.menuPadre')"></span> <font-awesome-icon icon="sort"></font-awesome-icon></th>
                     <th></th>
                 </tr>
                 </thead>
@@ -73,20 +71,20 @@
                     </td>
                     <td class="text-right">
                         <div class="btn-group">
-                            <router-link :to="{name: 'MenuView', params: {menuId: menu.id}}" tag="button" class="btn btn-info btn-sm details">
+                            <router-link custom v-slot="{ navigate }" :to="{name: 'MenuView', params: {menuId: menu.id}}"><button class="btn btn-info btn-sm details" @click="navigate">
                                 <font-awesome-icon icon="eye"></font-awesome-icon>
-                                <span class="d-none d-md-inline" v-text="$t('entity.action.view')">View</span>
-                            </router-link>
-                            <router-link :to="{name: 'MenuEdit', params: {menuId: menu.id}}"  tag="button" class="btn btn-primary btn-sm edit">
+                                <span class="d-none d-md-inline" v-text="$t('entity.action.view')"></span>
+                            </button></router-link>
+                            <router-link custom v-slot="{ navigate }" :to="{name: 'MenuEdit', params: {menuId: menu.id}}"><button class="btn btn-primary btn-sm edit" @click="navigate">
                                 <font-awesome-icon icon="pencil-alt"></font-awesome-icon>
-                                <span class="d-none d-md-inline" v-text="$t('entity.action.edit')">Edit</span>
-                            </router-link>
+                                <span class="d-none d-md-inline" v-text="$t('entity.action.edit')"></span>
+                            </button></router-link>
                             <b-button v-on:click="prepareRemove(menu)"
                                    variant="danger"
                                    class="btn btn-sm"
                                    v-b-modal.removeEntity>
                                 <font-awesome-icon icon="times"></font-awesome-icon>
-                                <span class="d-none d-md-inline" v-text="$t('entity.action.delete')">Delete</span>
+                                <span class="d-none d-md-inline" v-text="$t('entity.action.delete')"></span>
                             </b-button>
                         </div>
                     </td>
@@ -95,14 +93,18 @@
             </table>
         </div>
         <b-modal ref="removeEntity" id="removeEntity" >
-            <span slot="modal-title"><span id="ciecytApp.menu.delete.question" v-text="$t('entity.delete.title')">Confirm delete operation</span></span>
+            <template #modal-title>
+<span ><span id="ciecytApp.menu.delete.question" v-text="$t('entity.delete.title')"></span></span>
+</template>
             <div class="modal-body">
-                <p id="jhi-delete-menu-heading" v-text="$t('ciecytApp.menu.delete.question', {name: removeName })">Are you sure you want to delete this Menu?</p>
+                <p id="jhi-delete-menu-heading" v-text="$t('ciecytApp.menu.delete.question', {name: removeName })"></p>
             </div>
-            <div slot="modal-footer">
-                <button type="button" class="btn btn-secondary" v-text="$t('entity.action.cancel')" v-on:click="closeDialog()">Cancel</button>
-                <button type="button" class="btn btn-primary" id="jhi-confirm-delete-menu" v-text="$t('entity.action.delete')" v-on:click="removeMenu()">Delete</button>
+            <template #modal-footer>
+<div >
+                <button type="button" class="btn btn-secondary" v-text="$t('entity.action.cancel')" v-on:click="closeDialog()"></button>
+                <button type="button" class="btn btn-primary" id="jhi-confirm-delete-menu" v-text="$t('entity.action.delete')" v-on:click="removeMenu()"></button>
             </div>
+</template>
         </b-modal>
         <div v-show="menus && menus.length > 0">
             <div class="row justify-content-center">

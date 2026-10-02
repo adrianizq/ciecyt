@@ -1,6 +1,7 @@
-import { Component, Vue, Inject } from 'vue-property-decorator';
+import { useVuelidate } from '@vuelidate/core';
+import { Component, Vue, Inject, Hook } from 'vue-facing-decorator';
 
-import { numeric, required, minLength, maxLength } from 'vuelidate/lib/validators';
+import { numeric, required, minLength, maxLength } from '@vuelidate/validators';
 
 import FasesService from '../fases/fases.service';
 import { IFases } from '@/shared/model/fases.model';
@@ -22,22 +23,28 @@ const validations: any = {
 };
 
 @Component({
-  validations,
+  options: {
+    validations,
+  },
+  setup() {
+    return { v$: useVuelidate() };
+  },
 })
 export default class ProyectoFaseUpdate extends Vue {
-  @Inject('alertService') private alertService: () => AlertService;
-  @Inject('proyectoFaseService') private proyectoFaseService: () => ProyectoFaseService;
+  @Inject private alertService: () => AlertService;
+  @Inject private proyectoFaseService: () => ProyectoFaseService;
   public proyectoFase: IProyectoFase = new ProyectoFase();
 
-  @Inject('fasesService') private fasesService: () => FasesService;
+  @Inject private fasesService: () => FasesService;
 
   public fases: IFases[] = [];
 
-  @Inject('proyectoService') private proyectoService: () => ProyectoService;
+  @Inject private proyectoService: () => ProyectoService;
 
   public proyectos: IProyecto[] = [];
   public isSaving = false;
 
+  @Hook
   beforeRouteEnter(to, from, next) {
     next(vm => {
       if (to.params.proyectoFaseId) {

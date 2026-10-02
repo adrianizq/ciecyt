@@ -1,6 +1,7 @@
-import { Component, Vue, Inject } from 'vue-property-decorator';
+import { useVuelidate } from '@vuelidate/core';
+import { Component, Vue, Inject, Hook } from 'vue-facing-decorator';
 
-import { numeric, required, minLength, maxLength } from 'vuelidate/lib/validators';
+import { numeric, required, minLength, maxLength } from '@vuelidate/validators';
 
 import ProyectoService from '../proyecto/proyecto.service';
 import { IProyecto } from '@/shared/model/proyecto.model';
@@ -20,18 +21,24 @@ const validations: any = {
 };
 
 @Component({
-  validations,
+  options: {
+    validations,
+  },
+  setup() {
+    return { v$: useVuelidate() };
+  },
 })
 export default class CronogramaUpdate extends Vue {
-  @Inject('alertService') private alertService: () => AlertService;
-  @Inject('cronogramaService') private cronogramaService: () => CronogramaService;
+  @Inject private alertService: () => AlertService;
+  @Inject private cronogramaService: () => CronogramaService;
   public cronograma: ICronograma = new Cronograma();
 
-  @Inject('proyectoService') private proyectoService: () => ProyectoService;
+  @Inject private proyectoService: () => ProyectoService;
 
   public proyectos: IProyecto[] = [];
   public isSaving = false;
 
+  @Hook
   beforeRouteEnter(to, from, next) {
     next(vm => {
       if (to.params.cronogramaId) {

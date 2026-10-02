@@ -1,13 +1,14 @@
-import { Component, Vue, Inject } from 'vue-property-decorator';
+import { Component, Vue, Inject, Hook } from 'vue-facing-decorator';
 
 import { IFichaTecnica } from '@/shared/model/ficha-tecnica.model';
 import FichaTecnicaService from './ficha-tecnica.service';
 
 @Component
 export default class FichaTecnicaDetails extends Vue {
-  @Inject('fichaTecnicaService') private fichaTecnicaService: () => FichaTecnicaService;
+  @Inject private fichaTecnicaService: () => FichaTecnicaService;
   public fichaTecnica: IFichaTecnica = {};
 
+  @Hook
   beforeRouteEnter(to, from, next) {
     next(vm => {
       if (to.params.fichaTecnicaId) {

@@ -1,13 +1,14 @@
-import { Component, Vue, Inject } from 'vue-property-decorator';
+import { Component, Vue, Inject, Hook } from 'vue-facing-decorator';
 
 import { IInformacionPasantia } from '@/shared/model/informacion-pasantia.model';
 import InformacionPasantiaService from './informacion-pasantia.service';
 
 @Component
 export default class InformacionPasantiaDetails extends Vue {
-  @Inject('informacionPasantiaService') private informacionPasantiaService: () => InformacionPasantiaService;
+  @Inject private informacionPasantiaService: () => InformacionPasantiaService;
   public informacionPasantia: IInformacionPasantia = {};
 
+  @Hook
   beforeRouteEnter(to, from, next) {
     next(vm => {
       if (to.params.informacionPasantiaId) {

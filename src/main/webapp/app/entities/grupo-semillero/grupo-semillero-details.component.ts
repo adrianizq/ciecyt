@@ -1,13 +1,14 @@
-import { Component, Vue, Inject } from 'vue-property-decorator';
+import { Component, Vue, Inject, Hook } from 'vue-facing-decorator';
 
 import { IGrupoSemillero } from '@/shared/model/grupo-semillero.model';
 import GrupoSemilleroService from './grupo-semillero.service';
 
 @Component
 export default class GrupoSemilleroDetails extends Vue {
-  @Inject('grupoSemilleroService') private grupoSemilleroService: () => GrupoSemilleroService;
+  @Inject private grupoSemilleroService: () => GrupoSemilleroService;
   public grupoSemillero: IGrupoSemillero = {};
 
+  @Hook
   beforeRouteEnter(to, from, next) {
     next(vm => {
       if (to.params.grupoSemilleroId) {

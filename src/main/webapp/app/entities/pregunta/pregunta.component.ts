@@ -1,6 +1,6 @@
-import { mixins } from 'vue-class-component';
+import { mixins } from 'vue-facing-decorator';
 
-import { Component, Inject } from 'vue-property-decorator';
+import { Component, Inject } from 'vue-facing-decorator';
 import { IPregunta } from '@/shared/model/pregunta.model';
 //import AlertService from '@/shared/alert/alert.service';
 import AlertMixin from '@/shared/alert/alert.mixin';
@@ -10,9 +10,9 @@ import PreguntaService from './pregunta.service';
 
 @Component({})
 export default class Pregunta extends mixins(AlertMixin) {
-  //@Inject('alertService') private alertService: () => AlertService;
-  @Inject('preguntaService') private preguntaService: () => PreguntaService;
-  @Inject('fasesService') private fasesService: () => FasesService;
+  //@Inject  private alertService: () => AlertService;
+  @Inject private preguntaService: () => PreguntaService;
+  @Inject private fasesService: () => FasesService;
   private removeId: number = null;
   public itemsPerPage = 20;
   public queryCount: number = null;
@@ -58,18 +58,6 @@ export default class Pregunta extends mixins(AlertMixin) {
           }
         );
     }
-  }
-
-  public getAlertFromStore() {
-    this.dismissCountDown = this.$store.getters.dismissCountDown;
-    this.dismissSecs = this.$store.getters.dismissSecs;
-    this.alertType = this.$store.getters.alertType;
-    this.alertMessage = this.$store.getters.alertMessage;
-  }
-
-  public countDownChanged(dismissCountDown: number) {
-    this.alertService().countDownChanged(dismissCountDown);
-    this.getAlertFromStore();
   }
 
   public mounted(): void {

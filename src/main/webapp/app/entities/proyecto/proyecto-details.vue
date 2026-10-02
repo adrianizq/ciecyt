@@ -2,70 +2,70 @@
     <div class="row justify-content-center">
         <div class="col-8">
             <div v-if="proyecto">
-                <h2 class="jh-entity-heading"><span v-text="$t('ciecytApp.proyecto.detail.title')">Proyecto</span> {{proyecto.id}}</h2>
+                <h2 class="jh-entity-heading"><span v-text="$t('ciecytApp.proyecto.detail.title')"></span> {{proyecto.id}}</h2>
                 <dl class="row jh-entity-details">
                     <dt>
-                        <span v-text="$t('ciecytApp.proyecto.titulo')">Titulo</span>
+                        <span v-text="$t('ciecytApp.proyecto.titulo')"></span>
                     </dt>
                     <dd>
                         <span>{{proyecto.titulo}}</span>
                     </dd>
                     <dt>
-                        <span v-text="$t('ciecytApp.proyecto.url')">Url</span>
+                        <span v-text="$t('ciecytApp.proyecto.url')"></span>
                     </dt>
                     <dd>
                         <span>{{proyecto.url}}</span>
                     </dd>
                     <dt>
-                        <span v-text="$t('ciecytApp.proyecto.lugarEjecucion')">Lugar Ejecucion</span>
+                        <span v-text="$t('ciecytApp.proyecto.lugarEjecucion')"></span>
                     </dt>
                     <dd>
                         <span>{{proyecto.lugarEjecucion}}</span>
                     </dd>
                     <dt>
-                        <span v-text="$t('ciecytApp.proyecto.duracion')">Duracion</span>
+                        <span v-text="$t('ciecytApp.proyecto.duracion')"></span>
                     </dt>
                     <dd>
                         <span>{{proyecto.duracion}}</span>
                     </dd>
                     <dt>
-                        <span v-text="$t('ciecytApp.proyecto.fechaIni')">Fecha Ini</span>
+                        <span v-text="$t('ciecytApp.proyecto.fechaIni')"></span>
                     </dt>
                     <dd>
                         <span>{{proyecto.fechaIni}}</span>
                     </dd>
                     <dt>
-                        <span v-text="$t('ciecytApp.proyecto.fechaFin')">Fecha Fin</span>
+                        <span v-text="$t('ciecytApp.proyecto.fechaFin')"></span>
                     </dt>
                     <dd>
                         <span>{{proyecto.fechaFin}}</span>
                     </dd>
                     <dt>
-                        <span v-text="$t('ciecytApp.proyecto.contrapartidaPesos')">Contrapartida Pesos</span>
+                        <span v-text="$t('ciecytApp.proyecto.contrapartidaPesos')"></span>
                     </dt>
                     <dd>
                         <span>{{proyecto.contrapartidaPesos}}</span>
                     </dd>
                     <dt>
-                        <span v-text="$t('ciecytApp.proyecto.contrapartidaEspecie')">Contrapartida Especie</span>
+                        <span v-text="$t('ciecytApp.proyecto.contrapartidaEspecie')"></span>
                     </dt>
                     <dd>
                         <span>{{proyecto.contrapartidaEspecie}}</span>
                     </dd>
                     <dt>
-                        <span v-text="$t('ciecytApp.proyecto.palabrasClave')">Palabras Clave</span>
+                        <span v-text="$t('ciecytApp.proyecto.palabrasClave')"></span>
                     </dt>
                     <dd>
                         <span>{{proyecto.palabrasClave}}</span>
                     </dd>
                     <dt>
-                        <span v-text="$t('ciecytApp.proyecto.convocatoria')">Convocatoria</span>
+                        <span v-text="$t('ciecytApp.proyecto.convocatoria')"></span>
                     </dt>
                     <dd>
                         <span>{{proyecto.convocatoria}}</span>
                     </dd>
                     <dt>
-                        <span v-text="$t('ciecytApp.proyecto.proyectoLineaInvestigacion')">Proyecto Linea Investigacion</span>
+                        <span v-text="$t('ciecytApp.proyecto.proyectoLineaInvestigacion')"></span>
                     </dt>
                     <dd>
                         <div v-if="proyecto.proyectoLineaInvestigacionId">
@@ -73,7 +73,7 @@
                         </div>
                     </dd>
                     <dt>
-                        <span v-text="$t('ciecytApp.proyecto.proyectoGrupoSemillero')">Proyecto Grupo Semillero</span>
+                        <span v-text="$t('ciecytApp.proyecto.proyectoGrupoSemillero')"></span>
                     </dt>
                     <dd>
                         <div v-if="proyecto.proyectoGrupoSemilleroId">
@@ -81,7 +81,7 @@
                         </div>
                     </dd>
                     <dt>
-                        <span v-text="$t('ciecytApp.proyecto.proyectoModalidad')">Proyecto Modalidad</span>
+                        <span v-text="$t('ciecytApp.proyecto.proyectoModalidad')"></span>
                     </dt>
                     <dd>
                         <div v-if="proyecto.proyectoModalidadId">
@@ -89,7 +89,7 @@
                         </div>
                     </dd>
                     <dt>
-                        <span v-text="$t('ciecytApp.proyecto.facultad')">Facultad</span>
+                        <span v-text="$t('ciecytApp.proyecto.facultad')"></span>
                     </dt>
                     <dd>
                         <div v-if="proyecto.facultadId">
@@ -97,7 +97,7 @@
                         </div>
                     </dd>
                     <dt>
-                        <span v-text="$t('ciecytApp.proyecto.subLineaLineaInvestigacion')">Sub Linea Linea Investigacion</span>
+                        <span v-text="$t('ciecytApp.proyecto.subLineaLineaInvestigacion')"></span>
                     </dt>
                     <dd>
                         <div v-if="proyecto.subLineaLineaInvestigacionId">
@@ -108,11 +108,11 @@
                 <button type="submit"
                         v-on:click.prevent="previousState()"
                         class="btn btn-info">
-                    <font-awesome-icon icon="arrow-left"></font-awesome-icon>&nbsp;<span v-text="$t('entity.action.back')"> Back</span>
+                    <font-awesome-icon icon="arrow-left"></font-awesome-icon>&nbsp;<span v-text="$t('entity.action.back')"></span>
                 </button>
-                <router-link v-if="proyecto.id" :to="{name: 'ProyectoEdit', params: {proyectoId: proyecto.id}}" tag="button" class="btn btn-primary">
-                    <font-awesome-icon icon="pencil-alt"></font-awesome-icon>&nbsp;<span v-text="$t('entity.action.edit')"> Edit</span>
-                </router-link>
+                <router-link custom v-slot="{ navigate }" v-if="proyecto.id" :to="{name: 'ProyectoEdit', params: {proyectoId: proyecto.id}}"><button class="btn btn-primary" @click="navigate">
+                    <font-awesome-icon icon="pencil-alt"></font-awesome-icon>&nbsp;<span v-text="$t('entity.action.edit')"></span>
+                </button></router-link>
             </div>
         </div>
     </div>

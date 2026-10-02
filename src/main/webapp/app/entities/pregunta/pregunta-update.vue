@@ -2,27 +2,27 @@
     <div class="row justify-content-center">
         <div class="col-8">
             <form name="editForm" role="form" novalidate v-on:submit.prevent="save()" >
-                <h2 id="ciecytApp.pregunta.home.createOrEditLabel" v-text="$t('ciecytApp.pregunta.home.createOrEditLabel')">Create or edit a Pregunta</h2>
+                <h2 id="ciecytApp.pregunta.home.createOrEditLabel" v-text="$t('ciecytApp.pregunta.home.createOrEditLabel')"></h2>
                 <div>
                     <div class="mb-3 form-group" v-if="pregunta.id">
-                        <label for="id" v-text="$t('global.field.id')">ID</label>
+                        <label for="id" v-text="$t('global.field.id')"></label>
                         <input type="text" class="form-control" id="id" name="id"
                                v-model="pregunta.id" readonly />
                     </div>
                     <div class="mb-3 form-group">
-                        <label class="form-control-label" v-text="$t('ciecytApp.pregunta.encabezado')" for="pregunta-encabezado">Encabezado</label>
+                        <label class="form-control-label" v-text="$t('ciecytApp.pregunta.encabezado')" for="pregunta-encabezado"></label>
                         <input type="text" class="form-control" name="encabezado" id="pregunta-encabezado"
-                            :class="{'valid': !$v.pregunta.encabezado.$invalid, 'invalid': $v.pregunta.encabezado.$invalid }" v-model="$v.pregunta.encabezado.$model" />
+                            :class="{'valid': !v$.pregunta.encabezado.$invalid, 'invalid': v$.pregunta.encabezado.$invalid }" v-model="v$.pregunta.encabezado.$model" />
                     </div>
                     <div class="mb-3 form-group">
-                        <label class="form-control-label" v-text="$t('ciecytApp.pregunta.descripcion')" for="pregunta-descripcion">Descripcion</label>
+                        <label class="form-control-label" v-text="$t('ciecytApp.pregunta.descripcion')" for="pregunta-descripcion"></label>
                         <input type="text" class="form-control" name="descripcion" id="pregunta-descripcion"
-                            :class="{'valid': !$v.pregunta.descripcion.$invalid, 'invalid': $v.pregunta.descripcion.$invalid }" v-model="$v.pregunta.descripcion.$model" />
+                            :class="{'valid': !v$.pregunta.descripcion.$invalid, 'invalid': v$.pregunta.descripcion.$invalid }" v-model="v$.pregunta.descripcion.$model" />
                     </div>
                     <div class="mb-3 form-group">
-                        <label class="form-control-label" v-text="$t('ciecytApp.pregunta.pregunta')" for="pregunta-pregunta">Pregunta</label>
+                        <label class="form-control-label" v-text="$t('ciecytApp.pregunta.pregunta')" for="pregunta-pregunta"></label>
                         <input type="text" class="form-control" name="pregunta" id="pregunta-pregunta"
-                            :class="{'valid': !$v.pregunta.pregunta.$invalid, 'invalid': $v.pregunta.pregunta.$invalid }" v-model="$v.pregunta.pregunta.$model" />
+                            :class="{'valid': !v$.pregunta.pregunta.$invalid, 'invalid': v$.pregunta.pregunta.$invalid }" v-model="v$.pregunta.pregunta.$model" />
                     </div>
                     <div class="mb-3 form-group">
                         <label class="form-control-label" v-bind:value="$t('ciecytApp.pregunta.preguntaTipoPregunta')" for="pregunta-preguntaTipoPregunta">Tipo Pregunta</label>
@@ -34,9 +34,9 @@
                     </div>
                     <!--Puntaje MAx-->
                     <div class="mb-3 form-group" v-if="tipoNota">
-                        <label class="form-control-label" v-text="$t('ciecytApp.pregunta.puntajeMaximo')" for="pregunta-puntaje-maximo">Puntaje Máximo</label>
+                        <label class="form-control-label" v-text="$t('ciecytApp.pregunta.puntajeMaximo')" for="pregunta-puntaje-maximo"></label>
                         <input type="text" class="form-control" name="puntaje-maximo" id="pregunta-puntaje-maximo"
-                            :class="{'valid': !$v.pregunta.puntajeMaximo.$invalid, 'invalid': $v.pregunta.pregunta.$invalid }" v-model="$v.pregunta.puntajeMaximo.$model" />
+                            :class="{'valid': !v$.pregunta.puntajeMaximo.$invalid, 'invalid': v$.pregunta.pregunta.$invalid }" v-model="v$.pregunta.puntajeMaximo.$model" />
                     </div>
                     <!-- fases -->
                       <div class="mb-3 form-group">
@@ -118,9 +118,9 @@
                         </select>
                     </div>
                     <div class="mb-3 form-group">
-                        <label class="form-control-label" v-text="$t('ciecytApp.pregunta.orden')" for="pregunta-orden">Orden</label>
+                        <label class="form-control-label" v-text="$t('ciecytApp.pregunta.orden')" for="pregunta-orden"></label>
                         <input type="number" class="form-control" name="orden" id="pregunta-orden"
-                            :class="{'valid': !$v.pregunta.orden.$invalid, 'invalid': $v.pregunta.orden.$invalid }" v-model="$v.pregunta.orden.$model" />
+                            :class="{'valid': !v$.pregunta.orden.$invalid, 'invalid': v$.pregunta.orden.$invalid }" v-model="v$.pregunta.orden.$model" />
                     </div>
                     
                 </div>
@@ -131,10 +131,10 @@
                 <!--------------------------------------------->
                 <div>
                     <button type="button" id="cancel-save" class="btn btn-secondary" v-on:click="previousState()">
-                        <font-awesome-icon icon="ban"></font-awesome-icon>&nbsp;<span v-text="$t('entity.action.cancel')">Cancel</span>
+                        <font-awesome-icon icon="ban"></font-awesome-icon>&nbsp;<span v-text="$t('entity.action.cancel')"></span>
                     </button>
-                    <button type="submit" id="save-entity" :disabled="$v.pregunta.$invalid || isSaving" class="btn btn-primary">
-                        <font-awesome-icon icon="save"></font-awesome-icon>&nbsp;<span v-text="$t('entity.action.save')">Save</span>
+                    <button type="submit" id="save-entity" :disabled="v$.pregunta.$invalid || isSaving" class="btn btn-primary">
+                        <font-awesome-icon icon="save"></font-awesome-icon>&nbsp;<span v-text="$t('entity.action.save')"></span>
                     </button>
                 </div>
             </form>

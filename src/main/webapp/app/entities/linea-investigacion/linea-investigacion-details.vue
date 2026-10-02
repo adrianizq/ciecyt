@@ -2,22 +2,22 @@
     <div class="row justify-content-center">
         <div class="col-8">
             <div v-if="lineaInvestigacion">
-                <h2 class="jh-entity-heading"><span v-text="$t('ciecytApp.lineaInvestigacion.detail.title')">LineaInvestigacion</span> {{lineaInvestigacion.id}}</h2>
+                <h2 class="jh-entity-heading"><span v-text="$t('ciecytApp.lineaInvestigacion.detail.title')"></span> {{lineaInvestigacion.id}}</h2>
                 <dl class="row jh-entity-details">
                     <dt>
-                        <span v-text="$t('ciecytApp.lineaInvestigacion.linea')">Linea</span>
+                        <span v-text="$t('ciecytApp.lineaInvestigacion.linea')"></span>
                     </dt>
                     <dd>
                         <span>{{lineaInvestigacion.linea}}</span>
                     </dd>
                     <dt>
-                        <span v-text="$t('ciecytApp.lineaInvestigacion.codigoLinea')">Codigo Linea</span>
+                        <span v-text="$t('ciecytApp.lineaInvestigacion.codigoLinea')"></span>
                     </dt>
                     <dd>
                         <span>{{lineaInvestigacion.codigoLinea}}</span>
                     </dd>
                     <dt>
-                        <span v-text="$t('ciecytApp.lineaInvestigacion.lineaPadre')">Linea Padre</span>
+                        <span v-text="$t('ciecytApp.lineaInvestigacion.lineaPadre')"></span>
                     </dt>
                     <dd>
                         <div v-if="lineaInvestigacion.lineaPadreId">
@@ -25,7 +25,7 @@
                         </div>
                     </dd>
                     <dt>
-                        <span v-text="$t('ciecytApp.lineaInvestigacion.lineaInvestigacionPrograma')">Linea Investigacion Programa</span>
+                        <span v-text="$t('ciecytApp.lineaInvestigacion.lineaInvestigacionPrograma')"></span>
                     </dt>
                     <dd>
                         <div v-if="lineaInvestigacion.lineaInvestigacionProgramaId">
@@ -36,11 +36,11 @@
                 <button type="submit"
                         v-on:click.prevent="previousState()"
                         class="btn btn-info">
-                    <font-awesome-icon icon="arrow-left"></font-awesome-icon>&nbsp;<span v-text="$t('entity.action.back')"> Back</span>
+                    <font-awesome-icon icon="arrow-left"></font-awesome-icon>&nbsp;<span v-text="$t('entity.action.back')"></span>
                 </button>
-                <router-link v-if="lineaInvestigacion.id" :to="{name: 'LineaInvestigacionEdit', params: {lineaInvestigacionId: lineaInvestigacion.id}}" tag="button" class="btn btn-primary">
-                    <font-awesome-icon icon="pencil-alt"></font-awesome-icon>&nbsp;<span v-text="$t('entity.action.edit')"> Edit</span>
-                </router-link>
+                <router-link custom v-slot="{ navigate }" v-if="lineaInvestigacion.id" :to="{name: 'LineaInvestigacionEdit', params: {lineaInvestigacionId: lineaInvestigacion.id}}"><button class="btn btn-primary" @click="navigate">
+                    <font-awesome-icon icon="pencil-alt"></font-awesome-icon>&nbsp;<span v-text="$t('entity.action.edit')"></span>
+                </button></router-link>
             </div>
         </div>
     </div>

@@ -1,6 +1,7 @@
-import { Component, Vue, Inject } from 'vue-property-decorator';
+import { useVuelidate } from '@vuelidate/core';
+import { Component, Vue, Inject, Hook } from 'vue-facing-decorator';
 
-import { numeric, required, minLength, maxLength } from 'vuelidate/lib/validators';
+import { numeric, required, minLength, maxLength } from '@vuelidate/validators';
 
 import FacultadService from '../facultad/facultad.service';
 import { IFacultad } from '@/shared/model/facultad.model';
@@ -13,30 +14,35 @@ const validations: any = {
   programa: {
     programa: {},
     descripcion: {},
-      codigoInterno: {},
-      codigoSnies: {},
-      creditos: {},
-      ciclo:{},
-      resolucion: {},
-      titulo: {},
-      duracionSemestres: {},
+    codigoInterno: {},
+    codigoSnies: {},
+    creditos: {},
+    ciclo: {},
+    resolucion: {},
+    titulo: {},
+    duracionSemestres: {},
   },
 };
 
 @Component({
-  validations,
+  options: {
+    validations,
+  },
+  setup() {
+    return { v$: useVuelidate() };
+  },
 })
 export default class ProgramaUpdate extends Vue {
-  @Inject('alertService') private alertService: () => AlertService;
-  @Inject('programaService') private programaService: () => ProgramaService;
+  @Inject private alertService: () => AlertService;
+  @Inject private programaService: () => ProgramaService;
   public programa: IPrograma = new Programa();
 
-
-  @Inject('facultadService') private facultadService: () => FacultadService;
+  @Inject private facultadService: () => FacultadService;
 
   public facultads: IFacultad[] = [];
   public isSaving = false;
 
+  @Hook
   beforeRouteEnter(to, from, next) {
     next(vm => {
       if (to.params.programaId) {
@@ -82,7 +88,6 @@ export default class ProgramaUpdate extends Vue {
   }
 
   public initRelationships(): void {
-  
     this.facultadService()
       .retrieve()
       .then(res => {

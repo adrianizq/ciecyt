@@ -2,28 +2,28 @@
     <div class="row justify-content-center">
         <div class="col-8">
             <div v-if="integranteProyecto">
-                <h2 class="jh-entity-heading"><span v-text="$t('ciecytApp.integranteProyecto.detail.title')">IntegranteProyecto</span> {{integranteProyecto.id}}</h2>
+                <h2 class="jh-entity-heading"><span v-text="$t('ciecytApp.integranteProyecto.detail.title')"></span> {{integranteProyecto.id}}</h2>
                 <dl class="row jh-entity-details">
                     <dt>
-                        <span v-text="$t('ciecytApp.integranteProyecto.integrante')">Integrante</span>
+                        <span v-text="$t('ciecytApp.integranteProyecto.integrante')"></span>
                     </dt>
                     <dd>
                         <span>{{integranteProyecto.integrante}}</span>
                     </dd>
                     <dt>
-                        <span v-text="$t('ciecytApp.integranteProyecto.descripcion')">Descripcion</span>
+                        <span v-text="$t('ciecytApp.integranteProyecto.descripcion')"></span>
                     </dt>
                     <dd>
                         <span>{{integranteProyecto.descripcion}}</span>
                     </dd>
                     <dt>
-                        <span v-text="$t('ciecytApp.integranteProyecto.integranteProyectoUser')">Integrante Proyecto User</span>
+                        <span v-text="$t('ciecytApp.integranteProyecto.integranteProyectoUser')"></span>
                     </dt>
                     <dd>
                         {{integranteProyecto.integranteProyectoUserLogin}}
                     </dd>
                     <dt>
-                        <span v-text="$t('ciecytApp.integranteProyecto.integranteProyectoProyecto')">Integrante Proyecto Proyecto</span>
+                        <span v-text="$t('ciecytApp.integranteProyecto.integranteProyectoProyecto')"></span>
                     </dt>
                     <dd>
                         <div v-if="integranteProyecto.integranteProyectoProyectoId">
@@ -31,7 +31,7 @@
                         </div>
                     </dd>
                     <dt>
-                        <span v-text="$t('ciecytApp.integranteProyecto.integranteProyectoRolesModalidad')">Integrante Proyecto Roles Modalidad</span>
+                        <span v-text="$t('ciecytApp.integranteProyecto.integranteProyectoRolesModalidad')"></span>
                     </dt>
                     <dd>
                         <div v-if="integranteProyecto.integranteProyectoRolesModalidadId">
@@ -42,11 +42,11 @@
                 <button type="submit"
                         v-on:click.prevent="previousState()"
                         class="btn btn-info">
-                    <font-awesome-icon icon="arrow-left"></font-awesome-icon>&nbsp;<span v-text="$t('entity.action.back')"> Back</span>
+                    <font-awesome-icon icon="arrow-left"></font-awesome-icon>&nbsp;<span v-text="$t('entity.action.back')"></span>
                 </button>
-                <router-link v-if="integranteProyecto.id" :to="{name: 'IntegranteProyectoEdit', params: {integranteProyectoId: integranteProyecto.id}}" tag="button" class="btn btn-primary">
-                    <font-awesome-icon icon="pencil-alt"></font-awesome-icon>&nbsp;<span v-text="$t('entity.action.edit')"> Edit</span>
-                </router-link>
+                <router-link custom v-slot="{ navigate }" v-if="integranteProyecto.id" :to="{name: 'IntegranteProyectoEdit', params: {integranteProyectoId: integranteProyecto.id}}"><button class="btn btn-primary" @click="navigate">
+                    <font-awesome-icon icon="pencil-alt"></font-awesome-icon>&nbsp;<span v-text="$t('entity.action.edit')"></span>
+                </button></router-link>
             </div>
         </div>
     </div>

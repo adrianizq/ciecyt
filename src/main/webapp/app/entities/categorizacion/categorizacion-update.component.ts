@@ -1,6 +1,7 @@
-import { Component, Vue, Inject } from 'vue-property-decorator';
+import { useVuelidate } from '@vuelidate/core';
+import { Component, Vue, Inject, Hook } from 'vue-facing-decorator';
 
-import { numeric, required, minLength, maxLength } from 'vuelidate/lib/validators';
+import { numeric, required, minLength, maxLength } from '@vuelidate/validators';
 
 import ProyectoService from '../proyecto/proyecto.service';
 import { IProyecto } from '@/shared/model/proyecto.model';
@@ -17,18 +18,24 @@ const validations: any = {
 };
 
 @Component({
-  validations,
+  options: {
+    validations,
+  },
+  setup() {
+    return { v$: useVuelidate() };
+  },
 })
 export default class CategorizacionUpdate extends Vue {
-  @Inject('alertService') private alertService: () => AlertService;
-  @Inject('categorizacionService') private categorizacionService: () => CategorizacionService;
+  @Inject private alertService: () => AlertService;
+  @Inject private categorizacionService: () => CategorizacionService;
   public categorizacion: ICategorizacion = new Categorizacion();
 
-  @Inject('proyectoService') private proyectoService: () => ProyectoService;
+  @Inject private proyectoService: () => ProyectoService;
 
   public proyectos: IProyecto[] = [];
   public isSaving = false;
 
+  @Hook
   beforeRouteEnter(to, from, next) {
     next(vm => {
       if (to.params.categorizacionId) {

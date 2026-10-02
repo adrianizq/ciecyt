@@ -1,6 +1,7 @@
-import { Component, Vue, Inject } from 'vue-property-decorator';
+import { useVuelidate } from '@vuelidate/core';
+import { Component, Vue, Inject, Hook } from 'vue-facing-decorator';
 
-import { numeric, required, minLength, maxLength } from 'vuelidate/lib/validators';
+import { numeric, required, minLength, maxLength } from '@vuelidate/validators';
 
 import CicloService from '@/entities/ciclo/ciclo.service';
 import { ICiclo } from '@/shared/model/ciclo.model';
@@ -16,18 +17,24 @@ const validations: any = {
 };
 
 @Component({
-  validations,
+  options: {
+    validations,
+  },
+  setup() {
+    return { v$: useVuelidate() };
+  },
 })
 export default class CicloPropedeuticoUpdate extends Vue {
-  @Inject('alertService') private alertService: () => AlertService;
-  @Inject('cicloPropedeuticoService') private cicloPropedeuticoService: () => CicloPropedeuticoService;
+  @Inject private alertService: () => AlertService;
+  @Inject private cicloPropedeuticoService: () => CicloPropedeuticoService;
   public cicloPropedeutico: ICicloPropedeutico = new CicloPropedeutico();
 
-  @Inject('cicloService') private cicloService: () => CicloService;
+  @Inject private cicloService: () => CicloService;
 
   public ciclos: ICiclo[] = [];
   public isSaving = false;
 
+  @Hook
   beforeRouteEnter(to, from, next) {
     next(vm => {
       if (to.params.cicloPropedeuticoId) {

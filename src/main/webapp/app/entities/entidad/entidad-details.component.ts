@@ -1,13 +1,14 @@
-import { Component, Vue, Inject } from 'vue-property-decorator';
+import { Component, Vue, Inject, Hook } from 'vue-facing-decorator';
 
 import { IEntidad } from '@/shared/model/entidad.model';
 import EntidadService from './entidad.service';
 
 @Component
 export default class EntidadDetails extends Vue {
-  @Inject('entidadService') private entidadService: () => EntidadService;
+  @Inject private entidadService: () => EntidadService;
   public entidad: IEntidad = {};
 
+  @Hook
   beforeRouteEnter(to, from, next) {
     next(vm => {
       if (to.params.entidadId) {

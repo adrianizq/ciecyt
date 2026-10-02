@@ -1,6 +1,7 @@
-import { Component, Vue, Inject } from 'vue-property-decorator';
+import { useVuelidate } from '@vuelidate/core';
+import { Component, Vue, Inject, Hook } from 'vue-facing-decorator';
 
-import { numeric, required, minLength, maxLength } from 'vuelidate/lib/validators';
+import { numeric, required, minLength, maxLength } from '@vuelidate/validators';
 
 import CicloPropedeuticoService from '../ciclo-propedeutico/ciclo-propedeutico.service';
 import { ICicloPropedeutico } from '@/shared/model/ciclo-propedeutico.model';
@@ -20,22 +21,28 @@ const validations: any = {
 };
 
 @Component({
-  validations,
+  options: {
+    validations,
+  },
+  setup() {
+    return { v$: useVuelidate() };
+  },
 })
 export default class ModalidadUpdate extends Vue {
-  @Inject('alertService') private alertService: () => AlertService;
-  @Inject('modalidadService') private modalidadService: () => ModalidadService;
+  @Inject private alertService: () => AlertService;
+  @Inject private modalidadService: () => ModalidadService;
   public modalidad: IModalidad = new Modalidad();
 
-  @Inject('cicloPropedeuticoService') private cicloPropedeuticoService: () => CicloPropedeuticoService;
+  @Inject private cicloPropedeuticoService: () => CicloPropedeuticoService;
 
   public cicloPropedeuticos: ICicloPropedeutico[] = [];
 
-  @Inject('acuerdoService') private acuerdoService: () => AcuerdoService;
+  @Inject private acuerdoService: () => AcuerdoService;
 
   public acuerdos: IAcuerdo[] = [];
   public isSaving = false;
 
+  @Hook
   beforeRouteEnter(to, from, next) {
     next(vm => {
       if (to.params.modalidadId) {

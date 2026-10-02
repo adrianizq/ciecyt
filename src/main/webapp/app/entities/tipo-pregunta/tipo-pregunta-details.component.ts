@@ -1,13 +1,14 @@
-import { Component, Vue, Inject } from 'vue-property-decorator';
+import { Component, Vue, Inject, Hook } from 'vue-facing-decorator';
 
 import { ITipoPregunta } from '@/shared/model/tipo-pregunta.model';
 import TipoPreguntaService from './tipo-pregunta.service';
 
 @Component
 export default class TipoPreguntaDetails extends Vue {
-  @Inject('tipoPreguntaService') private tipoPreguntaService: () => TipoPreguntaService;
+  @Inject private tipoPreguntaService: () => TipoPreguntaService;
   public tipoPregunta: ITipoPregunta = {};
 
+  @Hook
   beforeRouteEnter(to, from, next) {
     next(vm => {
       if (to.params.tipoPreguntaId) {

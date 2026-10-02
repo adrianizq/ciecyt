@@ -1,13 +1,14 @@
-import { Component, Vue, Inject } from 'vue-property-decorator';
+import { Component, Vue, Inject, Hook } from 'vue-facing-decorator';
 
 import { IRolesModalidad } from '@/shared/model/roles-modalidad.model';
 import RolesModalidadService from './roles-modalidad.service';
 
 @Component
 export default class RolesModalidadDetails extends Vue {
-  @Inject('rolesModalidadService') private rolesModalidadService: () => RolesModalidadService;
+  @Inject private rolesModalidadService: () => RolesModalidadService;
   public rolesModalidad: IRolesModalidad = {};
 
+  @Hook
   beforeRouteEnter(to, from, next) {
     next(vm => {
       if (to.params.rolesModalidadId) {

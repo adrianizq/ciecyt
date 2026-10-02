@@ -1,6 +1,7 @@
-import { Component, Vue, Inject } from 'vue-property-decorator';
+import { useVuelidate } from '@vuelidate/core';
+import { Component, Vue, Inject, Hook } from 'vue-facing-decorator';
 
-import { numeric, required, minLength, maxLength } from 'vuelidate/lib/validators';
+import { numeric, required, minLength, maxLength } from '@vuelidate/validators';
 
 import AlertService from '@/shared/alert/alert.service';
 import { IMenu, Menu } from '@/shared/model/menu.model';
@@ -19,19 +20,25 @@ const validations: any = {
 };
 
 @Component({
-  validations,
   components: {
     Toggle,
   },
+  options: {
+    validations,
+  },
+  setup() {
+    return { v$: useVuelidate() };
+  },
 })
 export default class MenuUpdate extends Vue {
-  @Inject('alertService') private alertService: () => AlertService;
-  @Inject('menuService') private menuService: () => MenuService;
+  @Inject private alertService: () => AlertService;
+  @Inject private menuService: () => MenuService;
   public menu: IMenu = new Menu();
 
   public menus: IMenu[] = [];
   public isSaving = false;
 
+  @Hook
   beforeRouteEnter(to, from, next) {
     next(vm => {
       if (to.params.menuId) {

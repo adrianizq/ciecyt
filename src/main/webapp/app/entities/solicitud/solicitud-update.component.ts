@@ -1,6 +1,7 @@
-import { Component, Vue, Inject } from 'vue-property-decorator';
+import { useVuelidate } from '@vuelidate/core';
+import { Component, Vue, Inject, Hook } from 'vue-facing-decorator';
 
-import { numeric, required, minLength, maxLength } from 'vuelidate/lib/validators';
+import { numeric, required, minLength, maxLength } from '@vuelidate/validators';
 
 import IntegranteProyectoService from '../integrante-proyecto/integrante-proyecto.service';
 import { IIntegranteProyecto } from '@/shared/model/integrante-proyecto.model';
@@ -19,18 +20,24 @@ const validations: any = {
 };
 
 @Component({
-  validations,
+  options: {
+    validations,
+  },
+  setup() {
+    return { v$: useVuelidate() };
+  },
 })
 export default class SolicitudUpdate extends Vue {
-  @Inject('alertService') private alertService: () => AlertService;
-  @Inject('solicitudService') private solicitudService: () => SolicitudService;
+  @Inject private alertService: () => AlertService;
+  @Inject private solicitudService: () => SolicitudService;
   public solicitud: ISolicitud = new Solicitud();
 
-  @Inject('integranteProyectoService') private integranteProyectoService: () => IntegranteProyectoService;
+  @Inject private integranteProyectoService: () => IntegranteProyectoService;
 
   public integranteProyectos: IIntegranteProyecto[] = [];
   public isSaving = false;
 
+  @Hook
   beforeRouteEnter(to, from, next) {
     next(vm => {
       if (to.params.solicitudId) {

@@ -2,31 +2,31 @@
     <div class="row justify-content-center">
         <div class="col-8">
             <form name="editForm" role="form" novalidate v-on:submit.prevent="save()" >
-                <h2 id="ciecytApp.cronogramaCiecytFases.home.createOrEditLabel" v-text="$t('ciecytApp.cronogramaCiecytFases.home.createOrEditLabel')">Create or edit a CronogramaCiecytFases</h2>
+                <h2 id="ciecytApp.cronogramaCiecytFases.home.createOrEditLabel" v-text="$t('ciecytApp.cronogramaCiecytFases.home.createOrEditLabel')"></h2>
                 <div>
                     <div class="mb-3 form-group" v-if="cronogramaCiecytFases.id">
-                        <label for="id" v-text="$t('global.field.id')">ID</label>
+                        <label for="id" v-text="$t('global.field.id')"></label>
                         <input type="text" class="form-control" id="id" name="id"
                                v-model="cronogramaCiecytFases.id" readonly />
                     </div>
                     <div class="mb-3 form-group">
-                        <label class="form-control-label" v-text="$t('ciecytApp.cronogramaCiecytFases.inicioFase')" for="cronograma-ciecyt-fases-inicioFase">Inicio Fase</label>
+                        <label class="form-control-label" v-text="$t('ciecytApp.cronogramaCiecytFases.inicioFase')" for="cronograma-ciecyt-fases-inicioFase"></label>
                         <div class="input-group">
-                            <input id="cronograma-ciecyt-fases-inicioFase" type="date" class="form-control" name="inicioFase"  :class="{'valid': !$v.cronogramaCiecytFases.inicioFase.$invalid, 'invalid': $v.cronogramaCiecytFases.inicioFase.$invalid }"
-                            v-model="$v.cronogramaCiecytFases.inicioFase.$model"  />
+                            <input id="cronograma-ciecyt-fases-inicioFase" type="date" class="form-control" name="inicioFase"  :class="{'valid': !v$.cronogramaCiecytFases.inicioFase.$invalid, 'invalid': v$.cronogramaCiecytFases.inicioFase.$invalid }"
+                            v-model="v$.cronogramaCiecytFases.inicioFase.$model"  />
                         </div>
                     </div>
                     <div class="mb-3 form-group">
-                        <label class="form-control-label" v-text="$t('ciecytApp.cronogramaCiecytFases.finFase')" for="cronograma-ciecyt-fases-finFase">Fin Fase</label>
+                        <label class="form-control-label" v-text="$t('ciecytApp.cronogramaCiecytFases.finFase')" for="cronograma-ciecyt-fases-finFase"></label>
                         <div class="input-group">
-                            <input id="cronograma-ciecyt-fases-finFase" type="date" class="form-control" name="finFase"  :class="{'valid': !$v.cronogramaCiecytFases.finFase.$invalid, 'invalid': $v.cronogramaCiecytFases.finFase.$invalid }"
-                            v-model="$v.cronogramaCiecytFases.finFase.$model"  />
+                            <input id="cronograma-ciecyt-fases-finFase" type="date" class="form-control" name="finFase"  :class="{'valid': !v$.cronogramaCiecytFases.finFase.$invalid, 'invalid': v$.cronogramaCiecytFases.finFase.$invalid }"
+                            v-model="v$.cronogramaCiecytFases.finFase.$model"  />
                         </div>
                     </div>
                     <div class="mb-3 form-group">
-                        <label class="form-control-label" v-text="$t('ciecytApp.cronogramaCiecytFases.textoExplicativo')" for="cronograma-ciecyt-fases-textoExplicativo">Texto Explicativo</label>
+                        <label class="form-control-label" v-text="$t('ciecytApp.cronogramaCiecytFases.textoExplicativo')" for="cronograma-ciecyt-fases-textoExplicativo"></label>
                         <input type="text" class="form-control" name="textoExplicativo" id="cronograma-ciecyt-fases-textoExplicativo"
-                            :class="{'valid': !$v.cronogramaCiecytFases.textoExplicativo.$invalid, 'invalid': $v.cronogramaCiecytFases.textoExplicativo.$invalid }" v-model="$v.cronogramaCiecytFases.textoExplicativo.$model" />
+                            :class="{'valid': !v$.cronogramaCiecytFases.textoExplicativo.$invalid, 'invalid': v$.cronogramaCiecytFases.textoExplicativo.$invalid }" v-model="v$.cronogramaCiecytFases.textoExplicativo.$model" />
                     </div>
                     <div class="mb-3 form-group">
                         <label class="form-control-label" v-bind:value="$t('ciecytApp.cronogramaCiecytFases.cronogramaCiecytFasesCronogramaCiecyt')" for="cronograma-ciecyt-fases-cronogramaCiecytFasesCronogramaCiecyt">Cronograma Ciecyt Fases Cronograma Ciecyt</label>
@@ -45,10 +45,10 @@
                 </div>
                 <div>
                     <button type="button" id="cancel-save" class="btn btn-secondary" v-on:click="previousState()">
-                        <font-awesome-icon icon="ban"></font-awesome-icon>&nbsp;<span v-text="$t('entity.action.cancel')">Cancel</span>
+                        <font-awesome-icon icon="ban"></font-awesome-icon>&nbsp;<span v-text="$t('entity.action.cancel')"></span>
                     </button>
-                    <button type="submit" id="save-entity" :disabled="$v.cronogramaCiecytFases.$invalid || isSaving" class="btn btn-primary">
-                        <font-awesome-icon icon="save"></font-awesome-icon>&nbsp;<span v-text="$t('entity.action.save')">Save</span>
+                    <button type="submit" id="save-entity" :disabled="v$.cronogramaCiecytFases.$invalid || isSaving" class="btn btn-primary">
+                        <font-awesome-icon icon="save"></font-awesome-icon>&nbsp;<span v-text="$t('entity.action.save')"></span>
                     </button>
                 </div>
             </form>

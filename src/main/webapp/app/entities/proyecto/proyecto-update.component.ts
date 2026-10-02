@@ -1,6 +1,7 @@
-import { Component, Vue, Inject } from 'vue-property-decorator';
+import { useVuelidate } from '@vuelidate/core';
+import { Component, Vue, Inject, Hook } from 'vue-facing-decorator';
 
-import { numeric, required, minLength, maxLength } from 'vuelidate/lib/validators';
+import { numeric, required, minLength, maxLength } from '@vuelidate/validators';
 
 import LineaInvestigacionService from '../linea-investigacion/linea-investigacion.service';
 import { ILineaInvestigacion } from '@/shared/model/linea-investigacion.model';
@@ -34,30 +35,36 @@ const validations: any = {
 };
 
 @Component({
-  validations,
+  options: {
+    validations,
+  },
+  setup() {
+    return { v$: useVuelidate() };
+  },
 })
 export default class ProyectoUpdate extends Vue {
-  @Inject('alertService') private alertService: () => AlertService;
-  @Inject('proyectoService') private proyectoService: () => ProyectoService;
+  @Inject private alertService: () => AlertService;
+  @Inject private proyectoService: () => ProyectoService;
   public proyecto: IProyecto = new Proyecto();
 
-  @Inject('lineaInvestigacionService') private lineaInvestigacionService: () => LineaInvestigacionService;
+  @Inject private lineaInvestigacionService: () => LineaInvestigacionService;
 
   public lineaInvestigacions: ILineaInvestigacion[] = [];
 
-  @Inject('grupoSemilleroService') private grupoSemilleroService: () => GrupoSemilleroService;
+  @Inject private grupoSemilleroService: () => GrupoSemilleroService;
 
   public grupoSemilleros: IGrupoSemillero[] = [];
 
-  @Inject('modalidadService') private modalidadService: () => ModalidadService;
+  @Inject private modalidadService: () => ModalidadService;
 
   public modalidads: IModalidad[] = [];
 
-  @Inject('facultadService') private facultadService: () => FacultadService;
+  @Inject private facultadService: () => FacultadService;
 
   public facultads: IFacultad[] = [];
   public isSaving = false;
 
+  @Hook
   beforeRouteEnter(to, from, next) {
     next(vm => {
       if (to.params.proyectoId) {

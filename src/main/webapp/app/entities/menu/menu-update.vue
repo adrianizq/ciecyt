@@ -2,28 +2,28 @@
     <div class="row justify-content-center">
         <div class="col-8">
             <form name="editForm" role="form" novalidate v-on:submit.prevent="save()">
-                <h2 id="ciecytApp.menu.home.createOrEditLabel" v-text="$t('ciecytApp.menu.home.createOrEditLabel')">Create or edit a Menu</h2>
+                <h2 id="ciecytApp.menu.home.createOrEditLabel" v-text="$t('ciecytApp.menu.home.createOrEditLabel')"></h2>
                 <div>
                     <div class="mb-3 form-group" v-if="menu.id">
-                        <label for="id" v-text="$t('global.field.id')">ID</label>
+                        <label for="id" v-text="$t('global.field.id')"></label>
                         <input type="text" class="form-control" id="id" name="id"
                                v-model="menu.id" readonly/>
                     </div>
                     <div class="mb-3 form-group">
-                        <label class="form-control-label" v-text="$t('ciecytApp.menu.nombre')" for="menu-nombre">Nombre</label>
+                        <label class="form-control-label" v-text="$t('ciecytApp.menu.nombre')" for="menu-nombre"></label>
                         <input type="text" class="form-control" name="nombre" id="menu-nombre"
-                               :class="{'valid': !$v.menu.nombre.$invalid, 'invalid': $v.menu.nombre.$invalid }" v-model="$v.menu.nombre.$model"/>
+                               :class="{'valid': !v$.menu.nombre.$invalid, 'invalid': v$.menu.nombre.$invalid }" v-model="v$.menu.nombre.$model"/>
                     </div>
                     <div class="mb-3 form-group">
-                        <label class="form-control-label" v-text="$t('ciecytApp.menu.url')" for="menu-url">Url</label>
+                        <label class="form-control-label" v-text="$t('ciecytApp.menu.url')" for="menu-url"></label>
                         <input type="text" class="form-control" name="url" id="menu-url"
-                               :class="{'valid': !$v.menu.url.$invalid, 'invalid': $v.menu.url.$invalid }" v-model="$v.menu.url.$model"/>
+                               :class="{'valid': !v$.menu.url.$invalid, 'invalid': v$.menu.url.$invalid }" v-model="v$.menu.url.$model"/>
                     </div>
 
                     <div class="row">
                         <div class="col-sm-3">
                             <div class="mb-3 form-group">
-                                <label class="form-control-label" v-text="$t('ciecytApp.menu.icono')" for="menu-icono">Icono</label>
+                                <label class="form-control-label" v-text="$t('ciecytApp.menu.icono')" for="menu-icono"></label>
 
                                 <div class="input-group mb-2">
                                     <div class="input-group-prepend">
@@ -32,7 +32,7 @@
                                         </div>
                                     </div>
                                     <input type="text" class="form-control" name="icono" id="menu-icono"
-                                           :class="{'valid': !$v.menu.icono.$invalid, 'invalid': $v.menu.icono.$invalid }" v-model="$v.menu.icono.$model"/>
+                                           :class="{'valid': !v$.menu.icono.$invalid, 'invalid': v$.menu.icono.$invalid }" v-model="v$.menu.icono.$model"/>
                                 </div>
 
 
@@ -40,9 +40,9 @@
                         </div>
 
                         <div class="col-sm-2">
-                            <label class="form-control-label" v-text="$t('ciecytApp.menu.orden')" for="menu-orden">Orden</label>
+                            <label class="form-control-label" v-text="$t('ciecytApp.menu.orden')" for="menu-orden"></label>
                             <input type="text" class="form-control" name="orden" id="menu-orden"
-                                   :class="{'valid': !$v.menu.orden.$invalid, 'invalid': $v.menu.orden.$invalid }" v-model="$v.menu.orden.$model"/>
+                                   :class="{'valid': !v$.menu.orden.$invalid, 'invalid': v$.menu.orden.$invalid }" v-model="v$.menu.orden.$model"/>
                         </div>
 
                         <div class="col-sm-2">
@@ -80,10 +80,10 @@
                 </div>
                 <div>
                     <button type="button" id="cancel-save" class="btn btn-secondary" v-on:click="previousState()">
-                        <font-awesome-icon icon="ban"></font-awesome-icon>&nbsp;<span v-text="$t('entity.action.cancel')">Cancel</span>
+                        <font-awesome-icon icon="ban"></font-awesome-icon>&nbsp;<span v-text="$t('entity.action.cancel')"></span>
                     </button>
-                    <button type="submit" id="save-entity" :disabled="$v.menu.$invalid || isSaving" class="btn btn-primary">
-                        <font-awesome-icon icon="save"></font-awesome-icon>&nbsp;<span v-text="$t('entity.action.save')">Save</span>
+                    <button type="submit" id="save-entity" :disabled="v$.menu.$invalid || isSaving" class="btn btn-primary">
+                        <font-awesome-icon icon="save"></font-awesome-icon>&nbsp;<span v-text="$t('entity.action.save')"></span>
                     </button>
                 </div>
             </form>

@@ -2,24 +2,24 @@
     <div class="row justify-content-center">
         <div class="col-8">
             <div v-if="modalidad">
-                <h2 class="jh-entity-heading"><span v-text="$t('ciecytApp.modalidad.detail.title')">Modalidad</span> {{modalidad.id}}</h2>
+                <h2 class="jh-entity-heading"><span v-text="$t('ciecytApp.modalidad.detail.title')"></span> {{modalidad.id}}</h2>
                 <dl class="row jh-entity-details">
                     <dt>
-                        <span v-text="$t('ciecytApp.modalidad.modalidad')">Modalidad</span>
+                        <span v-text="$t('ciecytApp.modalidad.modalidad')"></span>
                     </dt>
                     <dd>
                         <span>{{modalidad.modalidad}}</span>
                     </dd>
 
                     <dt>
-                        <span v-text="$t('ciecytApp.modalidad.contieneLinea')">Contiene Linea de Investigacion</span>
+                        <span v-text="$t('ciecytApp.modalidad.contieneLinea')"></span>
                     </dt>
                     <dd>
                         <span>{{modalidad.contieneLinea}}</span>
                     </dd>
 
                     <dt>
-                        <span v-text="$t('ciecytApp.modalidad.modalidadAcuerdo')">Modalidad Acuerdo</span>
+                        <span v-text="$t('ciecytApp.modalidad.modalidadAcuerdo')"></span>
                     </dt>
                     <dd>
                         <div v-if="modalidad.modalidadAcuerdoId">
@@ -30,11 +30,11 @@
                 <button type="submit"
                         v-on:click.prevent="previousState()"
                         class="btn btn-info">
-                    <font-awesome-icon icon="arrow-left"></font-awesome-icon>&nbsp;<span v-text="$t('entity.action.back')"> Back</span>
+                    <font-awesome-icon icon="arrow-left"></font-awesome-icon>&nbsp;<span v-text="$t('entity.action.back')"></span>
                 </button>
-                <router-link v-if="modalidad.id" :to="{name: 'ModalidadEdit', params: {modalidadId: modalidad.id}}" tag="button" class="btn btn-primary">
-                    <font-awesome-icon icon="pencil-alt"></font-awesome-icon>&nbsp;<span v-text="$t('entity.action.edit')"> Edit</span>
-                </router-link>
+                <router-link custom v-slot="{ navigate }" v-if="modalidad.id" :to="{name: 'ModalidadEdit', params: {modalidadId: modalidad.id}}"><button class="btn btn-primary" @click="navigate">
+                    <font-awesome-icon icon="pencil-alt"></font-awesome-icon>&nbsp;<span v-text="$t('entity.action.edit')"></span>
+                </button></router-link>
             </div>
         </div>
     </div>

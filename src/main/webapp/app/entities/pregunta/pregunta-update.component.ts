@@ -1,6 +1,7 @@
-import { Component, Vue, Inject } from 'vue-property-decorator';
+import { useVuelidate } from '@vuelidate/core';
+import { Component, Vue, Inject, Hook } from 'vue-facing-decorator';
 
-import { numeric, required, minLength, maxLength } from 'vuelidate/lib/validators';
+import { numeric, required, minLength, maxLength } from '@vuelidate/validators';
 
 import TipoPreguntaService from '../tipo-pregunta/tipo-pregunta.service';
 import { ITipoPregunta } from '@/shared/model/tipo-pregunta.model';
@@ -39,22 +40,27 @@ const validations: any = {
 };
 
 @Component({
-  validations,
+  options: {
+    validations,
+  },
+  setup() {
+    return { v$: useVuelidate() };
+  },
 })
 export default class PreguntaUpdate extends Vue {
-  @Inject('alertService') private alertService: () => AlertService;
-  @Inject('preguntaService') private preguntaService: () => PreguntaService;
+  @Inject private alertService: () => AlertService;
+  @Inject private preguntaService: () => PreguntaService;
   public pregunta: IPregunta;
 
   public modalidadesAsignadas: IModalidad[] = [];
 
   public authoritiesAsignadas: IAuthority[] = [];
 
-  @Inject('tipoPreguntaService') private tipoPreguntaService: () => TipoPreguntaService;
+  @Inject private tipoPreguntaService: () => TipoPreguntaService;
 
   public tipoPreguntas: ITipoPregunta[] = [];
 
-  @Inject('modalidadService') private modalidadService: () => ModalidadService;
+  @Inject private modalidadService: () => ModalidadService;
 
   public modalidads: IModalidad[] = [];
 
@@ -63,18 +69,18 @@ export default class PreguntaUpdate extends Vue {
 
   public existeElemento: boolean = false;
 
-  @Inject('fasesService') private fasesService: () => FasesService;
+  @Inject private fasesService: () => FasesService;
 
   public fass: IFases[] = [];
 
-  @Inject('cicloService') private cicloService: () => CicloService;
+  @Inject private cicloService: () => CicloService;
 
   public ciclos: ICiclo[] = [];
 
-  @Inject('preguntaModalidadService') private preguntaModalidadService: () => PreguntaModalidadService;
-  @Inject('preguntaAuthorityService') private preguntaAuthorityService: () => PreguntaAuthorityService;
+  @Inject private preguntaModalidadService: () => PreguntaModalidadService;
+  @Inject private preguntaAuthorityService: () => PreguntaAuthorityService;
 
-  @Inject('userService') private userManagementService: () => UserManagementService;
+  @Inject({ from: 'userService' }) private userManagementService: () => UserManagementService;
 
   public elements: any[] = [];
 
@@ -99,6 +105,7 @@ export default class PreguntaUpdate extends Vue {
     this.pregunta.authorities = [];
   }
 
+  @Hook
   beforeRouteEnter(to, from, next) {
     next(vm => {
       // if (to.params.preguntaId) {

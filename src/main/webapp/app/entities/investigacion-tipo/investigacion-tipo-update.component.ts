@@ -1,6 +1,7 @@
-import { Component, Vue, Inject } from 'vue-property-decorator';
+import { useVuelidate } from '@vuelidate/core';
+import { Component, Vue, Inject, Hook } from 'vue-facing-decorator';
 
-import { numeric, required, minLength, maxLength } from 'vuelidate/lib/validators';
+import { numeric, required, minLength, maxLength } from '@vuelidate/validators';
 
 import AlertService from '@/shared/alert/alert.service';
 import { IInvestigacionTipo, InvestigacionTipo } from '@/shared/model/investigacion-tipo.model';
@@ -16,17 +17,23 @@ const validations: any = {
 };
 
 @Component({
-  validations,
+  options: {
+    validations,
+  },
+  setup() {
+    return { v$: useVuelidate() };
+  },
 })
 export default class InvestigacionTipoUpdate extends Vue {
-  @Inject('alertService') private alertService: () => AlertService;
-  @Inject('investigacionTipoService') private investigacionTipoService: () => InvestigacionTipoService;
+  @Inject private alertService: () => AlertService;
+  @Inject private investigacionTipoService: () => InvestigacionTipoService;
   public investigacionTipo: IInvestigacionTipo = new InvestigacionTipo();
 
   public investigacionTips: IInvestigacionTipo[] = [];
 
   public isSaving = false;
 
+  @Hook
   beforeRouteEnter(to, from, next) {
     next(vm => {
       if (to.params.investigacionTipoId) {

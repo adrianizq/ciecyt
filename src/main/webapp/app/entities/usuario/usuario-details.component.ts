@@ -1,13 +1,14 @@
-import { Component, Vue, Inject } from 'vue-property-decorator';
+import { Component, Vue, Inject, Hook } from 'vue-facing-decorator';
 
 import { IUsuario } from '@/shared/model/usuario.model';
 import UsuarioService from './usuario.service';
 
 @Component
 export default class UsuarioDetails extends Vue {
-  @Inject('usuarioService') private usuarioService: () => UsuarioService;
+  @Inject private usuarioService: () => UsuarioService;
   public usuario: IUsuario = {};
 
+  @Hook
   beforeRouteEnter(to, from, next) {
     next(vm => {
       if (to.params.usuarioId) {

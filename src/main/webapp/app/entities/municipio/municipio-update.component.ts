@@ -1,6 +1,7 @@
-import { Component, Vue, Inject } from 'vue-property-decorator';
+import { useVuelidate } from '@vuelidate/core';
+import { Component, Vue, Inject, Hook } from 'vue-facing-decorator';
 
-import { numeric, required, minLength, maxLength } from 'vuelidate/lib/validators';
+import { numeric, required, minLength, maxLength } from '@vuelidate/validators';
 
 import AlertService from '@/shared/alert/alert.service';
 import { IMunicipio, Municipio } from '@/shared/model/municipio.model';
@@ -17,14 +18,20 @@ const validations: any = {
 };
 
 @Component({
-  validations,
+  options: {
+    validations,
+  },
+  setup() {
+    return { v$: useVuelidate() };
+  },
 })
 export default class MunicipioUpdate extends Vue {
-  @Inject('alertService') private alertService: () => AlertService;
-  @Inject('municipioService') private municipioService: () => MunicipioService;
+  @Inject private alertService: () => AlertService;
+  @Inject private municipioService: () => MunicipioService;
   public municipio: IMunicipio = new Municipio();
   public isSaving = false;
 
+  @Hook
   beforeRouteEnter(to, from, next) {
     next(vm => {
       if (to.params.municipioId) {

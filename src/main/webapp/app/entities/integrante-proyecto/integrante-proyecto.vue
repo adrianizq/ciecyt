@@ -1,13 +1,11 @@
 <template>
     <div>
         <h2 id="page-heading">
-            <span v-text="$t('ciecytApp.integranteProyecto.home.title')" id="integrante-proyecto-heading">Integrante Proyectos</span>
-            <router-link :to="{name: 'IntegranteProyectoCreate'}" tag="button" id="jh-create-entity" class="btn btn-primary float-right jh-create-entity create-integrante-proyecto">
+            <span v-text="$t('ciecytApp.integranteProyecto.home.title')" id="integrante-proyecto-heading"></span>
+            <router-link custom v-slot="{ navigate }" :to="{name: 'IntegranteProyectoCreate'}"><button id="jh-create-entity" class="btn btn-primary float-right jh-create-entity create-integrante-proyecto" @click="navigate">
                 <font-awesome-icon icon="plus"></font-awesome-icon>
-                <span  v-text="$t('ciecytApp.integranteProyecto.home.createLabel')">
-                    Create a new Integrante Proyecto
-                </span>
-            </router-link>
+                <span  v-text="$t('ciecytApp.integranteProyecto.home.createLabel')"></span>
+            </button></router-link>
         </h2>
         <b-alert :show="dismissCountDown"
             dismissible
@@ -18,18 +16,18 @@
         </b-alert>
         <br/>
         <div class="alert alert-warning" v-if="!isFetching && integranteProyectos && integranteProyectos.length === 0">
-            <span v-text="$t('ciecytApp.integranteProyecto.home.notFound')">No integranteProyectos found</span>
+            <span v-text="$t('ciecytApp.integranteProyecto.home.notFound')"></span>
         </div>
         <div class="table-responsive" v-if="integranteProyectos && integranteProyectos.length > 0">
             <table class="table table-striped">
                 <thead>
                 <tr>
-                    <th v-on:click="changeOrder('id')"><span v-text="$t('global.field.id')">ID</span> <font-awesome-icon icon="sort"></font-awesome-icon></th>
-                    <th v-on:click="changeOrder('integrante')"><span v-text="$t('ciecytApp.integranteProyecto.integrante')">Integrante</span> <font-awesome-icon icon="sort"></font-awesome-icon></th>
-                    <th v-on:click="changeOrder('descripcion')"><span v-text="$t('ciecytApp.integranteProyecto.descripcion')">Descripcion</span> <font-awesome-icon icon="sort"></font-awesome-icon></th>
-                    <th v-on:click="changeOrder('integranteProyectoUserLogin')"><span v-text="$t('ciecytApp.integranteProyecto.integranteProyectoUser')">Integrante Proyecto User</span> <font-awesome-icon icon="sort"></font-awesome-icon></th>
-                    <th v-on:click="changeOrder('integranteProyectoProyectoTitulo')"><span v-text="$t('ciecytApp.integranteProyecto.integranteProyectoProyecto')">Integrante Proyecto Proyecto</span> <font-awesome-icon icon="sort"></font-awesome-icon></th>
-                    <th v-on:click="changeOrder('integranteProyectoRolesModalidadRol')"><span v-text="$t('ciecytApp.integranteProyecto.integranteProyectoRolesModalidad')">Integrante Proyecto Roles Modalidad</span> <font-awesome-icon icon="sort"></font-awesome-icon></th>
+                    <th v-on:click="changeOrder('id')"><span v-text="$t('global.field.id')"></span> <font-awesome-icon icon="sort"></font-awesome-icon></th>
+                    <th v-on:click="changeOrder('integrante')"><span v-text="$t('ciecytApp.integranteProyecto.integrante')"></span> <font-awesome-icon icon="sort"></font-awesome-icon></th>
+                    <th v-on:click="changeOrder('descripcion')"><span v-text="$t('ciecytApp.integranteProyecto.descripcion')"></span> <font-awesome-icon icon="sort"></font-awesome-icon></th>
+                    <th v-on:click="changeOrder('integranteProyectoUserLogin')"><span v-text="$t('ciecytApp.integranteProyecto.integranteProyectoUser')"></span> <font-awesome-icon icon="sort"></font-awesome-icon></th>
+                    <th v-on:click="changeOrder('integranteProyectoProyectoTitulo')"><span v-text="$t('ciecytApp.integranteProyecto.integranteProyectoProyecto')"></span> <font-awesome-icon icon="sort"></font-awesome-icon></th>
+                    <th v-on:click="changeOrder('integranteProyectoRolesModalidadRol')"><span v-text="$t('ciecytApp.integranteProyecto.integranteProyectoRolesModalidad')"></span> <font-awesome-icon icon="sort"></font-awesome-icon></th>
                     <th></th>
                 </tr>
                 </thead>
@@ -56,20 +54,20 @@
                     </td>
                     <td class="text-right">
                         <div class="btn-group">
-                            <router-link :to="{name: 'IntegranteProyectoView', params: {integranteProyectoId: integranteProyecto.id}}" tag="button" class="btn btn-info btn-sm details">
+                            <router-link custom v-slot="{ navigate }" :to="{name: 'IntegranteProyectoView', params: {integranteProyectoId: integranteProyecto.id}}"><button class="btn btn-info btn-sm details" @click="navigate">
                                 <font-awesome-icon icon="eye"></font-awesome-icon>
-                                <span class="d-none d-md-inline" v-text="$t('entity.action.view')">View</span>
-                            </router-link>
-                            <router-link :to="{name: 'IntegranteProyectoEdit', params: {integranteProyectoId: integranteProyecto.id}}"  tag="button" class="btn btn-primary btn-sm edit">
+                                <span class="d-none d-md-inline" v-text="$t('entity.action.view')"></span>
+                            </button></router-link>
+                            <router-link custom v-slot="{ navigate }" :to="{name: 'IntegranteProyectoEdit', params: {integranteProyectoId: integranteProyecto.id}}"><button class="btn btn-primary btn-sm edit" @click="navigate">
                                 <font-awesome-icon icon="pencil-alt"></font-awesome-icon>
-                                <span class="d-none d-md-inline" v-text="$t('entity.action.edit')">Edit</span>
-                            </router-link>
+                                <span class="d-none d-md-inline" v-text="$t('entity.action.edit')"></span>
+                            </button></router-link>
                             <b-button v-on:click="prepareRemove(integranteProyecto)"
                                    variant="danger"
                                    class="btn btn-sm"
                                    v-b-modal.removeEntity>
                                 <font-awesome-icon icon="times"></font-awesome-icon>
-                                <span class="d-none d-md-inline" v-text="$t('entity.action.delete')">Delete</span>
+                                <span class="d-none d-md-inline" v-text="$t('entity.action.delete')"></span>
                             </b-button>
                         </div>
                     </td>
@@ -78,14 +76,18 @@
             </table>
         </div>
         <b-modal ref="removeEntity" id="removeEntity" >
-            <span slot="modal-title"><span id="ciecytApp.integranteProyecto.delete.question" v-text="$t('entity.delete.title')">Confirm delete operation</span></span>
+            <template #modal-title>
+<span ><span id="ciecytApp.integranteProyecto.delete.question" v-text="$t('entity.delete.title')"></span></span>
+</template>
             <div class="modal-body">
                 <p id="jhi-delete-integranteProyecto-heading" v-bind:title="$t('ciecytApp.integranteProyecto.delete.question')">Are you sure you want to delete this Integrante Proyecto?</p>
             </div>
-            <div slot="modal-footer">
-                <button type="button" class="btn btn-secondary" v-text="$t('entity.action.cancel')" v-on:click="closeDialog()">Cancel</button>
-                <button type="button" class="btn btn-primary" id="jhi-confirm-delete-integranteProyecto" v-text="$t('entity.action.delete')" v-on:click="removeIntegranteProyecto()">Delete</button>
+            <template #modal-footer>
+<div >
+                <button type="button" class="btn btn-secondary" v-text="$t('entity.action.cancel')" v-on:click="closeDialog()"></button>
+                <button type="button" class="btn btn-primary" id="jhi-confirm-delete-integranteProyecto" v-text="$t('entity.action.delete')" v-on:click="removeIntegranteProyecto()"></button>
             </div>
+</template>
         </b-modal>
         <div v-show="integranteProyectos && integranteProyectos.length > 0">
             <div class="row justify-content-center">

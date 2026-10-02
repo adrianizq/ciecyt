@@ -1,13 +1,14 @@
-import { Component, Vue, Inject } from 'vue-property-decorator';
+import { Component, Vue, Inject, Hook } from 'vue-facing-decorator';
 
 import { IImpactosEsperados } from '@/shared/model/impactos-esperados.model';
 import ImpactosEsperadosService from './impactos-esperados.service';
 
 @Component
 export default class ImpactosEsperadosDetails extends Vue {
-  @Inject('impactosEsperadosService') private impactosEsperadosService: () => ImpactosEsperadosService;
+  @Inject private impactosEsperadosService: () => ImpactosEsperadosService;
   public impactosEsperados: IImpactosEsperados = {};
 
+  @Hook
   beforeRouteEnter(to, from, next) {
     next(vm => {
       if (to.params.impactosEsperadosId) {

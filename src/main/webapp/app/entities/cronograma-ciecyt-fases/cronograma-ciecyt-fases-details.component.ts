@@ -1,13 +1,14 @@
-import { Component, Vue, Inject } from 'vue-property-decorator';
+import { Component, Vue, Inject, Hook } from 'vue-facing-decorator';
 
 import { ICronogramaCiecytFases } from '@/shared/model/cronograma-ciecyt-fases.model';
 import CronogramaCiecytFasesService from './cronograma-ciecyt-fases.service';
 
 @Component
 export default class CronogramaCiecytFasesDetails extends Vue {
-  @Inject('cronogramaCiecytFasesService') private cronogramaCiecytFasesService: () => CronogramaCiecytFasesService;
+  @Inject private cronogramaCiecytFasesService: () => CronogramaCiecytFasesService;
   public cronogramaCiecytFases: ICronogramaCiecytFases = {};
 
+  @Hook
   beforeRouteEnter(to, from, next) {
     next(vm => {
       if (to.params.cronogramaCiecytFasesId) {

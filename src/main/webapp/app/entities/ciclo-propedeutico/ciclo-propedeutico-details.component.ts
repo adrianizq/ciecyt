@@ -1,13 +1,14 @@
-import { Component, Vue, Inject } from 'vue-property-decorator';
+import { Component, Vue, Inject, Hook } from 'vue-facing-decorator';
 
 import { ICicloPropedeutico } from '@/shared/model/ciclo-propedeutico.model';
 import CicloPropedeuticoService from './ciclo-propedeutico.service';
 
 @Component
 export default class CicloPropedeuticoDetails extends Vue {
-  @Inject('cicloPropedeuticoService') private cicloPropedeuticoService: () => CicloPropedeuticoService;
+  @Inject private cicloPropedeuticoService: () => CicloPropedeuticoService;
   public cicloPropedeutico: ICicloPropedeutico = {};
 
+  @Hook
   beforeRouteEnter(to, from, next) {
     next(vm => {
       if (to.params.cicloPropedeuticoId) {

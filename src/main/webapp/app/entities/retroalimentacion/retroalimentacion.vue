@@ -1,13 +1,11 @@
 <template>
     <div>
         <h2 id="page-heading">
-            <span v-text="$t('ciecytApp.retroalimentacion.home.title')" id="retroalimentacion-heading">Retroalimentacions</span>
-            <router-link :to="{name: 'RetroalimentacionCreate'}" tag="button" id="jh-create-entity" class="btn btn-primary float-right jh-create-entity create-retroalimentacion">
+            <span v-text="$t('ciecytApp.retroalimentacion.home.title')" id="retroalimentacion-heading"></span>
+            <router-link custom v-slot="{ navigate }" :to="{name: 'RetroalimentacionCreate'}"><button id="jh-create-entity" class="btn btn-primary float-right jh-create-entity create-retroalimentacion" @click="navigate">
                 <font-awesome-icon icon="plus"></font-awesome-icon>
-                <span  v-text="$t('ciecytApp.retroalimentacion.home.createLabel')">
-                    Create a new Retroalimentacion
-                </span>
-            </router-link>
+                <span  v-text="$t('ciecytApp.retroalimentacion.home.createLabel')"></span>
+            </button></router-link>
         </h2>
         <b-alert :show="dismissCountDown"
             dismissible
@@ -18,20 +16,20 @@
         </b-alert>
         <br/>
         <div class="alert alert-warning" v-if="!isFetching && retroalimentacions && retroalimentacions.length === 0">
-            <span v-text="$t('ciecytApp.retroalimentacion.home.notFound')">No retroalimentacions found</span>
+            <span v-text="$t('ciecytApp.retroalimentacion.home.notFound')"></span>
         </div>
         <div class="table-responsive" v-if="retroalimentacions && retroalimentacions.length > 0">
             <table class="table table-striped">
                 <thead>
                 <tr>
-                    <th v-on:click="changeOrder('id')"><span v-text="$t('global.field.id')">ID</span> <font-awesome-icon icon="sort"></font-awesome-icon></th>
-                    <th v-on:click="changeOrder('titulo')"><span v-text="$t('ciecytApp.retroalimentacion.titulo')">Titulo</span> <font-awesome-icon icon="sort"></font-awesome-icon></th>
-                    <th v-on:click="changeOrder('retroalimentacion')"><span v-text="$t('ciecytApp.retroalimentacion.retroalimentacion')">Retroalimentacion</span> <font-awesome-icon icon="sort"></font-awesome-icon></th>
-                    <th v-on:click="changeOrder('fechaRetroalimentacion')"><span v-text="$t('ciecytApp.retroalimentacion.fechaRetroalimentacion')">Fecha Retroalimentacion</span> <font-awesome-icon icon="sort"></font-awesome-icon></th>
-                    <th v-on:click="changeOrder('estadoRetroalimentacion')"><span v-text="$t('ciecytApp.retroalimentacion.estadoRetroalimentacion')">Estado Retroalimentacion</span> <font-awesome-icon icon="sort"></font-awesome-icon></th>
-                    <th v-on:click="changeOrder('estadoProyectoFase')"><span v-text="$t('ciecytApp.retroalimentacion.estadoProyectoFase')">Estado Proyecto Fase</span> <font-awesome-icon icon="sort"></font-awesome-icon></th>
-                    <th v-on:click="changeOrder('retroalimentacionProyectoFaseTitulo')"><span v-text="$t('ciecytApp.retroalimentacion.retroalimentacionProyectoFase')">Retroalimentacion Proyecto Fase</span> <font-awesome-icon icon="sort"></font-awesome-icon></th>
-                    <th v-on:click="changeOrder('retroalimentacionUserLogin')"><span v-text="$t('ciecytApp.retroalimentacion.retroalimentacionUser')">Retroalimentacion User</span> <font-awesome-icon icon="sort"></font-awesome-icon></th>
+                    <th v-on:click="changeOrder('id')"><span v-text="$t('global.field.id')"></span> <font-awesome-icon icon="sort"></font-awesome-icon></th>
+                    <th v-on:click="changeOrder('titulo')"><span v-text="$t('ciecytApp.retroalimentacion.titulo')"></span> <font-awesome-icon icon="sort"></font-awesome-icon></th>
+                    <th v-on:click="changeOrder('retroalimentacion')"><span v-text="$t('ciecytApp.retroalimentacion.retroalimentacion')"></span> <font-awesome-icon icon="sort"></font-awesome-icon></th>
+                    <th v-on:click="changeOrder('fechaRetroalimentacion')"><span v-text="$t('ciecytApp.retroalimentacion.fechaRetroalimentacion')"></span> <font-awesome-icon icon="sort"></font-awesome-icon></th>
+                    <th v-on:click="changeOrder('estadoRetroalimentacion')"><span v-text="$t('ciecytApp.retroalimentacion.estadoRetroalimentacion')"></span> <font-awesome-icon icon="sort"></font-awesome-icon></th>
+                    <th v-on:click="changeOrder('estadoProyectoFase')"><span v-text="$t('ciecytApp.retroalimentacion.estadoProyectoFase')"></span> <font-awesome-icon icon="sort"></font-awesome-icon></th>
+                    <th v-on:click="changeOrder('retroalimentacionProyectoFaseTitulo')"><span v-text="$t('ciecytApp.retroalimentacion.retroalimentacionProyectoFase')"></span> <font-awesome-icon icon="sort"></font-awesome-icon></th>
+                    <th v-on:click="changeOrder('retroalimentacionUserLogin')"><span v-text="$t('ciecytApp.retroalimentacion.retroalimentacionUser')"></span> <font-awesome-icon icon="sort"></font-awesome-icon></th>
                     <th></th>
                 </tr>
                 </thead>
@@ -56,20 +54,20 @@
                     </td>
                     <td class="text-right">
                         <div class="btn-group">
-                            <router-link :to="{name: 'RetroalimentacionView', params: {retroalimentacionId: retroalimentacion.id}}" tag="button" class="btn btn-info btn-sm details">
+                            <router-link custom v-slot="{ navigate }" :to="{name: 'RetroalimentacionView', params: {retroalimentacionId: retroalimentacion.id}}"><button class="btn btn-info btn-sm details" @click="navigate">
                                 <font-awesome-icon icon="eye"></font-awesome-icon>
-                                <span class="d-none d-md-inline" v-text="$t('entity.action.view')">View</span>
-                            </router-link>
-                            <router-link :to="{name: 'RetroalimentacionEdit', params: {retroalimentacionId: retroalimentacion.id}}"  tag="button" class="btn btn-primary btn-sm edit">
+                                <span class="d-none d-md-inline" v-text="$t('entity.action.view')"></span>
+                            </button></router-link>
+                            <router-link custom v-slot="{ navigate }" :to="{name: 'RetroalimentacionEdit', params: {retroalimentacionId: retroalimentacion.id}}"><button class="btn btn-primary btn-sm edit" @click="navigate">
                                 <font-awesome-icon icon="pencil-alt"></font-awesome-icon>
-                                <span class="d-none d-md-inline" v-text="$t('entity.action.edit')">Edit</span>
-                            </router-link>
+                                <span class="d-none d-md-inline" v-text="$t('entity.action.edit')"></span>
+                            </button></router-link>
                             <b-button v-on:click="prepareRemove(retroalimentacion)"
                                    variant="danger"
                                    class="btn btn-sm"
                                    v-b-modal.removeEntity>
                                 <font-awesome-icon icon="times"></font-awesome-icon>
-                                <span class="d-none d-md-inline" v-text="$t('entity.action.delete')">Delete</span>
+                                <span class="d-none d-md-inline" v-text="$t('entity.action.delete')"></span>
                             </b-button>
                         </div>
                     </td>
@@ -78,14 +76,18 @@
             </table>
         </div>
         <b-modal ref="removeEntity" id="removeEntity" >
-            <span slot="modal-title"><span id="ciecytApp.retroalimentacion.delete.question" v-text="$t('entity.delete.title')">Confirm delete operation</span></span>
+            <template #modal-title>
+<span ><span id="ciecytApp.retroalimentacion.delete.question" v-text="$t('entity.delete.title')"></span></span>
+</template>
             <div class="modal-body">
                 <p id="jhi-delete-retroalimentacion-heading" v-bind:title="$t('ciecytApp.retroalimentacion.delete.question')">Are you sure you want to delete this Retroalimentacion?</p>
             </div>
-            <div slot="modal-footer">
-                <button type="button" class="btn btn-secondary" v-text="$t('entity.action.cancel')" v-on:click="closeDialog()">Cancel</button>
-                <button type="button" class="btn btn-primary" id="jhi-confirm-delete-retroalimentacion" v-text="$t('entity.action.delete')" v-on:click="removeRetroalimentacion()">Delete</button>
+            <template #modal-footer>
+<div >
+                <button type="button" class="btn btn-secondary" v-text="$t('entity.action.cancel')" v-on:click="closeDialog()"></button>
+                <button type="button" class="btn btn-primary" id="jhi-confirm-delete-retroalimentacion" v-text="$t('entity.action.delete')" v-on:click="removeRetroalimentacion()"></button>
             </div>
+</template>
         </b-modal>
         <div v-show="retroalimentacions && retroalimentacions.length > 0">
             <div class="row justify-content-center">

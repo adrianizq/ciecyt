@@ -2,40 +2,40 @@
     <div class="row justify-content-center">
         <div class="col-8">
             <div v-if="rolMenu">
-                <h2 class="jh-entity-heading"><span v-text="$t('ciecytApp.rolMenu.detail.title')">RolMenu</span> {{rolMenu.id}}</h2>
+                <h2 class="jh-entity-heading"><span v-text="$t('ciecytApp.rolMenu.detail.title')"></span> {{rolMenu.id}}</h2>
                 <dl class="row jh-entity-details">
                     <dt>
-                        <span v-text="$t('ciecytApp.rolMenu.permitirAcceso')">Permitir Acceso</span>
+                        <span v-text="$t('ciecytApp.rolMenu.permitirAcceso')"></span>
                     </dt>
                     <dd>
                         <span>{{rolMenu.permitirAcceso}}</span>
                     </dd>
                     <dt>
-                        <span v-text="$t('ciecytApp.rolMenu.permitirCrear')">Permitir Crear</span>
+                        <span v-text="$t('ciecytApp.rolMenu.permitirCrear')"></span>
                     </dt>
                     <dd>
                         <span>{{rolMenu.permitirCrear}}</span>
                     </dd>
                     <dt>
-                        <span v-text="$t('ciecytApp.rolMenu.permitirEditar')">Permitir Editar</span>
+                        <span v-text="$t('ciecytApp.rolMenu.permitirEditar')"></span>
                     </dt>
                     <dd>
                         <span>{{rolMenu.permitirEditar}}</span>
                     </dd>
                     <dt>
-                        <span v-text="$t('ciecytApp.rolMenu.permitirEliminar')">Permitir Eliminar</span>
+                        <span v-text="$t('ciecytApp.rolMenu.permitirEliminar')"></span>
                     </dt>
                     <dd>
                         <span>{{rolMenu.permitirEliminar}}</span>
                     </dd>
                     <dt>
-                        <span v-text="$t('ciecytApp.rolMenu.authName')">Auth Name</span>
+                        <span v-text="$t('ciecytApp.rolMenu.authName')"></span>
                     </dt>
                     <dd>
                         <span>{{rolMenu.authName}}</span>
                     </dd>
                     <dt>
-                        <span v-text="$t('ciecytApp.rolMenu.rolMenuMenu')">Rol Menu Menu</span>
+                        <span v-text="$t('ciecytApp.rolMenu.rolMenuMenu')"></span>
                     </dt>
                     <dd>
                         <div v-if="rolMenu.rolMenuMenuId">
@@ -46,11 +46,11 @@
                 <button type="submit"
                         v-on:click.prevent="previousState()"
                         class="btn btn-info">
-                    <font-awesome-icon icon="arrow-left"></font-awesome-icon>&nbsp;<span v-text="$t('entity.action.back')"> Back</span>
+                    <font-awesome-icon icon="arrow-left"></font-awesome-icon>&nbsp;<span v-text="$t('entity.action.back')"></span>
                 </button>
-                <router-link v-if="rolMenu.id" :to="{name: 'RolMenuEdit', params: {rolMenuId: rolMenu.id}}" tag="button" class="btn btn-primary">
-                    <font-awesome-icon icon="pencil-alt"></font-awesome-icon>&nbsp;<span v-text="$t('entity.action.edit')"> Edit</span>
-                </router-link>
+                <router-link custom v-slot="{ navigate }" v-if="rolMenu.id" :to="{name: 'RolMenuEdit', params: {rolMenuId: rolMenu.id}}"><button class="btn btn-primary" @click="navigate">
+                    <font-awesome-icon icon="pencil-alt"></font-awesome-icon>&nbsp;<span v-text="$t('entity.action.edit')"></span>
+                </button></router-link>
             </div>
         </div>
     </div>

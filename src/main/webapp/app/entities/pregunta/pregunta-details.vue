@@ -2,28 +2,28 @@
     <div class="row justify-content-center">
         <div class="col-8">
             <div v-if="pregunta">
-                <h2 class="jh-entity-heading"><span v-text="$t('ciecytApp.pregunta.detail.title')">Pregunta</span> {{pregunta.id}}</h2>
+                <h2 class="jh-entity-heading"><span v-text="$t('ciecytApp.pregunta.detail.title')"></span> {{pregunta.id}}</h2>
                 <dl class="row jh-entity-details">
                     <dt>
-                        <span v-text="$t('ciecytApp.pregunta.encabezado')">Encabezado</span>
+                        <span v-text="$t('ciecytApp.pregunta.encabezado')"></span>
                     </dt>
                     <dd>
                         <span>{{pregunta.encabezado}}</span>
                     </dd>
                     <dt>
-                        <span v-text="$t('ciecytApp.pregunta.descripcion')">Descripcion</span>
+                        <span v-text="$t('ciecytApp.pregunta.descripcion')"></span>
                     </dt>
                     <dd>
                         <span>{{pregunta.descripcion}}</span>
                     </dd>
                     <dt>
-                        <span v-text="$t('ciecytApp.pregunta.pregunta')">Pregunta</span>
+                        <span v-text="$t('ciecytApp.pregunta.pregunta')"></span>
                     </dt>
                     <dd>
                         <span>{{pregunta.pregunta}}</span>
                     </dd>
                     <dt>
-                        <span v-text="$t('ciecytApp.pregunta.preguntaTipoPregunta')">Pregunta Tipo Pregunta</span>
+                        <span v-text="$t('ciecytApp.pregunta.preguntaTipoPregunta')"></span>
                     </dt>
                     <dd>
                         <div v-if="pregunta.preguntaTipoPreguntaId">
@@ -31,7 +31,7 @@
                         </div>
                     </dd>
                     <dt>
-                        <span v-text="$t('ciecytApp.pregunta.preguntaModalidad')">Pregunta Modalidad</span>
+                        <span v-text="$t('ciecytApp.pregunta.preguntaModalidad')"></span>
                     </dt>
                     <dd>
                         <div v-if="pregunta.preguntaModalidadId">
@@ -39,7 +39,7 @@
                         </div>
                     </dd>
                     <dt>
-                        <span v-text="$t('ciecytApp.pregunta.preguntaRolesModalidad')">Pregunta Roles Modalidad</span>
+                        <span v-text="$t('ciecytApp.pregunta.preguntaRolesModalidad')"></span>
                     </dt>
                     <dd>
                         <div v-if="pregunta.preguntaRolesModalidadId">
@@ -48,7 +48,7 @@
                     </dd>
                     
                     <dt>
-                        <span v-text="$t('ciecytApp.pregunta.elemento')">Elemento</span>
+                        <span v-text="$t('ciecytApp.pregunta.elemento')"></span>
                     </dt>
                     <dd>
                         <div v-if="pregunta.elementoId">
@@ -62,11 +62,11 @@
                 <button type="submit"
                         v-on:click.prevent="previousState()"
                         class="btn btn-info">
-                    <font-awesome-icon icon="arrow-left"></font-awesome-icon>&nbsp;<span v-text="$t('entity.action.back')"> Back</span>
+                    <font-awesome-icon icon="arrow-left"></font-awesome-icon>&nbsp;<span v-text="$t('entity.action.back')"></span>
                 </button>
-                <router-link v-if="pregunta.id" :to="{name: 'PreguntaEdit', params: {preguntaId: pregunta.id}}" tag="button" class="btn btn-primary">
-                    <font-awesome-icon icon="pencil-alt"></font-awesome-icon>&nbsp;<span v-text="$t('entity.action.edit')"> Edit</span>
-                </router-link>
+                <router-link custom v-slot="{ navigate }" v-if="pregunta.id" :to="{name: 'PreguntaEdit', params: {preguntaId: pregunta.id}}"><button class="btn btn-primary" @click="navigate">
+                    <font-awesome-icon icon="pencil-alt"></font-awesome-icon>&nbsp;<span v-text="$t('entity.action.edit')"></span>
+                </button></router-link>
             </div>
         </div>
     </div>

@@ -2,34 +2,34 @@
     <div class="row justify-content-center">
         <div class="col-8">
             <div v-if="cronogramaCiecyt">
-                <h2 class="jh-entity-heading"><span v-text="$t('ciecytApp.cronogramaCiecyt.detail.title')">CronogramaCiecyt</span> {{cronogramaCiecyt.id}}</h2>
+                <h2 class="jh-entity-heading"><span v-text="$t('ciecytApp.cronogramaCiecyt.detail.title')"></span> {{cronogramaCiecyt.id}}</h2>
                 <dl class="row jh-entity-details">
                     <dt>
-                        <span v-text="$t('ciecytApp.cronogramaCiecyt.tituloCronograma')">Titulo Cronograma</span>
+                        <span v-text="$t('ciecytApp.cronogramaCiecyt.tituloCronograma')"></span>
                     </dt>
                     <dd>
                         <span>{{cronogramaCiecyt.tituloCronograma}}</span>
                     </dd>
                     <dt>
-                        <span v-text="$t('ciecytApp.cronogramaCiecyt.fechaInicio')">Fecha Inicio</span>
+                        <span v-text="$t('ciecytApp.cronogramaCiecyt.fechaInicio')"></span>
                     </dt>
                     <dd>
                         <span>{{cronogramaCiecyt.fechaInicio}}</span>
                     </dd>
                     <dt>
-                        <span v-text="$t('ciecytApp.cronogramaCiecyt.fechaFin')">Fecha Fin</span>
+                        <span v-text="$t('ciecytApp.cronogramaCiecyt.fechaFin')"></span>
                     </dt>
                     <dd>
                         <span>{{cronogramaCiecyt.fechaFin}}</span>
                     </dd>
                     <dt>
-                        <span v-text="$t('ciecytApp.cronogramaCiecyt.observaciones')">Observaciones</span>
+                        <span v-text="$t('ciecytApp.cronogramaCiecyt.observaciones')"></span>
                     </dt>
                     <dd>
                         <span>{{cronogramaCiecyt.observaciones}}</span>
                     </dd>
                     <dt>
-                        <span v-text="$t('ciecytApp.cronogramaCiecyt.cronogramaCiecytModalidad')">Cronograma Ciecyt Modalidad</span>
+                        <span v-text="$t('ciecytApp.cronogramaCiecyt.cronogramaCiecytModalidad')"></span>
                     </dt>
                     <dd>
                         <div v-if="cronogramaCiecyt.cronogramaCiecytModalidadId">
@@ -40,11 +40,11 @@
                 <button type="submit"
                         v-on:click.prevent="previousState()"
                         class="btn btn-info">
-                    <font-awesome-icon icon="arrow-left"></font-awesome-icon>&nbsp;<span v-text="$t('entity.action.back')"> Back</span>
+                    <font-awesome-icon icon="arrow-left"></font-awesome-icon>&nbsp;<span v-text="$t('entity.action.back')"></span>
                 </button>
-                <router-link v-if="cronogramaCiecyt.id" :to="{name: 'CronogramaCiecytEdit', params: {cronogramaCiecytId: cronogramaCiecyt.id}}" tag="button" class="btn btn-primary">
-                    <font-awesome-icon icon="pencil-alt"></font-awesome-icon>&nbsp;<span v-text="$t('entity.action.edit')"> Edit</span>
-                </router-link>
+                <router-link custom v-slot="{ navigate }" v-if="cronogramaCiecyt.id" :to="{name: 'CronogramaCiecytEdit', params: {cronogramaCiecytId: cronogramaCiecyt.id}}"><button class="btn btn-primary" @click="navigate">
+                    <font-awesome-icon icon="pencil-alt"></font-awesome-icon>&nbsp;<span v-text="$t('entity.action.edit')"></span>
+                </button></router-link>
             </div>
         </div>
     </div>

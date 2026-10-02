@@ -2,58 +2,58 @@
     <div class="row justify-content-center">
         <div class="col-8">
             <div v-if="adjuntoRetroalimentacion">
-                <h2 class="jh-entity-heading"><span v-text="$t('ciecytApp.adjuntoRetroalimentacion.detail.title')">AdjuntoRetroalimentacion</span> {{adjuntoRetroalimentacion.id}}</h2>
+                <h2 class="jh-entity-heading"><span v-text="$t('ciecytApp.adjuntoRetroalimentacion.detail.title')"></span> {{adjuntoRetroalimentacion.id}}</h2>
                 <dl class="row jh-entity-details">
                     <dt>
-                        <span v-text="$t('ciecytApp.adjuntoRetroalimentacion.nombreAdjunto')">Nombre Adjunto</span>
+                        <span v-text="$t('ciecytApp.adjuntoRetroalimentacion.nombreAdjunto')"></span>
                     </dt>
                     <dd>
                         <span>{{adjuntoRetroalimentacion.nombreAdjunto}}</span>
                     </dd>
                     <dt>
-                        <span v-text="$t('ciecytApp.adjuntoRetroalimentacion.fechaCreacion')">Fecha Creacion</span>
+                        <span v-text="$t('ciecytApp.adjuntoRetroalimentacion.fechaCreacion')"></span>
                     </dt>
                     <dd>
                         <span>{{adjuntoRetroalimentacion.fechaCreacion}}</span>
                     </dd>
                     <dt>
-                        <span v-text="$t('ciecytApp.adjuntoRetroalimentacion.fechaModificacion')">Fecha Modificacion</span>
+                        <span v-text="$t('ciecytApp.adjuntoRetroalimentacion.fechaModificacion')"></span>
                     </dt>
                     <dd>
                         <span>{{adjuntoRetroalimentacion.fechaModificacion}}</span>
                     </dd>
                     <dt>
-                        <span v-text="$t('ciecytApp.adjuntoRetroalimentacion.estadoAdjunto')">Estado Adjunto</span>
+                        <span v-text="$t('ciecytApp.adjuntoRetroalimentacion.estadoAdjunto')"></span>
                     </dt>
                     <dd>
                         <span>{{adjuntoRetroalimentacion.estadoAdjunto}}</span>
                     </dd>
                     <dt>
-                        <span v-text="$t('ciecytApp.adjuntoRetroalimentacion.adjuntoRetroalimentacion')">Adjunto Retroalimentacion</span>
+                        <span v-text="$t('ciecytApp.adjuntoRetroalimentacion.adjuntoRetroalimentacion')"></span>
                     </dt>
                     <dd>
                         <span>{{adjuntoRetroalimentacion.adjuntoRetroalimentacion}}</span>
                     </dd>
                     <dt>
-                        <span v-text="$t('ciecytApp.adjuntoRetroalimentacion.nombreArchivoOriginal')">Nombre Archivo Original</span>
+                        <span v-text="$t('ciecytApp.adjuntoRetroalimentacion.nombreArchivoOriginal')"></span>
                     </dt>
                     <dd>
                         <span>{{adjuntoRetroalimentacion.nombreArchivoOriginal}}</span>
                     </dd>
                     <dt>
-                        <span v-text="$t('ciecytApp.adjuntoRetroalimentacion.fechaInicio')">Fecha Inicio</span>
+                        <span v-text="$t('ciecytApp.adjuntoRetroalimentacion.fechaInicio')"></span>
                     </dt>
                     <dd>
                         <span>{{adjuntoRetroalimentacion.fechaInicio}}</span>
                     </dd>
                     <dt>
-                        <span v-text="$t('ciecytApp.adjuntoRetroalimentacion.fechaFin')">Fecha Fin</span>
+                        <span v-text="$t('ciecytApp.adjuntoRetroalimentacion.fechaFin')"></span>
                     </dt>
                     <dd>
                         <span>{{adjuntoRetroalimentacion.fechaFin}}</span>
                     </dd>
                     <dt>
-                        <span v-text="$t('ciecytApp.adjuntoRetroalimentacion.adjuntoRetroalimentacionRetroalimentacion')">Adjunto Retroalimentacion Retroalimentacion</span>
+                        <span v-text="$t('ciecytApp.adjuntoRetroalimentacion.adjuntoRetroalimentacionRetroalimentacion')"></span>
                     </dt>
                     <dd>
                         <div v-if="adjuntoRetroalimentacion.adjuntoRetroalimentacionRetroalimentacionId">
@@ -64,11 +64,11 @@
                 <button type="submit"
                         v-on:click.prevent="previousState()"
                         class="btn btn-info">
-                    <font-awesome-icon icon="arrow-left"></font-awesome-icon>&nbsp;<span v-text="$t('entity.action.back')"> Back</span>
+                    <font-awesome-icon icon="arrow-left"></font-awesome-icon>&nbsp;<span v-text="$t('entity.action.back')"></span>
                 </button>
-                <router-link v-if="adjuntoRetroalimentacion.id" :to="{name: 'AdjuntoRetroalimentacionEdit', params: {adjuntoRetroalimentacionId: adjuntoRetroalimentacion.id}}" tag="button" class="btn btn-primary">
-                    <font-awesome-icon icon="pencil-alt"></font-awesome-icon>&nbsp;<span v-text="$t('entity.action.edit')"> Edit</span>
-                </router-link>
+                <router-link custom v-slot="{ navigate }" v-if="adjuntoRetroalimentacion.id" :to="{name: 'AdjuntoRetroalimentacionEdit', params: {adjuntoRetroalimentacionId: adjuntoRetroalimentacion.id}}"><button class="btn btn-primary" @click="navigate">
+                    <font-awesome-icon icon="pencil-alt"></font-awesome-icon>&nbsp;<span v-text="$t('entity.action.edit')"></span>
+                </button></router-link>
             </div>
         </div>
     </div>
