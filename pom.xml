@@ -23,8 +23,8 @@
         <!-- Build properties -->
         <maven.version>3.6.3</maven.version>
         <java.version>21</java.version>
-        <node.version>v12.16.1</node.version>
-        <npm.version>6.14.5</npm.version>
+        <node.version>v22.23.3</node.version>
+        <npm.version>10.9.9</npm.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <project.testresult.directory>${project.build.directory}/test-results</project.testresult.directory>
@@ -833,7 +833,7 @@
             <id>webpack</id>
             <activation>
                 <file>
-                    <missing>${basedir}/target/classes/static/app/main.bundle.js</missing>
+                    <missing>${basedir}/target/classes/static/index.html</missing>
                 </file>
             </activation>
             <dependencies>
@@ -866,13 +866,13 @@
                                 </goals>
                             </execution>
                             <execution>
-                                <id>webpack build dev</id>
+                                <id>frontend build dev</id>
                                 <goals>
                                     <goal>npm</goal>
                                 </goals>
                                 <phase>generate-resources</phase>
                                 <configuration>
-                                    <arguments>run webpack:build</arguments>
+                                    <arguments>run build</arguments>
                                     <environmentVariables>
                                         <APP_VERSION>${project.version}</APP_VERSION>
                                     </environmentVariables>
@@ -973,24 +973,24 @@
                                 </configuration>
                             </execution>
                             <!--<execution>
-                                <id>webpack build test</id>
+                                <id>frontend build test</id>
                                 <goals>
                                     <goal>npm</goal>
                                 </goals>
                                 <phase>test</phase>
                                 <configuration>
-                                    <arguments>run webpack:test</arguments>
+                                    <arguments>run test-ci</arguments>
                                     <npmInheritsProxyConfigFromMaven>false</npmInheritsProxyConfigFromMaven>
                                 </configuration>
                             </execution>-->
                             <execution>
-                                <id>webpack build prod</id>
+                                <id>frontend build prod</id>
                                 <goals>
                                     <goal>npm</goal>
                                 </goals>
                                 <phase>generate-resources</phase>
                                 <configuration>
-                                    <arguments>run webpack:prod</arguments>
+                                    <arguments>run build</arguments>
                                     <environmentVariables>
                                         <APP_VERSION>${project.version}</APP_VERSION>
                                     </environmentVariables>

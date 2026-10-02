@@ -137,4 +137,4 @@ export function evaluarRubricaPropuesta(puntajesPorCriterio: { [codigo: string]:
   };
 }
 
-export { ICalificacion };
+export type { ICalificacion };
