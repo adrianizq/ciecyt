@@ -4,12 +4,12 @@
             <form name="editForm" role="form" novalidate v-on:submit.prevent="save()" >
                 <h2 id="ciecytApp.cicloPropedeutico.home.createOrEditLabel" v-text="$t('ciecytApp.cicloPropedeutico.home.createOrEditLabel')">Create or edit a CicloPropedeutico</h2>
                 <div>
-                    <div class="form-group" v-if="cicloPropedeutico.id">
+                    <div class="mb-3 form-group" v-if="cicloPropedeutico.id">
                         <label for="id" v-text="$t('global.field.id')">ID</label>
                         <input type="text" class="form-control" id="id" name="id"
                                v-model="cicloPropedeutico.id" readonly />
                     </div>
-                    <div class="form-group">
+                    <div class="mb-3 form-group">
                         <label class="form-control-label" v-text="$t('ciecytApp.cicloPropedeutico.ciclo')" for="ciclo-propedeutico-ciclo">Ciclo</label>
                         <select class="form-control" id="ciclo-propedeutico-ciclo" name="ciclo" v-model="cicloPropedeutico.ciclo">
                             <option :value="null" disabled>Seleccione un ciclo</option>

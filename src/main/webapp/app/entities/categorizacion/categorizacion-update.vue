@@ -4,22 +4,22 @@
             <form name="editForm" role="form" novalidate v-on:submit.prevent="save()" >
                 <h2 id="ciecytApp.categorizacion.home.createOrEditLabel" v-text="$t('ciecytApp.categorizacion.home.createOrEditLabel')">Create or edit a Categorizacion</h2>
                 <div>
-                    <div class="form-group" v-if="categorizacion.id">
+                    <div class="mb-3 form-group" v-if="categorizacion.id">
                         <label for="id" v-text="$t('global.field.id')">ID</label>
                         <input type="text" class="form-control" id="id" name="id"
                                v-model="categorizacion.id" readonly />
                     </div>
-                    <div class="form-group">
+                    <div class="mb-3 form-group">
                         <label class="form-control-label" v-text="$t('ciecytApp.categorizacion.categoria')" for="categorizacion-categoria">Categoria</label>
                         <input type="text" class="form-control" name="categoria" id="categorizacion-categoria"
                             :class="{'valid': !$v.categorizacion.categoria.$invalid, 'invalid': $v.categorizacion.categoria.$invalid }" v-model="$v.categorizacion.categoria.$model" />
                     </div>
-                    <div class="form-group">
+                    <div class="mb-3 form-group">
                         <label class="form-control-label" v-text="$t('ciecytApp.categorizacion.descripcion')" for="categorizacion-descripcion">Descripcion</label>
                         <input type="text" class="form-control" name="descripcion" id="categorizacion-descripcion"
                             :class="{'valid': !$v.categorizacion.descripcion.$invalid, 'invalid': $v.categorizacion.descripcion.$invalid }" v-model="$v.categorizacion.descripcion.$model" />
                     </div>
-                    <div class="form-group">
+                    <div class="mb-3 form-group">
                         <label class="form-control-label" v-bind:value="$t('ciecytApp.categorizacion.categorizacionProyecto')" for="categorizacion-categorizacionProyecto">Categorizacion Proyecto</label>
                         <select class="form-control" id="categorizacion-categorizacionProyecto" name="categorizacionProyecto" v-model="categorizacion.categorizacionProyectoId">
                             <option v-bind:value="null"></option>

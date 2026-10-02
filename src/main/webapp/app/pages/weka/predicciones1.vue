@@ -3,7 +3,7 @@
     Predicciones con base en el Tipo de Investigación 
     <br />
 
-     <div class="form-group">
+     <div class="mb-3 form-group">
                 <input type="radio" v-model="tipo" id="tipo" class="form-radio-input" name="tipo" value=0 v-on:change="cambiarTipo()">
                 <label class="form-radio-label" for="tipo">Naive Bayes</label>
 <br />

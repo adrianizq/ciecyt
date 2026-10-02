@@ -4,18 +4,18 @@
             <form name="editForm" role="form" novalidate v-on:submit.prevent="save()" >
                 <h2 id="ciecytApp.adjuntoProyectoFase.home.createOrEditLabel" v-text="$t('ciecytApp.adjuntoProyectoFase.home.createOrEditLabel')">Create or edit a AdjuntoProyectoFase</h2>
                 <div>
-                    <div class="form-group" v-if="adjuntoProyectoFase.id">
+                    <div class="mb-3 form-group" v-if="adjuntoProyectoFase.id">
                         <label for="id" v-text="$t('global.field.id')">ID</label>
                         <input type="text" class="form-control" id="id" name="id"
                                v-model="adjuntoProyectoFase.id" readonly />
                     </div>
-                    <div class="form-group">
+                    <div class="mb-3 form-group">
                         <label class="form-control-label" v-text="$t('ciecytApp.adjuntoProyectoFase.nombreAdjunto')" for="adjunto-proyecto-fase-nombreAdjunto">Nombre Adjunto</label>
                         <input type="text" class="form-control" name="nombreAdjunto" id="adjunto-proyecto-fase-nombreAdjunto"
                             :class="{'valid': !$v.adjuntoProyectoFase.nombreAdjunto.$invalid, 'invalid': $v.adjuntoProyectoFase.nombreAdjunto.$invalid }" v-model="$v.adjuntoProyectoFase.nombreAdjunto.$model" />
                     </div>
                     <!--
-                    <div class="form-group">
+                    <div class="mb-3 form-group">
                         <label class="form-control-label" v-text="$t('ciecytApp.adjuntoProyectoFase.fechaCreacion')" for="adjunto-proyecto-fase-fechaCreacion">Fecha Creacion</label>
                         <div class="input-group">
                             <input id="adjunto-proyecto-fase-fechaCreacion" type="date" class="form-control" name="fechaCreacion"  :class="{'valid': !$v.adjuntoProyectoFase.fechaCreacion.$invalid, 'invalid': $v.adjuntoProyectoFase.fechaCreacion.$invalid }"
@@ -23,7 +23,7 @@
                         </div>
                     </div>
                     -->
-                    <div class="form-group">
+                    <div class="mb-3 form-group">
                         <label class="form-control-label" v-text="$t('ciecytApp.adjuntoProyectoFase.fechaCreacion')" for="adjunto-proyecto-fase-fechaCreacion">Fecha Creacion</label>
                         <b-input-group class="mb-3">
                             <b-input-group-prepend>
@@ -45,7 +45,7 @@
                         </b-input-group>
                     </div>
                     <!--
-                    <div class="form-group">
+                    <div class="mb-3 form-group">
                         <label class="form-control-label" v-text="$t('ciecytApp.adjuntoProyectoFase.fechaModificacion')" for="adjunto-proyecto-fase-fechaModificacion">Fecha Modificacion</label>
                         <div class="input-group">
                             <input id="adjunto-proyecto-fase-fechaModificacion" type="date" class="form-control" name="fechaModificacion"  :class="{'valid': !$v.adjuntoProyectoFase.fechaModificacion.$invalid, 'invalid': $v.adjuntoProyectoFase.fechaModificacion.$invalid }"
@@ -53,7 +53,7 @@
                         </div>
                     </div>
                     -->
-                    <div class="form-group">
+                    <div class="mb-3 form-group">
                         <label class="form-control-label" v-text="$t('ciecytApp.adjuntoProyectoFase.fechaModificacion')" for="adjunto-proyecto-fase-fechaModificacion">Fecha Modificacion</label>
                         <b-input-group class="mb-3">
                             <b-input-group-prepend>
@@ -74,23 +74,23 @@
                             v-model="$v.adjuntoProyectoFase.fechaModificacion.$model"  />
                         </b-input-group>
                     </div>
-                    <div class="form-group">
+                    <div class="mb-3 form-group">
                         <label class="form-control-label" v-text="$t('ciecytApp.adjuntoProyectoFase.estadoAdjunto')" for="adjunto-proyecto-fase-estadoAdjunto">Estado Adjunto</label>
                         <input type="number" class="form-control" name="estadoAdjunto" id="adjunto-proyecto-fase-estadoAdjunto"
                             :class="{'valid': !$v.adjuntoProyectoFase.estadoAdjunto.$invalid, 'invalid': $v.adjuntoProyectoFase.estadoAdjunto.$invalid }" v-model.number="$v.adjuntoProyectoFase.estadoAdjunto.$model" />
                     </div>
-                    <div class="form-group">
+                    <div class="mb-3 form-group">
                         <label class="form-control-label" v-text="$t('ciecytApp.adjuntoProyectoFase.adjuntoProyectoFase')" for="adjunto-proyecto-fase-adjuntoProyectoFase">Adjunto Proyecto Fase</label>
                         <input type="text" class="form-control" name="adjuntoProyectoFase" id="adjunto-proyecto-fase-adjuntoProyectoFase"
                             :class="{'valid': !$v.adjuntoProyectoFase.adjuntoProyectoFase.$invalid, 'invalid': $v.adjuntoProyectoFase.adjuntoProyectoFase.$invalid }" v-model="$v.adjuntoProyectoFase.adjuntoProyectoFase.$model" />
                     </div>
-                    <div class="form-group">
+                    <div class="mb-3 form-group">
                         <label class="form-control-label" v-text="$t('ciecytApp.adjuntoProyectoFase.nombreArchivoOriginal')" for="adjunto-proyecto-fase-nombreArchivoOriginal">Nombre Archivo Original</label>
                         <input type="text" class="form-control" name="nombreArchivoOriginal" id="adjunto-proyecto-fase-nombreArchivoOriginal"
                             :class="{'valid': !$v.adjuntoProyectoFase.nombreArchivoOriginal.$invalid, 'invalid': $v.adjuntoProyectoFase.nombreArchivoOriginal.$invalid }" v-model="$v.adjuntoProyectoFase.nombreArchivoOriginal.$model" />
                     </div>
                     <!-------------------------DESCARGAR ----------------------->
-                     <div class="form-group">
+                     <div class="mb-3 form-group">
                         <label class="form-control-label" v-text="$t('ciecytApp.adjuntoProyectoFase.archivo')" for="adjunto-proyecto-fase-archivo">Archivo</label>
                         <div>
                             <div v-if="adjuntoProyectoFase.file" class="form-text text-danger clearfix">
@@ -115,7 +115,7 @@
                             
                     </div>
 
-                    <div class="form-group">
+                    <div class="mb-3 form-group">
                    <!--<button  v-on:click="this.descargar">DownLoad</button>
                    <button v-if="adjuntoProyectoFase.file!=null" @click="this.descargar" 
                    target="_blank" v-text="$t('entity.action.open')" >
@@ -126,7 +126,7 @@
                   
                     </div> 
                     <!--
-                    <div class="form-group">
+                    <div class="mb-3 form-group">
                         <label class="form-control-label" v-text="$t('ciecytApp.adjuntoProyectoFase.fechaInicio')" for="adjunto-proyecto-fase-fechaInicio">Fecha Inicio</label>
                         <div class="input-group">
                             <input id="adjunto-proyecto-fase-fechaInicio" type="date" class="form-control" name="fechaInicio"  :class="{'valid': !$v.adjuntoProyectoFase.fechaInicio.$invalid, 'invalid': $v.adjuntoProyectoFase.fechaInicio.$invalid }"
@@ -134,7 +134,7 @@
                         </div>
                     </div>
                     -->
-                     <div class="form-group">
+                     <div class="mb-3 form-group">
                         <label class="form-control-label" v-text="$t('ciecytApp.adjuntoProyectoFase.fechaInicio')" for="adjunto-proyecto-fase-fechaInicio">Fecha Inicio</label>
                         <b-input-group class="mb-3">
                             <b-input-group-prepend>
@@ -156,7 +156,7 @@
                         </b-input-group>
                     </div>
                     <!--
-                    <div class="form-group">
+                    <div class="mb-3 form-group">
                         <label class="form-control-label" v-text="$t('ciecytApp.adjuntoProyectoFase.fechaFin')" for="adjunto-proyecto-fase-fechaFin">Fecha Fin</label>
                         <div class="input-group">
                             <input id="adjunto-proyecto-fase-fechaFin" type="date" class="form-control" name="fechaFin"  :class="{'valid': !$v.adjuntoProyectoFase.fechaFin.$invalid, 'invalid': $v.adjuntoProyectoFase.fechaFin.$invalid }"
@@ -164,7 +164,7 @@
                         </div>
                     </div>
                     -->
-                     <div class="form-group">
+                     <div class="mb-3 form-group">
                         <label class="form-control-label" v-text="$t('ciecytApp.adjuntoProyectoFase.fechaFin')" for="adjunto-proyecto-fase-fechaFin">Fecha Fin</label>
                         <b-input-group class="mb-3">
                             <b-input-group-prepend>
@@ -185,7 +185,7 @@
                             v-model="$v.adjuntoProyectoFase.fechaFin.$model"  />
                         </b-input-group>
                     </div>
-                    <div class="form-group">
+                    <div class="mb-3 form-group">
                         <label class="form-control-label" v-bind:value="$t('ciecytApp.adjuntoProyectoFase.adjuntoProyectoFaseFase')" for="adjunto-proyecto-fase-adjuntoProyectoFaseFase">Adjunto  Fase</label>
                         <select class="form-control" id="adjunto-proyecto-fase-adjuntoProyectoFaseFase" name="adjuntoProyectoFaseFase" v-model="adjuntoProyectoFase.adjuntoProyectoFaseFaseId">
                             <option v-bind:value="null"></option>

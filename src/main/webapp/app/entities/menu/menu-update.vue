@@ -4,17 +4,17 @@
             <form name="editForm" role="form" novalidate v-on:submit.prevent="save()">
                 <h2 id="ciecytApp.menu.home.createOrEditLabel" v-text="$t('ciecytApp.menu.home.createOrEditLabel')">Create or edit a Menu</h2>
                 <div>
-                    <div class="form-group" v-if="menu.id">
+                    <div class="mb-3 form-group" v-if="menu.id">
                         <label for="id" v-text="$t('global.field.id')">ID</label>
                         <input type="text" class="form-control" id="id" name="id"
                                v-model="menu.id" readonly/>
                     </div>
-                    <div class="form-group">
+                    <div class="mb-3 form-group">
                         <label class="form-control-label" v-text="$t('ciecytApp.menu.nombre')" for="menu-nombre">Nombre</label>
                         <input type="text" class="form-control" name="nombre" id="menu-nombre"
                                :class="{'valid': !$v.menu.nombre.$invalid, 'invalid': $v.menu.nombre.$invalid }" v-model="$v.menu.nombre.$model"/>
                     </div>
-                    <div class="form-group">
+                    <div class="mb-3 form-group">
                         <label class="form-control-label" v-text="$t('ciecytApp.menu.url')" for="menu-url">Url</label>
                         <input type="text" class="form-control" name="url" id="menu-url"
                                :class="{'valid': !$v.menu.url.$invalid, 'invalid': $v.menu.url.$invalid }" v-model="$v.menu.url.$model"/>
@@ -22,7 +22,7 @@
 
                     <div class="row">
                         <div class="col-sm-3">
-                            <div class="form-group">
+                            <div class="mb-3 form-group">
                                 <label class="form-control-label" v-text="$t('ciecytApp.menu.icono')" for="menu-icono">Icono</label>
 
                                 <div class="input-group mb-2">
@@ -46,7 +46,7 @@
                         </div>
 
                         <div class="col-sm-2">
-                            <div class="form-group">
+                            <div class="mb-3 form-group">
                                 <div class="btn-switch">
                                     <label>Estado</label>
                                     <!--<toggle :options="['Público', 'Privado']" :default="!menu.esPublico" @change="changeEsPublico"></toggle>-->
@@ -59,7 +59,7 @@
                         </div>
 
                         <div class="col-sm-2">
-                            <div class="form-group">
+                            <div class="mb-3 form-group">
                                 <div class="btn-switch">
                                     <label>Alcance</label>
                                     <b-button :variant="menu.esPublico ? 'warning' : 'primary'" @click="menu.esPublico = !menu.esPublico">
@@ -70,7 +70,7 @@
                         </div>
                     </div>
 
-                    <div class="form-group">
+                    <div class="mb-3 form-group">
                         <label class="form-control-label" v-bind:value="$t('ciecytApp.menu.menuPadre')" for="menu-menuPadre">Menu Padre</label>
                         <select class="form-control" id="menu-menuPadre" name="menuPadre" v-model="menu.menuPadreId">
                             <option v-bind:value="null"></option>

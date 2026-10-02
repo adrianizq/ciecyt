@@ -4,7 +4,7 @@
       <menu-lateral-pasantia :proyectoId='$route.params.proyectoId'></menu-lateral-pasantia>
     </div>
     <div class="col-sm-8">
-    <div class="form-group">
+    <div class="mb-3 form-group">
               <label class="form-control-label" for="encabezado">
                <h2>Cronograma</h2>
                </label>
@@ -20,7 +20,7 @@
        >
           <div class="row">
             <div class="col-12">
-              <div class="form-group">
+              <div class="mb-3 form-group">
                 <label
                   class="form-control-label"
                   for="proyecto-documento"
@@ -31,7 +31,7 @@
             </div>
             
             <!--<div class="col-3">
-              <div class="form-group">
+              <div class="mb-3 form-group">
                 <label class="form-control-label" for="proyecto-apellido">Duración</label>
                 <input type="text" class="form-control" 
                 name="duracion" id="duracion" v-model="item.duracion" />
@@ -39,7 +39,7 @@
             </div>-->
             
             <div class="col-12">
-              <div class="form-group">
+              <div class="mb-3 form-group">
                 <label class="form-control-label" for="proyecto-apellido">Fecha</label>
                 <label for="datepicker-sm">Fecha de Inicio</label>
                  <b-form-datepicker size="sm-6" local="ESP" 

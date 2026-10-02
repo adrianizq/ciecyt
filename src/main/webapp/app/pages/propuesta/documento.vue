@@ -7,14 +7,14 @@
       <form name="enviarAdjunto" role="form" novalidate v-on:submit.prevent="save()">
         <div class="row">
           <div class="col-12">
-            <div class="form-group">
+            <div class="mb-3 form-group">
               <label class="form-control-label" for="proyecto-titulo">
                 <h2>{{ documento.titulo }}</h2><br />
                 <span>{{ documento.descripcion }}</span>
               </label>
             </div>
 
-            <div class="form-group">
+            <div class="mb-3 form-group">
               <label class="form-control-label" v-text="$t('ciecytApp.adjuntoProyectoFase.archivo')" for="adjunto-proyecto-fase-archivo">Archivo</label>
               <div>
                 <div v-if="adjuntoProyectoFase.file" class="form-text clearfix">

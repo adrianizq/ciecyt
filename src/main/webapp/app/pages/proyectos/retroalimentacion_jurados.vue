@@ -10,7 +10,7 @@
         <div class="row">
           <div class="col-12">
             
-            <div class="form-group">
+            <div class="mb-3 form-group">
               <label class="form-control-label" for="proyecto-titulo"></label>
                <h2>Retroalimentación  de  Jurados</h2>
 <!--------------------------------------------------------->
@@ -24,13 +24,13 @@
                      <!--<div class="text-secondary"> Tipo de pregunta {{ep.preguntaTipoPreguntaTipoPregunta}} </div>-->
                      <label  class="p-3 mb-2 bg-info text-white container-fluid">{{ep.encabezado}} </label>
                      
-                     <b-form-group
+                     <b-form-group class="mb-3"
                             :label="ep.elemento"
                             :label-for="`ep-${i}`" 
                             :description="ep.proyectoRespuestasPreguntaPregunta"
                                                    
                        >
-                       <div class="form-group" >
+                       <div class="mb-3 form-group" >
                            
 
                             
@@ -42,8 +42,8 @@
 
                         
                        <!--- dato  -->
-                          <b-form-group>
-                       <div class="form-group" >
+                          <b-form-group class="mb-3">
+                       <div class="mb-3 form-group" >
 
                             <b-form-textarea rows="2"  max-rows="10" class="form-control" :name="`ep-${i}`"
                             :id="`ep-${i}` " 
@@ -52,7 +52,7 @@
                        </b-form-group>
 
                         <!-- TIPOS Pregunta--------------------------------------------->
-                        <div class="form-group">
+                        <div class="mb-3 form-group">
                         <label class="form-control-label" v-text="$t('ciecytApp.proyectoRespuestas.respuesta')" for="proyecto-respuestas-respuesta">Respuesta</label>
                         <select class="form-control" c  v-model="ep.respuesta"   disabled="true"
                           id="proyecto-respuestas-respuesta"
@@ -84,7 +84,7 @@
                   
                         </div>
                                  <!-------------observaciones ------------->
-                     <div class="form-group">
+                     <div class="mb-3 form-group">
                         <label class="form-control-label" v-text="$t('ciecytApp.proyectoRespuestas.observaciones')" for="proyecto-respuestas-respuesta">observaciones</label>
                      <b-form-textarea  
                          
@@ -104,12 +104,12 @@
                       header-bg-variant="light"
                       body-bg-variant="light"
                      header-text-variant="info">
-                    <b-form-group 
+                    <b-form-group class="mb-3" 
                     description="Comentarios o sugerencias adicionales sobre el proyecto">
                     <label class="form-control-label" 
                     v-text="$t('ciecytApp.proyecto.recomendaciones')" for="proyecto-recomendaciones">Recomendaciones</label>
                        
-                     <div class="form-group" >
+                     <div class="mb-3 form-group" >
                        <b-form-textarea  class="form-control" name="proyecto-recomendaciones"
                                    v-model="proyecto.recomendacionesJuradoProyecto"  disabled="true"  />
                         </div>
@@ -137,7 +137,7 @@
                      header-text-variant="info">  
                 
                   
-                       <div class="form-group">
+                       <div class="mb-3 form-group">
                         <label class="form-control-label" v-text="$t('ciecytApp.adjuntoRetroalimentacion.correcionesPropuesta')" for="adjunto-proyecto-fase-archivo">Archivo</label>
                         
                         <div>

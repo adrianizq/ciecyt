@@ -6,20 +6,20 @@
         <div class="col-sm-8">
            <form @submit.prevent="save('continuar')">
                 <div class="row">
-                <div class="form-group">
+                <div class="mb-3 form-group">
                <label class="form-control-label" for="encabezado">
                <h2>Elementos</h2>
                </label>
               </div>
                      <div class="col-12" v-for="(ep, e) in elementosProyecto" :key="e">
-                         <div class="form-group">
+                         <div class="mb-3 form-group">
                         </div>
-                       <b-form-group
+                       <b-form-group class="mb-3"
                             :label="'Elemento #' + (ep.elementoProyectoElementoId || e)"
                             :label-for="`ep-${i}`" 
                             :description="ep.elementoProyectoProyectoDescripcion"
                        >
-                       <div class="form-group" >
+                       <div class="mb-3 form-group" >
                             <b-form-textarea rows="5"  max-rows="10" class="form-control" :name="`ep-${i}`"
                             :id="`ep-${i}`" 
                                    v-model="ep.dato"   />

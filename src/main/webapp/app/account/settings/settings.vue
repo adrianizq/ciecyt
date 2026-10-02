@@ -16,7 +16,7 @@
 
                 <form name="form" id="settings-form" role="form" v-on:submit.prevent="save()" v-if="settingsAccount" novalidate>
 
-                    <div class="form-group">
+                    <div class="mb-3 form-group">
                         <label class="form-control-label" for="firstName" v-text="$t('settings.form.firstname')">First Name</label>
                         <input type="text" class="form-control" id="firstName" name="firstName" v-bind:placeholder="$t('settings.form[\'firstname.placeholder\']')"
                                :class="{'valid': !$v.settingsAccount.firstName.$invalid, 'invalid': $v.settingsAccount.firstName.$invalid }"
@@ -36,7 +36,7 @@
                             </small>
                         </div>
                     </div>
-                    <div class="form-group">
+                    <div class="mb-3 form-group">
                         <label class="form-control-label" for="lastName" v-text="$t('settings.form.lastname')">Last Name</label>
                         <input type="text" class="form-control" id="lastName" name="lastName" v-bind:placeholder="$t('settings.form[\'lastname.placeholder\']')"
                                :class="{'valid': !$v.settingsAccount.lastName.$invalid, 'invalid': $v.settingsAccount.lastName.$invalid }"
@@ -56,7 +56,7 @@
                             </small>
                         </div>
                     </div>
-                    <div class="form-group">
+                    <div class="mb-3 form-group">
                         <label class="form-control-label" for="email" v-text="$t('global.form[\'email.label\']')">Email</label>
                         <input type="email" class="form-control" id="email" name="email" v-bind:placeholder="$t('global.form[\'email.placeholder\']')"
                                :class="{'valid': !$v.settingsAccount.email.$invalid, 'invalid': $v.settingsAccount.email.$invalid }"
@@ -82,7 +82,7 @@
                     </div>
 
             <!--  User Info ---------------------------->
-                    <div class="form-group">
+                    <div class="mb-3 form-group">
                         <label class="form-control-label" for="nuip" >Número de Documento</label>
                         <input type="text" class="form-control" id="nuip" name="nuip" v-bind:placeholder="$t('settings.form[\'nuip.placeholder\']')"
                                :class="{'valid': !$v.userInfo.nuip.$invalid, 'invalid': $v.userInfo.nuip.$invalid }"
@@ -96,7 +96,7 @@
                     </div>
                     <!-- ---------------------------------------->
 
-                    <div class="form-group" v-if="languages && Object.keys(languages).length > 1">
+                    <div class="mb-3 form-group" v-if="languages && Object.keys(languages).length > 1">
                         <label for="langKey" v-text="$t('settings.form.language')">Language</label>
                         <select class="form-control" id="langKey" name="langKey" v-model="settingsAccount.langKey">
                             <option v-for="(language, key) in languages" :value="key" :key="`lang-${key}`">{{language.name}}</option>

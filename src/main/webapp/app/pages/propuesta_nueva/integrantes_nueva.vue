@@ -7,7 +7,7 @@
             <form @submit.prevent="save('continuar')">
                 <div class="row">
                     <div class="col-12" v-for="(integrante, i) in integrantesProyecto" :key="i">
-                    <b-form-group
+                    <b-form-group class="mb-3"
                         label="Busca los integrantes"
                         label-for="search-integrantes"
                     >

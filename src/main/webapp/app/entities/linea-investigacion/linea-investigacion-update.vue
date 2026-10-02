@@ -4,29 +4,29 @@
             <form name="editForm" role="form" novalidate v-on:submit.prevent="save()" >
                 <h2 id="ciecytApp.lineaInvestigacion.home.createOrEditLabel" v-text="$t('ciecytApp.lineaInvestigacion.home.createOrEditLabel')">Create or edit a LineaInvestigacion</h2>
                 <div>
-                    <div class="form-group" v-if="lineaInvestigacion.id">
+                    <div class="mb-3 form-group" v-if="lineaInvestigacion.id">
                         <label for="id" v-text="$t('global.field.id')">ID</label>
                         <input type="text" class="form-control" id="id" name="id"
                                v-model="lineaInvestigacion.id" readonly />
                     </div>
-                    <div class="form-group">
+                    <div class="mb-3 form-group">
                         <label class="form-control-label" v-text="$t('ciecytApp.lineaInvestigacion.linea')" for="linea-investigacion-linea">Linea</label>
                         <input type="text" class="form-control" name="linea" id="linea-investigacion-linea"
                             :class="{'valid': !$v.lineaInvestigacion.linea.$invalid, 'invalid': $v.lineaInvestigacion.linea.$invalid }" v-model="$v.lineaInvestigacion.linea.$model" />
                     </div>
-                    <div class="form-group">
+                    <div class="mb-3 form-group">
                         <label class="form-control-label" v-text="$t('ciecytApp.lineaInvestigacion.codigoLinea')" for="linea-investigacion-codigoLinea">Codigo Linea</label>
                         <input type="text" class="form-control" name="codigoLinea" id="linea-investigacion-codigoLinea"
                             :class="{'valid': !$v.lineaInvestigacion.codigoLinea.$invalid, 'invalid': $v.lineaInvestigacion.codigoLinea.$invalid }" v-model="$v.lineaInvestigacion.codigoLinea.$model" />
                     </div>
-                    <div class="form-group">
+                    <div class="mb-3 form-group">
                         <label class="form-control-label" v-bind:value="$t('ciecytApp.lineaInvestigacion.lineaPadre')" for="linea-investigacion-lineaPadre">Linea Padre</label>
                         <select class="form-control" id="linea-investigacion-lineaPadre" name="lineaPadre" v-model="lineaInvestigacion.lineaPadreId">
                             <option v-bind:value="null"></option>
                             <option v-bind:value="lineaInvestigacionOption.id" v-for="lineaInvestigacionOption in lineaInvestigacions" :key="lineaInvestigacionOption.id">{{lineaInvestigacionOption.linea}}</option>
                         </select>
                     </div>
-                    <div class="form-group">
+                    <div class="mb-3 form-group">
                         <label class="form-control-label" v-bind:value="$t('ciecytApp.lineaInvestigacion.lineaInvestigacionPrograma')" for="linea-investigacion-lineaInvestigacionPrograma">Linea Investigacion Programa</label>
                         <select class="form-control" id="linea-investigacion-lineaInvestigacionPrograma" name="lineaInvestigacionPrograma" v-model="lineaInvestigacion.lineaInvestigacionProgramaId">
                             <option v-bind:value="null"></option>

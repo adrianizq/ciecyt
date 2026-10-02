@@ -8,7 +8,7 @@
         <div class="row">
           <div class="col-12">
 
-            <div class="form-group">
+            <div class="mb-3 form-group">
               <label class="form-control-label" for="proyecto-titulo">
                <h2>Enviar la Propuesta</h2><br />
 
@@ -27,7 +27,7 @@
                 y de click en el boton <strong>Enviar </strong></label
               >
 
-              <div class="form-group" v-if="esTesis">
+              <div class="mb-3 form-group" v-if="esTesis">
                 <h3>Documentación requerida</h3>
                 <p>Para la modalidad Tesis debe adjuntar los siguientes documentos antes de enviar la propuesta:</p>
                 <table class="table table-sm table-bordered">

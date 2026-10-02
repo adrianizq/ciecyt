@@ -5,7 +5,7 @@
     </div>
     <div class="col-sm-8">
       <form name="checklistRequisitos" role="form" novalidate v-on:submit.prevent>
-        <div class="form-group">
+        <div class="mb-3 form-group">
           <h2>Requisitos de Inscripción</h2>
           <span>
             Complete todos los requisitos obligatorios. El CIECYT revisa cada uno y lo aprueba o lo
@@ -13,7 +13,7 @@
           </span>
         </div>
 
-        <div v-if="cargando" class="form-group">Cargando requisitos...</div>
+        <div v-if="cargando" class="mb-3 form-group">Cargando requisitos...</div>
 
         <div v-else-if="requisitos.length === 0" class="alert alert-info">
           Este proyecto todavía no tiene requisitos de inscripción.

@@ -8,13 +8,13 @@
             <form @submit.prevent="save()">
                 <div class="row">
 
-            <div class="form-group">
+            <div class="mb-3 form-group">
               <label class="form-control-label" for="encabezado">
                <h2>Integrantes</h2>
                </label>
               </div>
                     <div class="col-12" v-for="(integrante, i) in integrantesProyecto" :key="i">
-                        <b-form-group
+                        <b-form-group class="mb-3"
                             :label="`Integrante # ${i + 1}`"
                             :label-for="`integrante-${i}`"
                         >

@@ -7,17 +7,17 @@
       <form @submit.prevent="save('continuar')">
         <div class="row">
           <div class="col-12">
-            <div class="form-group">
+            <div class="mb-3 form-group">
               <label class="form-control-label" for="encabezado">
                <h2>Información General</h2>
                </label>
            </div>
-            <div class="form-group" v-if="proyecto.id">
+            <div class="mb-3 form-group" v-if="proyecto.id">
               <label for="id" v-text="$t('global.field.id')">ID</label>
               <input type="text" class="form-control" id="id" name="id" v-model="proyecto.id" readonly />
             </div>
 
-            <div class="form-group" :class="{ 'form-group--error': $v.proyecto.titulo.$error }">
+            <div class="mb-3 form-group" :class="{ 'form-group--error': $v.proyecto.titulo.$error }">
               <label class="form-control-label " v-text="$t('ciecytApp.proyecto.titulo')" for="proyecto-titulo">Titulo</label>
               <input
                 type="text"
@@ -40,7 +40,7 @@
               
             </div>
             <!--
-                        <div class="form-group"  :class="{ 'form-group--error': $v.proyecto.url.$error }">
+                        <div class="mb-3 form-group"  :class="{ 'form-group--error': $v.proyecto.url.$error }">
                             <label class="form-control-label " v-text="$t('ciecytApp.proyecto.url')" for="proyecto-url">Url</label>
                             <input type="text" class="form-control" name="url" id="proyecto-url"
                                    v-model="proyecto.url"
@@ -50,7 +50,7 @@
                                 
                         </div>    -->
             <!--
-                        <div class="form-group"  >
+                        <div class="mb-3 form-group"  >
                             <label class="form-control-label " v-text="$t('ciecytApp.proyecto.lugarEjecucion')" for="proyecto-url">Lugar de Ejecución</label>
                             <input type="text" class="form-control" name="lugar-ejecucion" id="proyecto-lugar-ejecucion"
                                    v-model="proyecto.lugarEjecucion"
@@ -58,7 +58,7 @@
                                    />
                         </div>   -->
             <!--
-            <div class="form-group">
+            <div class="mb-3 form-group">
               <label class="form-control-label " v-text="$t('ciecytApp.proyecto.duracion')" for="proyecto-duracion"
                 >Duración en meses</label
               >
@@ -82,7 +82,7 @@
               </div>
             </div>
             -->
-            <!--<div class="form-group">
+            <!--<div class="mb-3 form-group">
               <label class="form-control-label " v-text="$t('ciecytApp.proyecto.tipo')" for="proyecto-tipo">Tipo de Investigación</label>
               <input
                 type="text"
@@ -95,7 +95,7 @@
             </div> -->
              <!--/tipo investigacion//////////////////////////////////////7 ///////////////////7-->
             
-              <div class="form-group">
+              <div class="mb-3 form-group">
                 <label class="form-control-label " for="proyecto-facultad">Tipo de Investigacion</label>
                 <b-form-select
                   :options="investTipos"
@@ -111,7 +111,7 @@
               </div>
         
 
-            <div class="form-group">
+            <div class="mb-3 form-group">
               <label for="datepicker-sm">Fecha de Inicio</label>
               <b-form-datepicker size="sm-6" local="ESP" id="fecha-inicio" name="fecha-inicio" value="value"  disabled="true"   v-model="proyecto.fechaIni">
               </b-form-datepicker>
@@ -122,7 +122,7 @@
             </div>
 
             <!--  Modalidad   --------------------------->
-            <div class="form-group" :class="{ 'form-group--error': $v.proyecto.proyectoModalidadId.$error }">
+            <div class="mb-3 form-group" :class="{ 'form-group--error': $v.proyecto.proyectoModalidadId.$error }">
               <label class="form-control-label" v-text="$t('ciecytApp.proyecto.proyectoModalidad')" for="proyecto-modalidad"
                 >Modalidad</label
               >
@@ -145,7 +145,7 @@
             </div>
           
         <!--------------Facultad ------------------------------------>  
-            <div class="form-group" :class="{ 'form-group--error': $v.proyecto.facultadId }">
+            <div class="mb-3 form-group" :class="{ 'form-group--error': $v.proyecto.facultadId }">
               <label class="form-control-label" v-text="$t('ciecytApp.proyecto.facultad')" for="proyecto-facultad">Facultad</label>
               <b-form-select
                 :options="facultades"
@@ -167,7 +167,7 @@
          
            <!-- ////////////Programa -->
          
-            <div class="form-group">
+            <div class="mb-3 form-group">
               <label class="form-control-label" v-text="$t('ciecytApp.programa.programa')" for="proyecto-programa">Programa</label>
               <b-form-select
                 text-field="programa"
@@ -189,7 +189,7 @@
 
 
           <!-- Asesor: lo designa la decanatura, no el estudiante -->
-            <div class="form-group">
+            <div class="mb-3 form-group">
               <label class="form-control-label " v-text="$t('ciecytApp.proyecto.asesor')" for="asesor">Asesor</label>
               <b-alert show variant="info" class="p-2 mb-1">
                 La decanatura designará al asesor a partir de los docentes habilitados. El estudiante no lo selecciona.
@@ -198,7 +198,7 @@
          
          <!--/DEPARTAMENTO//////////////////////////////////////7 ///////////////////7-->
           
-            <div class="form-group">
+            <div class="mb-3 form-group">
               <label class="form-control-label " for="proyecto-departamento">Departamento</label>
               <b-form-select
                 :options="departamentos"
@@ -215,7 +215,7 @@
 
           <!--/MUNICIPIO//////////////////////////////////////7 ///////////////////7-->
           
-            <div class="form-group">
+            <div class="mb-3 form-group">
               <label class="form-control-label " for="proyecto-facultad">Municipio</label>
               <b-form-select 
               :options="municipios" 
@@ -228,7 +228,7 @@
           
 
 
-            <div class="form-group" :class="{ 'form-group--error': $v.proyecto.palabrasClave.$error }">
+            <div class="mb-3 form-group" :class="{ 'form-group--error': $v.proyecto.palabrasClave.$error }">
               <label class="form-control-label " v-text="$t('ciecytApp.proyecto.palabrasClave')" for="proyecto-palabras-clave"
                 >Palabras Clave</label
               >
@@ -247,7 +247,7 @@
               </div>
             </div>
 
-            <div class="form-group">
+            <div class="mb-3 form-group">
               <label class="form-control-label " v-text="$t('ciecytApp.proyecto.referencias')" for="proyecto-referencias"
                 >Referencias</label
               >

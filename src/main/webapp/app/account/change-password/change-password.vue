@@ -17,7 +17,7 @@
 
                 <form name="form" role="form" id="password-form" v-on:submit.prevent="changePassword()">
 
-                    <div class="form-group">
+                    <div class="mb-3 form-group">
                         <label class="form-control-label" for="currentPassword" v-text="$t('global.form[\'currentpassword.label\']')">Current password</label>
                         <input type="password" class="form-control" id="currentPassword" name="currentPassword"
                                :class="{'valid': !$v.resetPassword.currentPassword.$invalid, 'invalid': $v.resetPassword.currentPassword.$invalid }"
@@ -30,7 +30,7 @@
                             </small>
                         </div>
                     </div>
-                    <div class="form-group">
+                    <div class="mb-3 form-group">
                         <label class="form-control-label" for="newPassword" v-text="$t('global.form[\'newpassword.label\']')">New password</label>
                         <input type="password" class="form-control" id="newPassword" name="newPassword"
                                v-bind:placeholder="$t('global.form[\'newpassword.placeholder\']')"
@@ -52,7 +52,7 @@
                         </div>
                         <!--<jhi-password-strength-bar [passwordToCheck]="newPassword"></jhi-password-strength-bar>-->
                     </div>
-                    <div class="form-group">
+                    <div class="mb-3 form-group">
                         <label class="form-control-label" for="confirmPassword" v-text="$t('global.form[\'confirmpassword.label\']')">New password confirmation</label>
                         <input type="password" class="form-control" id="confirmPassword" name="confirmPassword"
                                :class="{'valid': !$v.resetPassword.confirmPassword.$invalid, 'invalid': $v.resetPassword.confirmPassword.$invalid }"

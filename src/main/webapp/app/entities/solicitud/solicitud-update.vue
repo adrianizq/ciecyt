@@ -4,34 +4,34 @@
             <form name="editForm" role="form" novalidate v-on:submit.prevent="save()" >
                 <h2 id="ciecytApp.solicitud.home.createOrEditLabel" v-text="$t('ciecytApp.solicitud.home.createOrEditLabel')">Create or edit a Solicitud</h2>
                 <div>
-                    <div class="form-group" v-if="solicitud.id">
+                    <div class="mb-3 form-group" v-if="solicitud.id">
                         <label for="id" v-text="$t('global.field.id')">ID</label>
                         <input type="text" class="form-control" id="id" name="id"
                                v-model="solicitud.id" readonly />
                     </div>
-                    <div class="form-group">
+                    <div class="mb-3 form-group">
                         <label class="form-control-label" v-text="$t('ciecytApp.solicitud.estado')" for="solicitud-estado">Estado</label>
                         <input type="checkbox" class="form-check" name="estado" id="solicitud-estado"
                             :class="{'valid': !$v.solicitud.estado.$invalid, 'invalid': $v.solicitud.estado.$invalid }" v-model="$v.solicitud.estado.$model" />
                     </div>
-                    <div class="form-group">
+                    <div class="mb-3 form-group">
                         <label class="form-control-label" v-text="$t('ciecytApp.solicitud.asunto')" for="solicitud-asunto">Asunto</label>
                         <input type="text" class="form-control" name="asunto" id="solicitud-asunto"
                             :class="{'valid': !$v.solicitud.asunto.$invalid, 'invalid': $v.solicitud.asunto.$invalid }" v-model="$v.solicitud.asunto.$model" />
                     </div>
-                    <div class="form-group">
+                    <div class="mb-3 form-group">
                         <label class="form-control-label" v-text="$t('ciecytApp.solicitud.textoSolicitud')" for="solicitud-textoSolicitud">Texto Solicitud</label>
                         <input type="text" class="form-control" name="textoSolicitud" id="solicitud-textoSolicitud"
                             :class="{'valid': !$v.solicitud.textoSolicitud.$invalid, 'invalid': $v.solicitud.textoSolicitud.$invalid }" v-model="$v.solicitud.textoSolicitud.$model" />
                     </div>
-                    <div class="form-group">
+                    <div class="mb-3 form-group">
                         <label class="form-control-label" v-text="$t('ciecytApp.solicitud.fechaSolicitud')" for="solicitud-fechaSolicitud">Fecha Solicitud</label>
                         <div class="input-group">
                             <input id="solicitud-fechaSolicitud" type="date" class="form-control" name="fechaSolicitud"  :class="{'valid': !$v.solicitud.fechaSolicitud.$invalid, 'invalid': $v.solicitud.fechaSolicitud.$invalid }"
                             v-model="$v.solicitud.fechaSolicitud.$model"  />
                         </div>
                     </div>
-                    <div class="form-group">
+                    <div class="mb-3 form-group">
                         <label class="form-control-label" v-bind:value="$t('ciecytApp.solicitud.solicitudIntegranteProyecto')" for="solicitud-solicitudIntegranteProyecto">Solicitud Integrante Proyecto</label>
                         <select class="form-control" id="solicitud-solicitudIntegranteProyecto" name="solicitudIntegranteProyecto" v-model="solicitud.solicitudIntegranteProyectoId">
                             <option v-bind:value="null"></option>

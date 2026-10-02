@@ -7,7 +7,7 @@
             <form @submit.prevent="save('continuar')">
                 <div class="row">
                     <div class="col-12">
-                        <b-form-group
+                        <b-form-group class="mb-3"
                             label="Asesor del Proyecto"
                             label-for="asesor"
                         >

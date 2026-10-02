@@ -13,12 +13,12 @@
       <form @submit.prevent="save('continuar')">
         <div class="row">
           <div class="col-12">
-            <div class="form-group" v-if="proyecto.id">
+            <div class="mb-3 form-group" v-if="proyecto.id">
               <label for="id" v-text="$t('global.field.id')">ID</label>
               <input type="text" class="form-control" id="id" name="id" v-model="proyecto.id" readonly />
             </div>
 
-            <div class="form-group">
+            <div class="mb-3 form-group">
               <label class="form-control-label" v-text="$t('ciecytApp.proyecto.titulo')" for="proyecto-titulo">Titulo</label>
               <input
                 type="text"
@@ -35,7 +35,7 @@
               <div class="text-danger" v-if="!$v.proyecto.titulo.required">Este campo es requerido</div>
             </div>
          
-            <div class="form-group">
+            <div class="mb-3 form-group">
               <label class="form-control-label" v-text="$t('ciecytApp.proyecto.lugarEjecucion')" for="proyecto-url"
                 >Lugar de Ejecución</label
               >
@@ -54,7 +54,7 @@
               <div class="text-danger" v-if="!$v.proyecto.lugarEjecucion.required">Este campo es requerido</div>
             </div>
           
-            <div class="form-group">
+            <div class="mb-3 form-group">
               <label for="datepicker-sm">Fecha de Inicio</label>
               <b-form-datepicker
                 size="sm-6"
@@ -91,7 +91,7 @@
           </div>
 
           <div class="col-md-6 col-12">
-            <div class="form-group">
+            <div class="mb-3 form-group">
               <label class="form-control-label" for="proyecto-ciclo">Ciclo de Formación</label>
               <b-form-select
                 :options="ciclos"
@@ -111,7 +111,7 @@
           </div>
 
           <div class="col-md-6 col-12">
-            <div class="form-group">
+            <div class="mb-3 form-group">
               <label class="form-control-label" v-text="$t('ciecytApp.proyecto.proyectoModalidad')" for="proyecto-modalidad"
                 >Modalidad</label
               >
@@ -135,7 +135,7 @@
           </div>
 
           <div class="col-md-6 col-12">
-            <div class="form-group">
+            <div class="mb-3 form-group">
               <label class="form-control-label" v-text="$t('ciecytApp.proyecto.facultad')" for="proyecto-facultad">Facultad</label>
               <b-form-select
                 :options="facultades"
@@ -155,7 +155,7 @@
 
           <!-- Programa -->
           <div class="col-md-6 col-12">
-            <div class="form-group">
+            <div class="mb-3 form-group">
               <label class="form-control-label" v-text="$t('ciecytApp.programa.programa')" for="proyecto-programa">Programa</label>
               <b-form-select
                 text-field="programa"
@@ -177,7 +177,7 @@
 
           <!-- Linea de Investigación -->
           <div class="col-md-6 col-12">
-            <div class="form-group">
+            <div class="mb-3 form-group">
               <label
                 class="form-control-label"
                 v-text="$t('ciecytApp.proyecto.proyectoLineaInvestigacion')"
@@ -192,7 +192,7 @@
           </div>
 
           <div class="col-md-6 col-12">
-            <div class="form-group">
+            <div class="mb-3 form-group">
               <label class="form-control-label" v-text="$t('ciecytApp.proyecto.subLineaLineaInvestigacion')" for="sub-linea-investigacion"
                 >Sublinea de Investigación</label
               >

@@ -28,7 +28,7 @@
         <div class="row justify-content-center">
             <div class="col-md-8">
                 <form id="register-form" name="registerForm" role="form" v-on:submit.prevent="register()" v-if="!success" no-validate>
-                    <div class="form-group">
+                    <div class="mb-3 form-group">
                         <label class="form-control-label" for="username" v-text="$t('global.form[\'username.label\']')">Username</label>
                         <input type="text" class="form-control" v-model="$v.registerAccount.login.$model" id="username" name="login"
                                :class="{'valid': !$v.registerAccount.login.$invalid, 'invalid': $v.registerAccount.login.$invalid }"
@@ -52,7 +52,7 @@
                             </small>
                         </div>
                     </div>
-                    <div class="form-group">
+                    <div class="mb-3 form-group">
                         <label class="form-control-label" for="email" v-text="$t('global.form[\'email.label\']')">Email</label>
                         <input type="email" class="form-control" id="email" name="email"
                                :class="{'valid': !$v.registerAccount.email.$invalid, 'invalid': $v.registerAccount.email.$invalid }"
@@ -76,7 +76,7 @@
                             </small>
                         </div>
                     </div>
-                    <div class="form-group">
+                    <div class="mb-3 form-group">
                         <label class="form-control-label" for="firstPassword" v-text="$t('global.form[\'newpassword.label\']')">New password</label>
                         <input type="password" class="form-control" id="firstPassword" name="password"
                                :class="{'valid': !$v.registerAccount.password.$invalid, 'invalid': $v.registerAccount.password.$invalid }"
@@ -97,7 +97,7 @@
                         </div>
                         <!--<jhi-password-strength-bar [passwordToCheck]="registerAccount.password"></jhi-password-strength-bar>-->
                     </div>
-                    <div class="form-group">
+                    <div class="mb-3 form-group">
                         <label class="form-control-label" for="secondPassword" v-text="$t('global.form[\'confirmpassword.label\']')">New password confirmation</label>
                         <input type="password" class="form-control" id="secondPassword" name="confirmPasswordInput"
                                :class="{'valid': !$v.confirmPassword.$invalid, 'invalid': $v.confirmPassword.$invalid }"

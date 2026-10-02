@@ -4,27 +4,27 @@
             <form name="editForm" role="form" novalidate v-on:submit.prevent="save()" >
                 <h2 id="ciecytApp.formato.home.createOrEditLabel" v-text="$t('ciecytApp.formato.home.createOrEditLabel')">Create or edit a Formato</h2>
                 <div>
-                    <div class="form-group" v-if="formato.id">
+                    <div class="mb-3 form-group" v-if="formato.id">
                         <label for="id" v-text="$t('global.field.id')">ID</label>
                         <input type="text" class="form-control" id="id" name="id"
                                v-model="formato.id" readonly />
                     </div>
-                    <div class="form-group">
+                    <div class="mb-3 form-group">
                         <label class="form-control-label" v-text="$t('ciecytApp.formato.formato')" for="formato-formato">Formato</label>
                         <input type="text" class="form-control" name="formato" id="formato-formato"
                             :class="{'valid': !$v.formato.formato.$invalid, 'invalid': $v.formato.formato.$invalid }" v-model="$v.formato.formato.$model" />
                     </div>
-                    <div class="form-group">
+                    <div class="mb-3 form-group">
                         <label class="form-control-label" v-text="$t('ciecytApp.formato.version')" for="formato-version">Version</label>
                         <input type="text" class="form-control" name="version" id="formato-version"
                             :class="{'valid': !$v.formato.version.$invalid, 'invalid': $v.formato.version.$invalid }" v-model="$v.formato.version.$model" />
                     </div>
-                    <div class="form-group">
+                    <div class="mb-3 form-group">
                         <label class="form-control-label" v-text="$t('ciecytApp.formato.codigo')" for="formato-codigo">Codigo</label>
                         <input type="text" class="form-control" name="codigo" id="formato-codigo"
                             :class="{'valid': !$v.formato.codigo.$invalid, 'invalid': $v.formato.codigo.$invalid }" v-model="$v.formato.codigo.$model" />
                     </div>
-                    <div class="form-group">
+                    <div class="mb-3 form-group">
                         <label class="form-control-label" v-text="$t('ciecytApp.formato.fecha')" for="formato-fecha">Fecha</label>
                         <div class="input-group">
                             <input id="formato-fecha" type="date" class="form-control" name="fecha"  :class="{'valid': !$v.formato.fecha.$invalid, 'invalid': $v.formato.fecha.$invalid }"

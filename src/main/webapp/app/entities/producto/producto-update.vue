@@ -4,12 +4,12 @@
             <form name="editForm" role="form" novalidate v-on:submit.prevent="save()" >
                 <h2 id="ciecytApp.producto.home.createOrEditLabel" v-text="$t('ciecytApp.producto.home.createOrEditLabel')">Create or edit a Producto</h2>
                 <div>
-                    <div class="form-group" v-if="producto.id">
+                    <div class="mb-3 form-group" v-if="producto.id">
                         <label for="id" v-text="$t('global.field.id')">ID</label>
                         <input type="text" class="form-control" id="id" name="id"
                                v-model="producto.id" readonly />
                     </div>
-                    <div class="form-group">
+                    <div class="mb-3 form-group">
                         <label class="form-control-label" v-text="$t('ciecytApp.producto.producto')" for="producto-producto">Producto</label>
                         <input type="text" class="form-control" name="producto" id="producto-producto"
                             :class="{'valid': !$v.producto.producto.$invalid, 'invalid': $v.producto.producto.$invalid }" v-model="$v.producto.producto.$model" />

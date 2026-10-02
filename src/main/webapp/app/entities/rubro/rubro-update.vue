@@ -4,12 +4,12 @@
             <form name="editForm" role="form" novalidate v-on:submit.prevent="save()" >
                 <h2 id="ciecytApp.rubro.home.createOrEditLabel" v-text="$t('ciecytApp.rubro.home.createOrEditLabel')">Create or edit a Rubro</h2>
                 <div>
-                    <div class="form-group" v-if="rubro.id">
+                    <div class="mb-3 form-group" v-if="rubro.id">
                         <label for="id" v-text="$t('global.field.id')">ID</label>
                         <input type="text" class="form-control" id="id" name="id"
                                v-model="rubro.id" readonly />
                     </div>
-                    <div class="form-group">
+                    <div class="mb-3 form-group">
                         <label class="form-control-label" v-text="$t('ciecytApp.rubro.rubro')" for="rubro-rubro">Rubro</label>
                         <input type="text" class="form-control" name="rubro" id="rubro-rubro"
                             :class="{'valid': !$v.rubro.rubro.$invalid, 'invalid': $v.rubro.rubro.$invalid }" v-model="$v.rubro.rubro.$model" />

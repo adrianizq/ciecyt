@@ -7,7 +7,7 @@
             <form @submit.prevent="save()">
                 <div class="row">
                     <div class="col-12" v-for="(integrante, i) in integrantesProyecto" :key="i">
-                        <b-form-group
+                        <b-form-group class="mb-3"
                             :label="`Jurado # ${i + 1}`"
                             :label-for="`integrante-${i}`"
                         >

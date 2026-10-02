@@ -10,7 +10,7 @@
         <div class="row">
           <div class="col-12">
             
-            <div class="form-group">
+            <div class="mb-3 form-group">
               <label class="form-control-label" for="proyecto-titulo">
                <h2>Adjuntar Archivo a la Propuesta</h2><br />
               </label>
@@ -20,7 +20,7 @@
           </div>
 
                     <!-------------------------DESCARGAR ------->
-                       <div class="form-group">
+                       <div class="mb-3 form-group">
                         <label class="form-control-label" v-text="$t('ciecytApp.adjuntoProyectoFase.archivo')" for="adjunto-proyecto-fase-archivo">Archivo</label>
                         <div>
                             <div v-if="adjuntoProyectoFase.id"  class="form-text text-danger clearfix">

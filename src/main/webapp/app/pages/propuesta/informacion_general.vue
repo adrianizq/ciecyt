@@ -8,18 +8,18 @@
         <div class="row">
           <div class="col-12">
 
-           <div class="form-group">
+           <div class="mb-3 form-group">
               <label class="form-control-label" for="encabezado">
                <h2>Información General</h2>
                </label>
            </div>
 
-            <div class="form-group" v-if="proyecto.id">
+            <div class="mb-3 form-group" v-if="proyecto.id">
               <label for="id" v-text="$t('global.field.id')">ID</label>
               <input type="text" class="form-control" id="id" name="id" v-model="proyecto.id" readonly />
             </div>
 
-            <div class="form-group" :class="{ 'form-group--error': $v.proyecto.titulo.$error }">
+            <div class="mb-3 form-group" :class="{ 'form-group--error': $v.proyecto.titulo.$error }">
               <label class="form-control-label" v-text="$t('ciecytApp.proyecto.titulo')" for="proyecto-titulo">Titulo</label>
               <input disabled="true"
                 type="text"
@@ -42,7 +42,7 @@
                 Este campo no debe tener más de {{ $v.proyecto.titulo.$params.maxLength.max }} caracteres.
               </div>
             </div>
-           <div class="form-group" :class="{ 'form-group--error': $v.proyecto.fechaIni.$error }">  
+           <div class="mb-3 form-group" :class="{ 'form-group--error': $v.proyecto.fechaIni.$error }">  
               <label for="datepicker-sm">Fecha de Inicio</label>
               <b-form-datepicker size="sm-6" local="ESP" id="fecha-inicio" name="fecha-inicio" value="value" v-model="proyecto.fechaIni"
               :class="{
@@ -56,7 +56,7 @@
               <div class="text-danger" v-if="!$v.proyecto.fechaIni.required">Este campo es requerido</div>
             </div>
 
-            <div class="form-group" :class="{ 'form-group--error': $v.proyecto.fechaFin.$error }">  
+            <div class="mb-3 form-group" :class="{ 'form-group--error': $v.proyecto.fechaFin.$error }">  
               <label for="datepicker-sm">Fecha final</label>
               <b-form-datepicker size="sm-6" local="ESP" id="fecha-fin" name="fecha-fin" value="value" v-model="proyecto.fechaFin"
               :class="{
@@ -70,7 +70,7 @@
             </div>
  
          
-            <div class="form-group" :class="{ 'form-group--error': $v.proyecto.proyectoModalidadId.$error }">
+            <div class="mb-3 form-group" :class="{ 'form-group--error': $v.proyecto.proyectoModalidadId.$error }">
               <label class="form-control-label" v-text="$t('ciecytApp.proyecto.proyectoModalidad')" for="proyecto-modalidad"
                 >Modalidad</label
               >
@@ -95,7 +95,7 @@
         
         
           
-            <div class="form-group" :class="{ 'form-group--error': $v.proyecto.facultadId }">
+            <div class="mb-3 form-group" :class="{ 'form-group--error': $v.proyecto.facultadId }">
               <label class="form-control-label" v-text="$t('ciecytApp.proyecto.facultad')" for="proyecto-facultad">Facultad</label>
               <b-form-select
                 :options="facultades"
@@ -118,7 +118,7 @@
 
             <!-- ////////////Programa -->
          
-            <div class="form-group">
+            <div class="mb-3 form-group">
               <label class="form-control-label" v-text="$t('ciecytApp.programa.programa')" for="proyecto-programa">Programa</label>
               <b-form-select
                 text-field="programa"
@@ -139,7 +139,7 @@
             </div>
          
 
-            <div class="form-group" :class="{ 'form-group--error': $v.proyecto.proyectoLineaInvestigacionId }">
+            <div class="mb-3 form-group" :class="{ 'form-group--error': $v.proyecto.proyectoLineaInvestigacionId }">
               <label
                 class="form-control-label"
                 v-text="$t('ciecytApp.proyecto.proyectoLineaInvestigacion')"
@@ -168,7 +168,7 @@
      
 
          
-            <div class="form-group" :class="{ 'form-group--error': $v.proyecto.subLineaLineaInvestigacionId }">
+            <div class="mb-3 form-group" :class="{ 'form-group--error': $v.proyecto.subLineaLineaInvestigacionId }">
               <label class="form-control-label" v-text="$t('ciecytApp.proyecto.subLineaLineaInvestigacion')" for="sub-linea-investigacion"
                 >Sublinea de Investigación</label
               >
@@ -193,7 +193,7 @@
         
           <!-- ADR   -->
           
-            <div class="form-group" :class="{ 'form-group--error': $v.integranteProyecto.integranteProyectoUserId }">
+            <div class="mb-3 form-group" :class="{ 'form-group--error': $v.integranteProyecto.integranteProyectoUserId }">
               <label class="form-control-label" v-text="$t('ciecytApp.proyecto.asesor')" for="asesor">Asesor</label>
               <b-form-select
                 :options="users"
@@ -212,7 +212,7 @@
               <div class="text-danger" v-if="!$v.proyecto.asesorId.required">Este campo es requerido</div>
             </div>
 
-            <div class="form-group">
+            <div class="mb-3 form-group">
                         <label class="form-control-label" v-bind:value="$t('ciecytApp.proyecto.proyectoGrupoSemillero')" for="proyecto-proyectoGrupoSemillero">Proyecto Grupo Semillero</label>
                         <select class="form-control" id="proyecto-proyectoGrupoSemillero" name="proyectoGrupoSemillero" v-model="proyecto.proyectoGrupoSemilleroId">
                             <option v-bind:value="null"></option>
@@ -221,7 +221,7 @@
                     </div>
       
 
-            <div class="form-group" :class="{ 'form-group--error': $v.proyecto.url.$error }">
+            <div class="mb-3 form-group" :class="{ 'form-group--error': $v.proyecto.url.$error }">
               <label class="form-control-label" v-text="$t('ciecytApp.proyecto.url')" for="proyecto-url">Url</label>
               <input
                 type="text"
@@ -241,7 +241,7 @@
  
       <!--/tipo investigacion//////////////////////////////////////7 ///////////////////7-->
         
-              <div class="form-group">
+              <div class="mb-3 form-group">
                 <label class="form-control-label " for="proyecto-facultad">Tipo de Investigacion</label>
                 <b-form-select
                   :options="investTipos"
@@ -258,7 +258,7 @@
            
             
 
-            <div class="form-group" :class="{ 'form-group--error': $v.proyecto.palabrasClave.$error }">
+            <div class="mb-3 form-group" :class="{ 'form-group--error': $v.proyecto.palabrasClave.$error }">
               <label class="form-control-label" v-text="$t('ciecytApp.proyecto.palabrasClave')" for="proyecto-palabras-clave"
                 >Palabras Clave</label
               >
@@ -279,7 +279,7 @@
               <div class="text-danger" v-if="!$v.proyecto.palabrasClave.required">Este campo es requerido</div>             
             </div>
 
-            <div class="form-group" :class="{ 'form-group--error': $v.proyecto.referencias.$error }">
+            <div class="mb-3 form-group" :class="{ 'form-group--error': $v.proyecto.referencias.$error }">
               <label class="form-control-label" v-text="$t('ciecytApp.proyecto.referencias')" for="proyecto-referencias">Referencias</label>
               <textarea
                 rows="3"

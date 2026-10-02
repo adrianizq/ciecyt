@@ -4,17 +4,17 @@
             <form name="editForm" role="form" novalidate v-on:submit.prevent="save()" >
                 <h2 id="ciecytApp.tipoPregunta.home.createOrEditLabel" v-text="$t('ciecytApp.tipoPregunta.home.createOrEditLabel')">Create or edit a TipoPregunta</h2>
                 <div>
-                    <div class="form-group" v-if="tipoPregunta.id">
+                    <div class="mb-3 form-group" v-if="tipoPregunta.id">
                         <label for="id" v-text="$t('global.field.id')">ID</label>
                         <input type="text" class="form-control" id="id" name="id"
                                v-model="tipoPregunta.id" readonly />
                     </div>
-                    <div class="form-group">
+                    <div class="mb-3 form-group">
                         <label class="form-control-label" v-text="$t('ciecytApp.tipoPregunta.tipoPregunta')" for="tipo-pregunta-tipoPregunta">Tipo Pregunta</label>
                         <input type="text" class="form-control" name="tipoPregunta" id="tipo-pregunta-tipoPregunta"
                             :class="{'valid': !$v.tipoPregunta.tipoPregunta.$invalid, 'invalid': $v.tipoPregunta.tipoPregunta.$invalid }" v-model="$v.tipoPregunta.tipoPregunta.$model" />
                     </div>
-                    <div class="form-group">
+                    <div class="mb-3 form-group">
                         <label class="form-control-label" v-text="$t('ciecytApp.tipoPregunta.tipoDato')" for="tipo-pregunta-tipoDato">Tipo Dato</label>
                         <input type="text" class="form-control" name="tipoDato" id="tipo-pregunta-tipoDato"
                             :class="{'valid': !$v.tipoPregunta.tipoDato.$invalid, 'invalid': $v.tipoPregunta.tipoDato.$invalid }" v-model="$v.tipoPregunta.tipoDato.$model" />

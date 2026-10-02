@@ -6,13 +6,13 @@
                     Create or edit a User
                 </h2>
                 <div>
-                    <div class="form-group" :hidden="!userAccount.id">
+                    <div class="mb-3 form-group" :hidden="!userAccount.id">
                         <label v-text="$t('global.field.id')">ID</label>
                         <input type="text" class="form-control" name="id"
                                v-model="userAccount.id" readonly>
                     </div>
 
-                    <div class="form-group">
+                    <div class="mb-3 form-group">
                         <label class="form-control-label" v-text="$t('userManagement.login')">Login</label>
                         <input type="text" class="form-control" name="login"
                                :class="{'valid': !$v.userAccount.login.$invalid, 'invalid': $v.userAccount.login.$invalid }"
@@ -35,7 +35,7 @@
                             </small>
                         </div>
                     </div>
-                    <div class="form-group">
+                    <div class="mb-3 form-group">
                         <label class="form-control-label" for="firstName" v-text="$t('userManagement.firstName')">First Name</label>
                         <input type="text" class="form-control" id="firstName" name="firstName" v-bind:placeholder="$t('settings.form[\'firstname.placeholder\']')"
                                :class="{'valid': !$v.userAccount.firstName.$invalid, 'invalid': $v.userAccount.firstName.$invalid }"
@@ -47,7 +47,7 @@
                             </small>
                         </div>
                     </div>
-                    <div class="form-group">
+                    <div class="mb-3 form-group">
                         <label class="form-control-label" for="lastName" v-text="$t('userManagement.lastName')">Last Name</label>
                         <input type="text" class="form-control" id="lastName" name="lastName" v-bind:placeholder="$t('settings.form[\'lastname.placeholder\']')"
                                :class="{'valid': !$v.userAccount.lastName.$invalid, 'invalid': $v.userAccount.lastName.$invalid }"
@@ -61,7 +61,7 @@
                     </div>
 
                     <!--  User Info ---------------------------->
-                    <div class="form-group">
+                    <div class="mb-3 form-group">
                         <label class="form-control-label" for="nuip" >Número de Documento</label>
                         <input type="text" class="form-control" id="nuip" name="nuip" v-bind:placeholder="$t('settings.form[\'nuip.placeholder\']')"
                                :class="{'valid': !$v.userInfo.nuip.$invalid, 'invalid': $v.userInfo.nuip.$invalid }"
@@ -74,7 +74,7 @@
                         </div>
                     </div>
                     <!-- ---------------------------------------->
-                    <div class="form-group">
+                    <div class="mb-3 form-group">
                         <label class="form-control-label" for="email" v-text="$t('userManagement.email')">Email</label>
                         <input type="email" class="form-control" id="email" name="email" v-bind:placeholder="$t('global.form[\'email.placeholder\']')"
                                :class="{'valid': !$v.userAccount.email.$invalid, 'invalid': $v.userAccount.email.$invalid }"
@@ -105,13 +105,13 @@
                         </label>
                     </div>
 
-                    <div class="form-group" v-if="languages && Object.keys(languages).length > 0">
+                    <div class="mb-3 form-group" v-if="languages && Object.keys(languages).length > 0">
                         <label for="langKey" v-text="$t('userManagement.langKey')">Language</label>
                         <select class="form-control" id="langKey" name="langKey" v-model="userAccount.langKey">
                             <option v-for="(language, key) in languages" :value="key" :key="key">{{language.name}}</option>
                         </select>
                     </div>
-                    <div class="form-group">
+                    <div class="mb-3 form-group">
                         <label v-text="$t('userManagement.profiles')">Profiles</label>
                         <select class="form-control" multiple name="authority" v-model="userAccount.authorities">
                             <option v-for="authority of authorities" :value="authority" :key="authority">{{authority}}</option>

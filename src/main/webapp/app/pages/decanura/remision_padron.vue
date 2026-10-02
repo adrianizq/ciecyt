@@ -18,10 +18,10 @@
 
         <div class="col-12" v-else>
             <div class="col-12 col-md-6">
-                <b-form-group label="Periodo académico" label-for="periodo">
+                <b-form-group class="mb-3" label="Periodo académico" label-for="periodo">
                     <b-form-input id="periodo" v-model="nuevoPeriodo" placeholder="por ejemplo 2026-1"></b-form-input>
                 </b-form-group>
-                <b-form-group label="Observaciones" label-for="obs-remision">
+                <b-form-group class="mb-3" label="Observaciones" label-for="obs-remision">
                     <b-form-input id="obs-remision" v-model="nuevasObservaciones"></b-form-input>
                 </b-form-group>
                 <b-button variant="primary" :disabled="isSaving || !nuevoPeriodo" @click="crearBorrador()">

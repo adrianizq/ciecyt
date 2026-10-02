@@ -4,22 +4,22 @@
             <form name="editForm" role="form" novalidate v-on:submit.prevent="save()" >
                 <h2 id="ciecytApp.fases.home.createOrEditLabel" v-text="$t('ciecytApp.fases.home.createOrEditLabel')">Create or edit a Fases</h2>
                 <div>
-                    <div class="form-group" v-if="fases.id">
+                    <div class="mb-3 form-group" v-if="fases.id">
                         <label for="id" v-text="$t('global.field.id')">ID</label>
                         <input type="text" class="form-control" id="id" name="id"
                                v-model="fases.id" readonly />
                     </div>
-                    <div class="form-group">
+                    <div class="mb-3 form-group">
                         <label class="form-control-label" v-text="$t('ciecytApp.fases.fase')" for="fases-fase">Fase</label>
                         <input type="text" class="form-control" name="fase" id="fases-fase"
                             :class="{'valid': !$v.fases.fase.$invalid, 'invalid': $v.fases.fase.$invalid }" v-model="$v.fases.fase.$model" />
                     </div>
-                    <div class="form-group">
+                    <div class="mb-3 form-group">
                         <label class="form-control-label" v-text="$t('ciecytApp.fases.notificable')" for="fases-notificable">Notificable</label>
                         <input type="checkbox" class="form-check" name="notificable" id="fases-notificable"
                             :class="{'valid': !$v.fases.notificable.$invalid, 'invalid': $v.fases.notificable.$invalid }" v-model="$v.fases.notificable.$model" />
                     </div>
-                    <div class="form-group">
+                    <div class="mb-3 form-group">
                         <label class="form-control-label" v-bind:value="$t('ciecytApp.fases.fasesModalidad')" for="fases-fasesModalidad">Fases Modalidad</label>
                         <select class="form-control" id="fases-fasesModalidad" name="fasesModalidad" v-model="fases.fasesModalidadId">
                             <option v-bind:value="null"></option>

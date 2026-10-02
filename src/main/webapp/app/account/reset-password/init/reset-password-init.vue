@@ -17,7 +17,7 @@
                 </div>
 
                 <form v-if="!success" name="form" role="form" v-on:submit.prevent="requestReset()">
-                    <div class="form-group">
+                    <div class="mb-3 form-group">
                         <label class="form-control-label" for="email" v-text="$t('global.form[\'email.label\']')">Email</label>
                         <input type="email" class="form-control" id="email" name="email" v-bind:placeholder="$t('global.form[\'email.placeholder\']')"
                                :class="{'valid': !$v.resetAccount.email.$invalid, 'invalid': $v.resetAccount.email.$invalid }"

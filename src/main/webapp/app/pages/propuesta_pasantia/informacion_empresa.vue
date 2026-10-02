@@ -7,12 +7,12 @@
       <form @submit.prevent="save('continuar')">
         <div class="row">
           <div class="col-12">
-            <div class="form-group">
+            <div class="mb-3 form-group">
               <label class="form-control-label" for="encabezado">
                <h2>Información de la Empresa</h2>
                </label>
            </div>
-            <div class="form-group">
+            <div class="mb-3 form-group">
               <label class="form-control-label " for="informacion-pasantia-convenio">Número del Convenio ITP - Empresa </label>
               <input
                 type="integer"
@@ -34,7 +34,7 @@
               </div>
             </div>
 
-            <div class="form-group">
+            <div class="mb-3 form-group">
               <label
                 class="form-control-label "
                 v-text="$t('ciecytApp.informacionPasantia.duracionHoras')"
@@ -61,7 +61,7 @@
               </div>
             </div>
 
-            <div class="form-group">
+            <div class="mb-3 form-group">
               <label class="form-control-label " v-text="$t('ciecytApp.informacionPasantia.direccion')" for="informacion-pasantia-direccion"
                 >Direccion
               </label>
@@ -87,7 +87,7 @@
               </div>
             </div>
 
-            <div class="form-group">
+            <div class="mb-3 form-group">
               <label class="form-control-label " for="informacion-pasantia-email">Email </label>
               <input
                 type="email"
@@ -114,7 +114,7 @@
            
               <span>Dias a laborar</span>
              
-                <div class="form-group">
+                <div class="mb-3 form-group">
                       <b-checkbox
                         type="checkbox"
                         class="form-control"
@@ -125,7 +125,7 @@
                       > lun
                       </b-checkbox>
                 </div>
-                 <div class="form-group">  
+                 <div class="mb-3 form-group">  
                       <b-checkbox
                         type="checkbox"
                         class="form-control"
@@ -137,7 +137,7 @@
                       </b-checkbox>
                    </div>
 
-                 <div class="form-group">  
+                 <div class="mb-3 form-group">  
                       <b-checkbox
                         type="checkbox"
                         class="form-control"
@@ -148,7 +148,7 @@
                       </b-checkbox>
                      </div>
 
-                 <div class="form-group">  
+                 <div class="mb-3 form-group">  
                      <b-checkbox
                         type="checkbox"
                         class="form-control"
@@ -159,7 +159,7 @@
                       </b-checkbox>
                    </div>
 
-                 <div class="form-group">  
+                 <div class="mb-3 form-group">  
                       <b-checkbox
                         type="checkbox"
                         class="form-control"
@@ -170,7 +170,7 @@
                       </b-checkbox>
                   </div>
 
-                 <div class="form-group">    
+                 <div class="mb-3 form-group">    
                       <b-checkbox
                         type="checkbox"
                         class="form-control"
@@ -181,7 +181,7 @@
                       </b-checkbox>
                     </div>
 
-                 <div class="form-group">  
+                 <div class="mb-3 form-group">  
                       <b-checkbox
                         type="checkbox"
                         class="form-control"
@@ -197,7 +197,7 @@
             <!-- --------------------------------------------------------------->
            
               <span>Apoyos de la empresa</span>
-               <div class="form-group">
+               <div class="mb-3 form-group">
                        <b-checkbox
                         type="checkbox"
                         class="form-control"
@@ -207,7 +207,7 @@
                      > Bono Alimenticio
                       </b-checkbox>
                </div>
-                <div class="form-group">
+                <div class="mb-3 form-group">
                      <b-checkbox
                         type="checkbox"
                         class="form-control"
@@ -217,7 +217,7 @@
                       > Apoyo Ecnómico
                      </b-checkbox>
                 </div>
-                  <div class="form-group">
+                  <div class="mb-3 form-group">
                      <b-checkbox
                         type="checkbox"
                         class="form-control"
@@ -227,7 +227,7 @@
                      > Auxilio de Transporte
                      </b-checkbox>
                     </div>
-                  <div class="form-group">
+                  <div class="mb-3 form-group">
                      <b-checkbox
                         type="checkbox"
                         class="form-control"
@@ -238,7 +238,7 @@
                      </b-checkbox>
                      </div>
 
-                  <div class="form-group">
+                  <div class="mb-3 form-group">
                     
                       Otro apoyo de la empresa
                     
@@ -254,7 +254,7 @@
                   </div>
             <hr />
             <!-- -------------------------------------------------------------->
-            <div class="form-group">
+            <div class="mb-3 form-group">
               <label class="form-control-label " for="informacion-pasantia-nombre-empresa">Nombre de la empresa </label>
               <input
                 type="text"
@@ -278,7 +278,7 @@
               </div>
             </div>
 
-            <div class="form-group">
+            <div class="mb-3 form-group">
               <label class="form-control-label " for="informacion-pasantia-nit-empresa">Nit de la empresa </label>
               <input
                 type="text"
@@ -303,7 +303,7 @@
               </div>
             </div>
 
-            <div class="form-group">
+            <div class="mb-3 form-group">
               <label class="form-control-label " for="informacion-pasantia-direccion-empresa">Dirección de la empresa </label>
               <input
                 type="text"
@@ -329,7 +329,7 @@
 
             <!--/DEPARTAMENTO//////////////////////////////////////7 ///////////////////7-->
             <div class="col-md-6 col-12">
-              <div class="form-group">
+              <div class="mb-3 form-group">
                 <label class="form-control-label " for="informacion-empresa-departamento">Departamento de la empresa</label>
                 <b-form-select
                   :options="departamentos"
@@ -351,7 +351,7 @@
 
             <!--/MUNICIPIO//////////////////////////////////////7 ///////////////////7-->
             <div class="col-md-6 col-12">
-              <div class="form-group">
+              <div class="mb-3 form-group">
                 <label class="form-control-label " for="proyecto-facultad">Municipio de la Empresa</label>
                 <b-form-select
                   :options="municipiosEmpresa"
@@ -370,7 +370,7 @@
               </div>
             </div>
             <!--///////////////////////////////////////7 ///////////////////7-->
-            <div class="form-group">
+            <div class="mb-3 form-group">
               <label class="form-control-label " for="informacion-pasantia-telefono-contacto-empresa"
                 >Teléfono de contacto de la empresa
               </label>
@@ -396,7 +396,7 @@
               </div>
             </div>
 
-            <div class="form-group">
+            <div class="mb-3 form-group">
               <label class="form-control-label " for="informacion-pasantia-email-empresa">Email de la empresa </label>
               <input
                 type="text"
@@ -420,7 +420,7 @@
               </div>
             </div>
 
-            <div class="form-group">
+            <div class="mb-3 form-group">
               <label
                 class="form-control-label "
                 v-text="$t('ciecytApp.informacionPasantia.sectorEconomicoEmpresa')"
@@ -452,7 +452,7 @@
 
             <hr />
 
-            <div class="form-group">
+            <div class="mb-3 form-group">
               <label class="form-control-label " for="informacion-pasantia-representante-legal">Representante Legal de la empresa </label>
               <input
                 type="text"
@@ -476,7 +476,7 @@
               </div>
             </div>
 
-            <div class="form-group">
+            <div class="mb-3 form-group">
               <label class="form-control-label " for="informacion-pasantia-identificacion-representante-legal"
                 >Identificacion del Representante Legal de la empresa
               </label>
@@ -507,7 +507,7 @@
             <!--        </div>    -->
 
             <hr />
-            <div class="form-group">
+            <div class="mb-3 form-group">
               <label class="form-control-label " for="informacion-pasantia-asesor-empresa">Asesor de la empresa </label>
               <input
                 type="text"
@@ -531,7 +531,7 @@
               </div>
             </div>
 
-            <div class="form-group">
+            <div class="mb-3 form-group">
               <label class="form-control-label " for="informacion-pasantia-cargo-asesor-empresa">Cargo del asesor de la empresa </label>
               <input
                 type="text"
@@ -555,7 +555,7 @@
               </div>
             </div>
 
-            <div class="form-group">
+            <div class="mb-3 form-group">
               <label class="form-control-label " for="informacion-pasantia-email-asesor-empresa">Email del asesor de la empresa </label>
               <input
                 type="text"
@@ -579,7 +579,7 @@
               </div>
             </div>
 
-            <div class="form-group">
+            <div class="mb-3 form-group">
               <label class="form-control-label " for="informacion-pasantia-profesion-asesor-empresa"
                 >Profesión del asesor de la empresa
               </label>
@@ -605,7 +605,7 @@
               </div>
             </div>
 
-            <div class="form-group">
+            <div class="mb-3 form-group">
               <label class="form-control-label " for="informacion-pasantia-celular-asesor-empresa">Celular del asesor de la empresa </label>
               <input
                 type="text"

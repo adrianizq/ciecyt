@@ -18,13 +18,13 @@
 
         <div class="col-12" v-else>
             <div class="col-12 col-md-4" v-if="facultades.length > 1">
-                <b-form-group label="Facultad" label-for="facultad">
+                <b-form-group class="mb-3" label="Facultad" label-for="facultad">
                     <b-form-select id="facultad" v-model="facultadId" :options="facultades" @change="cargar()"></b-form-select>
                 </b-form-group>
             </div>
 
             <div class="col-12 col-md-4">
-                <b-form-group label="Docentes con rol de" label-for="filtro-rol">
+                <b-form-group class="mb-3" label="Docentes con rol de" label-for="filtro-rol">
                     <b-form-select id="filtro-rol" v-model="filtroRol" :options="rolesDisponibles" @change="cargar()"></b-form-select>
                 </b-form-group>
             </div>
@@ -48,16 +48,16 @@
             <div class="col-12">
                 <h5>Dar de alta a un docente</h5>
                 <b-form @submit.prevent="habilitar()">
-                    <b-form-group label="Cédula o login" label-for="alta-login">
+                    <b-form-group class="mb-3" label="Cédula o login" label-for="alta-login">
                         <b-form-input id="alta-login" v-model="nuevo.login" placeholder="cédula o login del docente"></b-form-input>
                     </b-form-group>
-                    <b-form-group label="Rol" label-for="alta-rol">
+                    <b-form-group class="mb-3" label="Rol" label-for="alta-rol">
                         <b-form-select id="alta-rol" v-model="nuevo.rol" :options="rolesDisponibles"></b-form-select>
                     </b-form-group>
-                    <b-form-group label="Acto de resolución" label-for="alta-acto">
+                    <b-form-group class="mb-3" label="Acto de resolución" label-for="alta-acto">
                         <b-form-input id="alta-acto" v-model="nuevo.actoResolucion" placeholder="número de resolución, si existe"></b-form-input>
                     </b-form-group>
-                    <b-form-group label="Observaciones" label-for="alta-obs">
+                    <b-form-group class="mb-3" label="Observaciones" label-for="alta-obs">
                         <b-form-input id="alta-obs" v-model="nuevo.observaciones"></b-form-input>
                     </b-form-group>
                     <b-button type="submit" variant="primary" :disabled="isSaving || !nuevo.login">
