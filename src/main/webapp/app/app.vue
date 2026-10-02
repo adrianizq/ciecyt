@@ -10,16 +10,18 @@
         :show="dismissCountDown"
         dismissible
         :variant="alertType"
-        @dismissed="countDownChanged(0)"
-        @dismiss-count-down="countDownChanged"
+        @close="countDownChanged(0)"
+        @close-countdown="countDownChanged"
       >
         {{ textoAlerta }}
       </b-alert>
       <div class="jh-card">
         <router-view></router-view>
       </div>
-      <b-modal id="login-page" hide-footer lazy>
-        <span slot="modal-title" id="login-title" v-text="$t('login.title')">Sign in</span>
+      <b-modal id="login-page" v-model="loginModalVisible" no-footer lazy>
+        <template #title>
+          <span id="login-title" v-text="$t('login.title')"></span>
+        </template>
         <login-form></login-form>
       </b-modal>
       <jhi-footer></jhi-footer>

@@ -1,4 +1,4 @@
-import { Prop, Vue, Component, Watch } from 'vue-property-decorator';
+import { Prop, Vue, Component, Watch } from 'vue-facing-decorator';
 
 @Component
 export default class MenuUpdate extends Vue {

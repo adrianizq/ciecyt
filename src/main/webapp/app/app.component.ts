@@ -1,10 +1,11 @@
-import Vue from 'vue';
-import Component from 'vue-class-component';
+import { Vue } from 'vue-facing-decorator';
+import { Component } from 'vue-facing-decorator';
 import Ribbon from '@/core/ribbon/ribbon.vue';
 import JhiFooter from '@/core/jhi-footer/jhi-footer.vue';
 import JhiNavbar from '@/core/jhi-navbar/jhi-navbar.vue';
 import JhiNavbar2 from '@/core/jhi-navbar2/jhi-navbar2.vue';
 import LoginForm from '@/account/login-form/login-form.vue';
+import { loginModalVisible } from '@/account/login.service';
 
 @Component({
   components: {
@@ -14,6 +15,9 @@ import LoginForm from '@/account/login-form/login-form.vue';
     'login-form': LoginForm,
 
     'jhi-footer': JhiFooter,
+  },
+  setup() {
+    return { loginModalVisible };
   },
 })
 export default class App extends Vue {

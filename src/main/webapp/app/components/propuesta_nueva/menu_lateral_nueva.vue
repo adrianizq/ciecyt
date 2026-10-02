@@ -19,15 +19,15 @@
 </template>
 
 <script lang="ts">
-import Component from 'vue-class-component';
-import { Vue, Prop, Inject } from 'vue-property-decorator';
+import { Component } from 'vue-facing-decorator';
+import { Vue, Prop, Inject } from 'vue-facing-decorator';
 import ProyectoService from '@/entities/proyecto/proyecto.service';
 import RolesModalidadService from '@/entities/roles-modalidad/roles-modalidad.service';
 
 @Component
 export default class PropuestaMenuLateralNueva extends Vue {
-  @Inject('proyectoService') private proyectoService: () => ProyectoService;
-  @Inject('rolesModalidadService') private rolesModalidadService: () => RolesModalidadService;
+  @Inject  private proyectoService: () => ProyectoService;
+  @Inject  private rolesModalidadService: () => RolesModalidadService;
 
   items = this.$store.getters.menuLateralNueva;
   @Prop()

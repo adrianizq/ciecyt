@@ -19,8 +19,8 @@
 </template>
 
 <script lang="ts">
-import Component from 'vue-class-component';
-import { Vue, Prop } from 'vue-property-decorator';
+import { Component } from 'vue-facing-decorator';
+import { Vue, Prop } from 'vue-facing-decorator';
 
 @Component
 export default class PropuestaMenuLateralCiecyt extends Vue {
