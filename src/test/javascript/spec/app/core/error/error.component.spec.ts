@@ -1,4 +1,4 @@
-import { createLocalVue, Wrapper, shallowMount } from '@vue/test-utils';
+import { createLocalVue, Wrapper, shallowMount } from '@/shared/test/test-utils';
 import Error from '@/core/error/error.vue';
 import ErrorClass from '@/core/error/error.component';
 import * as config from '@/shared/config/config';
@@ -6,9 +6,8 @@ import router from '@/router';
 import LoginService from '@/account/login.service';
 
 const localVue = createLocalVue();
-config.initVueApp(localVue);
-const i18n = config.initI18N(localVue);
-const store = config.initVueXStore(localVue);
+const i18n = config.initI18N();
+const store = config.initVueXStore();
 const customErrorMsg = 'An error occurred.';
 
 describe('Error component', () => {
@@ -31,7 +30,7 @@ describe('Error component', () => {
   });
 
   it('should have retrieve custom error on routing', () => {
-    error.beforeRouteEnter({ meta: { errorMessage: customErrorMsg } }, null, cb => cb(error));
+    error.$options.beforeRouteEnter({ meta: { errorMessage: customErrorMsg } }, null, cb => cb(error));
 
     expect(error.errorMessage).toBe(customErrorMsg);
     expect(error.error403).toBeFalsy();
@@ -40,7 +39,7 @@ describe('Error component', () => {
   });
 
   it('should have set forbidden error on routing', () => {
-    error.beforeRouteEnter({ meta: { error403: true } }, null, cb => cb(error));
+    error.$options.beforeRouteEnter({ meta: { error403: true } }, null, cb => cb(error));
 
     expect(error.errorMessage).toBeNull();
     expect(error.error403).toBeTruthy();
@@ -49,7 +48,7 @@ describe('Error component', () => {
   });
 
   it('should have set not found error on routing', () => {
-    error.beforeRouteEnter({ meta: { error404: true } }, null, cb => cb(error));
+    error.$options.beforeRouteEnter({ meta: { error404: true } }, null, cb => cb(error));
 
     expect(error.errorMessage).toBeNull();
     expect(error.error403).toBeFalsy();

@@ -1,4 +1,4 @@
-import { shallowMount, createLocalVue, Wrapper } from '@vue/test-utils';
+import { shallowMount, createLocalVue, Wrapper } from '@/shared/test/test-utils';
 import axios from 'axios';
 
 import * as config from '@/shared/config/config';
@@ -10,9 +10,8 @@ import LoginService from '@/account/login.service';
 const localVue = createLocalVue();
 const mockedAxios: any = axios;
 
-config.initVueApp(localVue);
-const i18n = config.initI18N(localVue);
-const store = config.initVueXStore(localVue);
+const i18n = config.initI18N();
+const store = config.initVueXStore();
 
 vi.mock('axios', () => ({
   default: {
@@ -42,7 +41,7 @@ describe('Activate Component', () => {
 
   it('should display error when activation fails using route', async () => {
     mockedAxios.get.mockReturnValue(Promise.reject({}));
-    activate.beforeRouteEnter({ query: { key: 'invalid-key' } }, null, cb => cb(activate));
+    activate.$options.beforeRouteEnter({ query: { key: 'invalid-key' } }, null, cb => cb(activate));
     await activate.$nextTick();
 
     expect(activate.error).toBeTruthy();

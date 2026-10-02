@@ -1,6 +1,6 @@
 import axios from 'axios';
 import * as config from '@/shared/config/config';
-import { createLocalVue, shallowMount, Wrapper } from '@vue/test-utils';
+import { createLocalVue, shallowMount, Wrapper, flushPromises } from '@/shared/test/test-utils';
 import ResetPasswordFinish from '@/account/reset-password/finish/reset-password-finish.vue';
 import ResetPasswordFinishClass from '@/account/reset-password/finish/reset-password-finish.component';
 import LoginService from '@/account/login.service';
@@ -8,8 +8,7 @@ import LoginService from '@/account/login.service';
 const localVue = createLocalVue();
 const mockedAxios: any = axios;
 
-config.initVueApp(localVue);
-const i18n = config.initI18N(localVue);
+const i18n = config.initI18N();
 
 vi.mock('axios', () => ({
   default: {
@@ -60,7 +59,7 @@ describe('Reset Component Finish', () => {
 
     // When
     resetPasswordFinish.finishReset();
-    await resetPasswordFinish.$nextTick();
+    await flushPromises();
 
     // Then
     expect(resetPasswordFinish.success).toBeNull();

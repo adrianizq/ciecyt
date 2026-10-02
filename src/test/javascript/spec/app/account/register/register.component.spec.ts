@@ -1,4 +1,4 @@
-import { shallowMount, createLocalVue, Wrapper } from '@vue/test-utils';
+import { shallowMount, createLocalVue, Wrapper } from '@/shared/test/test-utils';
 import axios from 'axios';
 
 import { EMAIL_ALREADY_USED_TYPE, LOGIN_ALREADY_USED_TYPE } from '@/constants';
@@ -6,14 +6,13 @@ import * as config from '@/shared/config/config';
 import Register from '@/account/register/register.vue';
 import RegisterClass from '@/account/register/register.component';
 import RegisterService from '@/account/register/register.service';
-import LoginService from '@/account/login.service';
+import LoginService, { loginModalVisible } from '@/account/login.service';
 
 const localVue = createLocalVue();
 const mockedAxios: any = axios;
 
-config.initVueApp(localVue);
-const i18n = config.initI18N(localVue);
-const store = config.initVueXStore(localVue);
+const i18n = config.initI18N();
+const store = config.initVueXStore();
 
 vi.mock('axios', () => ({
   default: {
@@ -56,12 +55,9 @@ describe('Register Component', () => {
   });
 
   it('should open login modal when asked to', () => {
-    let called = false;
-    register.$root.$on('bv::show::modal', () => {
-      called = true;
-    });
+    loginModalVisible.value = false;
     register.openLogin();
-    expect(called).toBe(true);
+    expect(loginModalVisible.value).toBe(true);
   });
 
   it('should register when password match', async () => {

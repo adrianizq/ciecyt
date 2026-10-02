@@ -1,4 +1,4 @@
-import { shallowMount, createLocalVue, Wrapper } from '@vue/test-utils';
+import { shallowMount, createLocalVue, Wrapper } from '@/shared/test/test-utils';
 
 import * as config from '@/shared/config/config';
 import MetricsModal from '@/admin/metrics/metrics-modal.vue';
@@ -6,9 +6,8 @@ import MetricsModalClass from '@/admin/metrics/metrics-modal.component';
 
 const localVue = createLocalVue();
 
-config.initVueApp(localVue);
-const i18n = config.initI18N(localVue);
-const store = config.initVueXStore(localVue);
+const i18n = config.initI18N();
+const store = config.initVueXStore();
 
 describe('Metrics Component', () => {
   let wrapper: Wrapper<MetricsModalClass>;
@@ -20,8 +19,8 @@ describe('Metrics Component', () => {
   });
 
   describe('init', () => {
-    it('should count the numbers of each thread type', () => {
-      wrapper.setProps({
+    it('should count the numbers of each thread type', async () => {
+      await wrapper.setProps({
         threadDump: [
           { name: 'test1', threadState: 'RUNNABLE' },
           { name: 'test2', threadState: 'WAITING' },

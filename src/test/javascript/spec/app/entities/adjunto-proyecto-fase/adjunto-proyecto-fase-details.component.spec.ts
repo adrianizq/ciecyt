@@ -1,5 +1,5 @@
 /* tslint:disable max-line-length */
-import { shallowMount, createLocalVue, Wrapper } from '@vue/test-utils';
+import { shallowMount, createLocalVue, Wrapper } from '@/shared/test/test-utils';
 import sinon, { SinonStubbedInstance } from 'sinon';
 
 import * as config from '@/shared/config/config';
@@ -9,9 +9,8 @@ import AdjuntoProyectoFaseService from '@/entities/adjunto-proyecto-fase/adjunto
 
 const localVue = createLocalVue();
 
-config.initVueApp(localVue);
-const i18n = config.initI18N(localVue);
-const store = config.initVueXStore(localVue);
+const i18n = config.initI18N();
+const store = config.initVueXStore();
 localVue.component('font-awesome-icon', {});
 localVue.component('router-link', {});
 
@@ -44,7 +43,7 @@ describe('Component Tests', () => {
         await comp.$nextTick();
 
         // THEN
-        expect(comp.adjuntoProyectoFase).toBe(foundAdjuntoProyectoFase);
+        expect(comp.adjuntoProyectoFase).toEqual(foundAdjuntoProyectoFase);
       });
     });
   });

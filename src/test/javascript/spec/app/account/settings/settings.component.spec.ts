@@ -1,4 +1,4 @@
-import { shallowMount, createLocalVue, Wrapper } from '@vue/test-utils';
+import { shallowMount, createLocalVue, Wrapper, flushPromises } from '@/shared/test/test-utils';
 import axios from 'axios';
 
 import * as config from '@/shared/config/config';
@@ -9,9 +9,8 @@ import { EMAIL_ALREADY_USED_TYPE } from '@/constants';
 const localVue = createLocalVue();
 const mockedAxios: any = axios;
 
-config.initVueApp(localVue);
-const i18n = config.initI18N(localVue);
-const store = config.initVueXStore(localVue);
+const i18n = config.initI18N();
+const store = config.initVueXStore();
 
 vi.mock('axios', () => ({
   default: {
@@ -82,7 +81,7 @@ describe('Settings Component', () => {
 
     // WHEN
     settings.save();
-    await settings.$nextTick();
+    await flushPromises();
 
     // THEN
     expect(settings.error).toEqual('ERROR');
@@ -97,7 +96,7 @@ describe('Settings Component', () => {
 
     // WHEN
     settings.save();
-    await settings.$nextTick();
+    await flushPromises();
 
     // THEN
     expect(settings.error).toEqual('ERROR');
@@ -112,7 +111,7 @@ describe('Settings Component', () => {
 
     // WHEN
     settings.save();
-    await settings.$nextTick();
+    await flushPromises();
 
     // THEN
     expect(settings.errorEmailExists).toEqual('ERROR');

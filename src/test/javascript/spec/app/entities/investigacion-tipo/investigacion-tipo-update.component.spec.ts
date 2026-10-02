@@ -1,7 +1,7 @@
 /* tslint:disable max-line-length */
-import { shallowMount, createLocalVue, Wrapper } from '@vue/test-utils';
+import { shallowMount, createLocalVue, Wrapper } from '@/shared/test/test-utils';
 import sinon, { SinonStubbedInstance } from 'sinon';
-import Router from 'vue-router';
+import { createMemoryHistory, createRouter } from 'vue-router';
 
 import AlertService from '@/shared/alert/alert.service';
 import * as config from '@/shared/config/config';
@@ -11,11 +11,9 @@ import InvestigacionTipoService from '@/entities/investigacion-tipo/investigacio
 
 const localVue = createLocalVue();
 
-config.initVueApp(localVue);
-const i18n = config.initI18N(localVue);
-const store = config.initVueXStore(localVue);
-const router = new Router();
-localVue.use(Router);
+const i18n = config.initI18N();
+const store = config.initVueXStore();
+const router = createRouter({ history: createMemoryHistory(), routes: [] });
 localVue.component('font-awesome-icon', {});
 
 describe('Component Tests', () => {

@@ -1,12 +1,11 @@
-import { shallowMount, createLocalVue, Wrapper } from '@vue/test-utils';
+import { shallowMount, createLocalVue, Wrapper } from '@/shared/test/test-utils';
 import * as config from '@/shared/config/config';
 import HealthModal from '@/admin/health/health-modal.vue';
 import HealthModalClass from '@/admin/health/health-modal.component';
 
 const localVue = createLocalVue();
-config.initVueApp(localVue);
-const i18n = config.initI18N(localVue);
-const store = config.initVueXStore(localVue);
+const i18n = config.initI18N();
+const store = config.initVueXStore();
 localVue.component('font-awesome-icon', {});
 const healthsService = { getBaseName: vi.fn(), getSubSystemName: vi.fn() };
 

@@ -1,4 +1,4 @@
-import { shallowMount, createLocalVue, Wrapper } from '@vue/test-utils';
+import { shallowMount, createLocalVue, Wrapper, flushPromises } from '@/shared/test/test-utils';
 import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 
@@ -10,9 +10,8 @@ import AuditsService from '@/admin/audits/audits.service';
 const localVue = createLocalVue();
 const mockedAxios: any = axios;
 
-config.initVueApp(localVue);
-const i18n = config.initI18N(localVue);
-const store = config.initVueXStore(localVue);
+const i18n = config.initI18N();
+const store = config.initVueXStore();
 localVue.component('font-awesome-icon', FontAwesomeIcon);
 localVue.component('jhi-sort-indicator', {});
 
@@ -70,7 +69,7 @@ describe('Audits Component', () => {
   describe('By default, on init', () => {
     it('should set all default values correctly', async () => {
       audits.init();
-      await audits.$nextTick();
+      await flushPromises();
 
       expect(audits.predicate).toBe('timestamp');
       expect(audits.toDate).toBe(getDate());
@@ -100,7 +99,7 @@ describe('Audits Component', () => {
       const fromDate = getDate(false);
       // WHEN
       audits.init();
-      await audits.$nextTick();
+      await flushPromises();
 
       // THEN
       expect(mockedAxios.get).toHaveBeenCalledWith(

@@ -1,14 +1,13 @@
-import { createLocalVue, shallowMount, Wrapper } from '@vue/test-utils';
+import { createLocalVue, shallowMount, Wrapper } from '@/shared/test/test-utils';
 import Ribbon from '@/core/ribbon/ribbon.vue';
 import RibbonClass from '@/core/ribbon/ribbon.component';
 
 import * as config from '@/shared/config/config';
 
 const localVue = createLocalVue();
-config.initVueApp(localVue);
-const store = config.initVueXStore(localVue);
+const store = config.initVueXStore();
 
-const i18n = config.initI18N(localVue);
+const i18n = config.initI18N();
 
 describe('Ribbon', () => {
   let ribbon: RibbonClass;

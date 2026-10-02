@@ -1,4 +1,4 @@
-import { shallowMount, createLocalVue, Wrapper } from '@vue/test-utils';
+import { shallowMount, createLocalVue, Wrapper, flushPromises } from '@/shared/test/test-utils';
 import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 
@@ -11,9 +11,8 @@ import MetricsService from '@/admin/metrics/metrics.service';
 const localVue = createLocalVue();
 const mockedAxios: any = axios;
 
-config.initVueApp(localVue);
-const i18n = config.initI18N(localVue);
-const store = config.initVueXStore(localVue);
+const i18n = config.initI18N();
+const store = config.initVueXStore();
 localVue.component('font-awesome-icon', FontAwesomeIcon);
 localVue.component('metrics-modal', MetricsModal);
 localVue.directive('b-modal', {});
@@ -255,7 +254,7 @@ describe('Metrics Component', () => {
 
       // WHEN
       metricsComponent.refresh();
-      await metricsComponent.$nextTick();
+      await flushPromises();
 
       // THEN
       expect(mockedAxios.get).toHaveBeenCalledWith('management/jhimetrics');

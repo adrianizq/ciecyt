@@ -1,12 +1,11 @@
-import { createLocalVue, shallowMount, Wrapper } from '@vue/test-utils';
+import { createLocalVue, shallowMount, Wrapper } from '@/shared/test/test-utils';
 import Home from '@/core/home/home.vue';
 import HomeClass from '@/core/home/home.component';
 import * as config from '@/shared/config/config';
 
 const localVue = createLocalVue();
-config.initVueApp(localVue);
-const store = config.initVueXStore(localVue);
-const i18n = config.initI18N(localVue);
+const store = config.initVueXStore();
+const i18n = config.initI18N();
 localVue.component('router-link', {});
 
 describe('Home', () => {

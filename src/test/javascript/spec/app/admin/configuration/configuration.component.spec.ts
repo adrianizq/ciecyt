@@ -1,4 +1,4 @@
-import { shallowMount, createLocalVue, Wrapper } from '@vue/test-utils';
+import { shallowMount, createLocalVue, Wrapper } from '@/shared/test/test-utils';
 import axios from 'axios';
 
 import * as config from '@/shared/config/config';
@@ -9,9 +9,8 @@ import ConfigurationService from '@/admin/configuration/configuration.service';
 const localVue = createLocalVue();
 const mockedAxios: any = axios;
 
-config.initVueApp(localVue);
-const i18n = config.initI18N(localVue);
-const store = config.initVueXStore(localVue);
+const i18n = config.initI18N();
+const store = config.initVueXStore();
 
 vi.mock('axios', () => ({
   default: {

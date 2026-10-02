@@ -1,4 +1,4 @@
-import { createLocalVue } from '@vue/test-utils';
+import { createLocalVue } from '@/shared/test/test-utils';
 import router from '@/router';
 import axios from 'axios';
 import AccountService from '@/account/account.service';
@@ -24,8 +24,8 @@ describe('Account Service test suite', () => {
 
   beforeEach(() => {
     mockedAxios.get.mockReset();
-    store = config.initVueXStore(localVue);
-    i18n = config.initI18N(localVue);
+    store = config.initVueXStore();
+    i18n = config.initI18N();
   });
 
   it('should init service and do not retrieve account', async () => {
@@ -48,7 +48,7 @@ describe('Account Service test suite', () => {
     mockedAxios.get.mockReturnValue(Promise.resolve({}));
     accountService = await new AccountService(store, new TranslationService(store, i18n), router);
 
-    expect((<any>router).history.current.fullPath).toBe('/');
+    expect(router.currentRoute.value.fullPath).toBe('/');
     expect(store.getters.logon).toBe(false);
     expect(accountService.authenticated).toBe(false);
     expect(store.getters.account).toBe(null);
@@ -61,7 +61,7 @@ describe('Account Service test suite', () => {
     mockedAxios.get = vi.fn(apiName => (apiName === 'api/account' ? Promise.reject() : Promise.resolve({})));
     accountService = await new AccountService(store, new TranslationService(store, i18n), router);
 
-    expect((<any>router).history.current.fullPath).toBe('/');
+    expect(router.currentRoute.value.fullPath).toBe('/');
     expect(accountService.authenticated).toBe(false);
     expect(store.getters.account).toBe(null);
     expect(mockedAxios.get).toHaveBeenCalledWith('management/info');

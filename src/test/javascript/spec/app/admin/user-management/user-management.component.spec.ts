@@ -1,4 +1,4 @@
-import { shallowMount, createLocalVue, Wrapper } from '@vue/test-utils';
+import { shallowMount, createLocalVue, Wrapper } from '@/shared/test/test-utils';
 import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 
@@ -19,9 +19,8 @@ const bModalStub = {
   },
 };
 
-config.initVueApp(localVue);
-const i18n = config.initI18N(localVue);
-const store = config.initVueXStore(localVue);
+const i18n = config.initI18N();
+const store = config.initVueXStore();
 localVue.component('font-awesome-icon', FontAwesomeIcon);
 localVue.component('b-alert', {});
 localVue.component('router-link', {});
@@ -98,7 +97,9 @@ describe('UserManagement Component', () => {
   describe('confirmDelete', () => {
     it('Should call delete service on confirmDelete', async () => {
       // GIVEN
-      mockedAxios.delete.mockReturnValue(Promise.resolve({ headers: {} }));
+      mockedAxios.delete.mockReturnValue(
+        Promise.resolve({ headers: { 'x-ciecytapp-alert': 'userManagement.deleted', 'x-ciecytapp-params': '123' } })
+      );
 
       // WHEN
       userManagement.prepareRemove({ login: 123 });

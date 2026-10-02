@@ -1,4 +1,4 @@
-import { shallowMount, createLocalVue, Wrapper } from '@vue/test-utils';
+import { shallowMount, createLocalVue, Wrapper } from '@/shared/test/test-utils';
 import axios from 'axios';
 import AccountService from '@/account/account.service';
 import router from '@/router';
@@ -18,9 +18,8 @@ localVue.component('b-form-checkbox', {});
 localVue.component('b-link', {});
 const mockedAxios: any = axios;
 
-config.initVueApp(localVue);
-const i18n = config.initI18N(localVue);
-const store = config.initVueXStore(localVue);
+const i18n = config.initI18N();
+const store = config.initVueXStore();
 
 vi.mock('axios', () => ({
   default: {

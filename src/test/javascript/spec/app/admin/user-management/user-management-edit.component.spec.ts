@@ -1,4 +1,4 @@
-import { shallowMount, createLocalVue, Wrapper } from '@vue/test-utils';
+import { shallowMount, createLocalVue, Wrapper } from '@/shared/test/test-utils';
 import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 
@@ -7,15 +7,13 @@ import * as config from '@/shared/config/config';
 import UserManagementEdit from '@/admin/user-management/user-management-edit.vue';
 import UserManagementEditClass from '@/admin/user-management/user-management-edit.component';
 import UserManagementService from '@/admin/user-management/user-management.service';
-import VueRouter from 'vue-router';
+import { createMemoryHistory, createRouter } from 'vue-router';
 
 const localVue = createLocalVue();
-localVue.use(VueRouter);
 const mockedAxios: any = axios;
 
-config.initVueApp(localVue);
-const i18n = config.initI18N(localVue);
-const store = config.initVueXStore(localVue);
+const i18n = config.initI18N();
+const store = config.initVueXStore();
 localVue.component('font-awesome-icon', FontAwesomeIcon);
 localVue.component('b-alert', {});
 
@@ -36,7 +34,7 @@ describe('UserManagementEdit Component', () => {
   };
 
   beforeEach(() => {
-    const router = new VueRouter();
+    const router = createRouter({ history: createMemoryHistory(), routes: [] });
     wrapper = shallowMount<UserManagementEditClass>(UserManagementEdit, {
       store,
       router,
@@ -82,7 +80,9 @@ describe('UserManagementEdit Component', () => {
   describe('save', () => {
     it('Should call update service on save for existing user', async () => {
       // GIVEN
-      mockedAxios.put.mockReturnValue(Promise.resolve({ headers: {} }));
+      mockedAxios.put.mockReturnValue(
+        Promise.resolve({ headers: { 'x-ciecytapp-alert': 'userManagement.updated', 'x-ciecytapp-params': '123' } })
+      );
       userManagementEdit.userAccount = { id: 123, authorities: [] };
 
       // WHEN
@@ -96,7 +96,9 @@ describe('UserManagementEdit Component', () => {
 
     it('Should call create service on save for new user', async () => {
       // GIVEN
-      mockedAxios.post.mockReturnValue(Promise.resolve({ headers: {} }));
+      mockedAxios.post.mockReturnValue(
+        Promise.resolve({ headers: { 'x-ciecytapp-alert': 'userManagement.created', 'x-ciecytapp-params': '123' } })
+      );
       userManagementEdit.userAccount = { authorities: [] };
 
       // WHEN

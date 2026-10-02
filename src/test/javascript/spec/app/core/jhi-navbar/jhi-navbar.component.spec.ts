@@ -1,13 +1,12 @@
-import { createLocalVue, shallowMount, Wrapper } from '@vue/test-utils';
+import { createLocalVue, shallowMount, Wrapper } from '@/shared/test/test-utils';
 import JhiNavbar from '@/core/jhi-navbar/jhi-navbar.vue';
 import JhiNavbarClass from '@/core/jhi-navbar/jhi-navbar.component';
 import * as config from '@/shared/config/config';
 import router from '@/router';
 
 const localVue = createLocalVue();
-config.initVueApp(localVue);
-const i18n = config.initI18N(localVue);
-const store = config.initVueXStore(localVue);
+const i18n = config.initI18N();
+const store = config.initVueXStore();
 localVue.component('font-awesome-icon', {});
 localVue.component('b-navbar', {});
 localVue.component('b-navbar-nav', {});
@@ -91,8 +90,8 @@ describe('JhiNavbar', () => {
     expect(jhiNavbar.authenticated).toBeFalsy();
   });
 
-  it('should determine active route', () => {
-    router.push('/toto');
+  it('should determine active route', async () => {
+    await router.push('/toto');
 
     expect(jhiNavbar.subIsActive('/titi')).toBeFalsy();
     expect(jhiNavbar.subIsActive('/toto')).toBeTruthy();

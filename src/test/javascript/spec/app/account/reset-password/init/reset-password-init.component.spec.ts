@@ -1,4 +1,4 @@
-import { createLocalVue, shallowMount, Wrapper } from '@vue/test-utils';
+import { createLocalVue, shallowMount, Wrapper, flushPromises } from '@/shared/test/test-utils';
 import axios from 'axios';
 import * as config from '@/shared/config/config';
 import ResetPasswordInit from '@/account/reset-password/init/reset-password-init.vue';
@@ -7,8 +7,7 @@ import ResetPasswordInitClass from '@/account/reset-password/init/reset-password
 const localVue = createLocalVue();
 const mockedAxios: any = axios;
 
-config.initVueApp(localVue);
-const i18n = config.initI18N(localVue);
+const i18n = config.initI18N();
 
 vi.mock('axios', () => ({
   default: {
@@ -56,7 +55,7 @@ describe('Reset Component Init', () => {
 
     // When
     resetPasswordInit.requestReset();
-    await resetPasswordInit.$nextTick();
+    await flushPromises();
 
     // Then
     expect(resetPasswordInit.success).toBeNull();
