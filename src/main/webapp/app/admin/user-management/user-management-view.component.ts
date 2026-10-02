@@ -1,5 +1,5 @@
-import Vue from 'vue';
-import { Component, Inject } from 'vue-property-decorator';
+import { Vue, Hook } from 'vue-facing-decorator';
+import { Component, Inject } from 'vue-facing-decorator';
 import UserManagementService from './user-management.service';
 import UserInfoService from '@/entities/user-info/user-info.service';
 import { formatDate as formatDateValue } from '@/shared/date/filters';
@@ -10,11 +10,12 @@ export default class JhiUserManagementView extends Vue {
     return formatDateValue(value);
   }
 
-  @Inject('userService') private userManagementService: () => UserManagementService;
-  @Inject('userInfoService') private userInfoService: () => UserInfoService;
+  @Inject({ from: 'userService' }) private userManagementService: () => UserManagementService;
+  @Inject private userInfoService: () => UserInfoService;
   public user: any = null;
   public userInfo: any = null;
 
+  @Hook
   beforeRouteEnter(to, from, next) {
     next(vm => {
       if (to.params.userId) {

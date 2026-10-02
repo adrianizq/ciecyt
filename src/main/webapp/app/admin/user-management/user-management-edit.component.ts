@@ -1,5 +1,6 @@
-import { email, maxLength, minLength, required } from 'vuelidate/lib/validators';
-import { Component, Inject, Vue } from 'vue-property-decorator';
+import { useVuelidate } from '@vuelidate/core';
+import { email, maxLength, minLength, required } from '@vuelidate/validators';
+import { Component, Inject, Vue, Hook } from 'vue-facing-decorator';
 import UserManagementService from './user-management.service';
 import { IUser, User } from '@/shared/model/user.model';
 import UserInfoService from '@/entities/user-info/user-info.service';
@@ -44,12 +45,17 @@ const validations: any = {
 };
 
 @Component({
-  validations,
+  options: {
+    validations,
+  },
+  setup() {
+    return { v$: useVuelidate() };
+  },
 })
 export default class JhiUserManagementEdit extends Vue {
-  @Inject('alertService') private alertService: () => AlertService;
-  @Inject('userService') private userManagementService: () => UserManagementService;
-  @Inject('userInfoService') private userInfoService: () => UserInfoService;
+  @Inject private alertService: () => AlertService;
+  @Inject({ from: 'userService' }) private userManagementService: () => UserManagementService;
+  @Inject private userInfoService: () => UserInfoService;
 
   public userAccount: IUser;
   public isSaving = false;
@@ -59,6 +65,7 @@ export default class JhiUserManagementEdit extends Vue {
   public userId: any;
   public languages: any = this.$store.getters.languages;
 
+  @Hook
   beforeRouteEnter(to, from, next) {
     next(vm => {
       vm.initAuthorities();

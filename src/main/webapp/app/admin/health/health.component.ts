@@ -1,6 +1,6 @@
 import HealthService from './health.service';
 import JhiHealthModal from './health-modal.vue';
-import { Component, Inject, Vue } from 'vue-property-decorator';
+import { Component, Inject, Vue } from 'vue-facing-decorator';
 
 @Component({
   components: {
@@ -11,7 +11,7 @@ export default class JhiHealth extends Vue {
   public healthData: any = null;
   public currentHealth: any = null;
   public updatingHealth = false;
-  @Inject('healthService') private healthService: () => HealthService;
+  @Inject private healthService: () => HealthService;
 
   public mounted(): void {
     this.refresh();

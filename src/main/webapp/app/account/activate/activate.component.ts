@@ -1,17 +1,18 @@
-import Component from 'vue-class-component';
-import { Vue, Inject } from 'vue-property-decorator';
+import { Component, Hook } from 'vue-facing-decorator';
+import { Vue, Inject } from 'vue-facing-decorator';
 import LoginService from '@/account/login.service';
 import ActivateService from './activate.service';
 
 @Component
 export default class Activate extends Vue {
-  @Inject('activateService')
+  @Inject
   private activateService: () => ActivateService;
-  @Inject('loginService')
+  @Inject
   private loginService: () => LoginService;
   success = false;
   error = false;
 
+  @Hook
   beforeRouteEnter(to, from, next) {
     next(vm => {
       if (to.query.key) {

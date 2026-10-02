@@ -28,10 +28,12 @@
                         active-class="active"
                         class="pointer"
                         v-else>
-                    <span slot="button-content" class="navbar-dropdown-menu">
+                    <template #button-content>
+<span  class="navbar-dropdown-menu">
                         <font-awesome-icon :icon="menu.icono || 'asterisk'"/>
                         <span>{{ menu.nombre }}</span>
                     </span>
+</template>
                         <template v-for="submenu in menu.children">
                             <b-dropdown-item :key="submenu.id" :to="submenu.url" tag="b-dropdown-item" v-if="isUrl(submenu.url)">
                                 <font-awesome-icon :icon="submenu.icono || 'asterisk'"/>

@@ -1,7 +1,8 @@
-import { email, maxLength, minLength, required } from 'vuelidate/lib/validators';
+import { useVuelidate } from '@vuelidate/core';
+import { email, maxLength, minLength, required } from '@vuelidate/validators';
 import axios from 'axios';
 import { EMAIL_ALREADY_USED_TYPE } from '@/constants';
-import { Vue, Component, Inject } from 'vue-property-decorator';
+import { Vue, Component, Inject, Hook } from 'vue-facing-decorator';
 import UserInfoService from '@/entities/user-info/user-info.service';
 import { IUserInfo, UserInfo } from '@/shared/model/user-info.model';
 
@@ -34,10 +35,15 @@ const validations = {
 };
 
 @Component({
-  validations,
+  options: {
+    validations,
+  },
+  setup() {
+    return { v$: useVuelidate() };
+  },
 })
 export default class Settings extends Vue {
-  @Inject('userInfoService') private userInfoService: () => UserInfoService;
+  @Inject private userInfoService: () => UserInfoService;
   public success: string = null;
   public error: string = null;
   public errorEmailExists: string = null;
@@ -53,6 +59,7 @@ export default class Settings extends Vue {
     //  console.log(this.userId);
   }
 
+  @Hook
   beforeRouteEnter(to, from, next) {
     next(vm => {
       //vm.initAuthorities();

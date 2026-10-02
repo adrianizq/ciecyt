@@ -1,7 +1,8 @@
-import { email, maxLength, minLength, required } from 'vuelidate/lib/validators';
+import { useVuelidate } from '@vuelidate/core';
+import { email, maxLength, minLength, required } from '@vuelidate/validators';
 import axios from 'axios';
 import { EMAIL_NOT_FOUND_TYPE } from '@/constants';
-import { Vue, Component } from 'vue-property-decorator';
+import { Vue, Component } from 'vue-facing-decorator';
 
 const validations = {
   resetAccount: {
@@ -19,7 +20,12 @@ interface ResetAccount {
 }
 
 @Component({
-  validations,
+  options: {
+    validations,
+  },
+  setup() {
+    return { v$: useVuelidate() };
+  },
 })
 export default class ResetPasswordInit extends Vue {
   public success: boolean = null;

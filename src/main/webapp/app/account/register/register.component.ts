@@ -1,6 +1,7 @@
-import Vue from 'vue';
-import { Component, Inject } from 'vue-property-decorator';
-import { required, minLength, maxLength, helpers, email } from 'vuelidate/lib/validators';
+import { useVuelidate } from '@vuelidate/core';
+import { Vue } from 'vue-facing-decorator';
+import { Component, Inject } from 'vue-facing-decorator';
+import { required, minLength, maxLength, helpers, email } from '@vuelidate/validators';
 import LoginService from '@/account/login.service';
 import RegisterService from '@/account/register/register.service';
 import { EMAIL_ALREADY_USED_TYPE, LOGIN_ALREADY_USED_TYPE } from '@/constants';
@@ -33,11 +34,16 @@ const validations: any = {
   },
 };
 @Component({
-  validations,
+  options: {
+    validations,
+  },
+  setup() {
+    return { v$: useVuelidate() };
+  },
 })
 export default class Register extends Vue {
-  @Inject('registerService') private registerService: () => RegisterService;
-  @Inject('loginService') private loginService: () => LoginService;
+  @Inject private registerService: () => RegisterService;
+  @Inject private loginService: () => LoginService;
   public registerAccount: any = {
     login: undefined,
     email: undefined,

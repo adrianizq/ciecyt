@@ -1,13 +1,13 @@
 <template>
     <div class="modal-body pad">
         <div v-if="currentHealth && currentHealth.details">
-            <h5 v-text="$t('health.details.properties')">Properties</h5>
+            <h5 v-text="$t('health.details.properties')"></h5>
             <div class="table-responsive">
                 <table class="table table-striped">
                     <thead>
                     <tr>
-                        <th class="text-left" v-text="$t('health.details.name')">Name</th>
-                        <th class="text-left" v-text="$t('health.details.value')">Value</th>
+                        <th class="text-left" v-text="$t('health.details.name')"></th>
+                        <th class="text-left" v-text="$t('health.details.value')"></th>
                     </tr>
                     </thead>
                     <tbody>
@@ -20,7 +20,7 @@
             </div>
         </div>
         <div v-if="currentHealth && currentHealth.error">
-            <h4 v-text="$t('health.details.error')">Error</h4>
+            <h4 v-text="$t('health.details.error')"></h4>
             <pre>{{currentHealth.error}}</pre>
         </div>
     </div>

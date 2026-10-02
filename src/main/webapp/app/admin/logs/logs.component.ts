@@ -1,5 +1,5 @@
-import { Component, Vue, Inject } from 'vue-property-decorator';
-import { mixins } from 'vue-class-component';
+import { Component, Vue, Inject } from 'vue-facing-decorator';
+import { mixins } from 'vue-facing-decorator';
 import LogsService from './logs.service';
 import { filterBy as filterByCollection, orderBy as orderByCollection } from '@/shared/filter/filter';
 
@@ -12,7 +12,7 @@ export default class JhiLogs extends Vue {
     return orderByCollection(collection, ...args);
   }
 
-  @Inject('logsService') private logsService: () => LogsService;
+  @Inject private logsService: () => LogsService;
   private loggers: any[] = [];
   public filtered = '';
   public orderProp = 'name';

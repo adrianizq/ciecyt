@@ -43,8 +43,8 @@
     <!-- Not authenticated -->
     <div v-if="!authenticated" class="text-center mt-5">
       <div class="alert alert-warning d-inline-block" style="border-radius:0.75rem;">
-        <span v-text="$t('global.messages.info.authenticated.prefix')">If you want to </span>
-        <a class="alert-link" v-on:click="openLogin()" v-text="$t('global.messages.info.authenticated.link')">sign in</a>
+        <span v-text="$t('global.messages.info.authenticated.prefix')"></span>
+        <a class="alert-link" v-on:click="openLogin()" v-text="$t('global.messages.info.authenticated.link')"></a>
         <span v-html="$t('global.messages.info.authenticated.suffix')"></span>
       </div>
     </div>

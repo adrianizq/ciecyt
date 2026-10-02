@@ -1,8 +1,8 @@
 import format from 'date-fns/format';
 import AuditsService from './audits.service';
 import { formatDate as formatDateValue } from '@/shared/date/filters';
-import { Component, Vue, Inject } from 'vue-property-decorator';
-import { mixins } from 'vue-class-component';
+import { Component, Vue, Inject } from 'vue-facing-decorator';
+import { mixins } from 'vue-facing-decorator';
 @Component({})
 export default class JhiAudits extends Vue {
   public formatDate(value: any): string {
@@ -21,7 +21,7 @@ export default class JhiAudits extends Vue {
   public toDate: any = null;
   public totalItems = 0;
   public isFetching = false;
-  @Inject('auditsService') private auditsService: () => AuditsService;
+  @Inject private auditsService: () => AuditsService;
 
   public mounted(): void {
     this.init();

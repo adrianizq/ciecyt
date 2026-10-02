@@ -1,13 +1,11 @@
 <template>
     <div>
         <h2 class="mb-4">
-            <span id="user-management-page-heading" v-text="$t('userManagement.home.title')">Users</span>
-            <router-link tag="button" class="btn btn-primary btn-md float-right jh-create-entity" :to="{name: 'JhiUserCreate'}">
+            <span id="user-management-page-heading" v-text="$t('userManagement.home.title')"></span>
+            <router-link custom v-slot="{ navigate }" :to="{name: 'JhiUserCreate'}"><button class="btn btn-primary btn-md float-right jh-create-entity" @click="navigate">
                 <font-awesome-icon icon="plus"></font-awesome-icon>
-                <span v-text="$t('userManagement.home.createLabel')">
-                Create a new User
-            </span>
-            </router-link>
+                <span v-text="$t('userManagement.home.createLabel')"></span>
+            </button></router-link>
         </h2>
         <b-alert :show="dismissCountDown"
                  dismissible
@@ -20,27 +18,27 @@
             <table class="table table-striped">
                 <thead>
                 <tr>
-                    <th v-on:click="changeOrder('id')"><span v-text="$t('global.field.id')">ID</span>
+                    <th v-on:click="changeOrder('id')"><span v-text="$t('global.field.id')"></span>
                         <font-awesome-icon icon="sort"></font-awesome-icon>
                     </th>
-                    <th v-on:click="changeOrder('login')"><span v-text="$t('userManagement.login')">Login</span>
+                    <th v-on:click="changeOrder('login')"><span v-text="$t('userManagement.login')"></span>
                         <font-awesome-icon icon="sort"></font-awesome-icon>
                     </th>
-                    <th v-on:click="changeOrder('email')"><span v-text="$t('userManagement.email')">Email</span>
+                    <th v-on:click="changeOrder('email')"><span v-text="$t('userManagement.email')"></span>
                         <font-awesome-icon icon="sort"></font-awesome-icon>
                     </th>
                     <th></th>
-                    <!--<th v-on:click="changeOrder('langKey')"><span v-text="$t('userManagement.langKey')">Lang Key</span>
+                    <!--<th v-on:click="changeOrder('langKey')"><span v-text="$t('userManagement.langKey')"></span>
                         <font-awesome-icon icon="sort"></font-awesome-icon>
                     </th>-->
-                    <th><span v-text="$t('userManagement.profiles')">Profiles</span></th>
-                    <th v-on:click="changeOrder('createdDate')"><span v-text="$t('userManagement.createdDate')">Created Date</span>
+                    <th><span v-text="$t('userManagement.profiles')"></span></th>
+                    <th v-on:click="changeOrder('createdDate')"><span v-text="$t('userManagement.createdDate')"></span>
                         <font-awesome-icon icon="sort"></font-awesome-icon>
                     </th>
-                    <th v-on:click="changeOrder('lastModifiedBy')"><span v-text="$t('userManagement.lastModifiedBy')">Last Modified By</span>
+                    <th v-on:click="changeOrder('lastModifiedBy')"><span v-text="$t('userManagement.lastModifiedBy')"></span>
                         <font-awesome-icon icon="sort"></font-awesome-icon>
                     </th>
-                    <th id="modified-date-sort" v-on:click="changeOrder('lastModifiedDate')"><span v-text="$t('userManagement.lastModifiedDate')">Last Modified Date</span>
+                    <th id="modified-date-sort" v-on:click="changeOrder('lastModifiedDate')"><span v-text="$t('userManagement.lastModifiedDate')"></span>
                         <font-awesome-icon icon="sort"></font-awesome-icon>
                     </th>
                     <th></th>
@@ -49,18 +47,16 @@
                 <tbody v-if="users">
                 <tr v-for="user in users" :key="user.id" :id="user.login">
                     <td>
-                        <router-link tag="a" :to="{name: 'JhiUserView', params: {userId: user.login}}">{{user.id}}</router-link>
+                        <router-link custom v-slot="{ navigate, href }" :to="{name: 'JhiUserView', params: {userId: user.login}}"><a :href="href" @click="navigate">{{user.id}}</a></router-link>
                     </td>
                     <td>{{user.login}}</td>
                     <td class="jhi-user-email">{{user.email}}</td>
                     <td>
                         <button class="btn btn-danger btn-sm deactivated"
                                 v-on:click="setActive(user, true)" v-if="!user.activated"
-                                v-text="$t('userManagement.deactivated')">Deactivated
-                        </button>
+                                v-text="$t('userManagement.deactivated')"></button>
                         <button class="btn btn-success btn-sm" v-on:click="setActive(user, false)" v-if="user.activated"
-                                :disabled="username === user.login" v-text="$t('userManagement.activated')">Activated
-                        </button>
+                                :disabled="username === user.login" v-text="$t('userManagement.activated')"></button>
                     </td>
                     <!--<td>{{user.langKey}}</td>-->
                     <td>
@@ -73,21 +69,21 @@
                     <td>{{ formatDate(user.lastModifiedDate) }}</td>
                     <td class="text-right">
                         <div class="btn-group">
-                            <router-link :to="{name: 'JhiUserView', params: {userId: user.login}}" tag="button" class="btn btn-info btn-sm details">
+                            <router-link custom v-slot="{ navigate }" :to="{name: 'JhiUserView', params: {userId: user.login}}"><button class="btn btn-info btn-sm details" @click="navigate">
                                 <font-awesome-icon icon="eye"></font-awesome-icon>
-                                <span class="d-none d-md-inline" v-text="$t('entity.action.view')">View</span>
-                            </router-link>
-                            <router-link :to="{name: 'JhiUserEdit', params: {userId: user.login}}" tag="button" class="btn btn-primary btn-sm edit">
+                                <span class="d-none d-md-inline" v-text="$t('entity.action.view')"></span>
+                            </button></router-link>
+                            <router-link custom v-slot="{ navigate }" :to="{name: 'JhiUserEdit', params: {userId: user.login}}"><button class="btn btn-primary btn-sm edit" @click="navigate">
                                 <font-awesome-icon icon="pencil-alt"></font-awesome-icon>
-                                <span class="d-none d-md-inline" v-text="$t('entity.action.edit')">Edit</span>
-                            </router-link>
+                                <span class="d-none d-md-inline" v-text="$t('entity.action.edit')"></span>
+                            </button></router-link>
                             <b-button v-on:click="prepareRemove(user)"
                                       variant="danger"
                                       class="btn btn-sm delete"
                                       :disabled="username === user.login"
                                       v-b-modal.removeUser>
                                 <font-awesome-icon icon="times"></font-awesome-icon>
-                                <span class="d-none d-md-inline" v-text="$t('entity.action.delete')">Delete</span>
+                                <span class="d-none d-md-inline" v-text="$t('entity.action.delete')"></span>
                             </b-button>
                         </div>
                     </td>
@@ -96,12 +92,14 @@
             </table>
             <b-modal ref="removeUser" id="removeUser" v-bind:title="$t('entity.delete.title')" @ok="deleteUser()">
                 <div class="modal-body">
-                    <p id="jhi-delete-user-heading" v-text="$t('userManagement.delete.question', { 'login': removeId})">Are you sure you want to delete this user?</p>
+                    <p id="jhi-delete-user-heading" v-text="$t('userManagement.delete.question', { 'login': removeId})"></p>
                 </div>
-                <div slot="modal-footer">
-                    <button type="button" class="btn btn-secondary" v-text="$t('entity.action.cancel')" v-on:click="closeDialog()">Cancel</button>
-                    <button type="button" class="btn btn-primary" id="confirm-delete-user" v-text="$t('entity.action.delete')" v-on:click="deleteUser()">Delete</button>
+                <template #modal-footer>
+<div >
+                    <button type="button" class="btn btn-secondary" v-text="$t('entity.action.cancel')" v-on:click="closeDialog()"></button>
+                    <button type="button" class="btn btn-primary" id="confirm-delete-user" v-text="$t('entity.action.delete')" v-on:click="deleteUser()"></button>
                 </div>
+</template>
             </b-modal>
         </div>
         <div v-show="users && users.length > 0">

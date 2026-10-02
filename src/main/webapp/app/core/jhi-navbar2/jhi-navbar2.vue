@@ -23,12 +23,14 @@
                         active-class="active"
                         class="pointer"
                         v-else>
-                    <span slot="button-content" class="navbar-dropdown-menu">
+                    <template #button-content>
+<span  class="navbar-dropdown-menu">
                         <font-awesome-icon :icon="menu.icono || 'asterisk'"/>
                         <span>
                             {{ menu.nombre }}
                         </span>
                     </span>
+</template>
                         <template v-for="submenu in menu.children">
                             <b-dropdown-item :key="submenu.id" :to="submenu.url" tag="b-dropdown-item" v-if="isUrl(submenu.url)">
                                 <font-awesome-icon :icon="submenu.icono || 'asterisk'"/>
@@ -48,7 +50,7 @@
                 <!--b-nav-item to="/" exact>
                     <span>
                         <font-awesome-icon icon="home"/>
-                        <span v-text="$t('global.menu.home')">Home</span>
+                        <span v-text="$t('global.menu.home')"></span>
                     </span>
                 </b-nav-item-->
                 <!--<b-nav-item-dropdown
@@ -58,151 +60,151 @@
                     active-class="active" class="pointer">
                     <span slot="button-content" class="navbar-dropdown-menu">
                         <font-awesome-icon icon="th-list" />
-                        <span v-text="$t('global.menu.entities.main')">Entities</span>
+                        <span v-text="$t('global.menu.entities.main')"></span>
                     </span>
                     <b-dropdown-item to="/entity/proyecto">
                         <font-awesome-icon icon="asterisk" />
-                        <span v-text="$t('global.menu.entities.proyecto')">Proyecto</span>
+                        <span v-text="$t('global.menu.entities.proyecto')"></span>
                     </b-dropdown-item>
                     <b-dropdown-item to="/entity/linea-investigacion">
                         <font-awesome-icon icon="asterisk" />
-                        <span v-text="$t('global.menu.entities.lineaInvestigacion')">LineaInvestigacion</span>
+                        <span v-text="$t('global.menu.entities.lineaInvestigacion')"></span>
                     </b-dropdown-item>
                     <b-dropdown-item to="/entity/grupo-semillero">
                         <font-awesome-icon icon="asterisk" />
-                        <span v-text="$t('global.menu.entities.grupoSemillero')">GrupoSemillero</span>
+                        <span v-text="$t('global.menu.entities.grupoSemillero')"></span>
                     </b-dropdown-item>
                     <b-dropdown-item to="/entity/facultad">
                         <font-awesome-icon icon="asterisk" />
-                        <span v-text="$t('global.menu.entities.facultad')">Facultad</span>
+                        <span v-text="$t('global.menu.entities.facultad')"></span>
                     </b-dropdown-item>
                     <b-dropdown-item to="/entity/modalidad">
                         <font-awesome-icon icon="asterisk" />
-                        <span v-text="$t('global.menu.entities.modalidad')">Modalidad</span>
+                        <span v-text="$t('global.menu.entities.modalidad')"></span>
                     </b-dropdown-item>
                     <b-dropdown-item to="/entity/acuerdo">
                         <font-awesome-icon icon="asterisk" />
-                        <span v-text="$t('global.menu.entities.acuerdo')">Acuerdo</span>
+                        <span v-text="$t('global.menu.entities.acuerdo')"></span>
                     </b-dropdown-item>
                     <b-dropdown-item to="/entity/ciclo-propedeutico">
                         <font-awesome-icon icon="asterisk" />
-                        <span v-text="$t('global.menu.entities.cicloPropedeutico')">CicloPropedeutico</span>
+                        <span v-text="$t('global.menu.entities.cicloPropedeutico')"></span>
                     </b-dropdown-item>
                     <b-dropdown-item to="/entity/resultados-esperados">
                         <font-awesome-icon icon="asterisk" />
-                        <span v-text="$t('global.menu.entities.resultadosEsperados')">ResultadosEsperados</span>
+                        <span v-text="$t('global.menu.entities.resultadosEsperados')"></span>
                     </b-dropdown-item>
                     <b-dropdown-item to="/entity/producto">
                         <font-awesome-icon icon="asterisk" />
-                        <span v-text="$t('global.menu.entities.producto')">Producto</span>
+                        <span v-text="$t('global.menu.entities.producto')"></span>
                     </b-dropdown-item>
                     <b-dropdown-item to="/entity/producto-proyecto">
                         <font-awesome-icon icon="asterisk" />
-                        <span v-text="$t('global.menu.entities.productoProyecto')">ProductoProyecto</span>
+                        <span v-text="$t('global.menu.entities.productoProyecto')"></span>
                     </b-dropdown-item>
                     <b-dropdown-item to="/entity/impactos-esperados">
                         <font-awesome-icon icon="asterisk" />
-                        <span v-text="$t('global.menu.entities.impactosEsperados')">ImpactosEsperados</span>
+                        <span v-text="$t('global.menu.entities.impactosEsperados')"></span>
                     </b-dropdown-item>
                     <b-dropdown-item to="/entity/cronograma">
                         <font-awesome-icon icon="asterisk" />
-                        <span v-text="$t('global.menu.entities.cronograma')">Cronograma</span>
+                        <span v-text="$t('global.menu.entities.cronograma')"></span>
                     </b-dropdown-item>
                     <b-dropdown-item to="/entity/rubro">
                         <font-awesome-icon icon="asterisk" />
-                        <span v-text="$t('global.menu.entities.rubro')">Rubro</span>
+                        <span v-text="$t('global.menu.entities.rubro')"></span>
                     </b-dropdown-item>
                     <b-dropdown-item to="/entity/presupuesto-valor">
                         <font-awesome-icon icon="asterisk" />
-                        <span v-text="$t('global.menu.entities.presupuestoValor')">PresupuestoValor</span>
+                        <span v-text="$t('global.menu.entities.presupuestoValor')"></span>
                     </b-dropdown-item>
                     <b-dropdown-item to="/entity/entidad">
                         <font-awesome-icon icon="asterisk" />
-                        <span v-text="$t('global.menu.entities.entidad')">Entidad</span>
+                        <span v-text="$t('global.menu.entities.entidad')"></span>
                     </b-dropdown-item>
                     <b-dropdown-item to="/entity/entidad-financiadora">
                         <font-awesome-icon icon="asterisk" />
-                        <span v-text="$t('global.menu.entities.entidadFinanciadora')">EntidadFinanciadora</span>
+                        <span v-text="$t('global.menu.entities.entidadFinanciadora')"></span>
                     </b-dropdown-item>
                     <b-dropdown-item to="/entity/elemento">
                         <font-awesome-icon icon="asterisk" />
-                        <span v-text="$t('global.menu.entities.elemento')">Elemento</span>
+                        <span v-text="$t('global.menu.entities.elemento')"></span>
                     </b-dropdown-item>
                     <b-dropdown-item to="/entity/elemento-proyecto">
                         <font-awesome-icon icon="asterisk" />
-                        <span v-text="$t('global.menu.entities.elementoProyecto')">ElementoProyecto</span>
+                        <span v-text="$t('global.menu.entities.elementoProyecto')"></span>
                     </b-dropdown-item>
                     <b-dropdown-item to="/entity/formato">
                         <font-awesome-icon icon="asterisk" />
-                        <span v-text="$t('global.menu.entities.formato')">Formato</span>
+                        <span v-text="$t('global.menu.entities.formato')"></span>
                     </b-dropdown-item>
                     <b-dropdown-item to="/entity/tipo-pregunta">
                         <font-awesome-icon icon="asterisk" />
-                        <span v-text="$t('global.menu.entities.tipoPregunta')">TipoPregunta</span>
+                        <span v-text="$t('global.menu.entities.tipoPregunta')"></span>
                     </b-dropdown-item>
                     <b-dropdown-item to="/entity/pregunta">
                         <font-awesome-icon icon="asterisk" />
-                        <span v-text="$t('global.menu.entities.pregunta')">Pregunta</span>
+                        <span v-text="$t('global.menu.entities.pregunta')"></span>
                     </b-dropdown-item>
                     <b-dropdown-item to="/entity/proyecto-respuestas">
                         <font-awesome-icon icon="asterisk" />
-                        <span v-text="$t('global.menu.entities.proyectoRespuestas')">ProyectoRespuestas</span>
+                        <span v-text="$t('global.menu.entities.proyectoRespuestas')"></span>
                     </b-dropdown-item>
                     <b-dropdown-item to="/entity/roles-modalidad">
                         <font-awesome-icon icon="asterisk" />
-                        <span v-text="$t('global.menu.entities.rolesModalidad')">RolesModalidad</span>
+                        <span v-text="$t('global.menu.entities.rolesModalidad')"></span>
                     </b-dropdown-item>
                     <b-dropdown-item to="/entity/fases">
                         <font-awesome-icon icon="asterisk" />
-                        <span v-text="$t('global.menu.entities.fases')">Fases</span>
+                        <span v-text="$t('global.menu.entities.fases')"></span>
                     </b-dropdown-item>
                     <b-dropdown-item to="/entity/proyecto-fase">
                         <font-awesome-icon icon="asterisk" />
-                        <span v-text="$t('global.menu.entities.proyectoFase')">ProyectoFase</span>
+                        <span v-text="$t('global.menu.entities.proyectoFase')"></span>
                     </b-dropdown-item>
                     <b-dropdown-item to="/entity/cronograma-ciecyt">
                         <font-awesome-icon icon="asterisk" />
-                        <span v-text="$t('global.menu.entities.cronogramaCiecyt')">CronogramaCiecyt</span>
+                        <span v-text="$t('global.menu.entities.cronogramaCiecyt')"></span>
                     </b-dropdown-item>
                     <b-dropdown-item to="/entity/cronograma-ciecyt-fases">
                         <font-awesome-icon icon="asterisk" />
-                        <span v-text="$t('global.menu.entities.cronogramaCiecytFases')">CronogramaCiecytFases</span>
+                        <span v-text="$t('global.menu.entities.cronogramaCiecytFases')"></span>
                     </b-dropdown-item>
                     <b-dropdown-item to="/entity/integrante-proyecto">
                         <font-awesome-icon icon="asterisk" />
-                        <span v-text="$t('global.menu.entities.integranteProyecto')">IntegranteProyecto</span>
+                        <span v-text="$t('global.menu.entities.integranteProyecto')"></span>
                     </b-dropdown-item>
                     <b-dropdown-item to="/entity/solicitud">
                         <font-awesome-icon icon="asterisk" />
-                        <span v-text="$t('global.menu.entities.solicitud')">Solicitud</span>
+                        <span v-text="$t('global.menu.entities.solicitud')"></span>
                     </b-dropdown-item>
                     <b-dropdown-item to="/entity/adjunto-proyecto-fase">
                         <font-awesome-icon icon="asterisk" />
-                        <span v-text="$t('global.menu.entities.adjuntoProyectoFase')">AdjuntoProyectoFase</span>
+                        <span v-text="$t('global.menu.entities.adjuntoProyectoFase')"></span>
                     </b-dropdown-item>
                     <b-dropdown-item to="/entity/retroalimentacion">
                         <font-awesome-icon icon="asterisk" />
-                        <span v-text="$t('global.menu.entities.retroalimentacion')">Retroalimentacion</span>
+                        <span v-text="$t('global.menu.entities.retroalimentacion')"></span>
                     </b-dropdown-item>
                     <b-dropdown-item to="/entity/adjunto-retroalimentacion">
                         <font-awesome-icon icon="asterisk" />
-                        <span v-text="$t('global.menu.entities.adjuntoRetroalimentacion')">AdjuntoRetroalimentacion</span>
+                        <span v-text="$t('global.menu.entities.adjuntoRetroalimentacion')"></span>
                     </b-dropdown-item>
                     <b-dropdown-item to="/entity/ficha-tecnica">
                         <font-awesome-icon icon="asterisk" />
-                        <span v-text="$t('global.menu.entities.fichaTecnica')">FichaTecnica</span>
+                        <span v-text="$t('global.menu.entities.fichaTecnica')"></span>
                     </b-dropdown-item>
                     <b-dropdown-item to="/entity/categorizacion">
                         <font-awesome-icon icon="asterisk" />
-                        <span v-text="$t('global.menu.entities.categorizacion')">Categorizacion</span>
+                        <span v-text="$t('global.menu.entities.categorizacion')"></span>
                     </b-dropdown-item>
                     <b-dropdown-item to="/entity/usuario">
                         <font-awesome-icon icon="asterisk" />
-                        <span v-text="$t('global.menu.entities.usuario')">Usuario</span>
+                        <span v-text="$t('global.menu.entities.usuario')"></span>
                     </b-dropdown-item>
                     <b-dropdown-item to="/entity/rol-menu">
                         <font-awesome-icon icon="asterisk" />
-                        <span v-text="$t('global.menu.entities.rolMenu')">RolMenu</span>
+                        <span v-text="$t('global.menu.entities.rolMenu')"></span>
                     </b-dropdown-item>
                 </b-nav-item-dropdown>-->
 
@@ -214,31 +216,31 @@
                     class="pointer">
                     <span slot="button-content" class="navbar-dropdown-menu">
                         <font-awesome-icon icon="user-plus"/>
-                        <span v-text="$t('global.menu.admin.main')">Administration</span>
+                        <span v-text="$t('global.menu.admin.main')"></span>
                     </span>
                     <b-dropdown-item  to="/admin/jhi-metrics">
                         <font-awesome-icon icon="tachometer-alt" />
-                        <span v-text="$t('global.menu.admin.metrics')">Metrics</span>
+                        <span v-text="$t('global.menu.admin.metrics')"></span>
                     </b-dropdown-item>
                     <b-dropdown-item to="/admin/jhi-health">
                         <font-awesome-icon icon="heart" />
-                        <span v-text="$t('global.menu.admin.health')">Health</span>
+                        <span v-text="$t('global.menu.admin.health')"></span>
                     </b-dropdown-item>
                     <b-dropdown-item  to="/admin/jhi-configuration">
                         <font-awesome-icon icon="list" />
-                        <span v-text="$t('global.menu.admin.configuration')">Configuration</span>
+                        <span v-text="$t('global.menu.admin.configuration')"></span>
                     </b-dropdown-item>
                     <b-dropdown-item  to="/admin/audits">
                         <font-awesome-icon icon="bell" />
-                        <span v-text="$t('global.menu.admin.audits')">Audits</span>
+                        <span v-text="$t('global.menu.admin.audits')"></span>
                     </b-dropdown-item>
                     <b-dropdown-item  to="/admin/logs">
                         <font-awesome-icon icon="tasks" />
-                        <span v-text="$t('global.menu.admin.logs')">Logs</span>
+                        <span v-text="$t('global.menu.admin.logs')"></span>
                     </b-dropdown-item>
                     <b-dropdown-item v-if="swaggerEnabled"  to="/admin/docs">
                         <font-awesome-icon icon="book" />
-                        <span v-text="$t('global.menu.admin.apidocs')">API</span>
+                        <span v-text="$t('global.menu.admin.apidocs')"></span>
                     </b-dropdown-item>
                 </b-nav-item-dropdown-->
 
@@ -258,14 +260,14 @@
                     </b-dropdown-item>
                     <b-dropdown-item to="/admin/user-management">
                         <font-awesome-icon icon="user"/>
-                        <span v-text="$t('global.menu.admin.userManagement')">User management</span>
+                        <span v-text="$t('global.menu.admin.userManagement')"></span>
                     </b-dropdown-item>
 
                 </b-nav-item-dropdown-->
                 <!--<b-nav-item-dropdown id="languagesnavBarDropdown" right v-if="languages && Object.keys(languages).length > 1">
                     <span slot="button-content">
                         <font-awesome-icon icon="flag" />
-                        <span v-text="$t('global.menu.language')">Language</span>
+                        <span v-text="$t('global.menu.language')"></span>
                     </span>
                     <b-dropdown-item v-for="(value, key) in languages" :key="`lang-${key}`" v-on:click="changeLanguage(key);"
                         :class="{ active: isActiveLanguage(key)}">

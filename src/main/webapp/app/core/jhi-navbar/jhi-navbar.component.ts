@@ -1,4 +1,4 @@
-import { Component, Inject, Vue } from 'vue-property-decorator';
+import { Component, Inject, Vue } from 'vue-facing-decorator';
 import { VERSION } from '@/constants';
 import LoginService from '@/account/login.service';
 import AccountService from '@/account/account.service';
@@ -9,13 +9,13 @@ import { IMenu, MenuBar } from '@/shared/model/menu.model';
 
 @Component
 export default class JhiNavbar extends Vue {
-  @Inject('loginService')
+  @Inject
   private loginService: () => LoginService;
-  @Inject('translationService') private translationService: () => TranslationService;
+  @Inject private translationService: () => TranslationService;
 
-  @Inject('accountService') private accountService: () => AccountService;
+  @Inject private accountService: () => AccountService;
 
-  @Inject('menuService')
+  @Inject
   private menuService: () => MenuService;
 
   ///public version = VERSION ? 'v' + VERSION : '';

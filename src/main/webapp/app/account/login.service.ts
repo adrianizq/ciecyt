@@ -1,8 +1,17 @@
-import Vue from 'vue';
-import axios, { AxiosPromise } from 'axios';
+import { ref } from 'vue';
+
+export const loginModalVisible = ref(false);
+
+export function showLoginModal(): void {
+  loginModalVisible.value = true;
+}
+
+export function hideLoginModal(): void {
+  loginModalVisible.value = false;
+}
 
 export default class LoginService {
-  public openLogin(instance: Vue): void {
-    instance.$emit('bv::show::modal', 'login-page');
+  public openLogin(_instance?: unknown): void {
+    showLoginModal();
   }
 }

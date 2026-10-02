@@ -1,10 +1,10 @@
-import Component from 'vue-class-component';
-import { Inject, Vue } from 'vue-property-decorator';
+import { Component } from 'vue-facing-decorator';
+import { Inject, Vue } from 'vue-facing-decorator';
 import LoginService from '@/account/login.service';
 
 @Component
 export default class Home extends Vue {
-  @Inject('loginService')
+  @Inject
   private loginService: () => LoginService;
 
   public modalidades = [

@@ -1,8 +1,8 @@
-import { maxLength, minLength, required } from 'vuelidate/lib/validators';
+import { useVuelidate } from '@vuelidate/core';
+import { maxLength, minLength, required } from '@vuelidate/validators';
 import axios from 'axios';
-import { mapGetters } from 'vuex';
-import Component from 'vue-class-component';
-import { Vue, Inject } from 'vue-property-decorator';
+import { Component } from 'vue-facing-decorator';
+import { Vue, Inject } from 'vue-facing-decorator';
 
 const validations = {
   resetPassword: {
@@ -23,9 +23,11 @@ const validations = {
 };
 
 @Component({
-  validations,
-  computed: {
-    ...mapGetters(['account']),
+  options: {
+    validations,
+  },
+  setup() {
+    return { v$: useVuelidate() };
   },
 })
 export default class ChangePassword extends Vue {
@@ -59,6 +61,10 @@ export default class ChangePassword extends Vue {
           this.error = 'ERROR';
         });
     }
+  }
+
+  public get account(): any {
+    return this.$store.getters.account;
   }
 
   public get username(): string {

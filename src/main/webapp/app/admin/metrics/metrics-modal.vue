@@ -12,8 +12,8 @@
             <h6>
                 <span class="badge" :class="getBadgeClass(entry.threadState)">{{entry.threadState}}</span>&nbsp;{{entry.threadName}} (ID {{entry.threadId}})
                 <a v-on:click="entry.show = !entry.show" href="javascript:void(0);">
-                    <span :hidden="entry.show" v-text="$t('metrics.jvm.threads.dump.show')">Show StackTrace</span>
-                    <span :hidden="!entry.show" v-text="$t('metrics.jvm.threads.dump.hide')">Hide StackTrace</span>
+                    <span :hidden="entry.show" v-text="$t('metrics.jvm.threads.dump.show')"></span>
+                    <span :hidden="!entry.show" v-text="$t('metrics.jvm.threads.dump.hide')"></span>
                 </a>
             </h6>
             <div class="card" :hidden="!entry.show">
@@ -27,11 +27,11 @@
             <table class="table table-sm table-responsive">
                 <thead>
                 <tr>
-                    <th v-text="$t('metrics.jvm.threads.dump.blockedtime')">Blocked Time</th>
-                    <th v-text="$t('metrics.jvm.threads.dump.blockedcount')">Blocked Count</th>
-                    <th v-text="$t('metrics.jvm.threads.dump.waitedtime')">Waited Time</th>
-                    <th v-text="$t('metrics.jvm.threads.dump.waitedcount')">Waited Count</th>
-                    <th v-text="$t('metrics.jvm.threads.dump.lockname')">Lock Name</th>
+                    <th v-text="$t('metrics.jvm.threads.dump.blockedtime')"></th>
+                    <th v-text="$t('metrics.jvm.threads.dump.blockedcount')"></th>
+                    <th v-text="$t('metrics.jvm.threads.dump.waitedtime')"></th>
+                    <th v-text="$t('metrics.jvm.threads.dump.waitedcount')"></th>
+                    <th v-text="$t('metrics.jvm.threads.dump.lockname')"></th>
                 </tr>
                 </thead>
                 <tbody>

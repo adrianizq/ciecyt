@@ -1,18 +1,19 @@
 import axios from 'axios';
-import Component from 'vue-class-component';
-import { Vue, Inject } from 'vue-property-decorator';
+import { Component, Watch } from 'vue-facing-decorator';
+import { Vue, Inject } from 'vue-facing-decorator';
 import AccountService from '@/account/account.service';
+import { hideLoginModal } from '@/account/login.service';
 
-@Component({
-  watch: {
-    $route() {
-      this.$root.$emit('bv::hide::modal', 'login-page');
-    },
-  },
-})
+@Component
 export default class LoginForm extends Vue {
-  @Inject('accountService')
+  @Inject
   private accountService: () => AccountService;
+
+  @Watch('$route')
+  onRouteChange(): void {
+    hideLoginModal();
+  }
+
   public authenticationError = null;
   public login = null;
   public password = null;
@@ -33,7 +34,7 @@ export default class LoginForm extends Vue {
           }
         }
         this.authenticationError = false;
-        this.$root.$emit('bv::hide::modal', 'login-page');
+        hideLoginModal();
         this.accountService().retrieveAccount();
         window.location.href = '';
       })

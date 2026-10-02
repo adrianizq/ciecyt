@@ -1,11 +1,11 @@
-import { Component, Inject, Vue } from 'vue-property-decorator';
+import { Component, Inject, Vue } from 'vue-facing-decorator';
 
 import MenuService from '@/entities/menu/menu.service';
 import { IMenu, MenuBar } from '@/shared/model/menu.model';
 
 @Component
 export default class JhiNavbar2 extends Vue {
-  @Inject('menuService')
+  @Inject
   private menuService: () => MenuService;
 
   ///public version = VERSION ? 'v' + VERSION : '';

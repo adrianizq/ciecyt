@@ -1,5 +1,5 @@
-import { Component, Vue, Inject } from 'vue-property-decorator';
-import { mixins } from 'vue-class-component';
+import { Component, Vue, Inject } from 'vue-facing-decorator';
+import { mixins } from 'vue-facing-decorator';
 import ConfigurationService from './configuration.service';
 import { filterBy as filterByCollection, orderBy as orderByCollection } from '@/shared/filter/filter';
 
@@ -18,7 +18,7 @@ export default class JhiConfiguration extends Vue {
   public configuration: any = false;
   public configKeys: any[] = [];
   public filtered = '';
-  @Inject('configurationService') private configurationService: () => ConfigurationService;
+  @Inject private configurationService: () => ConfigurationService;
 
   public mounted(): void {
     this.init();

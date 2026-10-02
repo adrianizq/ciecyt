@@ -1,10 +1,10 @@
 import axios from 'axios';
 import { Store } from 'vuex';
-import VueRouter from 'vue-router';
+import type { Router } from 'vue-router';
 import TranslationService from '@/locale/translation.service';
 
 export default class AccountService {
-  constructor(private store: Store<any>, private translationService: TranslationService, private router: VueRouter) {
+  constructor(private store: Store<any>, private translationService: TranslationService, private router: Router) {
     this.init();
   }
 
@@ -37,7 +37,7 @@ export default class AccountService {
             this.store.commit('currentLanguage', account.langKey);
           }
           if (sessionStorage.getItem('requested-url')) {
-            this.router.replace(sessionStorage.getItem('requested-url'));
+            this.router.replace(sessionStorage.getItem('requested-url')).catch(() => {});
             sessionStorage.removeItem('requested-url');
           }
         } else {
@@ -64,7 +64,7 @@ export default class AccountService {
   // vue-router rechaza la navegacion si la ruta destino ya es la actual; sin esta
   // guarda se genera un NavigationDuplicated sin manejar en cada carga con sesion caducada.
   private volverALaPortada(): void {
-    if (this.router.currentRoute.path !== '/') {
+    if (this.router.currentRoute.value.path !== '/') {
       this.router.push('/');
     }
   }
@@ -99,7 +99,7 @@ export default class AccountService {
               this.store.commit('currentLanguage', account.langKey);
             }
             if (sessionStorage.getItem('requested-url')) {
-              this.router.replace(sessionStorage.getItem('requested-url'));
+              this.router.replace(sessionStorage.getItem('requested-url')).catch(() => {});
               sessionStorage.removeItem('requested-url');
             }
           } else {

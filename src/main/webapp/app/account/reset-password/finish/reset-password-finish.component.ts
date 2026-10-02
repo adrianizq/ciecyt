@@ -1,6 +1,7 @@
+import { useVuelidate } from '@vuelidate/core';
 import axios from 'axios';
-import { maxLength, minLength, required } from 'vuelidate/lib/validators';
-import { Inject, Vue, Component } from 'vue-property-decorator';
+import { maxLength, minLength, required } from '@vuelidate/validators';
+import { Inject, Vue, Component } from 'vue-facing-decorator';
 import LoginService from '@/account/login.service';
 
 const validations = {
@@ -19,10 +20,15 @@ const validations = {
 };
 
 @Component({
-  validations,
+  options: {
+    validations,
+  },
+  setup() {
+    return { v$: useVuelidate() };
+  },
 })
 export default class ResetPasswordFinish extends Vue {
-  @Inject('loginService')
+  @Inject
   private loginService: () => LoginService;
 
   public doNotMatch: string = null;

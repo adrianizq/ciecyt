@@ -1,15 +1,16 @@
-import Component from 'vue-class-component';
-import { Vue, Inject } from 'vue-property-decorator';
+import { Component, Hook } from 'vue-facing-decorator';
+import { Vue, Inject } from 'vue-facing-decorator';
 import LoginService from '@/account/login.service';
 
 @Component
 export default class Error extends Vue {
-  @Inject('loginService')
+  @Inject
   private loginService: () => LoginService;
   errorMessage: string = null;
   error403 = false;
   error404 = false;
 
+  @Hook
   beforeRouteEnter(to, from, next) {
     next(vm => {
       let errorMessage = null;

@@ -1,6 +1,6 @@
 import axios, { AxiosPromise } from 'axios';
-import Vue from 'vue';
-import Component from 'vue-class-component';
+import { Vue } from 'vue-facing-decorator';
+import { Component } from 'vue-facing-decorator';
 
 @Component
 export default class LogsService extends Vue {

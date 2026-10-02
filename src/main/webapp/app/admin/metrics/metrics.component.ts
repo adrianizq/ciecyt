@@ -2,7 +2,7 @@ import numeral from 'numeral';
 import { formatMillis as formatMillisValue } from '@/shared/date/filters';
 import JhiMetricsModal from './metrics-modal.vue';
 import MetricsService from './metrics.service';
-import { Component, Vue, Inject } from 'vue-property-decorator';
+import { Component, Vue, Inject } from 'vue-facing-decorator';
 
 @Component({
   components: {
@@ -18,7 +18,7 @@ export default class JhiMetrics extends Vue {
   public threadData: any = null;
   public threadStats: any = {};
   public updatingMetrics = true;
-  @Inject('metricsService')
+  @Inject
   private metricsService: () => MetricsService;
 
   public mounted(): void {

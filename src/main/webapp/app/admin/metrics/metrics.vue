@@ -1,16 +1,16 @@
 <template>
   <div>
     <h2>
-      <span id="metrics-page-heading" v-text="$t('metrics.title')">Application Metrics</span>
+      <span id="metrics-page-heading" v-text="$t('metrics.title')"></span>
       <button class="btn btn-primary float-right" v-on:click="refresh()">
-        <font-awesome-icon icon="sync"></font-awesome-icon> <span v-text="$t('metrics[\'refresh.button\']')">Refresh</span>
+        <font-awesome-icon icon="sync"></font-awesome-icon> <span v-text="$t('metrics[\'refresh.button\']')"></span>
       </button>
     </h2>
 
-    <h3 v-text="$t('metrics.jvm.title')">JVM Metrics</h3>
+    <h3 v-text="$t('metrics.jvm.title')"></h3>
     <div class="row" v-if="!updatingMetrics">
       <div class="col-md-4">
-        <h4 v-text="$t('metrics.jvm.memory.title')">Memory</h4>
+        <h4 v-text="$t('metrics.jvm.memory.title')"></h4>
         <div>
           <div v-for="(entry, key) of metrics.jvm" :key="key">
             <span v-if="entry.max !== -1">
@@ -27,23 +27,23 @@
         </div>
       </div>
       <div class="col-md-4">
-        <h4 v-text="$t('metrics.jvm.threads.title')">Threads </h4>
-        <span><span v-text="$t('metrics.jvm.threads.runnable')">Runnable</span> {{threadStats.threadDumpRunnable}}</span>
+        <h4 v-text="$t('metrics.jvm.threads.title')"></h4>
+        <span><span v-text="$t('metrics.jvm.threads.runnable')"></span> {{threadStats.threadDumpRunnable}}</span>
         <b-progress variant="success" :max="threadStats.threadDumpAll" striped >
           <b-progress-bar :value="threadStats.threadDumpRunnable" :label="formatNumber1(threadStats.threadDumpRunnable * 100 / threadStats.threadDumpAll) + '%'"></b-progress-bar>
         </b-progress>
 
-        <span><span v-text="$t('metrics.jvm.threads.timedwaiting')">Timed Waiting</span> ({{threadStats.threadDumpTimedWaiting}})</span>
+        <span><span v-text="$t('metrics.jvm.threads.timedwaiting')"></span> ({{threadStats.threadDumpTimedWaiting}})</span>
         <b-progress variant="success" :max="threadStats.threadDumpAll" striped >
           <b-progress-bar :value="threadStats.threadDumpTimedWaiting" :label="formatNumber1(threadStats.threadDumpTimedWaiting * 100 / threadStats.threadDumpAll) + '%'"></b-progress-bar>
         </b-progress>
 
-        <span><span v-text="$t('metrics.jvm.threads.waiting')">Waiting</span> ({{threadStats.threadDumpWaiting}})</span>
+        <span><span v-text="$t('metrics.jvm.threads.waiting')"></span> ({{threadStats.threadDumpWaiting}})</span>
         <b-progress variant="success" :max="threadStats.threadDumpAll" striped >
           <b-progress-bar :value="threadStats.threadDumpWaiting" :label="formatNumber1(threadStats.threadDumpWaiting * 100 / threadStats.threadDumpAll) + '%'"></b-progress-bar>
         </b-progress>
 
-        <span><span v-text="$t('metrics.jvm.threads.blocked')">Blocked</span> ({{threadStats.threadDumpBlocked}})</span>
+        <span><span v-text="$t('metrics.jvm.threads.blocked')"></span> ({{threadStats.threadDumpBlocked}})</span>
         <b-progress variant="success" :max="threadStats.threadDumpAll" striped >
           <b-progress-bar :value="threadStats.threadDumpBlocked" :label="formatNumber1(threadStats.threadDumpBlocked * 100 / threadStats.threadDumpAll) + '%'"></b-progress-bar>
         </b-progress>
@@ -105,7 +105,7 @@
       </div>
     </div>
 
-    <h3 v-text="$t('metrics.jvm.gc.title')">Garbage collections</h3>
+    <h3 v-text="$t('metrics.jvm.gc.title')"></h3>
     <div class="row" v-if="!updatingMetrics && isObjectExisting(metrics, 'garbageCollector')">
       <div class="col-md-4">
         <div>
@@ -150,14 +150,14 @@
           <thead>
           <tr>
             <th></th>
-            <th class="text-right" v-text="$t('metrics.servicesstats.table.count')">Count</th>
-            <th class="text-right" v-text="$t('metrics.servicesstats.table.mean')">Mean</th>
-            <th class="text-right" v-text="$t('metrics.servicesstats.table.min')">Min</th>
-            <th class="text-right" v-text="$t('metrics.servicesstats.table.p50')">p50</th>
-            <th class="text-right" v-text="$t('metrics.servicesstats.table.p75')">p75</th>
-            <th class="text-right" v-text="$t('metrics.servicesstats.table.p95')">p95</th>
-            <th class="text-right" v-text="$t('metrics.servicesstats.table.p99')">p99</th>
-            <th class="text-right" v-text="$t('metrics.servicesstats.table.max')">Max</th>
+            <th class="text-right" v-text="$t('metrics.servicesstats.table.count')"></th>
+            <th class="text-right" v-text="$t('metrics.servicesstats.table.mean')"></th>
+            <th class="text-right" v-text="$t('metrics.servicesstats.table.min')"></th>
+            <th class="text-right" v-text="$t('metrics.servicesstats.table.p50')"></th>
+            <th class="text-right" v-text="$t('metrics.servicesstats.table.p75')"></th>
+            <th class="text-right" v-text="$t('metrics.servicesstats.table.p95')"></th>
+            <th class="text-right" v-text="$t('metrics.servicesstats.table.p99')"></th>
+            <th class="text-right" v-text="$t('metrics.servicesstats.table.max')"></th>
           </tr>
           </thead>
           <tbody>
@@ -177,14 +177,14 @@
       </div>
     </div>
 
-    <h3 v-text="$t('metrics.jvm.http.title')">HTTP requests (time in millisecond)</h3>
+    <h3 v-text="$t('metrics.jvm.http.title')"></h3>
     <table class="table table-striped" v-if="!updatingMetrics && isObjectExisting(metrics, 'http.server.requests')">
       <thead>
       <tr>
-        <th v-text="$t('metrics.jvm.http.table.code')">Code</th>
-        <th v-text="$t('metrics.jvm.http.table.count')">Count</th>
-        <th class="text-right" v-text="$t('metrics.jvm.http.table.mean')">Mean</th>
-        <th class="text-right" v-text="$t('metrics.jvm.http.table.max')">Max</th>
+        <th v-text="$t('metrics.jvm.http.table.code')"></th>
+        <th v-text="$t('metrics.jvm.http.table.count')"></th>
+        <th class="text-right" v-text="$t('metrics.jvm.http.table.mean')"></th>
+        <th class="text-right" v-text="$t('metrics.jvm.http.table.max')"></th>
       </tr>
       </thead>
       <tbody>
@@ -227,12 +227,12 @@
       </table>
     </div>
 
-    <h3 v-text="$t('metrics.cache.title')">Cache statistics</h3>
+    <h3 v-text="$t('metrics.cache.title')"></h3>
     <div class="table-responsive" v-if="!updatingMetrics && isObjectExisting(metrics, 'cache')">
       <table class="table table-striped">
         <thead>
         <tr>
-          <th v-text="$t('metrics.cache.cachename')">Cache name</th>
+          <th v-text="$t('metrics.cache.cachename')"></th>
           <th class="text-right" data-translate="metrics.cache.hits">Cache Hits</th>
           <th class="text-right" data-translate="metrics.cache.misses">Cache Misses</th>
           <th class="text-right" data-translate="metrics.cache.gets">Cache Gets</th>
@@ -265,24 +265,24 @@
       </table>
     </div>
 
-    <h3 v-text="$t('metrics.datasource.title')">DataSource statistics (time in millisecond)</h3>
+    <h3 v-text="$t('metrics.datasource.title')"></h3>
     <div class="table-responsive" v-if="!updatingMetrics && isObjectExistingAndNotEmpty(metrics, 'databases')">
       <table class="table table-striped">
         <thead>
         <tr>
-          <th><span v-text="$t('metrics.datasource.usage')">Connection Pool Usage</span>
+          <th><span v-text="$t('metrics.datasource.usage')"></span>
             (active: {{metrics.databases.active.value}}, min: {{metrics.databases.min.value}}, max:
             {{metrics.databases.max.value}},
             idle: {{metrics.databases.idle.value}})
           </th>
-          <th class="text-right" v-text="$t('metrics.datasource.count')">Count</th>
-          <th class="text-right" v-text="$t('metrics.datasource.mean')">Mean</th>
-          <th class="text-right" v-text="$t('metrics.servicesstats.table.min')">Min</th>
-          <th class="text-right" v-text="$t('metrics.servicesstats.table.p50')">p50</th>
-          <th class="text-right" v-text="$t('metrics.servicesstats.table.p75')">p75</th>
-          <th class="text-right" v-text="$t('metrics.servicesstats.table.p95')">p95</th>
-          <th class="text-right" v-text="$t('metrics.servicesstats.table.p99')">p99</th>
-          <th class="text-right" v-text="$t('metrics.datasource.max')">Max</th>
+          <th class="text-right" v-text="$t('metrics.datasource.count')"></th>
+          <th class="text-right" v-text="$t('metrics.datasource.mean')"></th>
+          <th class="text-right" v-text="$t('metrics.servicesstats.table.min')"></th>
+          <th class="text-right" v-text="$t('metrics.servicesstats.table.p50')"></th>
+          <th class="text-right" v-text="$t('metrics.servicesstats.table.p75')"></th>
+          <th class="text-right" v-text="$t('metrics.servicesstats.table.p95')"></th>
+          <th class="text-right" v-text="$t('metrics.servicesstats.table.p99')"></th>
+          <th class="text-right" v-text="$t('metrics.datasource.max')"></th>
         </tr>
         </thead>
         <tbody>
@@ -325,7 +325,9 @@
     </div>
 
     <b-modal ref="metricsModal" size="lg">
-      <h4 slot="modal-title" class="modal-title" id="showMetricsLabel" v-text="$t('metrics.jvm.threads.dump.title')">Threads dump</h4>
+      <template #modal-title>
+<h4  class="modal-title" id="showMetricsLabel" v-text="$t('metrics.jvm.threads.dump.title')"></h4>
+</template>
       <metrics-modal :thread-dump="threadData"></metrics-modal>
     </b-modal>
   </div>

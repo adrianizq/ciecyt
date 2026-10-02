@@ -1,10 +1,10 @@
 import HealthService from './health.service';
-import { Component, Inject, Prop, Vue } from 'vue-property-decorator';
+import { Component, Inject, Prop, Vue } from 'vue-facing-decorator';
 
 @Component
 export default class JhiHealthModal extends Vue {
   @Prop() currentHealth!: any;
-  @Inject('healthService') private healthService: () => HealthService;
+  @Inject private healthService: () => HealthService;
 
   public baseName(name: string): any {
     return this.healthService().getBaseName(name);
