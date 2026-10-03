@@ -15,8 +15,10 @@ export default class RolMenu extends Vue {
   menus: MenuBar[] = [];
   rolMenu: IRolMenu[] = [];
   public isSaving = false;
+  public isFetching = false;
 
   created() {
+    this.isFetching = true;
     this.menuService()
       .all()
       .then(res => {
@@ -48,7 +50,10 @@ export default class RolMenu extends Vue {
 
         this.menus = res;
 
-        this.retrieveRolMenu(this.rolName);
+        return this.retrieveRolMenu(this.rolName);
+      })
+      .finally(() => {
+        this.isFetching = false;
       });
   }
 
@@ -57,7 +62,7 @@ export default class RolMenu extends Vue {
   }
 
   public retrieveRolMenu(rol) {
-    this.rolMenuService()
+    return this.rolMenuService()
       .fromRol(rol)
       .then(res => {
         res.forEach(r => {

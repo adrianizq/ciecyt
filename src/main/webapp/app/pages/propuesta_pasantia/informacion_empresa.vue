@@ -12,6 +12,7 @@
                 <h2>Información de la Empresa</h2>
               </label>
             </div>
+            <jhi-loading v-if="isFetching"></jhi-loading>
             <div class="mb-3 form-group">
               <label class="form-control-label" for="informacion-pasantia-convenio">Número del Convenio ITP - Empresa </label>
               <input

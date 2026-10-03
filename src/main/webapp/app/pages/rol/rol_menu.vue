@@ -5,9 +5,15 @@
                 <h2>Editar Permisos {{ rolName }}</h2>
                 <div class="row">
                     <div class="col-sm-12">
-                        <table class="table table-striped">
+                        <jhi-loading v-if="isFetching"></jhi-loading>
+                        <jhi-empty
+                            v-if="!isFetching && menus.length === 0"
+                            titulo="No hay menús disponibles"
+                            mensaje=""
+                        ></jhi-empty>
+                        <table class="table table-striped" v-if="menus.length > 0">
                             <tr>
-                                <th>Menu aaa</th>
+                                <th>Menú</th>
                                 <th>Permitir Acceso</th>
                                 <th>Permitir Crear</th>
                                 <th>Permitir Editar</th>
@@ -79,7 +85,7 @@
                     <button type="button" id="cancel-save" class="btn btn-secondary" v-on:click="previousState()">
                         <font-awesome-icon icon="ban"></font-awesome-icon>&nbsp;<span v-text="$t('entity.action.cancel')"></span>
                     </button>
-                    <button type="submit" id="save-entity" :disabled="isSaving" class="btn btn-primary">
+                    <button type="submit" id="save-entity" :disabled="isSaving || isFetching" class="btn btn-primary">
                         <font-awesome-icon icon="save"></font-awesome-icon>&nbsp;<span v-text="$t('entity.action.save')"></span>
                     </button>
                 </div>
