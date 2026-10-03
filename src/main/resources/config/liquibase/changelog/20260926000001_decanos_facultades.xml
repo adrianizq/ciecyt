@@ -81,7 +81,7 @@
          dejaba el changeSet anterior a medias, asi que rompia todas las corridas de prueba. -->
     <changeSet id="20260926000001-2-idx" author="ciecyt" dbms="postgresql">
         <sql>
-            CREATE UNIQUE INDEX ux_decano_facultad_vigente
+            CREATE UNIQUE INDEX IF NOT EXISTS ux_decano_facultad_vigente
                 ON decano_facultad (decano_facultad_facultad_id)
                 WHERE fecha_hasta IS NULL
         </sql>
