@@ -46,7 +46,7 @@
             <font-awesome-icon icon="ban"></font-awesome-icon>&nbsp;<span v-text="$t('entity.action.cancel')"></span>
           </button>
 
-          <button type="submit" id="save-entity" class="btn btn-primary" :disabled='isDisabled'>
+          <button type="submit" id="save-entity" class="btn btn-primary" :disabled="isDisabled || isSaving">
             <font-awesome-icon icon="save"></font-awesome-icon>&nbsp;<span>Enviar</span>
           </button>
         </div>

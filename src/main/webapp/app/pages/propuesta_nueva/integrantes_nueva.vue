@@ -24,10 +24,10 @@
                         <button type="button" id="cancel" class="btn btn-secondary" v-on:click="back">
                             <font-awesome-icon icon="arrow-left"></font-awesome-icon>&nbsp;Volver
                         </button>
-                        <button type="button" id="save-borrador" class="btn btn-outline-secondary" v-on:click="save('borrador')">
+                        <button type="button" id="save-borrador" class="btn btn-outline-secondary" v-on:click="save('borrador')" :disabled="isSaving">
                             <font-awesome-icon icon="save"></font-awesome-icon>&nbsp;<span>Guardar borrador</span>
                         </button>
-                        <button type="button" id="save" class="btn btn-primary" v-on:click="save('continuar')">
+                        <button type="button" id="save" class="btn btn-primary" v-on:click="save('continuar')" :disabled="isSaving">
                             <font-awesome-icon icon="save"></font-awesome-icon>&nbsp;<span>Guardar y continuar</span>
                         </button>
                     </div>
@@ -110,43 +110,26 @@ import { userInfo } from 'os';
             this.$router.push({ name: 'PropuestaInformacionGeneralNuevaEditView', params: { proyectoId: this.proyId } });
         }
 
-        public save(accion: 'borrador' | 'continuar' = 'continuar'): void {
+        public async save(accion: 'borrador' | 'continuar' = 'continuar'): Promise<void> {
+            this.isSaving = true;
             try {
-                this.isSaving = true;
-                let i=0;
-                for (let integrante of this.integrantesProyecto) {
-                    
-                    //integrante.integranteProyectoUserId=this.items[i].value;
-                    i++;
-                    //Actualizando el integrante
+                for (const integrante of this.integrantesProyecto) {
                     if (integrante.id) {
-                        this.integranteProyectoService().update(integrante);
-                        if (accion === 'continuar') {
-                            this.$router.push({ name: 'PropuestaAsesorNuevaEditView', params: { proyectoId: this.proyId } });
-                        }
-
+                        await this.integranteProyectoService().update(integrante);
                     } else {
-                        //Creando un nuevo integrante
-                        this.integranteProyectoService().create(integrante)
-                            .then(param => {
-                                integrante.id = param.id;
-                                if (accion === 'continuar') {
-                                    this.$router.push({ name: 'PropuestaAsesorNuevaEditView', params: { proyectoId: this.proyId } });
-                                }
-                            });
+                        const param = await this.integranteProyectoService().create(integrante);
+                        integrante.id = param.id;
                     }
-                     var proyId: string = String(this.proyId);
-                     //this.$router.push({ name: 'PropuestaElementosView', params: { proyectoId: proyId } });
-
                 }
-
                 if (accion === 'borrador') {
-                    this.isSaving = false;
                     this.alertService().showAlert('Borrador guardado. Aún puedes continuar más tarde.', 'info');
+                } else {
+                    this.$router.push({ name: 'PropuestaAsesorNuevaEditView', params: { proyectoId: this.proyId } });
                 }
-
             } catch (e) {
-                //TODO: mostrar mensajes de error
+                this.alertService().showHttpError(this, e && e.response ? e.response : e);
+            } finally {
+                this.isSaving = false;
             }
         }
 

@@ -35,11 +35,11 @@
 
 
 
-                    <button type="button" id="save-borrador" class="btn btn-outline-secondary" v-on:click="save('borrador')">
+                    <button type="button" id="save-borrador" class="btn btn-outline-secondary" v-on:click="save('borrador')" :disabled="isSaving">
                         <font-awesome-icon icon="save"></font-awesome-icon>&nbsp;<span>Guardar borrador</span>
                     </button>
 
-                    <button type="submit" id="save-entity" class="btn btn-primary">
+                    <button type="submit" id="save-entity" class="btn btn-primary" :disabled="isSaving">
                         <font-awesome-icon icon="save"></font-awesome-icon>&nbsp;<span>Guardar y continuar</span>
                     </button>
 
@@ -110,37 +110,27 @@ export default class Elementos extends Vue {
             });
         }
 
-        public save(accion: 'borrador' | 'continuar' = 'continuar'): void {//debo guardar un elemento proyecto
+        public async save(accion: 'borrador' | 'continuar' = 'continuar'): Promise<void> {
+            this.isSaving = true;
             try {
-                this.isSaving = true;
-
-                for (let e of this.elementosProyecto) {
-                    //Actualizando el integrante
+                for (const e of elementosProyecto) {
                     e.elementoFasesId = this.fase.id;
                     if (e.id) {
-                        this.elementoProyectoService().update(e); //envio un elemento
-                        if (accion === 'continuar') {
-                            this.$router.push({ name: 'ProyectoAdjuntarProyectoView',params:{ proyectoId: this.proyId}});
-                        }
+                        await this.elementoProyectoService().update(e);
                     } else {
-                        //Creando un nuevo integrante
-                        this.elementoProyectoService().create(e)
-                        .then(param => {
-                            e.id = param.id;
-                            if (accion === 'continuar') {
-                                this.$router.push({ name: 'ProyectoAdjuntarProyectoView',params:{ proyectoId: this.proyId}});
-                            }
-                        });
+                        const param = await this.elementoProyectoService().create(e);
+                        e.id = param.id;
                     }
                 }
-
                 if (accion === 'borrador') {
-                    this.isSaving = false;
                     this.alertService().showAlert('Borrador guardado. Aún puedes continuar más tarde.', 'info');
+                } else {
+                    this.$router.push({ name: 'ProyectoAdjuntarProyectoView', params: { proyectoId: this.proyId } });
                 }
-
             } catch (e) {
-                //TODO: mostrar mensajes de error
+                this.alertService().showHttpError(this, e && e.response ? e.response : e);
+            } finally {
+                this.isSaving = false;
             }
         }
 

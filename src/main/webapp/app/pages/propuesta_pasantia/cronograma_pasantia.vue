@@ -67,13 +67,13 @@
 
       <button type="button" id="save-borrador"
        class="btn btn-outline-secondary float-right"
-         @click="save('borrador')" > 
+         @click="save('borrador')" :disabled="isSaving"> 
         <font-awesome-icon :icon="['fas', 'save']"></font-awesome-icon>&nbsp;
         <span>Guardar borrador</span>
       </button>
       <button type="submit" id="save-entity" 
        class="btn btn-primary float-right"
-         @click="save('continuar')" > 
+         @click="save('continuar')" :disabled="isSaving"> 
         <font-awesome-icon :icon="['fas', 'save']"></font-awesome-icon>&nbsp;
         <span>Guardar y continuar</span>
       </button>
@@ -81,8 +81,7 @@
         type="submit"
         id="save-entity"
         class="btn btn-primary float-right"
-        @click="nuevo_cronograma()"
-      >
+        @click="nuevo_cronograma()" :disabled="isSaving">
         <font-awesome-icon :icon="['fas', 'plus']"></font-awesome-icon>&nbsp;
         <span></span>
       </button>
@@ -147,46 +146,29 @@ public cronograms: ICronograma[] = [];
             });
     }
 
-             public save(accion: 'borrador' | 'continuar' = 'continuar'): void {//debo guardar un elemento proyecto
+             public async save(accion: 'borrador' | 'continuar' = 'continuar'): Promise<void> {
+            this.isSaving = true;
             try {
-                this.isSaving = true;
-                var i=this.cronograms.length;
-                //var i=0;
-                for (let e of this.cronograms) {
-                    //Actualizando el cronograma
-                     var resultado = new Cronograma();
-                     e.cronogramaProyectoId = this.proyId;
-                     e.ordenVista = i++;  
-
-                        
-            
+                let i = this.cronograms.length;
+                for (const e of this.cronograms) {
+                    e.cronogramaProyectoId = this.proyId;
+                    e.ordenVista = i++;
                     if (e.id) {
-                        this.cronogramaService().update(e); //envio un elemento
-                        if (accion === 'continuar') {
-                            this.$router.push({ name: 'PropuestaAdjuntarPropuestaPasantiaView',params:{ proyectoId: this.proyId}});
-                        }
+                        await this.cronogramaService().update(e);
                     } else {
-                        
-                        this.cronogramaService().create(e)
-                        .then(param => {
-                            e.id = param.id;
-                            if (accion === 'continuar') {
-                                this.$router.push({ name: 'PropuestaAdjuntarPropuestaPasantiaView',params:{ proyectoId: this.proyId}});
-                                //const message = this.$t('ciecytApp.cronograma.created', { param: param.id });
-                                const message = "Se ha creado un nuevo cronograma" + { param: param.id };
-                                this.alertService().showAlert(message, 'success');
-                            }
-                        });
+                        const param = await this.cronogramaService().create(e);
+                        e.id = param.id;
                     }
                 }
-
                 if (accion === 'borrador') {
-                    this.isSaving = false;
                     this.alertService().showAlert('Borrador guardado. Aún puedes continuar más tarde.', 'info');
+                } else {
+                    this.$router.push({ name: 'PropuestaAdjuntarPropuestaPasantiaView', params: { proyectoId: this.proyId } });
                 }
-
             } catch (e) {
-                //TODO: mostrar mensajes de error
+                this.alertService().showHttpError(this, e && e.response ? e.response : e);
+            } finally {
+                this.isSaving = false;
             }
         }
 

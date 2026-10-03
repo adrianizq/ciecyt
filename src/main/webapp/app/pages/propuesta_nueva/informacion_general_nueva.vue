@@ -215,11 +215,11 @@
             <font-awesome-icon icon="ban"></font-awesome-icon>&nbsp;<span v-text="$t('entity.action.cancel')"></span>
           </button>
 
-          <button type="button" id="save-borrador" class="btn btn-outline-secondary" v-on:click="save('borrador')">
+          <button type="button" id="save-borrador" class="btn btn-outline-secondary" v-on:click="save('borrador')" :disabled="isSaving">
             <font-awesome-icon icon="save"></font-awesome-icon>&nbsp;<span>Guardar borrador</span>
           </button>
 
-          <button type="submit" id="save-entity" class="btn btn-primary">
+          <button type="submit" id="save-entity" class="btn btn-primary" :disabled="isSaving">
             <font-awesome-icon icon="save"></font-awesome-icon>&nbsp;<span>Guardar y continuar</span>
           </button>
 

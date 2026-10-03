@@ -107,6 +107,22 @@ setupAxiosInterceptors(status => {
   alertService.showAlert('No tiene permisos para realizar esta acción.', 'danger');
 });
 
+// Muchos .then() del frontend no tenian .catch(): el fallo solo aparecia en la
+// consola y al usuario no le llegaba nada. Con esto cualquier peticion HTTP que
+// quede sin manejar muestra el mismo aviso que showHttpError, sin repetir el de
+// sesion caducada/permisos que ya emite el interceptor.
+window.addEventListener('unhandledrejection', event => {
+  const reason: any = event.reason;
+  const response = reason && typeof reason === 'object' ? reason.response : null;
+  if (!response) {
+    return;
+  }
+  if (response.status === 401 || response.status === 403) {
+    return;
+  }
+  alertService.showHttpError(null, response);
+});
+
 const provide: Record<string, unknown> = {
   loginService: () => loginService,
   activateService: () => new ActivateService(),

@@ -46,7 +46,7 @@
             <font-awesome-icon icon="ban"></font-awesome-icon>&nbsp;<span v-text="$t('entity.action.cancel')"></span>
           </button>
 
-          <button type="submit" id="save-entity" class="btn btn-primary" :disabled='isDisabled'>
+          <button type="submit" id="save-entity" class="btn btn-primary" :disabled="isDisabled || isSaving">
             <font-awesome-icon icon="save"></font-awesome-icon>&nbsp;<span>Enviar</span>
           </button>
         </div>
@@ -124,6 +124,10 @@ export default class EnviarPropuesta extends Vue {
           (<any>this).$router.go(0);
           const message = this.$t('ciecytApp.proyecto.updated', { param: param.id });
           this.alertService().showAlert(message, 'info');
+        })
+        .catch(() => {
+          this.isSaving = false;
+          this.alertService().showAlert('No fue posible completar la operación. Intente de nuevo.', 'danger');
         });
     } else {
       this.proyectoService()
@@ -138,6 +142,10 @@ export default class EnviarPropuesta extends Vue {
 
           const message = 'Se ha creado un nuevo proyecto';
           this.alertService().showAlert(message, 'success');
+        })
+        .catch(() => {
+          this.isSaving = false;
+          this.alertService().showAlert('No fue posible completar la operación. Intente de nuevo.', 'danger');
         });
     }
     //this.submitStatus = 'PENDING';

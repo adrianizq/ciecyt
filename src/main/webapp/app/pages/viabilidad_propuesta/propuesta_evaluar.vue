@@ -375,7 +375,7 @@
                 <button type="button" id="cancel-save" class="btn btn-light" v-on:click="previousState()">
                   <font-awesome-icon icon="undo" />&nbsp;<span>Cancelar</span>
                 </button>
-                <button type="button" id="save-borrador" class="btn btn-outline-secondary" v-on:click="save('borrador')">
+                <button type="button" id="save-borrador" class="btn btn-outline-secondary" v-on:click="save('borrador')" :disabled="isSaving">
                   <font-awesome-icon icon="save" />&nbsp;<span>Guardar borrador</span>
                 </button>
                 <button type="button" id="save-enviar" class="btn btn-primary" v-on:click="save('enviar')">

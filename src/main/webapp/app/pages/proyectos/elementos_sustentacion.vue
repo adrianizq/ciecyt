@@ -59,7 +59,7 @@
 
 
 
-                    <button type="submit" id="save-entity" class="btn btn-outline-secondary">
+                    <button type="submit" id="save-entity" class="btn btn-outline-secondary" :disabled="isSaving">
                         <font-awesome-icon icon="save"></font-awesome-icon>&nbsp;<span>Guardar borrador</span>
                     </button>
 

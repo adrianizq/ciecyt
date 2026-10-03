@@ -359,11 +359,11 @@
             <font-awesome-icon icon="ban"></font-awesome-icon>&nbsp;<span v-text="$t('entity.action.cancel')"></span>
           </button>
 
-          <button type="button" id="save-borrador" class="btn btn-outline-secondary" v-on:click="save('borrador')">
+          <button type="button" id="save-borrador" class="btn btn-outline-secondary" v-on:click="save('borrador')" :disabled="isSaving">
             <font-awesome-icon icon="save"></font-awesome-icon>&nbsp;<span>Guardar borrador</span>
           </button>
 
-          <button type="submit" id="save-entity" class="btn btn-primary" :disabled="this.submitStatus === 'PENDING'">
+          <button type="submit" id="save-entity" class="btn btn-primary" :disabled="(this.submitStatus === 'PENDING') || isSaving">
             <font-awesome-icon icon="save"></font-awesome-icon>&nbsp;<span>Guardar y continuar</span>
           </button>
 
@@ -540,6 +540,10 @@ export default class DiplomadoInformacionGeneral extends Vue {
           this.$router.push({ name: 'PropuestaDiplomadoElementosView', params: { proyectoId: this.proyecto.id.toString() } });
           const message = this.$t('ciecytApp.proyecto.updated', { param: param.id });
           this.alertService().showAlert(message, 'info');
+        })
+        .catch(() => {
+          this.isSaving = false;
+          this.alertService().showAlert('No fue posible completar la operación. Intente de nuevo.', 'danger');
         });
     } else {
       this.proyectoService()
@@ -559,6 +563,10 @@ export default class DiplomadoInformacionGeneral extends Vue {
 
           const message = 'Se ha creado un nuevo  proyecto de Diplomado';
           this.alertService().showAlert(message, 'success');
+        })
+        .catch(() => {
+          this.isSaving = false;
+          this.alertService().showAlert('No fue posible completar la operación. Intente de nuevo.', 'danger');
         });
     }
     //this.submitStatus = 'PENDING';

@@ -39,7 +39,7 @@
             <font-awesome-icon icon="ban"></font-awesome-icon>&nbsp;<span v-text="$t('entity.action.cancel')"></span>
           </button>
 
-          <button type="submit" id="save-entity" class="btn btn-primary" :disabled='isDisabled'>
+          <button type="submit" id="save-entity" class="btn btn-primary" :disabled="isDisabled || isSaving">
             <font-awesome-icon icon="save"></font-awesome-icon>&nbsp;<span>Guardar</span>
           </button>
         </div>
@@ -197,6 +197,10 @@ export default class DocumentoPropuesta extends mixins(JhiDataUtils) {
           const message = this.$t('ciecytApp.adjuntoProyectoFase.updated', { param: param.id });
           this.alertService().showAlert(message, 'info');
           (<any>this).$router.go(0);
+        })
+        .catch(() => {
+          this.isSaving = false;
+          this.alertService().showAlert('No fue posible completar la operación. Intente de nuevo.', 'danger');
         });
     } else {
       this.adjuntoProyectoFaseService()
@@ -206,6 +210,10 @@ export default class DocumentoPropuesta extends mixins(JhiDataUtils) {
           const message = this.$t('ciecytApp.adjuntoProyectoFase.created', { param: param.id });
           this.alertService().showAlert(message, 'success');
           (<any>this).$router.go(0);
+        })
+        .catch(() => {
+          this.isSaving = false;
+          this.alertService().showAlert('No fue posible completar la operación. Intente de nuevo.', 'danger');
         });
     }
   }
