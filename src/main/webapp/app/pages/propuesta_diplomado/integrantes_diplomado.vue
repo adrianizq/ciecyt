@@ -179,7 +179,6 @@ import { useVuelidate } from '@vuelidate/core';
                     .retrieveEstudiantesProyecto(this.proyId )
                     .then(res => {
                        this.integrantesProyecto = res.data;
-                       console.log(res.data);
                    });
                     
                   if(this.integrantesProyecto.length==0){  

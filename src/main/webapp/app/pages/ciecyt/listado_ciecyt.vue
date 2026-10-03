@@ -29,9 +29,8 @@
               </div>
 
         <br/>
-        <div class="alert alert-warning" v-if="!isFetching && proyects && proyects.length === 0">
-            <span>No se encontraron proyectos</span>
-        </div>
+        <jhi-loading v-if="isFetching"></jhi-loading>
+        <jhi-empty v-if="!isFetching && proyects && proyects.length === 0" titulo="No se encontraron proyectos" mensaje=""></jhi-empty>
        
         <div >
             <table class="table table-responsive table-striped table-hover table-fixed"
@@ -402,7 +401,6 @@ retrieveSearchTitulo(){
       .then(
         res => {
           this.proyects = res.data;
-          //console.log(this.licenses);
           this.totalItems = Number(res.headers['x-total-count']);
           this.queryCount = this.totalItems;
           this.isFetching = false;
@@ -434,7 +432,6 @@ retrieveSearchTitulo(){
       .then(
         res => {
           this.proyects = res.data;
-          //console.log(this.licenses);
           this.totalItems = Number(res.headers['x-total-count']);
           this.queryCount = this.totalItems;
           this.isFetching = false;
@@ -740,7 +737,6 @@ public continuidadTexto(proyecto: IProyecto): string {
       //    this.proyects.forEach(p => {
       //      this.integrantesProyectoJurados.push(this.integranteProyectoService().retrieveJuradosProyecto(p.id,"Jurado", paginationQuery));
       //  });
-      //  console.log( this.integrantesProyectoJurados)
 
 
 
@@ -820,7 +816,6 @@ public get username(): string {
        this.users.forEach(u => {
       if(u.login==login){
         res=u.firstName.toString();
-        //console.log(res);
        }
     });
     return res;
@@ -853,7 +848,6 @@ public get username(): string {
   }
 
 public get authorities(): string {
-    console.log(this.$store.getters.account);
     return this.$store.getters.account ? this.$store.getters.account.authorities : '';
   }
 

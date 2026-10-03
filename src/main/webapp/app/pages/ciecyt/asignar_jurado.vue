@@ -328,7 +328,6 @@ await this.integranteProyectoService()
                         this.cantJurados = res.cantidad;
                         this.rolModalidadId = res.id;
 
-                        console.log( this.cantJurados);
                         
                          for (var i = 0; i < this.cantJurados; i++) {
                             let integrante = new IntegranteProyecto();

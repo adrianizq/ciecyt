@@ -87,7 +87,6 @@ export default class RolMenuService {
   }
 
   public async batchUpdate(entities: IRolMenu[]): Promise<boolean> {
-    console.log(entities);
     for (const entity of entities) {
       if (entity.id) {
         await this.update(entity);

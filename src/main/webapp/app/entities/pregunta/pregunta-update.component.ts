@@ -136,7 +136,6 @@ export default class PreguntaUpdate extends Vue {
       pr.preguntaId = this.preguntaId;
       pr.modalidad2Id = element.id;
       this.pregunta.preguntaModalidads.push(pr);
-      // console.log(this.pregunta.preguntaModalidads);
     });
     //4
     this.pregunta.authorities = [];
@@ -145,7 +144,6 @@ export default class PreguntaUpdate extends Vue {
       pr.pregunta3Id = this.preguntaId;
       pr.authorityName = element.toString();
       this.pregunta.authorities.push(pr);
-      console.log(this.pregunta.authorities);
     });
 
     if (this.pregunta.id) {
@@ -159,8 +157,6 @@ export default class PreguntaUpdate extends Vue {
           this.alertService().showAlert(message, 'info');
         });
       /////////
-
-      // console.log(this.selected);
     } else {
       this.preguntaService()
         .create(this.pregunta)
@@ -172,7 +168,6 @@ export default class PreguntaUpdate extends Vue {
           this.alertService().showAlert(message, 'success');
         });
     }
-    //console.log(this.modalidadesAsignadas);
   }
 
   get Elementos() {

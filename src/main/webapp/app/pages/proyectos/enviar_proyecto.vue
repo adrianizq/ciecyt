@@ -138,7 +138,6 @@ export default class EnviarProyecto extends Vue {
       .then(res => {
         this.proyecto = res.data;
         this.integrants = this.proyecto.listaIntegrantesProyecto;
-        console.log( res.data.listaIntegrantesProyecto);
         
       });
   }

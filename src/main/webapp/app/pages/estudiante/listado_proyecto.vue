@@ -8,9 +8,8 @@
         <span id="proyecto-heading">Mis Proyectos</span>
       </h2>
       <br />
-      <div class="alert alert-warning" v-if="!isFetching && proyects && proyects.length === 0">
-        <span>No se encontraron proyectos</span>
-      </div>
+      <jhi-loading v-if="isFetching"></jhi-loading>
+      <jhi-empty v-if="!isFetching && proyects && proyects.length === 0" titulo="No se encontraron proyectos" mensaje=""></jhi-empty>
       <!--<div>{{ username }} con id {{ userid }} </div>-->
       <div class="table-responsive" v-if="proyects && proyects.length > 0">
         <table class="table table-striped">
@@ -241,7 +240,6 @@ export default class Listado extends Vue {
   }
 
   public get authorities(): string {
-    console.log(this.$store.getters.account);
     return this.$store.getters.account ? this.$store.getters.account.authorities : '';
   }
 }

@@ -47,7 +47,6 @@ export default class Pregunta extends mixins(AlertMixin) {
         .then(
           res => {
             this.preguntas = res.data;
-            //console.log(this.licenses);
             this.totalItems = Number(res.headers['x-total-count']);
             this.queryCount = this.totalItems;
             this.isFetching = false;

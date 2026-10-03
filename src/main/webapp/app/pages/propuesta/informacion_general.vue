@@ -549,7 +549,6 @@ export default class PropuestaInformacionGeneral extends Vue {
       .retrieve()
       .then(res => {
         this.modalidads = res.data;
-        //console.log(this.modalidads);
       });
 
     this.investigacionTipoService()
@@ -603,7 +602,6 @@ export default class PropuestaInformacionGeneral extends Vue {
   }
 
   setAsesor(value) {
-    console.log(value);
     //this.integranteProyecto.integranteProyectoUserId = value;
     this.proyecto.asesorId = value;
   }

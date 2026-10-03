@@ -294,13 +294,15 @@ export default class Retroalimentacion extends mixins(JhiDataUtils){
 
   
      descargarRetro() {
-        //console.log('se hizo clic');
         this.adjuntoRetroalimentacionService().downloadFile(this.adjuntoRetroalimentacion.id, this.adjuntoRetroalimentacion.nombreArchivoOriginal);
      }
 
       
 
      eliminarRetro(ob) {
+         if (!window.confirm('¿Está seguro de que desea eliminar este archivo?')) {
+           return;
+         }
          this.adjuntoRetroalimentacionService()
          .delete(this.adjuntoRetroalimentacion.id)
            .then(() => {
@@ -318,7 +320,6 @@ export default class Retroalimentacion extends mixins(JhiDataUtils){
   asignarDataRetro(event, entity, field, isImage){
      var fileData =  event.target.files[0];
     this.adjuntoRetroalimentacion.nombreArchivoOriginal= fileData.name;
-    console.log(this.adjuntoRetroalimentacion.nombreArchivoOriginal);
 
     this.setFileData(event, entity, field, isImage)
     
@@ -340,7 +341,6 @@ export default class Retroalimentacion extends mixins(JhiDataUtils){
       .then(res => {
         this.proyecto = res.data;
         this.integrants = this.proyecto.listaIntegrantesProyecto;
-        console.log( res.data.listaIntegrantesProyecto);
         
       });
   }

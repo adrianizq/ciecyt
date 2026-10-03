@@ -300,7 +300,6 @@ export default class Retroalimentacion extends mixins(JhiDataUtils){
   
 
        descargarAsesorRetro() {
-        //console.log('se hizo clic');
         this.adjuntoRetroalimentacionService().downloadFile(this.adjuntoAsesorRetroalimentacion.id, this.adjuntoAsesorRetroalimentacion.nombreArchivoOriginal);
      }
 
@@ -314,7 +313,6 @@ export default class Retroalimentacion extends mixins(JhiDataUtils){
    asignarDataAsesorRetro(event, entity, field, isImage){
      var fileData =  event.target.files[0];
     this.adjuntoAsesorRetroalimentacion.nombreArchivoOriginal= fileData.name;
-    console.log(this.adjuntoAsesorRetroalimentacion.nombreArchivoOriginal);
 
     this.setFileData(event, entity, field, isImage)
     
@@ -334,7 +332,6 @@ export default class Retroalimentacion extends mixins(JhiDataUtils){
       .then(res => {
         this.proyecto = res.data;
         this.integrants = this.proyecto.listaIntegrantesProyecto;
-        console.log( res.data.listaIntegrantesProyecto);
         
       });
   }

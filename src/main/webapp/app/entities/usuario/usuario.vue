@@ -15,9 +15,8 @@
             {{alertMessage}}
         </b-alert>
         <br/>
-        <div class="alert alert-warning" v-if="!isFetching && usuarios && usuarios.length === 0">
-            <span v-text="$t('ciecytApp.usuario.home.notFound')"></span>
-        </div>
+        <jhi-loading v-if="isFetching"></jhi-loading>
+        <jhi-empty v-if="!isFetching && usuarios && usuarios.length === 0" :titulo="$t('ciecytApp.usuario.home.notFound')" mensaje=""></jhi-empty>
         <div class="table-responsive" v-if="usuarios && usuarios.length > 0">
             <table class="table table-striped">
                 <thead>

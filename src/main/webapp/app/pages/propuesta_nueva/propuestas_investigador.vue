@@ -10,9 +10,8 @@
             
         </h2>
         <br/>
-        <div class="alert alert-warning" v-if="!isFetching && proyects && proyects.length === 0">
-            <span>No se encontraron proyectos</span>
-        </div>
+        <jhi-loading v-if="isFetching"></jhi-loading>
+        <jhi-empty v-if="!isFetching && proyects && proyects.length === 0" titulo="No se encontraron proyectos" mensaje=""></jhi-empty>
         <!--<div>{{username}} con id {{userid}} </div>-->
         <div class="table-responsive" v-if="proyects && proyects.length > 0">
             <table class="table table-striped">
@@ -285,7 +284,6 @@ public get username(): string {
   }
 
 public get authorities(): string {
-    console.log(this.$store.getters.account);
     return this.$store.getters.account ? this.$store.getters.account.authorities : '';
   }
 
@@ -296,7 +294,6 @@ public  buscarAuthorithy(idAuth:number): string{
      {
         
         if( this.modalidads[i].id == idAuth){
-            console.log("econtro " + this.modalidads[i].id + " " + idAuth + "elemento => " + this.modalidads[i].modalidad);
           
            return this.modalidads[i].modalidad;
            //e=element.modalidad;
@@ -317,7 +314,6 @@ public  buscarAuthorithy(idAuth:number): string{
                 .then(
                 res => {
                     this.modalidads = res.data;
-                //console.log(res.data);
                 }
                 );
             }

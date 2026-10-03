@@ -332,7 +332,6 @@ export default class PropuestaInformacionGeneral extends Vue {
 
   public save(accion: 'borrador' | 'continuar' = 'continuar'): void {
     this.isSaving = true;
-    console.log('Guardando proyecto:', JSON.stringify(this.proyecto));
 
     // this.v$.$touch();
     /* if (this.v$.$invalid) {
@@ -356,7 +355,6 @@ export default class PropuestaInformacionGeneral extends Vue {
                     this.setSubLinea(0);
                 }
                   if(this.v$.integranteProyecto.integranteProyectoUserId.$invalid){
-                    console.log(this.v$);
                     this.setAsesor("");
                     
                 }
@@ -423,7 +421,6 @@ export default class PropuestaInformacionGeneral extends Vue {
       this.submitStatus = 'OK';
     }, 500);
     //}
-    //console.log(this.submitStatus);
   }
 
   get LineasInvestigacion() {
@@ -496,12 +493,10 @@ export default class PropuestaInformacionGeneral extends Vue {
     if (this.proyId) {
       const res = await this.proyectoService().retrieveWithAsesor(this.proyId);
       const proyectoCargado = res.data;
-      console.log('Proyecto cargado:', proyectoCargado);
 
       // Cargar la modalidad completa para saber si contiene linea/sublinea
       if (proyectoCargado.proyectoModalidadId) {
         this.modalidad = await this.modalidadService().find(proyectoCargado.proyectoModalidadId);
-        console.log('Modalidad cargada:', this.modalidad);
       }
 
       // Cargar modalidades y programas asociados al ciclo del proyecto

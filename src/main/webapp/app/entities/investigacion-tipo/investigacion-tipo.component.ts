@@ -49,7 +49,6 @@ export default class InvestigacionTipo extends mixins(AlertMixin) {
       .then(
         res => {
           this.investigacionTips = res.data;
-          //console.log(this.investigacionTips);
           this.totalItems = Number(res.headers['x-total-count']);
           this.queryCount = this.totalItems;
           this.isFetching = false;

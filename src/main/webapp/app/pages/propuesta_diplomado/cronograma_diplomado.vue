@@ -184,7 +184,6 @@ public cronograms: ICronograma[] = [];
              this.proyecto = await this.proyectoService().find(this.proyId);
 
 
-              console.log(this.proyId);
             
             //recuperar los cronogramas enviando un idProyecto (api)
             //retrieveCronogramaProyecto
@@ -204,7 +203,6 @@ public cronograms: ICronograma[] = [];
             
             }
             catch(e){ 
-              console.log("error al recuperar la informacion de cronograma ");
             }
  
         }

@@ -46,8 +46,6 @@ export default class JhiNavbar extends Vue {
         .allRoles(this.roles)
         .then(res => {
           this.menus = res;
-
-          console.log(this.roles);
         });
     } else {
       await this.menuService()
@@ -55,8 +53,6 @@ export default class JhiNavbar extends Vue {
         .allRoles('ANONYMOUS')
         .then(res => {
           this.menus = res;
-
-          //console.log(this.roles);
         });
     }
 

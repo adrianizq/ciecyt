@@ -2,7 +2,7 @@
   <div class="jhi-empty text-center py-4" role="status">
     <font-awesome-icon :icon="icono" class="jhi-empty-icon text-muted mb-2" size="2x" />
     <p class="mb-1 fw-semibold">{{ titulo }}</p>
-    <p class="mb-0 text-muted small">{{ mensaje }}</p>
+    <p v-if="mensaje" class="mb-0 text-muted small">{{ mensaje }}</p>
     <slot></slot>
   </div>
 </template>

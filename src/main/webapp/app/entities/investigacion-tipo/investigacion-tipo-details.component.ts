@@ -22,7 +22,6 @@ export default class InvestigacionTipoDetails extends Vue {
       .find(investigacionTipoId)
       .then(res => {
         this.investigacionTipo = res;
-        console.log(res);
       });
   }
 

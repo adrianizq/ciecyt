@@ -153,7 +153,6 @@ export default class EnviarPropuesta extends Vue {
     //  this.submitStatus = 'OK';
     //}, 500);
     //}
-    // console.log(this.submitStatus);
   }
 
   retrieveProyecto() {
@@ -163,7 +162,6 @@ export default class EnviarPropuesta extends Vue {
       .then(res => {
         this.proyecto = res.data;
         this.integrants = this.proyecto.listaIntegrantesProyecto;
-        console.log( res.data.listaIntegrantesProyecto);
         
       });
   }

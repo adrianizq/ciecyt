@@ -97,7 +97,6 @@ export default class MenuUpdate extends Vue {
 
   public getAlcance() {
     const esPublico = this.menu.esPublico ? false : true;
-    console.log('aqui!!!' + esPublico);
     return esPublico;
   }
 }

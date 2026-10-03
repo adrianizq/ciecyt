@@ -423,12 +423,10 @@ export default class PropuestaEvaluar extends mixins(JhiDataUtils) {
   }
 
   descargar() {
-    //console.log('se hizo clic');
     this.adjuntoProyectoFaseService().downloadFile(this.adjuntoProyectoFase.id, this.adjuntoProyectoFase.nombreArchivoOriginal);
   }
 
   descargarRetro() {
-    //console.log('se hizo clic');
     this.adjuntoRetroalimentacionService().downloadFile(
       this.adjuntoRetroalimentacion.id,
       this.adjuntoRetroalimentacion.nombreArchivoOriginal
@@ -436,6 +434,9 @@ export default class PropuestaEvaluar extends mixins(JhiDataUtils) {
   }
 
   eliminarRetro(ob) {
+      if (!window.confirm('¿Está seguro de que desea eliminar este archivo?')) {
+        return;
+      }
       this.adjuntoRetroalimentacionService()
       .delete(this.adjuntoRetroalimentacion.id)
         .then(() => {
@@ -450,7 +451,6 @@ export default class PropuestaEvaluar extends mixins(JhiDataUtils) {
   asignarData(event, entity, field, isImage) {
     var fileData = event.target.files[0];
     this.adjuntoProyectoFase.nombreArchivoOriginal = fileData.name;
-    console.log(this.adjuntoProyectoFase.nombreArchivoOriginal);
 
     this.setFileData(event, entity, field, isImage);
   }
@@ -458,7 +458,6 @@ export default class PropuestaEvaluar extends mixins(JhiDataUtils) {
   asignarDataRetro(event, entity, field, isImage) {
     var fileData = event.target.files[0];
     this.adjuntoRetroalimentacion.nombreArchivoOriginal = fileData.name;
-    console.log(this.adjuntoRetroalimentacion.nombreArchivoOriginal);
 
     this.setFileData(event, entity, field, isImage);
   }
@@ -579,7 +578,6 @@ export default class PropuestaEvaluar extends mixins(JhiDataUtils) {
       } else {
         this.proyectoRespuestasDatos = false;
       }
-      //console.log(this.proyectoRespuestasDatos);
 
       //Obtenienedo los elementos de acuerdo a la modalidad
       res = await this.preguntaService().retrievePreguntasModalidadyFaseyAuthority(this.modalidadId, this.fase.id, this.authority);
@@ -630,7 +628,6 @@ export default class PropuestaEvaluar extends mixins(JhiDataUtils) {
           } else {
             this.adjuntoProyectoFase = this.adjuntoProyectoFass[0];
           }
-          console.log(this.adjuntoProyectoFass);
         });
 
       res = await this.adjuntoRetroalimentacionService()
@@ -642,11 +639,8 @@ export default class PropuestaEvaluar extends mixins(JhiDataUtils) {
           } else {
             this.adjuntoRetroalimentacion = this.adjuntoRetroalimentacions[0];
           }
-          console.log(this.adjuntoRetroalimentacions);
-          console.log(this.adjuntoRetroalimentacion);
         });
     } catch (e) {
-      console.log('error al recuperar la informacion de elemento ');
     }
   }
   public previousState() {

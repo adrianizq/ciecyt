@@ -425,7 +425,6 @@ export default class PasantiaInformacionGeneral extends Vue {
       }
 
       if (this.v$.integranteProyecto.integranteProyectoUserId.$invalid) {
-        //console.log(this.v$);
         //this.setAsesor('');
       }
 

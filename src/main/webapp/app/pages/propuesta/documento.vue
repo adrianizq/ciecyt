@@ -129,6 +129,9 @@ export default class DocumentoPropuesta extends mixins(JhiDataUtils) {
   }
 
   eliminar() {
+    if (!window.confirm('¿Está seguro de que desea eliminar este archivo?')) {
+      return;
+    }
     this.adjuntoProyectoFaseService().delete(this.adjuntoProyectoFase.id).then(() => {
       this.adjuntoProyectoFase = new AdjuntoProyectoFase();
       this.alertService().showAlert('Documento eliminado', 'info');

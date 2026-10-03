@@ -853,7 +853,6 @@ export default class PasantiaInformacionEmpresa extends Vue {
       });
   }
   setMunicipios(value) {
-    console.log(value);
     this.municipiosEmpresa = [];
     this.municipioService()
       .retrieveMunicipiosPorDepartamento(value)

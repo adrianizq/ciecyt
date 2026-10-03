@@ -329,7 +329,6 @@ import { useVuelidate } from '@vuelidate/core';
                         this.cantAsesores = res.cantidad;
                         this.rolModalidadId = res.id;
 
-                        console.log( this.cantAsesores);
                         
                          for (var i = 0; i < this.cantAsesores; i++) {
                             let integrante = new IntegranteProyecto();

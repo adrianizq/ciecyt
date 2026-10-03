@@ -15,9 +15,8 @@
             {{alertMessage}}
         </b-alert>
         <br/>
-        <div class="alert alert-warning" v-if="!isFetching && fichaTecnicas && fichaTecnicas.length === 0">
-            <span v-text="$t('ciecytApp.fichaTecnica.home.notFound')"></span>
-        </div>
+        <jhi-loading v-if="isFetching"></jhi-loading>
+        <jhi-empty v-if="!isFetching && fichaTecnicas && fichaTecnicas.length === 0" :titulo="$t('ciecytApp.fichaTecnica.home.notFound')" mensaje=""></jhi-empty>
         <div class="table-responsive" v-if="fichaTecnicas && fichaTecnicas.length > 0">
             <table class="table table-striped">
                 <thead>

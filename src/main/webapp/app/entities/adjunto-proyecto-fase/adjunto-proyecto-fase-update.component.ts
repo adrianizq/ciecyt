@@ -51,7 +51,6 @@ export default class AdjuntoProyectoFaseUpdate extends mixins(JhiDataUtils) {
   public modalidadId: number;
 
   descargar() {
-    //console.log('se hizo clic');
     this.adjuntoProyectoFaseService().downloadFile(this.adjuntoProyectoFase.id);
   }
   @Hook

@@ -118,14 +118,11 @@ import { useVuelidate } from '@vuelidate/core';
 
         async cargarJuradosExistentes() {
             try {
-                console.log('Cargando jurados existentes para proyecto:', this.proyId, 'modalidad:', this.modalidadId);
                 const res = await this.integranteProyectoService().retrieveJuradosProyecto(this.proyId, "Jurado");
                 this.integrantesProyecto = res.data || [];
-                console.log('Jurados existentes cargados:', JSON.stringify(this.integrantesProyecto));
 
                 if (this.integrantesProyecto.length === 0) {
                     const rolRes = await this.rolesModalidadService().findRolModalidad("Jurado", this.modalidadId);
-                    console.log('Rol de jurado encontrado:', JSON.stringify(rolRes));
                     if (!rolRes || !rolRes.id) {
                         // La modalidad no requiere jurado (Acuerdo 025, art. 9): se omite este paso
                         this.$router.push({ name: 'PropuestaInscripcionNuevaEditView', params: { proyectoId: String(this.proyId) } });

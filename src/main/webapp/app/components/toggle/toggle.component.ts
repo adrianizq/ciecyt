@@ -12,7 +12,6 @@ export default class MenuUpdate extends Vue {
   @Prop() default: boolean;
 
   /*created() {
-    console.log('Cargando la información: ' + this.default);
     this.dataModel = this.default;
   }*/
 

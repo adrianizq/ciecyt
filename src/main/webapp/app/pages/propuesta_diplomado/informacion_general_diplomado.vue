@@ -521,12 +521,10 @@ export default class DiplomadoInformacionGeneral extends Vue {
         this.setSubLinea(0);
       }
       if (this.v$.integranteProyecto.integranteProyectoUserId.$invalid) {
-        console.log(this.v$);
         this.setAsesor('');
       }
 
       this.submitStatus = 'ERROR';
-      console.log(this.submitStatus);
     } else {*/
     if (this.proyecto.id) {
       this.proyectoService()
@@ -574,7 +572,6 @@ export default class DiplomadoInformacionGeneral extends Vue {
     //  this.submitStatus = 'OK';
     //}, 500);
     //}
-    console.log(this.submitStatus);
   }
 
   get LineasInvestigacion() {
@@ -685,7 +682,6 @@ export default class DiplomadoInformacionGeneral extends Vue {
   }
 
   setAsesor(value) {
-    console.log(value);
     //this.integranteProyecto.integranteProyectoUserId = value;
     this.proyecto.asesorId = value;
   }

@@ -96,7 +96,6 @@ export default class RolesModalidadUpdate extends Vue {
       .retrieveAuthorities()
       .then(_res => {
         this.authorities = _res.data;
-        console.log(this.authorities);
       });
   }
 }

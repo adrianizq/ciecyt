@@ -185,7 +185,6 @@ export default class Elementos extends Vue {
             ////////////////////////////////////////////////////77
             }
             catch(e){
-              console.log("error al recuperar la informacion de elemento ");
             }
         }
 }

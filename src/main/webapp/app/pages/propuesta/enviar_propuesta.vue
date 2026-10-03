@@ -209,7 +209,6 @@ export default class EnviarPropuesta extends Vue {
         this.proyecto = res.data;
         this.integrants = this.proyecto.listaIntegrantesProyecto;
         this.modalidadId = this.proyecto.proyectoModalidadId;
-        console.log(res.data.listaIntegrantesProyecto);
       });
   }
 

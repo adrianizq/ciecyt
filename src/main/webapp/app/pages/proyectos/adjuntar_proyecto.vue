@@ -146,11 +146,13 @@ export default class AdjutarProyecto extends mixins(JhiDataUtils) {
   public modalidadId: any;
 
   descargar() {
-    //console.log('se hizo clic');
     this.adjuntoProyectoFaseService().downloadFile(this.adjuntoProyectoFase.id, this.adjuntoProyectoFase.nombreArchivoOriginal);
   }
 
   eliminar(ob) {
+      if (!window.confirm('¿Está seguro de que desea eliminar este archivo?')) {
+        return;
+      }
       this.adjuntoProyectoFaseService()
       .delete(this.adjuntoProyectoFase.id)
         .then(() => {
@@ -165,7 +167,6 @@ export default class AdjutarProyecto extends mixins(JhiDataUtils) {
   asignarData(event, entity, field, isImage) {
     var fileData = event.target.files[0];
     this.adjuntoProyectoFase.nombreArchivoOriginal = fileData.name;
-    console.log(this.adjuntoProyectoFase.nombreArchivoOriginal);
 
     this.setFileData(event, entity, field, isImage);
   }
@@ -199,7 +200,6 @@ export default class AdjutarProyecto extends mixins(JhiDataUtils) {
     this.adjuntoProyectoFase.proyectoFaseProyectoTitulo = this.proyecto.titulo;
 
     if (this.adjuntoProyectoFase.id) {
-      console.log('Existe el adjunto');
       this.adjuntoProyectoFaseService()
         .update(this.adjuntoProyectoFase)
         .then(param => {
@@ -213,7 +213,6 @@ export default class AdjutarProyecto extends mixins(JhiDataUtils) {
           this.alertService().showAlert('No fue posible guardar el archivo. Intente de nuevo.', 'danger');
         });
     } else {
-      console.log('NO Existe el adjunto');
       this.adjuntoProyectoFaseService()
         .create(this.adjuntoProyectoFase)
         .then(param => {
@@ -264,8 +263,6 @@ export default class AdjutarProyecto extends mixins(JhiDataUtils) {
         } else {
           this.adjuntoProyectoFase = this.adjuntoProyectoFass[0];
         }
-        console.log(this.adjuntoProyectoFass);
-        console.log(this.adjuntoProyectoFase);
       });
   }
 
