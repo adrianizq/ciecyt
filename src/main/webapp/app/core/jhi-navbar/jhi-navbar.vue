@@ -116,8 +116,7 @@
 
     /* Dropdown menu styles */
     ::v-deep .dropdown-menu {
-        border: none;
-        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+        box-shadow: 0 8px 24px rgba(0, 34, 68, 0.18);
         border-radius: 0.5rem;
         padding: 0.5rem 0;
     }
@@ -131,7 +130,7 @@
 
     ::v-deep .dropdown-item:hover,
     ::v-deep .dropdown-item:focus {
-        background-color: #dce4ef;
+        background-color: #c9d9f0;
         color: #003366;
     }
 
