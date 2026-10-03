@@ -151,12 +151,16 @@ export default class EnviarPropuesta extends mixins(JhiDataUtils) {
   }
 
   eliminar(ob) {
-    console.log('entro a eliminar');
-    this.adjuntoProyectoFaseService().delete(this.adjuntoProyectoFase.id);
-    this.adjuntoProyectoFass = null;
-    //this.isSaving = false;
-    (<any>this).$router.go(0);
-  }
+      this.adjuntoProyectoFaseService()
+      .delete(this.adjuntoProyectoFase.id)
+        .then(() => {
+          this.alertService().showAlert('El archivo se eliminó correctamente.', 'success');
+          this.initRelationships();
+        })
+        .catch(() => {
+          this.alertService().showAlert('No fue posible eliminar el archivo. Intente de nuevo.', 'danger');
+        });
+    }
 
   asignarData(event, entity, field, isImage) {
     var fileData = event.target.files[0];

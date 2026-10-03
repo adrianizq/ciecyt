@@ -293,13 +293,16 @@ export default class Retroalimentacion extends mixins(JhiDataUtils){
       
 
      eliminarRetro(ob) {
-    console.log('entro a eliminar');
-    this.adjuntoRetroalimentacionService().delete(this.adjuntoRetroalimentacion.id);
-    //this.adjuntoProyectoFass=null;
-    this.adjuntoRetroalimentacions = null;
-        //this.isSaving = false;
-           (<any>this).$router.go(0);
-  }
+         this.adjuntoRetroalimentacionService()
+         .delete(this.adjuntoRetroalimentacion.id)
+           .then(() => {
+             this.alertService().showAlert('El archivo se eliminó correctamente.', 'success');
+             this.initRelationships();
+           })
+           .catch(() => {
+             this.alertService().showAlert('No fue posible eliminar el archivo. Intente de nuevo.', 'danger');
+           });
+       }
 
 
   

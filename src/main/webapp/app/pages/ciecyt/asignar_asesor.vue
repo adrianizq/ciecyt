@@ -42,7 +42,7 @@ import { useVuelidate } from '@vuelidate/core';
                         <button type="button" id="cancel" class="btn btn-secondary" v-on:click="back">
                             <font-awesome-icon icon="arrow-left"></font-awesome-icon>&nbsp;Volver
                         </button>
-                        <button type="button" id="save" class="btn btn-primary" v-on:click="save()">
+                        <button type="button" id="save" class="btn btn-primary" v-on:click="save()" :disabled="isSaving">
                             <font-awesome-icon icon="save"></font-awesome-icon>&nbsp;<span v-text="$t('entity.action.save')"></span>
                         </button>
                     </div>
@@ -139,13 +139,10 @@ import { useVuelidate } from '@vuelidate/core';
            // this.$router.push({ name: 'PropuestaListadoCiecytView', params: { proyectoId: this.proyId } });
         }
 
-        public save(): void {
+        public async save(): Promise<void> {
+            this.isSaving = true;
             try {
-                this.isSaving = true;
-                let i=0;
-                for (let integrante of this.integrantesProyecto) {
-                    //Actualizando el integrante
-                       i++;
+                for (const integrante of this.integrantesProyecto) {
                     if (integrante.esExterno) {
                         integrante.integranteProyectoUserId = null;
                         integrante.integranteProyectoUserLogin = null;
@@ -155,23 +152,27 @@ import { useVuelidate } from '@vuelidate/core';
                         integrante.integranteProyectoExternoId = null;
                         integrante.integranteProyectoExternoNombre = null;
                     }
-                    if (integrante.id) {
-                         this.integranteProyectoService().update(integrante);
-                        (<any>this).$router.go(0);
-                    } else {
-                        //Creando un nuevo integrante
-                        this.integranteProyectoService().create(integrante)
-                            .then(param => {
-                                (<any>this).$router.go(0);
-                            });
+                    // Los casilleros sin designar son huecos de la lista, no registros:
+                    // guardarlos daria de alta asesores vacios.
+                    const sinDesignar = integrante.esExterno
+                        ? integrante.integranteProyectoExternoId == null
+                        : integrante.integranteProyectoUserId == null;
+                    if (sinDesignar) {
+                        continue;
                     }
-                     var proyId: string = String(this.proyId);
-                   
-
+                    if (integrante.id) {
+                        await this.integranteProyectoService().update(integrante);
+                    } else {
+                        const param = await this.integranteProyectoService().create(integrante);
+                        integrante.id = param.id;
+                    }
                 }
-
+                this.alertService().showAlert('Las designaciones se guardaron correctamente.', 'success');
+                await this.initRelationships();
             } catch (e) {
-                //TODO: mostrar mensajes de error
+                this.alertService().showHttpError(this, e && e.response ? e.response : e);
+            } finally {
+                this.isSaving = false;
             }
         }
          /**

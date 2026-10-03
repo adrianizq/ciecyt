@@ -192,7 +192,7 @@ export default class EnviarPropuesta extends Vue {
       .cambiarEstado(this.proyecto.id, estado, observacion)
       .then(param => {
         this.isSaving = false;
-        (<any>this).$router.go(0);
+        this.initRelationships();
         const message = this.$t('ciecytApp.proyecto.updated', { param: param.id });
         this.alertService().showAlert(message, 'info');
       })

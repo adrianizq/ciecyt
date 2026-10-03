@@ -479,13 +479,16 @@ export default class PropuestaEvaluar extends mixins(JhiDataUtils) {
   }
 
   eliminarRetro(ob) {
-    //console.log('entro a eliminar');
-    this.adjuntoRetroalimentacionService().delete(this.adjuntoRetroalimentacion.id);
-    //this.adjuntoProyectoFass=null;
-    this.adjuntoRetroalimentacions = null;
-    //this.isSaving = false;
-    (<any>this).$router.go(0);
-  }
+      this.adjuntoRetroalimentacionService()
+      .delete(this.adjuntoRetroalimentacion.id)
+        .then(() => {
+          this.alertService().showAlert('El archivo se eliminó correctamente.', 'success');
+          this.initRelationships();
+        })
+        .catch(() => {
+          this.alertService().showAlert('No fue posible eliminar el archivo. Intente de nuevo.', 'danger');
+        });
+    }
 
   asignarData(event, entity, field, isImage) {
     var fileData = event.target.files[0];

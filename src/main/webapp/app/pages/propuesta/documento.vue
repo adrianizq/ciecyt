@@ -196,7 +196,7 @@ export default class DocumentoPropuesta extends mixins(JhiDataUtils) {
           this.isSaving = false;
           const message = this.$t('ciecytApp.adjuntoProyectoFase.updated', { param: param.id });
           this.alertService().showAlert(message, 'info');
-          (<any>this).$router.go(0);
+          this.initRelationships();
         })
         .catch(() => {
           this.isSaving = false;
@@ -209,7 +209,7 @@ export default class DocumentoPropuesta extends mixins(JhiDataUtils) {
           this.isSaving = false;
           const message = this.$t('ciecytApp.adjuntoProyectoFase.created', { param: param.id });
           this.alertService().showAlert(message, 'success');
-          (<any>this).$router.go(0);
+          this.initRelationships();
         })
         .catch(() => {
           this.isSaving = false;

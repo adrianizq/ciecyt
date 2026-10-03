@@ -121,7 +121,7 @@ export default class EnviarPropuesta extends Vue {
         .then(param => {
           this.isSaving = false;
           //this.$router.push({ name: 'PropuestaIntegrantesView', params: { proyectoId: this.proyecto.id.toString() } });
-          (<any>this).$router.go(0);
+          this.initRelationships();
           const message = this.$t('ciecytApp.proyecto.updated', { param: param.id });
           this.alertService().showAlert(message, 'info');
         })
@@ -138,7 +138,7 @@ export default class EnviarPropuesta extends Vue {
           this.proyId = String(param.id);
 
           // this.$router.push({ name: 'PropuestaIntegrantesView', params: { proyectoId: this.proyId } });
-          (<any>this).$router.go(0);
+          this.initRelationships();
 
           const message = 'Se ha creado un nuevo proyecto';
           this.alertService().showAlert(message, 'success');
