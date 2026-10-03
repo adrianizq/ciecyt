@@ -5,10 +5,12 @@ import tech.jhipster.config.JHipsterProperties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.web.server.*;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.boot.web.servlet.ServletContextInitializer;
 import org.springframework.boot.web.server.servlet.ConfigurableServletWebServerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.Ordered;
 import org.springframework.core.env.Environment;
 import org.springframework.core.env.Profiles;
 import org.springframework.http.MediaType;
@@ -105,6 +107,17 @@ public class WebConfigurer implements ServletContextInitializer, WebServerFactor
         return extractedPath.substring(0, extractionEndIndex);
     }
 
+
+    /**
+     * Runs before Spring Security so that SPA routes reach the index.html forward
+     * while every other request keeps going through the normal security chain.
+     */
+    @Bean
+    public FilterRegistrationBean<SpaForwardFilter> spaForwardFilter() {
+        FilterRegistrationBean<SpaForwardFilter> registration = new FilterRegistrationBean<>(new SpaForwardFilter());
+        registration.setOrder(Ordered.HIGHEST_PRECEDENCE);
+        return registration;
+    }
 
     @Bean
     public CorsFilter corsFilter() {

@@ -81,7 +81,12 @@ public class SecurityConfiguration {
                 .requestMatchers("/management/health").permitAll()
                 .requestMatchers("/management/info").permitAll()
                 .requestMatchers("/management/prometheus").permitAll()
-                .requestMatchers("/management/**").hasAuthority(AuthoritiesConstants.ADMIN))
+                .requestMatchers("/management/**").hasAuthority(AuthoritiesConstants.ADMIN)
+                // Frontend estatico servido por Spring Boot (Vite lo emite en target/classes/static).
+                // Van al final: las reglas de /api/** y /management/** se evaluan antes (first match wins).
+                .requestMatchers("/", "/assets/**", "/favicon.ico", "/manifest.webapp", "/robots.txt").permitAll()
+                .requestMatchers("/*.js", "/*.css", "/*.html", "/*.map", "/*.json", "/*.ico", "/*.png", "/*.gif", "/*.jpg",
+                    "/*.jpeg", "/*.svg", "/*.txt", "/*.webapp", "/*.woff", "/*.woff2", "/*.ttf", "/*.eot").permitAll())
             .httpBasic(Customizer.withDefaults());
         // @formatter:on
         return http.build();
