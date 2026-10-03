@@ -142,17 +142,6 @@ jhipster:
   #     max-age: 1800
   mail:
     from: ciecyt@localhost
-  swagger:
-    default-include-pattern: /api/.*
-    title: ciecyt API
-    description: ciecyt API documentation
-    version: 0.0.1
-    terms-of-service-url:
-    contact-name:
-    contact-url:
-    contact-email:
-    license: unlicensed
-    license-url:
 # ===================================================================
 # Application specific properties
 # Add your own application properties here, see the ApplicationProperties class
