@@ -129,8 +129,9 @@
         transition: all 0.15s ease;
     }
 
-    ::v-deep .dropdown-item:hover {
-        background-color: #F4F6F9;
+    ::v-deep .dropdown-item:hover,
+    ::v-deep .dropdown-item:focus {
+        background-color: #dce4ef;
         color: #003366;
     }
 
