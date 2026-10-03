@@ -294,7 +294,7 @@
 
 
 import { useVuelidate } from '@vuelidate/core';
-import { mixins, Hook } from 'vue-facing-decorator';
+import { mixins } from 'vue-facing-decorator';
 import AlertService from '@/shared/alert/alert.service';
 
 
@@ -697,6 +697,7 @@ public continuidadTexto(proyecto: IProyecto): string {
       .then(
         res => {
           this.proyects = res.data;
+          this.isFetching = false;
         
 
           /*for (let i = 0; i < this.proyects.length; i++) {
@@ -809,14 +810,6 @@ public continuidadTexto(proyecto: IProyecto): string {
 
     public isSaving = false;
 
-
-        @Hook
-        beforeRouteEnter(to, from, next) {
-            next(vm => {
-
-                    vm.initRelationships();
-            });
-        }
 
 public get username(): string {
     return this.$store.getters.account ? this.$store.getters.account.login : '';

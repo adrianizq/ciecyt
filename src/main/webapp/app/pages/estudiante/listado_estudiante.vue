@@ -170,6 +170,7 @@ export default class Listado extends Vue {
 
   public retrieveAllProyectos(): void {
     this.isFetching = true;
+    let seConsulto = false;
 
     const paginationQuery = {
       page: this.page - 1,
@@ -177,6 +178,7 @@ export default class Listado extends Vue {
       sort: this.sort()
     };
     if (this.autoridades.includes('ROLE_JURADO')) {
+      seConsulto = true;
       this.proyectoService()
         .retrieveProyectoIntegranteAuthority(this.userid, 'ROLE_JURADO', paginationQuery)
         .then(
@@ -192,6 +194,7 @@ export default class Listado extends Vue {
         );
     } //del if ROLE_ESTUDIANTE
     if (this.autoridades.includes('ROLE_ESTUDIANTE')) {
+      seConsulto = true;
       this.proyectoService()
         //.retrieveProyectoIntegrante(this.userid,paginationQuery) //todos los roles no borrar
         .retrieveProyectoIntegranteAuthority(this.userid, 'ROLE_ESTUDIANTE', paginationQuery)
@@ -209,6 +212,9 @@ export default class Listado extends Vue {
           }
         );
     } //del if ROLE_ESTUDIANTE
+    if (!seConsulto) {
+      this.isFetching = false;
+    }
   }
 
   public prepareRemove(instance: IProyecto): void {

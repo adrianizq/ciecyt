@@ -24,11 +24,11 @@
               <div v-if="adjuntoProyectoFase.id" class="form-text text-danger clearfix">
                 <!--<a class="pull-left" v-on:click="openFile(adjuntoProyectoFase.archivoContentType, adjuntoProyectoFase.file)" v-text="$t('entity.action.open')"></a><br> -->
                 <a class="pull-left" v-on:click="this.descargar" v-text="$t('entity.action.open')"></a>
-                <span class="pull-left">{{ adjuntoProyectoFase.nombreArchivoOriginal }} <br /> {{ adjuntoProyectoFase.archivoContentType }}, {{ byteSize(adjuntoProyectoFase.file) }}</span>
+                <span class="pull-left">{{ adjuntoProyectoFase.nombreArchivoOriginal }} <br /> {{ adjuntoProyectoFase.archivoContentType }}, {{ byteSize(adjuntoProyectoFase.archivo || adjuntoProyectoFase.file) }}</span>
                 <button type="button" v-on:click="this.eliminar" v-text="$t('entity.action.delete')"></button>
               </div>
-              <input v-if="adjuntoProyectoFase.file==null" type="file" ref="file_archivo" id="file_archivo" v-on:change="asignarData($event, adjuntoProyectoFase, 'archivo', false)" v-text="$t('entity.action.addblob')"/>
-              <span v-if="adjuntoProyectoFase.file!=null">Si desea subir otro adjunto de la propuesta, deberá eliminar el archivo actual</span>
+              <input v-if="!adjuntoProyectoFase.id" type="file" ref="file_archivo" id="file_archivo" v-on:change="asignarData($event, adjuntoProyectoFase, 'archivo', false)" v-text="$t('entity.action.addblob')"/>
+              <span v-if="adjuntoProyectoFase.id">Si desea subir otro adjunto de la propuesta, deberá eliminar el archivo actual</span>
             </div>
             <input
               type="hidden"
@@ -60,7 +60,7 @@
             <font-awesome-icon icon="ban"></font-awesome-icon>&nbsp;<span v-text="$t('entity.action.cancel')"></span>
           </button>
 
-          <button type="submit" id="save-entity" class="btn btn-primary" :disabled="isDisabled">
+          <button type="submit" id="save-entity" class="btn btn-primary" :disabled="isDisabled || isSaving">
             <font-awesome-icon icon="save"></font-awesome-icon>&nbsp;<span>Enviar</span>
           </button>
         </div>
@@ -91,7 +91,6 @@ import AdjuntoProyectoFaseService from '@/entities/adjunto-proyecto-fase/adjunto
 
 import { IFases, Fases } from '@/shared/model/fases.model';
 import FasesService from '@/entities/fases/fases.service';
-import { resolve4 } from 'dns';
 
 const validations: any = {
   adjuntoProyectoFase: {
@@ -184,6 +183,10 @@ export default class AdjutarProyecto extends mixins(JhiDataUtils) {
   }
 
   public save(): void {
+    if (!this.adjuntoProyectoFase.archivo && !this.adjuntoProyectoFase.file) {
+      this.alertService().showAlert('Debe seleccionar un archivo', 'warning');
+      return;
+    }
     this.isSaving = true;
 
     this.adjuntoProyectoFase.proyectoFaseProyectoId = this.proyecto.id;
@@ -197,9 +200,13 @@ export default class AdjutarProyecto extends mixins(JhiDataUtils) {
         .update(this.adjuntoProyectoFase)
         .then(param => {
           this.isSaving = false;
-          (<any>this).$router.go(0);
           const message = this.$t('ciecytApp.adjuntoProyectoFase.updated', { param: param.id });
           this.alertService().showAlert(message, 'info');
+          this.initRelationships();
+        })
+        .catch(() => {
+          this.isSaving = false;
+          this.alertService().showAlert('No fue posible guardar el archivo. Intente de nuevo.', 'danger');
         });
     } else {
       console.log('NO Existe el adjunto');
@@ -207,9 +214,13 @@ export default class AdjutarProyecto extends mixins(JhiDataUtils) {
         .create(this.adjuntoProyectoFase)
         .then(param => {
           this.isSaving = false;
-          (<any>this).$router.go(0);
           const message = this.$t('ciecytApp.adjuntoProyectoFase.created', { param: param.id });
           this.alertService().showAlert(message, 'success');
+          this.initRelationships();
+        })
+        .catch(() => {
+          this.isSaving = false;
+          this.alertService().showAlert('No fue posible guardar el archivo. Intente de nuevo.', 'danger');
         });
     }
   }
@@ -255,7 +266,7 @@ export default class AdjutarProyecto extends mixins(JhiDataUtils) {
   }
 
   get isDisabled() {
-    return this.adjuntoProyectoFase.file != null;
+    return !this.adjuntoProyectoFase.archivo && !this.adjuntoProyectoFase.file;
   }
 }
 </script>

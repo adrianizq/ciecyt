@@ -318,15 +318,15 @@
             <font-awesome-icon icon="ban"></font-awesome-icon>&nbsp;<span v-text="$t('entity.action.cancel')"></span>
           </button>
 
-          <button type="button" id="save-borrador" class="btn btn-outline-secondary" v-on:click="save('borrador')">
+          <button type="button" id="save-borrador" class="btn btn-outline-secondary" v-on:click="save('borrador')" :disabled="isSaving">
             <font-awesome-icon icon="save"></font-awesome-icon>&nbsp;<span>Guardar borrador</span>
           </button>
 
-          <button type="submit" id="save-entity" class="btn btn-primary">
+          <button type="submit" id="save-entity" class="btn btn-primary" :disabled="isSaving">
             <font-awesome-icon icon="save"></font-awesome-icon>&nbsp;<span>Guardar y continuar</span>
           </button>
 
-          <p class="typo__p" v-if="this.submitStatus === 'ERROR'">¡Existen campos sin llenar!.</p>
+          <p class="typo__p text-danger" v-if="this.submitStatus === 'ERROR'">¡Existen campos sin llenar!.</p>
         </div>
       </form>
     </div>
@@ -460,12 +460,16 @@ export default class PropuestaInformacionGeneral extends Vue {
   }
 
   public save(accion: 'borrador' | 'continuar' = 'continuar'): void {
+    this.v$.$touch();
+    if (this.v$.$invalid) {
+      this.submitStatus = 'ERROR';
+      this.isSaving = false;
+      this.alertService().showAlert('Complete los campos obligatorios antes de continuar.', 'warning');
+      return;
+    }
+    this.submitStatus = 'PENDING';
     this.isSaving = true;
 
-    //this.v$.$touch();
-    //if (this.v$.$invalid) {
-    //this.submitStatus = 'ERROR';
-    //} else {
     if (this.proyecto.id) {
       this.proyectoService()
         .updateProyecto(this.proyecto)
@@ -478,6 +482,11 @@ export default class PropuestaInformacionGeneral extends Vue {
           this.$router.push({ name: 'PropuestaIntegrantesView', params: { proyectoId: this.proyecto.id.toString() } });
           const message = this.$t('ciecytApp.proyecto.updated', { param: param.id });
           this.alertService().showAlert(message, 'info');
+        })
+        .catch(() => {
+          this.isSaving = false;
+          this.submitStatus = 'ERROR';
+          this.alertService().showAlert('No fue posible guardar la información. Intente de nuevo.', 'danger');
         });
     } else {
       this.proyectoService()
@@ -497,14 +506,13 @@ export default class PropuestaInformacionGeneral extends Vue {
 
           const message = 'Se ha creado un nuevo proyecto';
           this.alertService().showAlert(message, 'success');
+        })
+        .catch(() => {
+          this.isSaving = false;
+          this.submitStatus = 'ERROR';
+          this.alertService().showAlert('No fue posible guardar la información. Intente de nuevo.', 'danger');
         });
     }
-    //this.submitStatus = 'PENDING';
-    //setTimeout(() => {
-    //  this.submitStatus = 'OK';
-    //}, 500);
-    //}
-    console.log(this.submitStatus);
   }
 
   get LineasInvestigacion() {
@@ -605,6 +613,31 @@ export default class PropuestaInformacionGeneral extends Vue {
     this.submitStatus = 'ERROR';
     this.proyecto.facultadId = value;
     this.cargarAsesoresDeLaFacultad();
+  }
+
+  /**
+   * El template enganchaba estos cuatro manejadores que no existian: cada seleccion
+   * lanzaba un TypeError. v-model ya escribe el valor, asi que aqui solo se hacen
+   * los efectos derivados (limpiar la sublinea que depende de la linea elegida).
+   */
+  setModalidad() {
+    this.proyecto.proyectoLineaInvestigacionId = null;
+    this.proyecto.subLineaLineaInvestigacionId = null;
+    this.proyecto.proyectoLineaInvestigacionLinea = null;
+    this.proyecto.subLineaLineaInvestigacionLinea = null;
+  }
+
+  setLinea() {
+    this.proyecto.subLineaLineaInvestigacionId = null;
+    this.proyecto.subLineaLineaInvestigacionLinea = null;
+  }
+
+  setSubLinea() {
+    this.v$.proyecto.subLineaLineaInvestigacionId.$touch();
+  }
+
+  setPalabrasClave() {
+    this.v$.proyecto.palabrasClave.$touch();
   }
 
   /**

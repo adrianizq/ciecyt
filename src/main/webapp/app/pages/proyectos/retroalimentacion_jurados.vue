@@ -6,7 +6,7 @@
     
    <!-- <div class="col-sm-8"  v-if="!proyecto.preEnviado"> -->
     <div class="col-sm-8" v-if="retroalimentacionVisible">
-      <form @submit.prevent="save()">
+      <form @submit.prevent>
         <div class="row">
           <div class="col-12">
             

@@ -178,6 +178,7 @@ public getAlertFromStore() {
 
   public retrieveAllProyectos(): void {
     this.isFetching = true;
+    let seConsulto = false;
 
     const paginationQuery = {
       page: this.page - 1,
@@ -185,6 +186,7 @@ public getAlertFromStore() {
       sort: this.sort()
     };
     if (this.autoridades.includes("ROLE_ESTUDIANTE")){
+    seConsulto = true;
     this.proyectoService()
       //.retrieveProyectoIntegrante(this.userid,paginationQuery) //todos los roles no borrar
       .retrieveProyectoIntegranteAuthority(this.userid,"ROLE_ESTUDIANTE",paginationQuery)
@@ -203,7 +205,10 @@ public getAlertFromStore() {
 
       
       
+        if (!seConsulto) {
+      this.isFetching = false;
     }
+  }
 
     
          
