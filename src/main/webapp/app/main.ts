@@ -7,6 +7,8 @@ import * as config from './shared/config/config';
 import { setupAxiosInterceptors } from './shared/config/axios-interceptor';
 import { initBootstrapVue } from './shared/config/config-bootstrap-vue';
 import JhiItemCountComponent from './shared/jhi-item-count.vue';
+import JhiLoadingComponent from './shared/jhi-loading.vue';
+import JhiEmptyComponent from './shared/jhi-empty.vue';
 import AuditsService from './admin/audits/audits.service';
 
 import HealthService from './admin/health/health.service';
@@ -183,6 +185,8 @@ config.initFortAwesome();
 initBootstrapVue(app);
 app.component('font-awesome-icon', FontAwesomeIcon);
 app.component('jhi-item-count', JhiItemCountComponent);
+app.component('jhi-loading', JhiLoadingComponent);
+app.component('jhi-empty', JhiEmptyComponent);
 app.use(store);
 app.use(i18n);
 app.use(router);
