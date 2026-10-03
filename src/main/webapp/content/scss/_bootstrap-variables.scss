@@ -5,12 +5,12 @@
 
 // Colors: Paleta institucional
 $primary: #003366;
-$secondary: #C4A94D;
+$secondary: #6c757d;
 $success: #28a745;
 $info: #17a2b8;
-$warning: #C4A94D;
+$warning: #d9831f;
 $danger: #dc3545;
-$light: #F4F6F9;
+$light: #f4f6f9;
 $dark: #1a2332;
 
 // Options
@@ -28,7 +28,7 @@ $border-radius-lg: 0.75rem;
 $border-radius-sm: 0.35rem;
 
 // Body
-$body-bg: #F4F6F9;
+$body-bg: #f4f6f9;
 $font-size-base: 0.95rem;
 
 // Typography
@@ -42,7 +42,8 @@ $box-shadow-lg: 0 4px 16px rgba(0, 0, 0, 0.12);
 
 // Navbar
 $navbar-dark-color: #ffffff;
-$navbar-dark-hover-color: #C4A94D;
+$navbar-dark-hover-color: #c4a94d;
+$navbar-dark-active-color: #c4a94d;
 
 // Cards
 $card-cap-bg: #003366;
@@ -59,7 +60,7 @@ $btn-padding-x: 1.25rem;
 
 // Forms
 $input-border-color: #d1d5db;
-$input-focus-border-color: #C4A94D;
+$input-focus-border-color: #c4a94d;
 $input-focus-box-shadow: 0 0 0 0.2rem rgba(196, 169, 77, 0.25);
 $input-border-radius: 0.5rem;
 

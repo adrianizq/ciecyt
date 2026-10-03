@@ -2,12 +2,17 @@
 //src/main/webapp/content/scss/vendor.scss
 
 // Override Bootstrap variables
+@import 'bootstrap-variables';
 @import 'bootswatch/dist/simplex/variables';
 @import 'bootstrap/scss/bootstrap';
 @import 'bootswatch/dist/simplex/bootswatch';
 
 /* Navbar active link fix */
 nav li.router-link-active .navbar-dropdown-menu {
+  color: #c4a94d;
+}
+
+.navbar-dark .navbar-nav .nav-link.router-link-active {
   color: #c4a94d;
 }
 
