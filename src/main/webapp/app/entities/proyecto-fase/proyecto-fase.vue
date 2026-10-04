@@ -21,14 +21,14 @@
             <table class="table table-striped">
                 <thead>
                 <tr>
-                    <th v-on:click="changeOrder('id')"><span v-text="$t('global.field.id')"></span> <font-awesome-icon icon="sort"></font-awesome-icon></th>
-                    <th v-on:click="changeOrder('titulo')"><span v-text="$t('ciecytApp.proyectoFase.titulo')"></span> <font-awesome-icon icon="sort"></font-awesome-icon></th>
-                    <th v-on:click="changeOrder('cumplida')"><span v-text="$t('ciecytApp.proyectoFase.cumplida')"></span> <font-awesome-icon icon="sort"></font-awesome-icon></th>
-                    <th v-on:click="changeOrder('fechaCumplimiento')"><span v-text="$t('ciecytApp.proyectoFase.fechaCumplimiento')"></span> <font-awesome-icon icon="sort"></font-awesome-icon></th>
-                    <th v-on:click="changeOrder('observaciones')"><span v-text="$t('ciecytApp.proyectoFase.observaciones')"></span> <font-awesome-icon icon="sort"></font-awesome-icon></th>
-                    <th v-on:click="changeOrder('proyectoFaseFasesFase')"><span v-text="$t('ciecytApp.proyectoFase.proyectoFaseFases')"></span> <font-awesome-icon icon="sort"></font-awesome-icon></th>
-                    <th v-on:click="changeOrder('proyectoFaseProyectoTitulo')"><span v-text="$t('ciecytApp.proyectoFase.proyectoFaseProyecto')"></span> <font-awesome-icon icon="sort"></font-awesome-icon></th>
-                    <th></th>
+                    <th role="button" tabindex="0" :aria-sort="propOrder === 'id' ? (reverse ? 'descending' : 'ascending') : 'none'" v-on:click="changeOrder('id')" v-on:keydown.enter="changeOrder('id')" v-on:keydown.space.prevent="changeOrder('id')"><span v-text="$t('global.field.id')"></span> <font-awesome-icon icon="sort"></font-awesome-icon></th>
+                    <th role="button" tabindex="0" :aria-sort="propOrder === 'titulo' ? (reverse ? 'descending' : 'ascending') : 'none'" v-on:click="changeOrder('titulo')" v-on:keydown.enter="changeOrder('titulo')" v-on:keydown.space.prevent="changeOrder('titulo')"><span v-text="$t('ciecytApp.proyectoFase.titulo')"></span> <font-awesome-icon icon="sort"></font-awesome-icon></th>
+                    <th role="button" tabindex="0" :aria-sort="propOrder === 'cumplida' ? (reverse ? 'descending' : 'ascending') : 'none'" v-on:click="changeOrder('cumplida')" v-on:keydown.enter="changeOrder('cumplida')" v-on:keydown.space.prevent="changeOrder('cumplida')"><span v-text="$t('ciecytApp.proyectoFase.cumplida')"></span> <font-awesome-icon icon="sort"></font-awesome-icon></th>
+                    <th role="button" tabindex="0" :aria-sort="propOrder === 'fechaCumplimiento' ? (reverse ? 'descending' : 'ascending') : 'none'" v-on:click="changeOrder('fechaCumplimiento')" v-on:keydown.enter="changeOrder('fechaCumplimiento')" v-on:keydown.space.prevent="changeOrder('fechaCumplimiento')"><span v-text="$t('ciecytApp.proyectoFase.fechaCumplimiento')"></span> <font-awesome-icon icon="sort"></font-awesome-icon></th>
+                    <th role="button" tabindex="0" :aria-sort="propOrder === 'observaciones' ? (reverse ? 'descending' : 'ascending') : 'none'" v-on:click="changeOrder('observaciones')" v-on:keydown.enter="changeOrder('observaciones')" v-on:keydown.space.prevent="changeOrder('observaciones')"><span v-text="$t('ciecytApp.proyectoFase.observaciones')"></span> <font-awesome-icon icon="sort"></font-awesome-icon></th>
+                    <th role="button" tabindex="0" :aria-sort="propOrder === 'proyectoFaseFasesFase' ? (reverse ? 'descending' : 'ascending') : 'none'" v-on:click="changeOrder('proyectoFaseFasesFase')" v-on:keydown.enter="changeOrder('proyectoFaseFasesFase')" v-on:keydown.space.prevent="changeOrder('proyectoFaseFasesFase')"><span v-text="$t('ciecytApp.proyectoFase.proyectoFaseFases')"></span> <font-awesome-icon icon="sort"></font-awesome-icon></th>
+                    <th role="button" tabindex="0" :aria-sort="propOrder === 'proyectoFaseProyectoTitulo' ? (reverse ? 'descending' : 'ascending') : 'none'" v-on:click="changeOrder('proyectoFaseProyectoTitulo')" v-on:keydown.enter="changeOrder('proyectoFaseProyectoTitulo')" v-on:keydown.space.prevent="changeOrder('proyectoFaseProyectoTitulo')"><span v-text="$t('ciecytApp.proyectoFase.proyectoFaseProyecto')"></span> <font-awesome-icon icon="sort"></font-awesome-icon></th>
+                    <th scope="col" class="text-right"><span class="visually-hidden" v-text="$t('global.menu.actions')"></span></th>
                 </tr>
                 </thead>
                 <tbody>
@@ -53,15 +53,15 @@
                     </td>
                     <td class="text-right">
                         <div class="btn-group">
-                            <router-link custom v-slot="{ navigate }" :to="{name: 'ProyectoFaseView', params: {proyectoFaseId: proyectoFase.id}}"><button class="btn btn-info btn-sm details" @click="navigate">
+                            <router-link custom v-slot="{ navigate }" :to="{name: 'ProyectoFaseView', params: {proyectoFaseId: proyectoFase.id}}"><button class="btn btn-info btn-sm details" :aria-label="$t('entity.action.view')" @click="navigate">
                                 <font-awesome-icon icon="eye"></font-awesome-icon>
                                 <span class="d-none d-md-inline" v-text="$t('entity.action.view')"></span>
                             </button></router-link>
-                            <router-link custom v-slot="{ navigate }" :to="{name: 'ProyectoFaseEdit', params: {proyectoFaseId: proyectoFase.id}}"><button class="btn btn-primary btn-sm edit" @click="navigate">
+                            <router-link custom v-slot="{ navigate }" :to="{name: 'ProyectoFaseEdit', params: {proyectoFaseId: proyectoFase.id}}"><button class="btn btn-primary btn-sm edit" :aria-label="$t('entity.action.edit')" @click="navigate">
                                 <font-awesome-icon icon="pencil-alt"></font-awesome-icon>
                                 <span class="d-none d-md-inline" v-text="$t('entity.action.edit')"></span>
                             </button></router-link>
-                            <b-button v-on:click="prepareRemove(proyectoFase)"
+                            <b-button :aria-label="$t('entity.action.delete')" v-on:click="prepareRemove(proyectoFase)"
                                    variant="danger"
                                    class="btn btn-sm"
                                    v-b-modal.removeEntity>
@@ -93,7 +93,7 @@
                 <jhi-item-count :page="page" :total="queryCount" :itemsPerPage="itemsPerPage"></jhi-item-count>
             </div>
             <div class="row justify-content-center">
-                <b-pagination size="md" :total-rows="totalItems" v-model="page" :per-page="itemsPerPage" :change="loadPage(page)"></b-pagination>
+                <b-pagination size="md" :total-rows="totalItems" v-model="page" :per-page="itemsPerPage" @update:model-value="loadPage"></b-pagination>
             </div>
         </div>
     </div>

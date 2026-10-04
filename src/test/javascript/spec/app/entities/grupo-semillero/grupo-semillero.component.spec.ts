@@ -102,7 +102,7 @@ describe('Component Tests', () => {
       await comp.$nextTick();
 
       // THEN
-      expect(grupoSemilleroServiceStub.retrieve.callCount).toEqual(3);
+      expect(grupoSemilleroServiceStub.retrieve.callCount).toEqual(2);
       expect(comp.page).toEqual(1);
       expect(comp.grupoSemilleros[0]).toEqual(expect.objectContaining({ id: 123 }));
     });

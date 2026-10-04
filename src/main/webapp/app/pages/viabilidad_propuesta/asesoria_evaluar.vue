@@ -502,8 +502,8 @@ export default class PropuestaEvaluar extends mixins(JhiDataUtils) {
           this.alertService().showAlert('El archivo se eliminó correctamente.', 'success');
           this.initRelationships();
         })
-        .catch(() => {
-          this.alertService().showAlert('No fue posible eliminar el archivo. Intente de nuevo.', 'danger');
+        .catch(err => {
+          this.alertService().showHttpError(null, err);
         });
     }
 

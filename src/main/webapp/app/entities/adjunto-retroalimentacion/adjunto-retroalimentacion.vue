@@ -21,17 +21,17 @@
             <table class="table table-striped">
                 <thead>
                 <tr>
-                    <th v-on:click="changeOrder('id')"><span v-text="$t('global.field.id')"></span> <font-awesome-icon icon="sort"></font-awesome-icon></th>
-                    <th v-on:click="changeOrder('nombreAdjunto')"><span v-text="$t('ciecytApp.adjuntoRetroalimentacion.nombreAdjunto')"></span> <font-awesome-icon icon="sort"></font-awesome-icon></th>
-                    <th v-on:click="changeOrder('fechaCreacion')"><span v-text="$t('ciecytApp.adjuntoRetroalimentacion.fechaCreacion')"></span> <font-awesome-icon icon="sort"></font-awesome-icon></th>
-                    <th v-on:click="changeOrder('fechaModificacion')"><span v-text="$t('ciecytApp.adjuntoRetroalimentacion.fechaModificacion')"></span> <font-awesome-icon icon="sort"></font-awesome-icon></th>
-                    <th v-on:click="changeOrder('estadoAdjunto')"><span v-text="$t('ciecytApp.adjuntoRetroalimentacion.estadoAdjunto')"></span> <font-awesome-icon icon="sort"></font-awesome-icon></th>
-                    <th v-on:click="changeOrder('adjuntoRetroalimentacion')"><span v-text="$t('ciecytApp.adjuntoRetroalimentacion.adjuntoRetroalimentacion')"></span> <font-awesome-icon icon="sort"></font-awesome-icon></th>
-                    <th v-on:click="changeOrder('nombreArchivoOriginal')"><span v-text="$t('ciecytApp.adjuntoRetroalimentacion.nombreArchivoOriginal')"></span> <font-awesome-icon icon="sort"></font-awesome-icon></th>
-                    <th v-on:click="changeOrder('fechaInicio')"><span v-text="$t('ciecytApp.adjuntoRetroalimentacion.fechaInicio')"></span> <font-awesome-icon icon="sort"></font-awesome-icon></th>
-                    <th v-on:click="changeOrder('fechaFin')"><span v-text="$t('ciecytApp.adjuntoRetroalimentacion.fechaFin')"></span> <font-awesome-icon icon="sort"></font-awesome-icon></th>
-                    <th v-on:click="changeOrder('adjuntoRetroalimentacionRetroalimentacionTitulo')"><span v-text="$t('ciecytApp.adjuntoRetroalimentacion.adjuntoRetroalimentacionRetroalimentacion')"></span> <font-awesome-icon icon="sort"></font-awesome-icon></th>
-                    <th></th>
+                    <th role="button" tabindex="0" :aria-sort="propOrder === 'id' ? (reverse ? 'descending' : 'ascending') : 'none'" v-on:click="changeOrder('id')" v-on:keydown.enter="changeOrder('id')" v-on:keydown.space.prevent="changeOrder('id')"><span v-text="$t('global.field.id')"></span> <font-awesome-icon icon="sort"></font-awesome-icon></th>
+                    <th role="button" tabindex="0" :aria-sort="propOrder === 'nombreAdjunto' ? (reverse ? 'descending' : 'ascending') : 'none'" v-on:click="changeOrder('nombreAdjunto')" v-on:keydown.enter="changeOrder('nombreAdjunto')" v-on:keydown.space.prevent="changeOrder('nombreAdjunto')"><span v-text="$t('ciecytApp.adjuntoRetroalimentacion.nombreAdjunto')"></span> <font-awesome-icon icon="sort"></font-awesome-icon></th>
+                    <th role="button" tabindex="0" :aria-sort="propOrder === 'fechaCreacion' ? (reverse ? 'descending' : 'ascending') : 'none'" v-on:click="changeOrder('fechaCreacion')" v-on:keydown.enter="changeOrder('fechaCreacion')" v-on:keydown.space.prevent="changeOrder('fechaCreacion')"><span v-text="$t('ciecytApp.adjuntoRetroalimentacion.fechaCreacion')"></span> <font-awesome-icon icon="sort"></font-awesome-icon></th>
+                    <th role="button" tabindex="0" :aria-sort="propOrder === 'fechaModificacion' ? (reverse ? 'descending' : 'ascending') : 'none'" v-on:click="changeOrder('fechaModificacion')" v-on:keydown.enter="changeOrder('fechaModificacion')" v-on:keydown.space.prevent="changeOrder('fechaModificacion')"><span v-text="$t('ciecytApp.adjuntoRetroalimentacion.fechaModificacion')"></span> <font-awesome-icon icon="sort"></font-awesome-icon></th>
+                    <th role="button" tabindex="0" :aria-sort="propOrder === 'estadoAdjunto' ? (reverse ? 'descending' : 'ascending') : 'none'" v-on:click="changeOrder('estadoAdjunto')" v-on:keydown.enter="changeOrder('estadoAdjunto')" v-on:keydown.space.prevent="changeOrder('estadoAdjunto')"><span v-text="$t('ciecytApp.adjuntoRetroalimentacion.estadoAdjunto')"></span> <font-awesome-icon icon="sort"></font-awesome-icon></th>
+                    <th role="button" tabindex="0" :aria-sort="propOrder === 'adjuntoRetroalimentacion' ? (reverse ? 'descending' : 'ascending') : 'none'" v-on:click="changeOrder('adjuntoRetroalimentacion')" v-on:keydown.enter="changeOrder('adjuntoRetroalimentacion')" v-on:keydown.space.prevent="changeOrder('adjuntoRetroalimentacion')"><span v-text="$t('ciecytApp.adjuntoRetroalimentacion.adjuntoRetroalimentacion')"></span> <font-awesome-icon icon="sort"></font-awesome-icon></th>
+                    <th role="button" tabindex="0" :aria-sort="propOrder === 'nombreArchivoOriginal' ? (reverse ? 'descending' : 'ascending') : 'none'" v-on:click="changeOrder('nombreArchivoOriginal')" v-on:keydown.enter="changeOrder('nombreArchivoOriginal')" v-on:keydown.space.prevent="changeOrder('nombreArchivoOriginal')"><span v-text="$t('ciecytApp.adjuntoRetroalimentacion.nombreArchivoOriginal')"></span> <font-awesome-icon icon="sort"></font-awesome-icon></th>
+                    <th role="button" tabindex="0" :aria-sort="propOrder === 'fechaInicio' ? (reverse ? 'descending' : 'ascending') : 'none'" v-on:click="changeOrder('fechaInicio')" v-on:keydown.enter="changeOrder('fechaInicio')" v-on:keydown.space.prevent="changeOrder('fechaInicio')"><span v-text="$t('ciecytApp.adjuntoRetroalimentacion.fechaInicio')"></span> <font-awesome-icon icon="sort"></font-awesome-icon></th>
+                    <th role="button" tabindex="0" :aria-sort="propOrder === 'fechaFin' ? (reverse ? 'descending' : 'ascending') : 'none'" v-on:click="changeOrder('fechaFin')" v-on:keydown.enter="changeOrder('fechaFin')" v-on:keydown.space.prevent="changeOrder('fechaFin')"><span v-text="$t('ciecytApp.adjuntoRetroalimentacion.fechaFin')"></span> <font-awesome-icon icon="sort"></font-awesome-icon></th>
+                    <th role="button" tabindex="0" :aria-sort="propOrder === 'adjuntoRetroalimentacionRetroalimentacionTitulo' ? (reverse ? 'descending' : 'ascending') : 'none'" v-on:click="changeOrder('adjuntoRetroalimentacionRetroalimentacionTitulo')" v-on:keydown.enter="changeOrder('adjuntoRetroalimentacionRetroalimentacionTitulo')" v-on:keydown.space.prevent="changeOrder('adjuntoRetroalimentacionRetroalimentacionTitulo')"><span v-text="$t('ciecytApp.adjuntoRetroalimentacion.adjuntoRetroalimentacionRetroalimentacion')"></span> <font-awesome-icon icon="sort"></font-awesome-icon></th>
+                    <th scope="col" class="text-right"><span class="visually-hidden" v-text="$t('global.menu.actions')"></span></th>
                 </tr>
                 </thead>
                 <tbody>
@@ -55,15 +55,15 @@
                     </td>
                     <td class="text-right">
                         <div class="btn-group">
-                            <router-link custom v-slot="{ navigate }" :to="{name: 'AdjuntoRetroalimentacionView', params: {adjuntoRetroalimentacionId: adjuntoRetroalimentacion.id}}"><button class="btn btn-info btn-sm details" @click="navigate">
+                            <router-link custom v-slot="{ navigate }" :to="{name: 'AdjuntoRetroalimentacionView', params: {adjuntoRetroalimentacionId: adjuntoRetroalimentacion.id}}"><button class="btn btn-info btn-sm details" :aria-label="$t('entity.action.view')" @click="navigate">
                                 <font-awesome-icon icon="eye"></font-awesome-icon>
                                 <span class="d-none d-md-inline" v-text="$t('entity.action.view')"></span>
                             </button></router-link>
-                            <router-link custom v-slot="{ navigate }" :to="{name: 'AdjuntoRetroalimentacionEdit', params: {adjuntoRetroalimentacionId: adjuntoRetroalimentacion.id}}"><button class="btn btn-primary btn-sm edit" @click="navigate">
+                            <router-link custom v-slot="{ navigate }" :to="{name: 'AdjuntoRetroalimentacionEdit', params: {adjuntoRetroalimentacionId: adjuntoRetroalimentacion.id}}"><button class="btn btn-primary btn-sm edit" :aria-label="$t('entity.action.edit')" @click="navigate">
                                 <font-awesome-icon icon="pencil-alt"></font-awesome-icon>
                                 <span class="d-none d-md-inline" v-text="$t('entity.action.edit')"></span>
                             </button></router-link>
-                            <b-button v-on:click="prepareRemove(adjuntoRetroalimentacion)"
+                            <b-button :aria-label="$t('entity.action.delete')" v-on:click="prepareRemove(adjuntoRetroalimentacion)"
                                    variant="danger"
                                    class="btn btn-sm"
                                    v-b-modal.removeEntity>
@@ -95,7 +95,7 @@
                 <jhi-item-count :page="page" :total="queryCount" :itemsPerPage="itemsPerPage"></jhi-item-count>
             </div>
             <div class="row justify-content-center">
-                <b-pagination size="md" :total-rows="totalItems" v-model="page" :per-page="itemsPerPage" :change="loadPage(page)"></b-pagination>
+                <b-pagination size="md" :total-rows="totalItems" v-model="page" :per-page="itemsPerPage" @update:model-value="loadPage"></b-pagination>
             </div>
         </div>
     </div>

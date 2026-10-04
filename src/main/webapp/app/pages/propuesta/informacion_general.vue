@@ -483,10 +483,10 @@ export default class PropuestaInformacionGeneral extends Vue {
           const message = this.$t('ciecytApp.proyecto.updated', { param: param.id });
           this.alertService().showAlert(message, 'info');
         })
-        .catch(() => {
+        .catch(err => {
           this.isSaving = false;
           this.submitStatus = 'ERROR';
-          this.alertService().showAlert('No fue posible guardar la información. Intente de nuevo.', 'danger');
+          this.alertService().showHttpError(null, err);
         });
     } else {
       this.proyectoService()
@@ -507,10 +507,10 @@ export default class PropuestaInformacionGeneral extends Vue {
           const message = 'Se ha creado un nuevo proyecto';
           this.alertService().showAlert(message, 'success');
         })
-        .catch(() => {
+        .catch(err => {
           this.isSaving = false;
           this.submitStatus = 'ERROR';
-          this.alertService().showAlert('No fue posible guardar la información. Intente de nuevo.', 'danger');
+          this.alertService().showHttpError(null, err);
         });
     }
   }
@@ -660,7 +660,7 @@ export default class PropuestaInformacionGeneral extends Vue {
           });
         });
       })
-      .catch(() => {
+      .catch(err => {
         this.users = [];
       });
   }

@@ -38,6 +38,15 @@ export default class Error extends Vue {
     this.error403 = error403;
     this.error404 = error404;
 
+    // El titulo en la pestana debe comunicar el error, no quedar como
+    // "CIECYT-ITP" generico. Asi el usuario sabe en cual ventana esta cuando
+    // navega entre pestañas.
+    if (error404) {
+      document.title = this.$t('error.http.404') + ' | CIECYT-ITP';
+    } else if (error403) {
+      document.title = this.$t('error.http.403') + ' | CIECYT-ITP';
+    }
+
     if (!this.$store.getters.authenticated && this.error403) {
       this.loginService().openLogin((<any>this).$root);
     }

@@ -21,39 +21,39 @@
             <table class="table table-striped">
                 <thead>
                 <tr>
-                    <th><span v-text="$t('global.field.id')"></span></th>
-                    <th><span v-text="$t('ciecytVueApp.informacionPasantia.duracionHoras')"></span></th>
-                    <th><span v-text="$t('ciecytVueApp.informacionPasantia.direccion')"></span></th>
-                    <th><span v-text="$t('ciecytVueApp.informacionPasantia.email')"></span></th>
-                    <th><span v-text="$t('ciecytVueApp.informacionPasantia.lunes')"></span></th>
-                    <th><span v-text="$t('ciecytVueApp.informacionPasantia.martes')"></span></th>
-                    <th><span v-text="$t('ciecytVueApp.informacionPasantia.miercoles')"></span></th>
-                    <th><span v-text="$t('ciecytVueApp.informacionPasantia.jueves')"></span></th>
-                    <th><span v-text="$t('ciecytVueApp.informacionPasantia.viernes')"></span></th>
-                    <th><span v-text="$t('ciecytVueApp.informacionPasantia.sabado')"></span></th>
-                    <th><span v-text="$t('ciecytVueApp.informacionPasantia.domingo')"></span></th>
-                    <th><span v-text="$t('ciecytVueApp.informacionPasantia.horasMes')"></span></th>
-                    <th><span v-text="$t('ciecytVueApp.informacionPasantia.bonoAlimenticio')"></span></th>
-                    <th><span v-text="$t('ciecytVueApp.informacionPasantia.apoyoEconomico')"></span></th>
-                    <th><span v-text="$t('ciecytVueApp.informacionPasantia.auxilioTransporte')"></span></th>
-                    <th><span v-text="$t('ciecytVueApp.informacionPasantia.capacitacion')"></span></th>
-                    <th><span v-text="$t('ciecytVueApp.informacionPasantia.otroApoyo')"></span></th>
-                    <th><span v-text="$t('ciecytVueApp.informacionPasantia.nombreEmpresa')"></span></th>
-                    <th><span v-text="$t('ciecytVueApp.informacionPasantia.nitEmpresa')"></span></th>
-                    <th><span v-text="$t('ciecytVueApp.informacionPasantia.direccionEmpresa')"></span></th>
-                    <th><span v-text="$t('ciecytVueApp.informacionPasantia.sectorEconomicoEmpresa')"></span></th>
-                    <th><span v-text="$t('ciecytVueApp.informacionPasantia.representanteLegalEmpresa')"></span></th>
-                    <th><span v-text="$t('ciecytVueApp.informacionPasantia.asesorEmpresa')"></span></th>
-                    <th><span v-text="$t('ciecytVueApp.informacionPasantia.cargoAsesorEmpresa')"></span></th>
-                    <th><span v-text="$t('ciecytVueApp.informacionPasantia.emailAsesorEmpresa')"></span></th>
-                    <th><span v-text="$t('ciecytVueApp.informacionPasantia.municipioEmpresa')"></span></th>
-                    <th><span v-text="$t('ciecytVueApp.informacionPasantia.telefonoContactoEmpresa')"></span></th>
-                    <th><span v-text="$t('ciecytVueApp.informacionPasantia.emailEmpresa')"></span></th>
-                    <th><span v-text="$t('ciecytVueApp.informacionPasantia.departamentoEmpresa')"></span></th>
-                    <th><span v-text="$t('ciecytVueApp.informacionPasantia.identificacionRepresentanteLegal')"></span></th>
-                    <th><span v-text="$t('ciecytVueApp.informacionPasantia.profesionAsesorEmpresa')"></span></th>
-                    <th><span v-text="$t('ciecytVueApp.informacionPasantia.celularAsesorEmpresa')"></span></th>
-                    <th><span v-text="$t('ciecytVueApp.informacionPasantia.informacionPasantiaProyecto')"></span></th>
+                    <th scope="col"><span v-text="$t('global.field.id')"></span></th>
+                    <th scope="col"><span v-text="$t('ciecytVueApp.informacionPasantia.duracionHoras')"></span></th>
+                    <th scope="col"><span v-text="$t('ciecytVueApp.informacionPasantia.direccion')"></span></th>
+                    <th scope="col"><span v-text="$t('ciecytVueApp.informacionPasantia.email')"></span></th>
+                    <th scope="col"><span v-text="$t('ciecytVueApp.informacionPasantia.lunes')"></span></th>
+                    <th scope="col"><span v-text="$t('ciecytVueApp.informacionPasantia.martes')"></span></th>
+                    <th scope="col"><span v-text="$t('ciecytVueApp.informacionPasantia.miercoles')"></span></th>
+                    <th scope="col"><span v-text="$t('ciecytVueApp.informacionPasantia.jueves')"></span></th>
+                    <th scope="col"><span v-text="$t('ciecytVueApp.informacionPasantia.viernes')"></span></th>
+                    <th scope="col"><span v-text="$t('ciecytVueApp.informacionPasantia.sabado')"></span></th>
+                    <th scope="col"><span v-text="$t('ciecytVueApp.informacionPasantia.domingo')"></span></th>
+                    <th scope="col"><span v-text="$t('ciecytVueApp.informacionPasantia.horasMes')"></span></th>
+                    <th scope="col"><span v-text="$t('ciecytVueApp.informacionPasantia.bonoAlimenticio')"></span></th>
+                    <th scope="col"><span v-text="$t('ciecytVueApp.informacionPasantia.apoyoEconomico')"></span></th>
+                    <th scope="col"><span v-text="$t('ciecytVueApp.informacionPasantia.auxilioTransporte')"></span></th>
+                    <th scope="col"><span v-text="$t('ciecytVueApp.informacionPasantia.capacitacion')"></span></th>
+                    <th scope="col"><span v-text="$t('ciecytVueApp.informacionPasantia.otroApoyo')"></span></th>
+                    <th scope="col"><span v-text="$t('ciecytVueApp.informacionPasantia.nombreEmpresa')"></span></th>
+                    <th scope="col"><span v-text="$t('ciecytVueApp.informacionPasantia.nitEmpresa')"></span></th>
+                    <th scope="col"><span v-text="$t('ciecytVueApp.informacionPasantia.direccionEmpresa')"></span></th>
+                    <th scope="col"><span v-text="$t('ciecytVueApp.informacionPasantia.sectorEconomicoEmpresa')"></span></th>
+                    <th scope="col"><span v-text="$t('ciecytVueApp.informacionPasantia.representanteLegalEmpresa')"></span></th>
+                    <th scope="col"><span v-text="$t('ciecytVueApp.informacionPasantia.asesorEmpresa')"></span></th>
+                    <th scope="col"><span v-text="$t('ciecytVueApp.informacionPasantia.cargoAsesorEmpresa')"></span></th>
+                    <th scope="col"><span v-text="$t('ciecytVueApp.informacionPasantia.emailAsesorEmpresa')"></span></th>
+                    <th scope="col"><span v-text="$t('ciecytVueApp.informacionPasantia.municipioEmpresa')"></span></th>
+                    <th scope="col"><span v-text="$t('ciecytVueApp.informacionPasantia.telefonoContactoEmpresa')"></span></th>
+                    <th scope="col"><span v-text="$t('ciecytVueApp.informacionPasantia.emailEmpresa')"></span></th>
+                    <th scope="col"><span v-text="$t('ciecytVueApp.informacionPasantia.departamentoEmpresa')"></span></th>
+                    <th scope="col"><span v-text="$t('ciecytVueApp.informacionPasantia.identificacionRepresentanteLegal')"></span></th>
+                    <th scope="col"><span v-text="$t('ciecytVueApp.informacionPasantia.profesionAsesorEmpresa')"></span></th>
+                    <th scope="col"><span v-text="$t('ciecytVueApp.informacionPasantia.celularAsesorEmpresa')"></span></th>
+                    <th scope="col"><span v-text="$t('ciecytVueApp.informacionPasantia.informacionPasantiaProyecto')"></span></th>
                     <th></th>
                 </tr>
                 </thead>
@@ -101,15 +101,15 @@
                     </td>
                     <td class="text-right">
                         <div class="btn-group">
-                            <router-link custom v-slot="{ navigate }" :to="{name: 'InformacionPasantiaView', params: {informacionPasantiaId: informacionPasantia.id}}"><button class="btn btn-info btn-sm details" @click="navigate">
+                            <router-link custom v-slot="{ navigate }" :to="{name: 'InformacionPasantiaView', params: {informacionPasantiaId: informacionPasantia.id}}"><button class="btn btn-info btn-sm details" :aria-label="$t('entity.action.view')" @click="navigate">
                                 <font-awesome-icon icon="eye"></font-awesome-icon>
                                 <span class="d-none d-md-inline" v-text="$t('entity.action.view')"></span>
                             </button></router-link>
-                            <router-link custom v-slot="{ navigate }" :to="{name: 'InformacionPasantiaEdit', params: {informacionPasantiaId: informacionPasantia.id}}"><button class="btn btn-primary btn-sm edit" @click="navigate">
+                            <router-link custom v-slot="{ navigate }" :to="{name: 'InformacionPasantiaEdit', params: {informacionPasantiaId: informacionPasantia.id}}"><button class="btn btn-primary btn-sm edit" :aria-label="$t('entity.action.edit')" @click="navigate">
                                 <font-awesome-icon icon="pencil-alt"></font-awesome-icon>
                                 <span class="d-none d-md-inline" v-text="$t('entity.action.edit')"></span>
                             </button></router-link>
-                            <b-button v-on:click="prepareRemove(informacionPasantia)"
+                            <b-button :aria-label="$t('entity.action.delete')" v-on:click="prepareRemove(informacionPasantia)"
                                    variant="danger"
                                    class="btn btn-sm"
                                    v-b-modal.removeEntity>

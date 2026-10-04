@@ -73,6 +73,10 @@ export default class AdjuntoProyectoFaseUpdate extends mixins(JhiDataUtils) {
           this.$router.go(-1);
           const message = this.$t('ciecytApp.adjuntoProyectoFase.updated', { param: param.id });
           this.alertService().showAlert(message, 'info');
+        })
+        .catch(error => {
+          this.isSaving = false;
+          this.alertService().showHttpError(this, error);
         });
     } else {
       this.adjuntoProyectoFaseService()
@@ -82,6 +86,10 @@ export default class AdjuntoProyectoFaseUpdate extends mixins(JhiDataUtils) {
           this.$router.go(-1);
           const message = this.$t('ciecytApp.adjuntoProyectoFase.created', { param: param.id });
           this.alertService().showAlert(message, 'success');
+        })
+        .catch(error => {
+          this.isSaving = false;
+          this.alertService().showHttpError(this, error);
         });
     }
   }

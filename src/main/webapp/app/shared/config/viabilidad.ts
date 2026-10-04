@@ -1,5 +1,11 @@
 export const VIABILIDAD_VALOR_VIABLE: string = 'VIABLE';
-export const VIABILIDAD_VALOR_VIABLE_MODIFICACIONES: string = 'PENDIENTE';
+export const VIABILIDAD_VALOR_VIABLE_MODIFICACIONES: string = 'VIABLE_CON_MODIFICACIONES';
+/**
+ * Alias historico: el sistema backend persistia este concepto bajo 'PENDIENTE'
+ * antes de alinear la cadena con el Acuerdo 25, art. 14 par. 6. Se conserva
+ * como constante para compatibilidad con registros antiguos.
+ */
+export const VIABILIDAD_VALOR_VIABLE_MODIFICACIONES_LEGACY: string = 'PENDIENTE';
 export const VIABILIDAD_VALOR_NO_VIABLE: string = 'NO_VIABLE';
 
 export interface OpcionViabilidad {

@@ -37,6 +37,41 @@ a:hover {
 }
 
 /* ==========================================================================
+   Accessibility - focus visible and skip link
+   ========================================================================== */
+:focus-visible {
+  outline: 3px solid #c4a94d;
+  outline-offset: 2px;
+}
+
+.visually-hidden-focusable:not(:focus):not(:focus-within) {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+}
+
+.skip-link:focus,
+.skip-link:focus-visible {
+  position: fixed;
+  top: 0.5rem;
+  left: 0.5rem;
+  z-index: 1100;
+  padding: 0.75rem 1rem;
+  background: #003366;
+  color: #fff;
+  border-radius: 0.5rem;
+  text-decoration: none;
+  font-weight: 600;
+  box-shadow: 0 4px 16px rgba(0, 51, 102, 0.4);
+}
+
+/* ==========================================================================
    Browser Upgrade Prompt
    ========================================================================== */
 .browserupgrade {
@@ -118,6 +153,21 @@ a:hover {
   min-width: 240px;
 }
 
+.menu-lateral:focus-visible {
+  outline: none;
+}
+
+@media (max-width: 767px) {
+  .menu-lateral {
+    min-width: 0;
+    width: 100%;
+    margin-bottom: 1rem;
+  }
+  .menu-lateral .step-btn {
+    padding: 1rem;
+  }
+}
+
 .menu-lateral .step-item {
   border: none;
   border-radius: 0;
@@ -157,12 +207,13 @@ a:hover {
 
 .menu-lateral .step-btn.step-btn-disabled {
   cursor: not-allowed;
-  color: #9ca3af;
+  color: #4b5563;
+  background: rgba(0, 0, 0, 0.03);
 }
 
 .menu-lateral .step-btn.step-btn-disabled:hover {
-  background: transparent;
-  color: #9ca3af;
+  background: rgba(0, 0, 0, 0.03);
+  color: #4b5563;
 }
 
 .menu-lateral .step-btn.active {
@@ -182,7 +233,7 @@ a:hover {
   min-width: 28px;
   border-radius: 50%;
   background: #e5e7eb;
-  color: #6b7280;
+  color: #1a2332;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -208,7 +259,7 @@ a:hover {
 .menu-lateral .step-desc {
   display: block;
   font-size: 0.75rem;
-  color: #9ca3af;
+  color: #4b5563;
   margin-top: 2px;
   line-height: 1.3;
   white-space: normal;
@@ -401,12 +452,38 @@ a:hover {
   padding: 0.75rem 1rem;
 }
 
+.table thead th[role='button'] {
+  cursor: pointer;
+  user-select: none;
+}
+
+.table thead th[role='button']:hover {
+  background-color: #002244;
+}
+
 .table-striped tbody tr:nth-of-type(odd) {
   background-color: rgba(0, 51, 102, 0.02);
 }
 
 .table-hover tbody tr:hover {
   background-color: rgba(196, 169, 77, 0.08);
+}
+
+.table-responsive {
+  display: block;
+  width: 100%;
+  overflow-x: auto;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
 
 /* ==========================================================================

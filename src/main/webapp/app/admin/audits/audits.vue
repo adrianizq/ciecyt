@@ -26,10 +26,10 @@
             <table class="table table-sm table-striped">
                 <thead>
                 <tr>
-                    <th v-on:click="changeOrder('auditEventDate', 'timestamp')"><span v-text="$t('audits.table.header.date')"></span><font-awesome-icon v-if="propOrder === 'auditEventDate'" icon="sort"></font-awesome-icon></th>
-                    <th v-on:click="changeOrder('principal', 'principal')"><span v-text="$t('audits.table.header.principal')"></span><font-awesome-icon v-if="propOrder === 'principal'" icon="sort"></font-awesome-icon></th>
-                    <th v-on:click="changeOrder('auditEventType', 'type')"><span v-text="$t('audits.table.header.status')"></span><font-awesome-icon v-if="propOrder === 'auditEventType'" icon="sort"></font-awesome-icon></th>
-                    <th><span v-text="$t('audits.table.header.data')"></span></th>
+                    <th role="button" tabindex="0" :aria-sort="propOrder === 'auditEventDate' ? (reverse ? 'descending' : 'ascending') : 'none'" v-on:click="changeOrder('auditEventDate', 'timestamp')" v-on:keydown.enter="changeOrder('auditEventDate', 'timestamp')" v-on:keydown.space.prevent="changeOrder('auditEventDate', 'timestamp')"><span v-text="$t('audits.table.header.date')"></span><font-awesome-icon v-if="propOrder === 'auditEventDate'" icon="sort"></font-awesome-icon></th>
+                    <th role="button" tabindex="0" :aria-sort="propOrder === 'principal' ? (reverse ? 'descending' : 'ascending') : 'none'" v-on:click="changeOrder('principal', 'principal')" v-on:keydown.enter="changeOrder('principal', 'principal')" v-on:keydown.space.prevent="changeOrder('principal', 'principal')"><span v-text="$t('audits.table.header.principal')"></span><font-awesome-icon v-if="propOrder === 'principal'" icon="sort"></font-awesome-icon></th>
+                    <th role="button" tabindex="0" :aria-sort="propOrder === 'auditEventType' ? (reverse ? 'descending' : 'ascending') : 'none'" v-on:click="changeOrder('auditEventType', 'type')" v-on:keydown.enter="changeOrder('auditEventType', 'type')" v-on:keydown.space.prevent="changeOrder('auditEventType', 'type')"><span v-text="$t('audits.table.header.status')"></span><font-awesome-icon v-if="propOrder === 'auditEventType'" icon="sort"></font-awesome-icon></th>
+                    <th scope="col"><span v-text="$t('audits.table.header.data')"></span></th>
                 </tr>
                 </thead>
                 <tbody>
@@ -50,7 +50,7 @@
                 <jhi-item-count :page="page" :total="totalItems" :itemsPerPage="itemsPerPage"></jhi-item-count>
             </div>
             <div class="row justify-content-center">
-                <b-pagination size="md" :total-rows="totalItems" v-model="page" :per-page="itemsPerPage" :change="loadPage(page)"></b-pagination>
+                <b-pagination size="md" :total-rows="totalItems" v-model="page" :per-page="itemsPerPage" @update:model-value="loadPage"></b-pagination>
             </div>
         </div>
     </div>

@@ -1,5 +1,6 @@
 <template>
   <div id="app">
+    <a class="skip-link visually-hidden-focusable" href="#contenido">Saltar al contenido principal</a>
     <ribbon></ribbon>
     <div id="app-header">
       <jhi-navbar></jhi-navbar>
@@ -15,9 +16,9 @@
       >
         {{ textoAlerta }}
       </b-alert>
-      <div class="jh-card">
+      <main id="contenido" tabindex="-1" class="jh-card">
         <router-view></router-view>
-      </div>
+      </main>
       <b-modal id="login-page" v-model="loginModalVisible" no-footer lazy>
         <template #title>
           <span id="login-title" v-text="$t('login.title')"></span>
@@ -41,5 +42,19 @@
         top: 0;
         z-index: 1030;
         margin-top: 0.75rem;
+    }
+    .skip-link:focus {
+        position: fixed;
+        top: 0.5rem;
+        left: 0.5rem;
+        z-index: 1100;
+        padding: 0.5rem 0.75rem;
+        background: #003366;
+        color: #fff;
+        border-radius: 0.25rem;
+        text-decoration: none;
+    }
+    #contenido:focus {
+        outline: none;
     }
 </style>

@@ -789,9 +789,9 @@ export default class PasantiaInformacionEmpresa extends Vue {
           const message = this.$t('ciecytApp.proyecto.updated', { param: param.id });
           this.alertService().showAlert(message, 'info');
         })
-        .catch(() => {
+        .catch(err => {
           this.isSaving = false;
-          this.alertService().showAlert('No fue posible completar la operación. Intente de nuevo.', 'danger');
+          this.alertService().showHttpError(null, err);
         });
     } else {
       this.informacionPasantia.informacionPasantiaProyectoId = parseInt(this.proyId);
@@ -808,9 +808,9 @@ export default class PasantiaInformacionEmpresa extends Vue {
           const message = 'Se ha creado un nuevo elemento de pasantia';
           this.alertService().showAlert(message, 'success');
         })
-        .catch(() => {
+        .catch(err => {
           this.isSaving = false;
-          this.alertService().showAlert('No fue posible completar la operación. Intente de nuevo.', 'danger');
+          this.alertService().showHttpError(null, err);
         });
     }
     this.submitStatus = 'PENDING';

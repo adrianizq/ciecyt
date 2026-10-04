@@ -154,8 +154,8 @@ export default class EnviarPropuesta extends mixins(JhiDataUtils) {
           this.alertService().showAlert('El archivo se eliminó correctamente.', 'success');
           this.initRelationships();
         })
-        .catch(() => {
-          this.alertService().showAlert('No fue posible eliminar el archivo. Intente de nuevo.', 'danger');
+        .catch(err => {
+          this.alertService().showHttpError(null, err);
         });
     }
 
@@ -209,9 +209,9 @@ export default class EnviarPropuesta extends mixins(JhiDataUtils) {
           this.alertService().showAlert(message, 'info');
           this.initRelationships();
         })
-        .catch(() => {
+        .catch(err => {
           this.isSaving = false;
-          this.alertService().showAlert('No fue posible guardar el archivo. Intente de nuevo.', 'danger');
+          this.alertService().showHttpError(null, err);
         });
     } else {
       this.adjuntoProyectoFaseService()
@@ -222,9 +222,9 @@ export default class EnviarPropuesta extends mixins(JhiDataUtils) {
           this.alertService().showAlert(message, 'success');
           this.initRelationships();
         })
-        .catch(() => {
+        .catch(err => {
           this.isSaving = false;
-          this.alertService().showAlert('No fue posible guardar el archivo. Intente de nuevo.', 'danger');
+          this.alertService().showHttpError(null, err);
         });
     }
   }

@@ -28,6 +28,6 @@ export default class AdjuntoProyectoFaseDetails extends mixins(JhiDataUtils) {
   }
 
   public previousState() {
-    this.$router.go(-1);
+    this.$router.push({ name: 'AdjuntoProyectoFase' });
   }
 }

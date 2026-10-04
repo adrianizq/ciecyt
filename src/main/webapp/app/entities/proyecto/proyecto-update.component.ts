@@ -84,6 +84,10 @@ export default class ProyectoUpdate extends Vue {
           this.$router.go(-1);
           const message = this.$t('ciecytApp.proyecto.updated', { param: param.id });
           this.alertService().showAlert(message, 'info');
+        })
+        .catch(error => {
+          this.isSaving = false;
+          this.alertService().showHttpError(this, error);
         });
     } else {
       this.proyectoService()
@@ -93,6 +97,10 @@ export default class ProyectoUpdate extends Vue {
           this.$router.go(-1);
           const message = this.$t('ciecytApp.proyecto.created', { param: param.id });
           this.alertService().showAlert(message, 'success');
+        })
+        .catch(error => {
+          this.isSaving = false;
+          this.alertService().showHttpError(this, error);
         });
     }
   }

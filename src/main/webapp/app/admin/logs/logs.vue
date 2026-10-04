@@ -10,8 +10,8 @@
             <table class="table table-sm table-striped table-bordered">
                 <thead>
                 <tr title="click to order">
-                    <th v-on:click="changeOrder('name')"><span v-text="$t('logs.table.name')"></span></th>
-                    <th v-on:click="changeOrder('level')"><span v-text="$t('logs.table.level')"></span></th>
+                    <th role="button" tabindex="0" :aria-sort="propOrder === 'name' ? (reverse ? 'descending' : 'ascending') : 'none'" v-on:click="changeOrder('name')" v-on:keydown.enter="changeOrder('name')" v-on:keydown.space.prevent="changeOrder('name')"><span v-text="$t('logs.table.name')"></span></th>
+                    <th role="button" tabindex="0" :aria-sort="propOrder === 'level' ? (reverse ? 'descending' : 'ascending') : 'none'" v-on:click="changeOrder('level')" v-on:keydown.enter="changeOrder('level')" v-on:keydown.space.prevent="changeOrder('level')"><span v-text="$t('logs.table.level')"></span></th>
                 </tr>
                 </thead>
 

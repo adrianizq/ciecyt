@@ -201,9 +201,9 @@ export default class DocumentoPropuesta extends mixins(JhiDataUtils) {
           this.alertService().showAlert(message, 'info');
           this.initRelationships();
         })
-        .catch(() => {
+        .catch(err => {
           this.isSaving = false;
-          this.alertService().showAlert('No fue posible completar la operación. Intente de nuevo.', 'danger');
+          this.alertService().showHttpError(null, err);
         });
     } else {
       this.adjuntoProyectoFaseService()
@@ -214,9 +214,9 @@ export default class DocumentoPropuesta extends mixins(JhiDataUtils) {
           this.alertService().showAlert(message, 'success');
           this.initRelationships();
         })
-        .catch(() => {
+        .catch(err => {
           this.isSaving = false;
-          this.alertService().showAlert('No fue posible completar la operación. Intente de nuevo.', 'danger');
+          this.alertService().showHttpError(null, err);
         });
     }
   }

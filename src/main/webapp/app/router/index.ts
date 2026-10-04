@@ -317,8 +317,11 @@ const ListadoProyecto = () => import('../pages/estudiante/listado_proyecto.vue')
 const PropuestasInvestigador = () => import('../pages/propuesta_nueva/propuestas_investigador.vue');
 
 // prettier-ignore
-export default createRouter({
+const router = createRouter({
   history: createWebHistory(),
+  scrollBehavior(_to, _from, savedPosition) {
+    return savedPosition ?? { top: 0 };
+  },
   routes: [
     {
       path: '/',
@@ -1964,3 +1967,11 @@ export default createRouter({
     // jhipster-needle-add-entity-to-router - JHipster will add entities to the router here
   ]
 });
+
+router.afterEach(to => {
+  const base = 'CIECYT-ITP';
+  const titulo = to.meta && typeof to.meta.title === 'string' ? to.meta.title : null;
+  document.title = titulo ? `${titulo} | ${base}` : base;
+});
+
+export default router;

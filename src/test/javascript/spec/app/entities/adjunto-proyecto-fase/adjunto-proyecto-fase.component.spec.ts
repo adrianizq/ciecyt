@@ -102,7 +102,7 @@ describe('Component Tests', () => {
       await comp.$nextTick();
 
       // THEN
-      expect(adjuntoProyectoFaseServiceStub.retrieve.callCount).toEqual(3);
+      expect(adjuntoProyectoFaseServiceStub.retrieve.callCount).toEqual(2);
       expect(comp.page).toEqual(1);
       expect(comp.adjuntoProyectoFases[0]).toEqual(expect.objectContaining({ id: 123 }));
     });

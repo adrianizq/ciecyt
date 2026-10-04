@@ -32,19 +32,32 @@ export default class JhiAlertService {
     if (!error) {
       return 'No fue posible completar la operación. Intente de nuevo.';
     }
-    const data = error.data;
-    const detalle = data && (data.message || data.detail || data.title);
-    if (typeof error.status === 'number') {
-      if (error.status === 401) {
+    // Axios envuelve la respuesta real en error.response; cuando la peticion falla antes de
+    // llegar al servidor (red caida, CORS, timeout) error.response es undefined.
+    const response = error.response || {};
+    const data = error.data || response.data || {};
+    const detalle = data.message || data.detail || data.title || error.message;
+    const status = typeof response.status === 'number' ? response.status : error.status;
+    if (typeof status === 'number') {
+      if (status === 0) {
+        return 'No fue posible comunicarse con el servidor. Verifique su conexión e intente de nuevo.';
+      }
+      if (status === 401) {
         return 'Su sesión ha expirado. Vuelva a iniciar sesión para continuar.';
       }
-      if (error.status === 403) {
+      if (status === 403) {
         return 'No tiene permisos para realizar esta acción.';
       }
-      if (error.status === 404) {
+      if (status === 404) {
         return 'El recurso solicitado ya no está disponible.';
       }
-      if (error.status >= 500) {
+      if (status === 413) {
+        return 'El archivo enviado supera el tamaño máximo permitido.';
+      }
+      if (status === 422 || status === 400) {
+        return detalle ? String(detalle) : 'Los datos enviados no son válidos.';
+      }
+      if (status >= 500) {
         return 'Error del servidor. Intente de nuevo en unos momentos.';
       }
     }

@@ -18,16 +18,55 @@
                     </b-form-group>
                     </div>
                 </div>
+
+                <!--
+                  Acuerdo 25, art. 7 par. 2 y Tabla 9: la opcion de grado Publicacion
+                  de Articulo aplica limite de estudiantes segun la categoria de la
+                  revista indexada. A1|A2 admiten hasta 3, B|C admiten hasta 2.
+                -->
+                <div v-if="esPublicacionArticulo" class="row mt-3 mb-3">
+                  <div class="col-12">
+                    <b-form-group
+                      label="Categoria de la revista indexada (Publindex u homologo)"
+                      label-for="categoria-revista"
+                    >
+                      <b-form-select
+                        id="categoria-revista"
+                        v-model="proyecto.publicacionCategoriaRevista"
+                        :options="categoriaRevistaOpciones"
+                      ></b-form-select>
+                    </b-form-group>
+
+                    <div
+                      class="alert alert-warning"
+                      role="alert"
+                      v-if="limiteExcedido"
+                    >
+                      <strong>Excede el maximo permitido.</strong>
+                      La categoria
+                      <em>{{ proyecto.publicacionCategoriaRevista }}</em>
+                      admite hasta {{ integrantesMaxPermitidos }} estudiantes pero
+                      hay {{ conteoIntegrantesDesignados }}. Ajuste la categoria o
+                      reduzca el numero de integrantes antes de guardar.
+                    </div>
+
+                    <div class="small text-muted">
+                      Integrantes designados: <strong>{{ conteoIntegrantesDesignados }}</strong>
+                      / {{ integrantesMaxPermitidos }} permitidos por la categoria seleccionada.
+                    </div>
+                  </div>
+                </div>
+
                 <br><br>
                 <div class="row">
                     <div class="col-12">
                         <button type="button" id="cancel" class="btn btn-secondary" v-on:click="back">
                             <font-awesome-icon icon="arrow-left"></font-awesome-icon>&nbsp;Volver
                         </button>
-                        <button type="button" id="save-borrador" class="btn btn-outline-secondary" v-on:click="save('borrador')" :disabled="isSaving">
+                        <button type="button" id="save-borrador" class="btn btn-outline-secondary" v-on:click="save('borrador')" :disabled="isSaving || limiteExcedido">
                             <font-awesome-icon icon="save"></font-awesome-icon>&nbsp;<span>Guardar borrador</span>
                         </button>
-                        <button type="button" id="save" class="btn btn-primary" v-on:click="save('continuar')" :disabled="isSaving">
+                        <button type="button" id="save" class="btn btn-primary" v-on:click="save('continuar')" :disabled="isSaving || limiteExcedido">
                             <font-awesome-icon icon="save"></font-awesome-icon>&nbsp;<span>Guardar y continuar</span>
                         </button>
                     </div>
@@ -52,19 +91,20 @@
     import ProyectoService from '@/entities/proyecto/proyecto.service';
 
     import { IIntegranteProyecto, IntegranteProyecto } from '@/shared/model/integrante-proyecto.model';
+    import {
+      EnumCategoriaRevista,
+      integrantesPermitidosPorCategoriaRevista,
+    } from '@/shared/model/enumerations/enum-categoria-revista.model';
     import { withPlaceholder as withPlaceholderOptions } from '@/shared/filter/filter';
     import IntegranteProyectoService from '@/entities/integrante-proyecto/integrante-proyecto.service';
-   
- 
+
+
 import { useVuelidate } from '@vuelidate/core';
-import { userInfo } from 'os';
 
-
-    const validations: any = {};
+    const MODALIDAD_PUBLICACION_ARTICULO = 9006;
 
     @Component({
         components: { MenuLateralNueva },
-        validations
     })
 
     export default class PropuestaIntegrantes extends Vue {
@@ -89,8 +129,42 @@ import { userInfo } from 'os';
         public cantEstudiantes: number = 0;
         public rolModalidadId?: number =0;
         public options : any = [];
-      
-//public proyId: string = null;
+
+        /**
+         * Opciones del selector de categoria de revista para la opcion de grado
+         * Publicacion de Articulo.
+         */
+        public categoriaRevistaOpciones: any[] = [
+          { value: null, text: 'Seleccione una categoria' },
+          { value: EnumCategoriaRevista.A1, text: 'A1 (hasta 3 estudiantes)' },
+          { value: EnumCategoriaRevista.A2, text: 'A2 (hasta 3 estudiantes)' },
+          { value: EnumCategoriaRevista.B, text: 'B (hasta 2 estudiantes)' },
+          { value: EnumCategoriaRevista.C, text: 'C (hasta 2 estudiantes)' },
+        ];
+
+        get esPublicacionArticulo(): boolean {
+          return this.modalidadId === MODALIDAD_PUBLICACION_ARTICULO;
+        }
+
+        /**
+         * Cuenta solo los integrantes con usuario efectivamente asignado: el resto
+         * son casilleros vacios que no cuentan contra el limite del Acuerdo.
+         */
+        get conteoIntegrantesDesignados(): number {
+          if (!this.integrantesProyecto) {
+            return 0;
+          }
+          return this.integrantesProyecto.filter(i => i.integranteProyectoUserId != null).length;
+        }
+
+        get integrantesMaxPermitidos(): number {
+          return integrantesPermitidosPorCategoriaRevista(this.proyecto.publicacionCategoriaRevista as EnumCategoriaRevista);
+        }
+
+        get limiteExcedido(): boolean {
+          return this.esPublicacionArticulo && this.integrantesMaxPermitidos > 0
+            && this.conteoIntegrantesDesignados > this.integrantesMaxPermitidos;
+        }
 
         @Hook
         beforeRouteEnter(to, from, next) {
@@ -98,19 +172,29 @@ import { userInfo } from 'os';
                 vm.initRelationships();
             });
         }
-       
+
         mounted() {
             this.proyId = this.$route.params.proyectoId;
         }
         beforeMount() {
         }
-        
+
         /*Methods for multi select*/
         public back() {
             this.$router.push({ name: 'PropuestaInformacionGeneralNuevaEditView', params: { proyectoId: this.proyId } });
         }
 
         public async save(accion: 'borrador' | 'continuar' = 'continuar'): Promise<void> {
+            if (this.limiteExcedido) {
+              this.alertService().showAlert(
+                `La categoria ${this.proyecto.publicacionCategoriaRevista || 'sin categoria'} ` +
+                `admite maximo ${this.integrantesMaxPermitidos} estudiantes, pero hay ` +
+                `${this.conteoIntegrantesDesignados} asignados. Reduzca el numero de ` +
+                'integrantes antes de continuar (Acuerdo 25, art. 7 par. 2 y Tabla 9).',
+                'danger',
+              );
+              return;
+            }
             this.isSaving = true;
             try {
                 for (const integrante of this.integrantesProyecto) {
@@ -135,8 +219,6 @@ import { userInfo } from 'os';
 
          async initRelationships() {
             try {
-                //Obteniendo los usuarios estudiantes
-                
                 this.usuarioService()
                     .retrieveEstudiantes()
                     .then(res => {
@@ -150,46 +232,36 @@ import { userInfo } from 'os';
 
                             this.users.push(item);
                             this.options.push({value: item.id, text: item.nombresApellidos})
-
-                            
-                        }); 
-                    });             
+                        });
+                    });
                 this.proyId = parseInt(this.$route.params.proyectoId);
                 this.proyecto = await this.proyectoService().find(this.proyId);
-                /*await this.proyectoService().find(this.proyId).then
-                    (res=> {
-                            this.proyecto = res;
-                    });
-                */
                 this.modalidadId = this.proyecto.proyectoModalidadId;
 
-                
-                            
-                 await this.integranteProyectoService()
+                await this.integranteProyectoService()
                     .retrieveEstudiantesProyecto(this.proyId)
                     .then(res => {
                        this.integrantesProyecto = res.data;
                    });
-                    
-                  if(this.integrantesProyecto.length==0){  
+
+                  if(this.integrantesProyecto.length==0){
                     await this.rolesModalidadService()
-                        .findRolModalidad("Estudiante", this.modalidadId )
+                        .findRolModalidad('Estudiante', this.modalidadId )
                         .then(res => {
                             this.rolesModalidad = res;
                             this.cantEstudiantes = res.cantidad;
                             this.rolModalidadId = res.id;
-                            
+
                             for (var i = 0; i < this.cantEstudiantes; i++) {
                                 let integrante = new IntegranteProyecto();
 
                                 integrante.integranteProyectoProyectoId = this.proyId;
                                 integrante.integranteProyectoRolesModalidadId = this.rolModalidadId;
 
-                                this.integrantesProyecto.push(integrante);                            
+                                this.integrantesProyecto.push(integrante);
                             }
                     });
                   }
-
             } catch (e) {
             }
         }

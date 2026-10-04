@@ -62,6 +62,10 @@ export default class ModalidadUpdate extends Vue {
           this.$router.go(-1);
           const message = this.$t('ciecytApp.modalidad.updated', { param: param.id });
           this.alertService().showAlert(message, 'info');
+        })
+        .catch(error => {
+          this.isSaving = false;
+          this.alertService().showHttpError(this, error);
         });
     } else {
       this.modalidadService()
@@ -71,6 +75,10 @@ export default class ModalidadUpdate extends Vue {
           this.$router.go(-1);
           const message = this.$t('ciecytApp.modalidad.created', { param: param.id });
           this.alertService().showAlert(message, 'success');
+        })
+        .catch(error => {
+          this.isSaving = false;
+          this.alertService().showHttpError(this, error);
         });
     }
   }

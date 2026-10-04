@@ -155,6 +155,10 @@ export default class PreguntaUpdate extends Vue {
           //(<any>this).$router.go(0);
           const message = this.$t('ciecytApp.pregunta.updated', { param: param.id });
           this.alertService().showAlert(message, 'info');
+        })
+        .catch(error => {
+          this.isSaving = false;
+          this.alertService().showHttpError(this, error);
         });
       /////////
     } else {
@@ -166,6 +170,10 @@ export default class PreguntaUpdate extends Vue {
           // (<any>this).$router.go(0);
           const message = this.$t('ciecytApp.pregunta.created', { param: param.id });
           this.alertService().showAlert(message, 'success');
+        })
+        .catch(error => {
+          this.isSaving = false;
+          this.alertService().showHttpError(this, error);
         });
     }
   }

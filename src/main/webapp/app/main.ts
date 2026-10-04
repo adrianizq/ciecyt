@@ -9,6 +9,8 @@ import { initBootstrapVue } from './shared/config/config-bootstrap-vue';
 import JhiItemCountComponent from './shared/jhi-item-count.vue';
 import JhiLoadingComponent from './shared/jhi-loading.vue';
 import JhiEmptyComponent from './shared/jhi-empty.vue';
+import FileUpload from './shared/components/file-upload.vue';
+import MenuLateralWizard from './components/shared/menu-lateral-wizard.vue';
 import AuditsService from './admin/audits/audits.service';
 
 import HealthService from './admin/health/health.service';
@@ -112,15 +114,17 @@ setupAxiosInterceptors(status => {
 // quede sin manejar muestra el mismo aviso que showHttpError, sin repetir el de
 // sesion caducada/permisos que ya emite el interceptor.
 window.addEventListener('unhandledrejection', event => {
-  const reason: any = event.reason;
-  const response = reason && typeof reason === 'object' ? reason.response : null;
-  if (!response) {
+  const reason: any = event && event.reason;
+  if (!reason) {
     return;
   }
-  if (response.status === 401 || response.status === 403) {
+  const response = typeof reason === 'object' ? reason.response : null;
+  if (response && (response.status === 401 || response.status === 403)) {
     return;
   }
-  alertService.showHttpError(null, response);
+  // Pasa toda la razon (o solo la respuesta de Axios) a showHttpError para que
+  // mapee 0/4xx/5xx a mensajes en lenguaje natural.
+  alertService.showHttpError(null, response || reason);
 });
 
 const provide: Record<string, unknown> = {
@@ -203,6 +207,8 @@ app.component('font-awesome-icon', FontAwesomeIcon);
 app.component('jhi-item-count', JhiItemCountComponent);
 app.component('jhi-loading', JhiLoadingComponent);
 app.component('jhi-empty', JhiEmptyComponent);
+app.component('file-upload', FileUpload);
+app.component('menu-lateral-wizard', MenuLateralWizard);
 app.use(store);
 app.use(i18n);
 app.use(router);

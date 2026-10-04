@@ -48,14 +48,28 @@ function vueI18nInterpolation(value: unknown): unknown {
   return value;
 }
 
+function deepMerge(target: Record<string, unknown>, source: Record<string, unknown>): Record<string, unknown> {
+  for (const key of Object.keys(source)) {
+    const sv = source[key];
+    const tv = target[key];
+    if (sv && typeof sv === 'object' && !Array.isArray(sv) && tv && typeof tv === 'object' && !Array.isArray(tv)) {
+      target[key] = deepMerge({ ...(tv as Record<string, unknown>) }, sv as Record<string, unknown>);
+    } else {
+      target[key] = sv;
+    }
+  }
+  return target;
+}
+
 function mergeLanguage(lang: string): string {
   const dir = path.join(webapp, 'i18n', lang);
-  const merged = {};
+  const merged: Record<string, unknown> = {};
   for (const file of fs
     .readdirSync(dir)
     .filter(name => name.endsWith('.json'))
     .sort()) {
-    Object.assign(merged, JSON.parse(fs.readFileSync(path.join(dir, file), 'utf8')));
+    const parsed = JSON.parse(fs.readFileSync(path.join(dir, file), 'utf8')) as Record<string, unknown>;
+    deepMerge(merged, parsed);
   }
   return JSON.stringify(vueI18nInterpolation(merged), null, 2);
 }

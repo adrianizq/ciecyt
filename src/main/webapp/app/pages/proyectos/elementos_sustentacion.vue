@@ -147,7 +147,7 @@ export default class Elementos extends Vue {
                 Promise.all(operaciones).then(() => {
                     this.isSaving = false;
                     this.alertService().showAlert('Borrador guardado. Aún puedes continuar más tarde.', 'info');
-                }).catch(() => {
+                }).catch(err => {
                     this.isSaving = false;
                 });
 

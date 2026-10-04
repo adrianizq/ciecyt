@@ -125,7 +125,7 @@ export default class EnviarProyecto extends Vue {
         const message = this.$t('ciecytApp.proyecto.updated', { param: param.id });
         this.alertService().showAlert(message, 'info');
       })
-      .catch(() => {
+      .catch(err => {
         this.isSaving = false;
         this.alertService().showAlert('Error al enviar el proyecto', 'danger');
       });

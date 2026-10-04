@@ -125,9 +125,9 @@ export default class EnviarPropuesta extends Vue {
           const message = this.$t('ciecytApp.proyecto.updated', { param: param.id });
           this.alertService().showAlert(message, 'info');
         })
-        .catch(() => {
+        .catch(err => {
           this.isSaving = false;
-          this.alertService().showAlert('No fue posible completar la operación. Intente de nuevo.', 'danger');
+          this.alertService().showHttpError(null, err);
         });
     } else {
       this.proyectoService()
@@ -143,9 +143,9 @@ export default class EnviarPropuesta extends Vue {
           const message = 'Se ha creado un nuevo proyecto';
           this.alertService().showAlert(message, 'success');
         })
-        .catch(() => {
+        .catch(err => {
           this.isSaving = false;
-          this.alertService().showAlert('No fue posible completar la operación. Intente de nuevo.', 'danger');
+          this.alertService().showHttpError(null, err);
         });
     }
     //this.submitStatus = 'PENDING';

@@ -26,6 +26,6 @@ export default class InvestigacionTipoDetails extends Vue {
   }
 
   public previousState() {
-    this.$router.go(-1);
+    this.$router.push({ name: 'InvestigacionTipo' });
   }
 }

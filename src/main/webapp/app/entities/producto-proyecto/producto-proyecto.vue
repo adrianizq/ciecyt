@@ -21,12 +21,12 @@
             <table class="table table-striped">
                 <thead>
                 <tr>
-                    <th v-on:click="changeOrder('id')"><span v-text="$t('global.field.id')"></span> <font-awesome-icon icon="sort"></font-awesome-icon></th>
-                    <th v-on:click="changeOrder('aplica')"><span v-text="$t('ciecytApp.productoProyecto.aplica')"></span> <font-awesome-icon icon="sort"></font-awesome-icon></th>
-                    <th v-on:click="changeOrder('descripcion')"><span v-text="$t('ciecytApp.productoProyecto.descripcion')"></span> <font-awesome-icon icon="sort"></font-awesome-icon></th>
-                    <th v-on:click="changeOrder('productoProyectoProductoProducto')"><span v-text="$t('ciecytApp.productoProyecto.productoProyectoProducto')"></span> <font-awesome-icon icon="sort"></font-awesome-icon></th>
-                    <th v-on:click="changeOrder('productoProyectoProyectoTitulo')"><span v-text="$t('ciecytApp.productoProyecto.productoProyectoProyecto')"></span> <font-awesome-icon icon="sort"></font-awesome-icon></th>
-                    <th></th>
+                    <th role="button" tabindex="0" :aria-sort="propOrder === 'id' ? (reverse ? 'descending' : 'ascending') : 'none'" v-on:click="changeOrder('id')" v-on:keydown.enter="changeOrder('id')" v-on:keydown.space.prevent="changeOrder('id')"><span v-text="$t('global.field.id')"></span> <font-awesome-icon icon="sort"></font-awesome-icon></th>
+                    <th role="button" tabindex="0" :aria-sort="propOrder === 'aplica' ? (reverse ? 'descending' : 'ascending') : 'none'" v-on:click="changeOrder('aplica')" v-on:keydown.enter="changeOrder('aplica')" v-on:keydown.space.prevent="changeOrder('aplica')"><span v-text="$t('ciecytApp.productoProyecto.aplica')"></span> <font-awesome-icon icon="sort"></font-awesome-icon></th>
+                    <th role="button" tabindex="0" :aria-sort="propOrder === 'descripcion' ? (reverse ? 'descending' : 'ascending') : 'none'" v-on:click="changeOrder('descripcion')" v-on:keydown.enter="changeOrder('descripcion')" v-on:keydown.space.prevent="changeOrder('descripcion')"><span v-text="$t('ciecytApp.productoProyecto.descripcion')"></span> <font-awesome-icon icon="sort"></font-awesome-icon></th>
+                    <th role="button" tabindex="0" :aria-sort="propOrder === 'productoProyectoProductoProducto' ? (reverse ? 'descending' : 'ascending') : 'none'" v-on:click="changeOrder('productoProyectoProductoProducto')" v-on:keydown.enter="changeOrder('productoProyectoProductoProducto')" v-on:keydown.space.prevent="changeOrder('productoProyectoProductoProducto')"><span v-text="$t('ciecytApp.productoProyecto.productoProyectoProducto')"></span> <font-awesome-icon icon="sort"></font-awesome-icon></th>
+                    <th role="button" tabindex="0" :aria-sort="propOrder === 'productoProyectoProyectoTitulo' ? (reverse ? 'descending' : 'ascending') : 'none'" v-on:click="changeOrder('productoProyectoProyectoTitulo')" v-on:keydown.enter="changeOrder('productoProyectoProyectoTitulo')" v-on:keydown.space.prevent="changeOrder('productoProyectoProyectoTitulo')"><span v-text="$t('ciecytApp.productoProyecto.productoProyectoProyecto')"></span> <font-awesome-icon icon="sort"></font-awesome-icon></th>
+                    <th scope="col" class="text-right"><span class="visually-hidden" v-text="$t('global.menu.actions')"></span></th>
                 </tr>
                 </thead>
                 <tbody>
@@ -49,15 +49,15 @@
                     </td>
                     <td class="text-right">
                         <div class="btn-group">
-                            <router-link custom v-slot="{ navigate }" :to="{name: 'ProductoProyectoView', params: {productoProyectoId: productoProyecto.id}}"><button class="btn btn-info btn-sm details" @click="navigate">
+                            <router-link custom v-slot="{ navigate }" :to="{name: 'ProductoProyectoView', params: {productoProyectoId: productoProyecto.id}}"><button class="btn btn-info btn-sm details" :aria-label="$t('entity.action.view')" @click="navigate">
                                 <font-awesome-icon icon="eye"></font-awesome-icon>
                                 <span class="d-none d-md-inline" v-text="$t('entity.action.view')"></span>
                             </button></router-link>
-                            <router-link custom v-slot="{ navigate }" :to="{name: 'ProductoProyectoEdit', params: {productoProyectoId: productoProyecto.id}}"><button class="btn btn-primary btn-sm edit" @click="navigate">
+                            <router-link custom v-slot="{ navigate }" :to="{name: 'ProductoProyectoEdit', params: {productoProyectoId: productoProyecto.id}}"><button class="btn btn-primary btn-sm edit" :aria-label="$t('entity.action.edit')" @click="navigate">
                                 <font-awesome-icon icon="pencil-alt"></font-awesome-icon>
                                 <span class="d-none d-md-inline" v-text="$t('entity.action.edit')"></span>
                             </button></router-link>
-                            <b-button v-on:click="prepareRemove(productoProyecto)"
+                            <b-button :aria-label="$t('entity.action.delete')" v-on:click="prepareRemove(productoProyecto)"
                                    variant="danger"
                                    class="btn btn-sm"
                                    v-b-modal.removeEntity>
@@ -89,7 +89,7 @@
                 <jhi-item-count :page="page" :total="queryCount" :itemsPerPage="itemsPerPage"></jhi-item-count>
             </div>
             <div class="row justify-content-center">
-                <b-pagination size="md" :total-rows="totalItems" v-model="page" :per-page="itemsPerPage" :change="loadPage(page)"></b-pagination>
+                <b-pagination size="md" :total-rows="totalItems" v-model="page" :per-page="itemsPerPage" @update:model-value="loadPage"></b-pagination>
             </div>
         </div>
     </div>

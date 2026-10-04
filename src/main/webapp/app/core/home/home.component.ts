@@ -26,8 +26,8 @@ export default class Home extends Vue {
     },
     {
       id: 3,
-      nombre: 'Pasantía Investigativa',
-      descripcion: 'Experiencia práctica en línea de investigación.',
+      nombre: 'Pasantía Investigativa Profesional',
+      descripcion: 'Experiencia práctica en línea de investigación para ciclo profesional.',
       icono: 'flask',
       color: '#6A1B9A',
       ruta: '/estudiante/listado-estudiante',
@@ -54,6 +54,14 @@ export default class Home extends Vue {
       descripcion: 'Programa de profundización académica (sin flujo en sistema).',
       icono: 'award',
       color: '#5D4037',
+      ruta: '/estudiante/listado-estudiante',
+    },
+    {
+      id: 7,
+      nombre: 'Especialización',
+      descripcion: 'Primer semestre de una especialización de la institución como opción de grado.',
+      icono: 'user-graduate',
+      color: '#4527A0',
       ruta: '/estudiante/listado-estudiante',
     },
   ];

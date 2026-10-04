@@ -59,11 +59,12 @@
                   v-on:click.prevent="descargar(requisito)"
                   >Ver archivo entregado</a
                 >
-                <input
+                <file-upload
                   v-if="editable(requisito)"
-                  :id="'archivo-' + requisito.id"
-                  type="file"
-                  v-on:change="asignarArchivo($event, requisito)"
+                  :accept="requisito.aceptaTipos || '.pdf,.doc,.docx,.zip'"
+                  :help="'Adjunte un archivo de hasta 20 MB'"
+                  label="Adjuntar archivo de requisito"
+                  @change="archivo => asignarArchivo(archivo, requisito)"
                 />
               </div>
             </div>
@@ -168,13 +169,21 @@ export default class ChecklistPropuesta extends mixins(JhiDataUtils) {
     }
   }
 
-  asignarArchivo(event, requisito: IRequisitoProyecto) {
-    const fileData = event.target.files[0];
+  asignarArchivo(archivo: File | Event | null, requisito: IRequisitoProyecto) {
+    let fileData: File | null = null;
+    if (archivo instanceof File) {
+      fileData = archivo;
+    } else if (archivo && (archivo as Event).target && (archivo as any).target.files) {
+      fileData = (archivo as any).target.files[0] || null;
+    }
     if (!fileData) {
+      delete this.pendientes[requisito.id];
       return;
     }
     const pendiente: any = { nombreArchivoOriginal: fileData.name };
-    this.setFileData(event, pendiente, 'archivo', false);
+    // setFileData espera un evento; construimos un wrapper sintetico con el File
+    const syntheticEvent: any = { target: { files: [fileData] } };
+    this.setFileData(syntheticEvent, pendiente, 'archivo', false);
     this.pendientes[requisito.id] = pendiente;
   }
 
@@ -212,7 +221,7 @@ export default class ChecklistPropuesta extends mixins(JhiDataUtils) {
         this.reemplazar(actualizado);
         this.alertService().showAlert('Requisito entregado', 'success');
       })
-      .catch(() => {
+      .catch(err => {
         this.guardando = false;
         this.alertService().showAlert('No se pudo entregar el requisito', 'danger');
       });
@@ -251,7 +260,7 @@ export default class ChecklistPropuesta extends mixins(JhiDataUtils) {
         this.reemplazar(actualizado);
         this.alertService().showAlert('Requisito entregado', 'success');
       })
-      .catch(() => {
+      .catch(err => {
         this.guardando = false;
         this.alertService().showAlert('No se pudo entregar el requisito', 'danger');
       });
@@ -314,7 +323,7 @@ export default class ChecklistPropuesta extends mixins(JhiDataUtils) {
   }
 
   created() {
-    this.initRelationships().catch(() => {
+    this.initRelationships().catch(err => {
       this.cargando = false;
       this.alertService().showAlert('No se pudieron cargar los requisitos de inscripción', 'danger');
     });

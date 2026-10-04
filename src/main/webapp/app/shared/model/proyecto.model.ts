@@ -56,6 +56,12 @@ export interface IProyecto {
   periodosContinuidadUsados?: number;
   continuidadPeriodoAdicional?: boolean;
   estadoContinuidad?: EnumEstadoContinuidad;
+  /**
+   * Acuerdo 25, art. 7 par. 2 y Tabla 9: categoria de la revista indexada
+   * (A1|A2|B|C) cuando la modalidad es Publicacion de Articulo. Define
+   * el numero maximo de estudiantes permitido.
+   */
+  publicacionCategoriaRevista?: string;
 }
 
 export class Proyecto implements IProyecto {

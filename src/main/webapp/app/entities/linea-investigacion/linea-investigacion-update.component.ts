@@ -57,6 +57,10 @@ export default class LineaInvestigacionUpdate extends Vue {
           this.$router.go(-1);
           const message = this.$t('ciecytApp.lineaInvestigacion.updated', { param: param.id });
           this.alertService().showAlert(message, 'info');
+        })
+        .catch(error => {
+          this.isSaving = false;
+          this.alertService().showHttpError(this, error);
         });
     } else {
       this.lineaInvestigacionService()
@@ -66,6 +70,10 @@ export default class LineaInvestigacionUpdate extends Vue {
           this.$router.go(-1);
           const message = this.$t('ciecytApp.lineaInvestigacion.created', { param: param.id });
           this.alertService().showAlert(message, 'success');
+        })
+        .catch(error => {
+          this.isSaving = false;
+          this.alertService().showHttpError(this, error);
         });
     }
   }

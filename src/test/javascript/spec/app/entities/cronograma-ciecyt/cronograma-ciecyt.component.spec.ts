@@ -102,7 +102,7 @@ describe('Component Tests', () => {
       await comp.$nextTick();
 
       // THEN
-      expect(cronogramaCiecytServiceStub.retrieve.callCount).toEqual(3);
+      expect(cronogramaCiecytServiceStub.retrieve.callCount).toEqual(2);
       expect(comp.page).toEqual(1);
       expect(comp.cronogramaCiecyts[0]).toEqual(expect.objectContaining({ id: 123 }));
     });

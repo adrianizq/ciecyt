@@ -135,9 +135,9 @@ export default class RolMenu extends Vue {
         const message = 'Los permisos se han actualizado correctamente';
         this.alertService().showAlert(message, 'success');
       })
-      .catch(() => {
+      .catch(err => {
         this.isSaving = false;
-        this.alertService().showAlert('No fue posible actualizar los permisos. Intente de nuevo.', 'danger');
+        this.alertService().showHttpError(null, err);
       });
   }
 }

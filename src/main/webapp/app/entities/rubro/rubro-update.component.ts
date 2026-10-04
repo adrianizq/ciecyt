@@ -46,6 +46,10 @@ export default class RubroUpdate extends Vue {
           this.$router.go(-1);
           const message = this.$t('ciecytApp.rubro.updated', { param: param.id });
           this.alertService().showAlert(message, 'info');
+        })
+        .catch(error => {
+          this.isSaving = false;
+          this.alertService().showHttpError(this, error);
         });
     } else {
       this.rubroService()
@@ -55,6 +59,10 @@ export default class RubroUpdate extends Vue {
           this.$router.go(-1);
           const message = this.$t('ciecytApp.rubro.created', { param: param.id });
           this.alertService().showAlert(message, 'success');
+        })
+        .catch(error => {
+          this.isSaving = false;
+          this.alertService().showHttpError(this, error);
         });
     }
   }

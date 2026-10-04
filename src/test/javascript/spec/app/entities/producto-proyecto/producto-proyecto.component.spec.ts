@@ -102,7 +102,7 @@ describe('Component Tests', () => {
       await comp.$nextTick();
 
       // THEN
-      expect(productoProyectoServiceStub.retrieve.callCount).toEqual(3);
+      expect(productoProyectoServiceStub.retrieve.callCount).toEqual(2);
       expect(comp.page).toEqual(1);
       expect(comp.productoProyectos[0]).toEqual(expect.objectContaining({ id: 123 }));
     });

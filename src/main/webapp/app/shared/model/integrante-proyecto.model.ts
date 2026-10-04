@@ -15,6 +15,11 @@ export interface IIntegranteProyecto {
   integranteProyectoProyectoId?: number;
   integranteProyectoRolesModalidadRol?: string;
   integranteProyectoRolesModalidadId?: number;
+  /**
+   * Acuerdo 25, art. 7 par. 2 y Tabla 9: categoria de la revista indexada
+   * para la opcion de grado Publicacion de Articulo (A1|A2|B|C).
+   */
+  integranteProyectoCategoriaRevista?: string;
 }
 
 export class IntegranteProyecto implements IIntegranteProyecto {
@@ -34,6 +39,7 @@ export class IntegranteProyecto implements IIntegranteProyecto {
     public integranteProyectoProyectoTitulo?: string,
     public integranteProyectoProyectoId?: number,
     public integranteProyectoRolesModalidadRol?: string,
-    public integranteProyectoRolesModalidadId?: number
+    public integranteProyectoRolesModalidadId?: number,
+    public integranteProyectoCategoriaRevista?: string
   ) {}
 }

@@ -196,7 +196,7 @@ export default class EnviarPropuesta extends Vue {
         const message = this.$t('ciecytApp.proyecto.updated', { param: param.id });
         this.alertService().showAlert(message, 'info');
       })
-      .catch(() => {
+      .catch(err => {
         this.isSaving = false;
         this.alertService().showAlert('Error al enviar la propuesta', 'danger');
       });

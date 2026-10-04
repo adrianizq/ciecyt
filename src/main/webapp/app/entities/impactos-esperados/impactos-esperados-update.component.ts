@@ -58,6 +58,10 @@ export default class ImpactosEsperadosUpdate extends Vue {
           this.$router.go(-1);
           const message = this.$t('ciecytApp.impactosEsperados.updated', { param: param.id });
           this.alertService().showAlert(message, 'info');
+        })
+        .catch(error => {
+          this.isSaving = false;
+          this.alertService().showHttpError(this, error);
         });
     } else {
       this.impactosEsperadosService()
@@ -67,6 +71,10 @@ export default class ImpactosEsperadosUpdate extends Vue {
           this.$router.go(-1);
           const message = this.$t('ciecytApp.impactosEsperados.created', { param: param.id });
           this.alertService().showAlert(message, 'success');
+        })
+        .catch(error => {
+          this.isSaving = false;
+          this.alertService().showHttpError(this, error);
         });
     }
   }

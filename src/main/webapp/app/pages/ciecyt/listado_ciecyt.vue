@@ -49,6 +49,7 @@
                      <th ><span >Jurado</span></th>
                      <th ><span >Asesor</span></th>
                      <th ><span >Continuidad</span></th>
+                     <th ><span >Plazos Acuerdo 25</span></th>
                      <th ><span >Acto público</span></th>
                      <th ><span >Requisitos</span></th>
 
@@ -60,7 +61,7 @@
                      <th class="col-md-2"><span >Jurado</span></th>
                      <th class="col-md-2"><span >Asesor</span></th>
                      -->
-                    <!-- <th v-on:click="changeOrder('tipo')"><span v-text="$t('ciecytApp.proyecto.tipo')"></span> <font-awesome-icon icon="sort"></font-awesome-icon></th> -->
+                    <!-- <th role="button" tabindex="0" :aria-sort="propOrder === 'tipo' ? (reverse ? 'descending' : 'ascending') : 'none'" v-on:click="changeOrder('tipo')" v-on:keydown.enter="changeOrder('tipo')" v-on:keydown.space.prevent="changeOrder('tipo')"><span v-text="$t('ciecytApp.proyecto.tipo')"></span> <font-awesome-icon icon="sort"></font-awesome-icon></th> -->
                    
                 </tr>
                 </thead>
@@ -144,6 +145,15 @@
                         </div>
                     </td>
 
+                    <!------ Plazos Acuerdo 25: muestra dias habiles restantes o vencidos ------>
+                    <td class="text-center">
+                      <div v-for="plazo in plazosDelProyecto(proyecto)" :key="plazo.id" class="mb-1">
+                        <div class="small text-muted">{{ plazo.etiqueta }}</div>
+                        <span class="badge" :class="'bg-' + plazo.variant">{{ plazo.estado }}</span>
+                      </div>
+                      <div v-if="plazosDelProyecto(proyecto).length === 0" class="text-muted small">Sin plazos activos</div>
+                    </td>
+
                     <!------ Acto público: sustentación con jurado (9002, 9004) o socialización sin jurado (9001, 9003, 9006) ---->
                     <td class="text-center">
                         <div v-if="esListoParaProgramarActo(proyecto)">
@@ -224,7 +234,7 @@
                 <jhi-item-count :page="page" :total="queryCount" :itemsPerPage="itemsPerPage"></jhi-item-count>
             </div>
             <div class="row justify-content-center">
-                <b-pagination size="md" :total-rows="totalItems" v-model="page" :per-page="itemsPerPage" :change="loadPage(page)"></b-pagination>
+                <b-pagination size="md" :total-rows="totalItems" v-model="page" :per-page="itemsPerPage" @update:model-value="loadPage"></b-pagination>
             </div>
         </div>
 
@@ -318,6 +328,12 @@ import { estadoActoProgramado, estadoListoParaActo, requiereSustentacion } from 
 import RequisitoProyectoService from '@/entities/requisito-proyecto/requisito-proyecto.service';
 import { IRequisitoProyecto } from '@/shared/model/requisito-proyecto.model';
 import { EnumEstadoRequisito } from '@/shared/model/enumerations/enum-estado-requisito.model';
+import {
+  PLAZOS_ACUERDO_25,
+  evaluarPlazo,
+  etiquetaPlazo,
+  variantePlazo,
+} from '@/shared/composables/dias-habiles';
 import { TipoRequisito } from '@/shared/model/enumerations/tipo-requisito.model';
 
 
@@ -461,7 +477,7 @@ public abrirRequisitos(proyecto: IProyecto): void {
       });
       this.cargandoRequisitos = false;
     })
-    .catch(() => {
+    .catch(err => {
       this.cargandoRequisitos = false;
       this.alertService().showAlert('No se pudieron cargar los requisitos del proyecto', 'danger');
     });
@@ -492,7 +508,7 @@ public validarRequisito(requisito: IRequisitoProyecto, aprobado: boolean): void 
       this.observacionesRequisito[actualizado.id] = actualizado.observacion;
       this.alertService().showAlert(aprobado ? 'Requisito aprobado' : 'Requisito rechazado', 'success');
     })
-    .catch(() => {
+    .catch(err => {
       this.guardandoRequisito = false;
       this.alertService().showAlert('No se pudo validar el requisito', 'danger');
     });
@@ -551,6 +567,46 @@ public continuidadTexto(proyecto: IProyecto): string {
 
   public marcadorContinuidad(proyecto: IProyecto): string {
     return proyecto.continuidadPeriodoAdicional ? '3+1' : '3';
+  }
+
+  /**
+   * Devuelve los plazos del Acuerdo 25 que aplican al proyecto segun su estado
+   * y fechas relevantes. Es responsable solo de la presentacion: la logica de
+   * que un plazo venciera dispara acciones corresponde al backend.
+   */
+  public plazosDelProyecto(proyecto: IProyecto): Array<{ id: string; etiqueta: string; estado: string; variant: string }> {
+    const plazos: Array<{ id: string; etiqueta: string; diasPlazo: number; fechaInicio: string | Date | undefined }> = [];
+
+    // Continuidad: cuenta regresiva desde el arranque hasta los 3 (o 3+1) plazos.
+    if (proyecto.fechaInicioContinuidad) {
+      const totalPeriodos = proyecto.continuidadPeriodoAdicional ? 4 : 3;
+      plazos.push({
+        id: 'continuidad',
+        etiqueta: `Periodo de continuidad (${totalPeriodos} habiles)`,
+        diasPlazo: totalPeriodos,
+        fechaInicio: proyecto.fechaInicioContinuidad,
+      });
+    }
+
+    // Sustentacion programada: 10 dias habiles entre programacion y realizacion.
+    if (proyecto.fechaSustentacionProyecto && proyecto.estado === 'SUSTENTACION_PROGRAMADA') {
+      plazos.push({
+        id: 'sustentacion',
+        etiqueta: 'Realizar sustentacion (10 habiles)',
+        diasPlazo: PLAZOS_ACUERDO_25.EVALUACION_DOCUMENTO_FINAL,
+        fechaInicio: proyecto.fechaSustentacionProyecto,
+      });
+    }
+
+    return plazos.map(p => {
+      const estado = evaluarPlazo(p.fechaInicio, p.diasPlazo);
+      return {
+        id: p.id,
+        etiqueta: p.etiqueta,
+        estado: etiquetaPlazo(estado),
+        variant: variantePlazo(estado),
+      };
+    });
   }
 
   public nombreActo(modalidadId: number | undefined | null): string {

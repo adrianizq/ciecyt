@@ -95,6 +95,10 @@ export default class InformacionPasantiaUpdate extends Vue {
           this.$router.go(-1);
           const message = this.$t('ciecytVueApp.informacionPasantia.updated', { param: param.id });
           this.alertService().showAlert(message, 'info');
+        })
+        .catch(error => {
+          this.isSaving = false;
+          this.alertService().showHttpError(this, error);
         });
     } else {
       this.informacionPasantiaService()
@@ -104,6 +108,10 @@ export default class InformacionPasantiaUpdate extends Vue {
           this.$router.go(-1);
           const message = this.$t('ciecytVueApp.informacionPasantia.created', { param: param.id });
           this.alertService().showAlert(message, 'success');
+        })
+        .catch(error => {
+          this.isSaving = false;
+          this.alertService().showHttpError(this, error);
         });
     }
   }

@@ -159,3 +159,6 @@ adjuntoproyectofases/61101.pdf
 *.bakcup
 *.zip
 debug.txt
+
+# Archivos personales no relacionados con el codigo
+/record_academico/

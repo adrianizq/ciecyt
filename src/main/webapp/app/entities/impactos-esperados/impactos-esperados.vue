@@ -21,14 +21,14 @@
             <table class="table table-striped">
                 <thead>
                 <tr>
-                    <th v-on:click="changeOrder('id')"><span v-text="$t('global.field.id')"></span> <font-awesome-icon icon="sort"></font-awesome-icon></th>
-                    <th v-on:click="changeOrder('impacto')"><span v-text="$t('ciecytApp.impactosEsperados.impacto')"></span> <font-awesome-icon icon="sort"></font-awesome-icon></th>
-                    <th v-on:click="changeOrder('plazo')"><span v-text="$t('ciecytApp.impactosEsperados.plazo')"></span> <font-awesome-icon icon="sort"></font-awesome-icon></th>
-                    <th v-on:click="changeOrder('indicador')"><span v-text="$t('ciecytApp.impactosEsperados.indicador')"></span> <font-awesome-icon icon="sort"></font-awesome-icon></th>
-                    <th v-on:click="changeOrder('supuestos')"><span v-text="$t('ciecytApp.impactosEsperados.supuestos')"></span> <font-awesome-icon icon="sort"></font-awesome-icon></th>
-                    <th v-on:click="changeOrder('ordenVista')"><span v-text="$t('ciecytApp.impactosEsperados.ordenVista')"></span> <font-awesome-icon icon="sort"></font-awesome-icon></th>
-                    <th v-on:click="changeOrder('impactosEsperadoProyectoTitulo')"><span v-text="$t('ciecytApp.impactosEsperados.impactosEsperadoProyecto')"></span> <font-awesome-icon icon="sort"></font-awesome-icon></th>
-                    <th></th>
+                    <th role="button" tabindex="0" :aria-sort="propOrder === 'id' ? (reverse ? 'descending' : 'ascending') : 'none'" v-on:click="changeOrder('id')" v-on:keydown.enter="changeOrder('id')" v-on:keydown.space.prevent="changeOrder('id')"><span v-text="$t('global.field.id')"></span> <font-awesome-icon icon="sort"></font-awesome-icon></th>
+                    <th role="button" tabindex="0" :aria-sort="propOrder === 'impacto' ? (reverse ? 'descending' : 'ascending') : 'none'" v-on:click="changeOrder('impacto')" v-on:keydown.enter="changeOrder('impacto')" v-on:keydown.space.prevent="changeOrder('impacto')"><span v-text="$t('ciecytApp.impactosEsperados.impacto')"></span> <font-awesome-icon icon="sort"></font-awesome-icon></th>
+                    <th role="button" tabindex="0" :aria-sort="propOrder === 'plazo' ? (reverse ? 'descending' : 'ascending') : 'none'" v-on:click="changeOrder('plazo')" v-on:keydown.enter="changeOrder('plazo')" v-on:keydown.space.prevent="changeOrder('plazo')"><span v-text="$t('ciecytApp.impactosEsperados.plazo')"></span> <font-awesome-icon icon="sort"></font-awesome-icon></th>
+                    <th role="button" tabindex="0" :aria-sort="propOrder === 'indicador' ? (reverse ? 'descending' : 'ascending') : 'none'" v-on:click="changeOrder('indicador')" v-on:keydown.enter="changeOrder('indicador')" v-on:keydown.space.prevent="changeOrder('indicador')"><span v-text="$t('ciecytApp.impactosEsperados.indicador')"></span> <font-awesome-icon icon="sort"></font-awesome-icon></th>
+                    <th role="button" tabindex="0" :aria-sort="propOrder === 'supuestos' ? (reverse ? 'descending' : 'ascending') : 'none'" v-on:click="changeOrder('supuestos')" v-on:keydown.enter="changeOrder('supuestos')" v-on:keydown.space.prevent="changeOrder('supuestos')"><span v-text="$t('ciecytApp.impactosEsperados.supuestos')"></span> <font-awesome-icon icon="sort"></font-awesome-icon></th>
+                    <th role="button" tabindex="0" :aria-sort="propOrder === 'ordenVista' ? (reverse ? 'descending' : 'ascending') : 'none'" v-on:click="changeOrder('ordenVista')" v-on:keydown.enter="changeOrder('ordenVista')" v-on:keydown.space.prevent="changeOrder('ordenVista')"><span v-text="$t('ciecytApp.impactosEsperados.ordenVista')"></span> <font-awesome-icon icon="sort"></font-awesome-icon></th>
+                    <th role="button" tabindex="0" :aria-sort="propOrder === 'impactosEsperadoProyectoTitulo' ? (reverse ? 'descending' : 'ascending') : 'none'" v-on:click="changeOrder('impactosEsperadoProyectoTitulo')" v-on:keydown.enter="changeOrder('impactosEsperadoProyectoTitulo')" v-on:keydown.space.prevent="changeOrder('impactosEsperadoProyectoTitulo')"><span v-text="$t('ciecytApp.impactosEsperados.impactosEsperadoProyecto')"></span> <font-awesome-icon icon="sort"></font-awesome-icon></th>
+                    <th scope="col" class="text-right"><span class="visually-hidden" v-text="$t('global.menu.actions')"></span></th>
                 </tr>
                 </thead>
                 <tbody>
@@ -49,15 +49,15 @@
                     </td>
                     <td class="text-right">
                         <div class="btn-group">
-                            <router-link custom v-slot="{ navigate }" :to="{name: 'ImpactosEsperadosView', params: {impactosEsperadosId: impactosEsperados.id}}"><button class="btn btn-info btn-sm details" @click="navigate">
+                            <router-link custom v-slot="{ navigate }" :to="{name: 'ImpactosEsperadosView', params: {impactosEsperadosId: impactosEsperados.id}}"><button class="btn btn-info btn-sm details" :aria-label="$t('entity.action.view')" @click="navigate">
                                 <font-awesome-icon icon="eye"></font-awesome-icon>
                                 <span class="d-none d-md-inline" v-text="$t('entity.action.view')"></span>
                             </button></router-link>
-                            <router-link custom v-slot="{ navigate }" :to="{name: 'ImpactosEsperadosEdit', params: {impactosEsperadosId: impactosEsperados.id}}"><button class="btn btn-primary btn-sm edit" @click="navigate">
+                            <router-link custom v-slot="{ navigate }" :to="{name: 'ImpactosEsperadosEdit', params: {impactosEsperadosId: impactosEsperados.id}}"><button class="btn btn-primary btn-sm edit" :aria-label="$t('entity.action.edit')" @click="navigate">
                                 <font-awesome-icon icon="pencil-alt"></font-awesome-icon>
                                 <span class="d-none d-md-inline" v-text="$t('entity.action.edit')"></span>
                             </button></router-link>
-                            <b-button v-on:click="prepareRemove(impactosEsperados)"
+                            <b-button :aria-label="$t('entity.action.delete')" v-on:click="prepareRemove(impactosEsperados)"
                                    variant="danger"
                                    class="btn btn-sm"
                                    v-b-modal.removeEntity>
@@ -89,7 +89,7 @@
                 <jhi-item-count :page="page" :total="queryCount" :itemsPerPage="itemsPerPage"></jhi-item-count>
             </div>
             <div class="row justify-content-center">
-                <b-pagination size="md" :total-rows="totalItems" v-model="page" :per-page="itemsPerPage" :change="loadPage(page)"></b-pagination>
+                <b-pagination size="md" :total-rows="totalItems" v-model="page" :per-page="itemsPerPage" @update:model-value="loadPage"></b-pagination>
             </div>
         </div>
     </div>

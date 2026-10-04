@@ -7,6 +7,8 @@
         :class="{ active: isActive(item.to), 'step-btn-disabled': !esEnlace(item) }"
         v-bind="enlaceProps(item)"
         :title="esEnlace(item) ? null : 'Seleccione un proyecto para continuar'"
+        :aria-current="esEnlace(item) && isActive(item.to) ? 'step' : undefined"
+        :aria-disabled="!esEnlace(item) ? 'true' : undefined"
       >
         <span class="step-number">{{ index + 1 }}</span>
         <span class="step-info">

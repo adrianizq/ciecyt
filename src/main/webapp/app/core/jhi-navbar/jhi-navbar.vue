@@ -139,4 +139,39 @@
         background-color: #003366;
         color: #fff;
     }
+
+    /*
+     * bootstrap-vue-next aplica color al texto segun la clase que infiere del atributo type="dark"
+     * del b-navbar, pero los <a class="nav-link"> que renderiza <b-nav-item> son DOM de un
+     * componente hijo y no heredan el data-attribute del scope de Vue SFC. Hay que atravesar
+     * scope con :deep() para que las reglas apliquen.
+     */
+    .ciecyt-navbar :deep(.nav-link) {
+        color: #ffffff !important;
+        font-weight: 500;
+    }
+
+    .ciecyt-navbar :deep(.nav-link:hover),
+    .ciecyt-navbar :deep(.nav-link:focus) {
+        color: #C4A94D !important;
+    }
+
+    .ciecyt-navbar :deep(.nav-link.router-link-active),
+    .ciecyt-navbar :deep(.nav-link.active) {
+        color: #C4A94D !important;
+    }
+
+    /* Texto del boton del dropdown (Administracion, Configuracion, ...) */
+    .ciecyt-navbar :deep(.navbar-dropdown-menu) {
+        color: #ffffff;
+    }
+
+    .ciecyt-navbar :deep(.navbar-dropdown-menu:hover),
+    .ciecyt-navbar :deep(.navbar-dropdown-menu:focus) {
+        color: #C4A94D;
+    }
+
+    .ciecyt-navbar :deep(.router-link-active > .navbar-dropdown-menu) {
+        color: #C4A94D;
+    }
 </style>

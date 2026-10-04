@@ -26,6 +26,6 @@ export default class CategorizacionDetails extends Vue {
   }
 
   public previousState() {
-    this.$router.go(-1);
+    this.$router.push({ name: 'Categorizacion' });
   }
 }
