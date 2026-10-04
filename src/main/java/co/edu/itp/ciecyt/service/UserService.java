@@ -217,6 +217,26 @@ public class UserService {
     }
 
     /**
+     * Reset the user's password without knowing the current one. Used by
+     * ROLE_ADMIN via {@code POST /api/admin/users/{login}/reset-password}.
+     *
+     * @param newPassword the new cleartext password to set.
+     * @return empty Optional when the user does not exist.
+     */
+    public Optional<UserDTO> adminResetPassword(String login, String newPassword) {
+        return userRepository
+            .findOneByLogin(login.toLowerCase())
+            .map(user -> {
+                this.clearUserCaches(user);
+                user.setPassword(passwordEncoder.encode(newPassword));
+                this.clearUserCaches(user);
+                log.debug("Admin reset password for user: {}", login);
+                return user;
+            })
+            .map(UserDTO::new);
+    }
+
+    /**
      * Update all information for a specific user, and return the modified user.
      *
      * @param userDTO user to update.

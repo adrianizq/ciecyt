@@ -8,6 +8,13 @@
     "created": "Se creó un nuevo usuario con identificador {{ param }}",
     "updated": "Se actualizó el usuario con identificador {{ param }}",
     "deleted": "Se borró el usuario con identificador {{ param }}",
+    "resetPassword": {
+      "button": "Resetear contraseña",
+      "title": "Resetear contraseña de {{ login }}",
+      "body": "Asignar una nueva contraseña al usuario <strong>{{ login }}</strong> deja sin efecto la contraseña anterior. Lo aplica el administrador y debe comunicarse por canal alterno.",
+      "confirm": "Aplicar",
+      "error": "No se pudo resetear la contraseña. Inténtalo nuevamente."
+    },
     "delete": {
       "question": "¿Seguro que quieres eliminar el usuario {{ login }}?"
     },

@@ -9,6 +9,7 @@ import co.edu.itp.ciecyt.service.UserInfoQueryService;
 import co.edu.itp.ciecyt.service.UserInfoService;
 import co.edu.itp.ciecyt.service.UserService;
 import co.edu.itp.ciecyt.service.dto.UserDTO;
+import co.edu.itp.ciecyt.service.dto.AdminPasswordResetDTO;
 import co.edu.itp.ciecyt.service.dto.UserInfoDTO;
 import co.edu.itp.ciecyt.errors.BadRequestAlertException;
 import co.edu.itp.ciecyt.web.rest.errors.EmailAlreadyUsedException;
@@ -202,6 +203,31 @@ public class UserResource {
         log.debug("REST request to delete User: {}", login);
         userService.deleteUser(login);
         return ResponseEntity.noContent().headers(HeaderUtil.createAlert(applicationName,  "userManagement.deleted", login)).build();
+    }
+
+    /**
+     * {@code POST /admin/users/{login}/reset-password} : reset a user's password
+     * without knowing the current one. Allows ROLE_ADMIN to deliver temporary
+     * credentials to a Decano/CIECYT/Asesor/Jurado/Estudiante at any time
+     * without going through the email-based reset flow.
+     *
+     * @param login the login of the user to reset.
+     * @param dto   payload with the new cleartext password.
+     * @return {@code 200 (OK)} with the updated user, or {@code 404 (Not Found)}
+     *         if the login does not exist.
+     */
+    @PostMapping("/admin/users/{login:" + Constants.LOGIN_REGEX + "}/reset-password")
+    @PreAuthorize("hasRole(\"" + AuthoritiesConstants.ADMIN + "\")")
+    public ResponseEntity<UserDTO> adminResetPassword(
+        @PathVariable String login,
+        @Valid @RequestBody AdminPasswordResetDTO dto
+    ) {
+        log.debug("REST request to admin-reset password for User: {}", login);
+        Optional<UserDTO> updated = userService.adminResetPassword(login, dto.getNewPassword());
+        return ResponseUtil.wrapOrNotFound(
+            updated,
+            HeaderUtil.createAlert(applicationName, "userManagement.resetPassword", login)
+        );
     }
 
 

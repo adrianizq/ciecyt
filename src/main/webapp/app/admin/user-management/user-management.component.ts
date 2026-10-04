@@ -117,6 +117,10 @@ export default class JhiUserManagementComponent extends Vue {
     this.removeId = instance.login;
   }
 
+  public openResetPasswordDialog(user): void {
+    (this.$refs.resetPasswordDialog as any).open(user.login);
+  }
+
   public closeDialog(): void {
     (<any>this.$refs.removeUser).hide();
   }

@@ -85,6 +85,13 @@
                                 <font-awesome-icon icon="times"></font-awesome-icon>
                                 <span class="d-none d-md-inline" v-text="$t('entity.action.delete')"></span>
                             </b-button>
+                            <button class="btn btn-warning btn-sm reset-password"
+                                    data-cy="resetPassword"
+                                    v-on:click="openResetPasswordDialog(user)"
+                                    :aria-label="$t('userManagement.resetPassword.button')">
+                                <font-awesome-icon icon="key"></font-awesome-icon>
+                                <span class="d-none d-md-inline" v-text="$t('userManagement.resetPassword.button')"></span>
+                            </button>
                         </div>
                     </td>
                 </tr>
@@ -101,6 +108,7 @@
                 </div>
 </template>
             </b-modal>
+            <reset-password-dialog ref="resetPasswordDialog"></reset-password-dialog>
         </div>
         <div v-show="users && users.length > 0">
             <div class="row justify-content-center">

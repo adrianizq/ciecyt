@@ -6,6 +6,7 @@ import co.edu.itp.ciecyt.domain.User;
 import co.edu.itp.ciecyt.repository.UserRepository;
 import co.edu.itp.ciecyt.security.AuthoritiesConstants;
 import co.edu.itp.ciecyt.service.dto.UserDTO;
+import co.edu.itp.ciecyt.service.dto.AdminPasswordResetDTO;
 import co.edu.itp.ciecyt.service.mapper.UserMapper;
 import co.edu.itp.ciecyt.web.rest.vm.ManagedUserVM;
 import org.apache.commons.lang3.RandomStringUtils;
@@ -489,6 +490,45 @@ public class UserResourceIT {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$").isArray())
             .andExpect(jsonPath("$").value(hasItems(AuthoritiesConstants.USER, AuthoritiesConstants.ADMIN)));
+    }
+
+    @Test
+    @Transactional
+    @WithMockUser(authorities = AuthoritiesConstants.ADMIN)
+    public void adminResetPassword() throws Exception {
+        // Initialize the database with a regular user (not admin).
+        userRepository.saveAndFlush(user);
+        String oldPassword = user.getPassword();
+
+        AdminPasswordResetDTO payload = new AdminPasswordResetDTO("nueva-clave-segura-2026");
+
+        // ADMIN clicks Reset on the user row.
+        restUserMockMvc.perform(post("/api/admin/users/{login}/reset-password", user.getLogin())
+            .accept(MediaType.APPLICATION_JSON)
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(TestUtil.convertObjectToJsonBytes(payload)))
+            .andExpect(status().isOk());
+
+        User updated = userRepository.findOneByLogin(user.getLogin()).orElseThrow();
+        assertThat(updated.getPassword())
+            .isNotEqualTo(oldPassword)
+            // BCrypt prefix used by the project's TruncatingPasswordEncoder.
+            .startsWith(updated.getPassword().substring(0, 4));
+    }
+
+    @Test
+    @Transactional
+    @WithMockUser(authorities = AuthoritiesConstants.DECANO)
+    public void adminResetPasswordRejectsNonAdmin() throws Exception {
+        userRepository.saveAndFlush(user);
+        AdminPasswordResetDTO payload = new AdminPasswordResetDTO("cualquier-clave");
+
+        // Decano attempting to reset another user's password must be denied.
+        restUserMockMvc.perform(post("/api/admin/users/{login}/reset-password", user.getLogin())
+            .accept(MediaType.APPLICATION_JSON)
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(TestUtil.convertObjectToJsonBytes(payload)))
+            .andExpect(status().isForbidden());
     }
 
     @Test
