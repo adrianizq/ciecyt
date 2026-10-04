@@ -1,5 +1,4 @@
-import { Component } from 'vue-facing-decorator';
-import { Inject, Vue } from 'vue-facing-decorator';
+import { Component, Inject, Vue } from 'vue-facing-decorator';
 import LoginService from '@/account/login.service';
 
 @Component
@@ -7,62 +6,79 @@ export default class Home extends Vue {
   @Inject
   private loginService: () => LoginService;
 
+  /**
+   * 7 modalidades de grado del Acuerdo 25, art. 4 y Tabla 1. Cada una
+   * apunta al wizard correspondiente; el estudiante lo abre directamente. La
+   * ruta del Acuerdo 25 art. 5 obliga a entregar documentos especificos
+   * (configurados en shared/config/requisitos-modalidad.ts) según la modalidad.
+   */
   public modalidades = [
     {
       id: 1,
       nombre: 'Tesis',
-      descripcion: 'Investigación académica con desarrollo de prototipo o solución tecnológica.',
+      descripcion:
+        'Trabajo individual o colectivo que explora un tema bajo un nuevo enfoque o demuestra una hipótesis. Aplica a tecnólogo, profesional y posgrado (Acuerdo 25 art. 4 Tabla 1).',
       icono: 'graduation-cap',
       color: '#003366',
-      ruta: '/estudiante/listado-estudiante',
+      ruta: '/propuesta/informacion-general/:proyectoId',
+      componente: 'router-link',
     },
     {
       id: 2,
       nombre: 'Pasantía Tecnológica',
-      descripcion: 'Experiencia práctica en empresa con enfoque tecnológico.',
+      descripcion:
+        'Actividades prácticas en empresas o instituciones con enfoque tecnológico. Aplica solo a técnico profesional y tecnólogo (Acuerdo 25 art. 4).',
       icono: 'industry',
       color: '#2E7D32',
-      ruta: '/estudiante/listado-estudiante',
+      ruta: '/propuesta-pasantia/informacion-general-pasantia',
+      componente: 'router-link',
     },
     {
       id: 3,
       nombre: 'Pasantía Investigativa Profesional',
-      descripcion: 'Experiencia práctica en línea de investigación para ciclo profesional.',
+      descripcion: 'Pasantia con enfoque de investigación. Aplica solo al ciclo profesional (Acuerdo 25 art. 4).',
       icono: 'flask',
       color: '#6A1B9A',
-      ruta: '/estudiante/listado-estudiante',
+      ruta: '/propuesta-pasantia/informacion-general-pasantia',
+      componente: 'router-link',
     },
     {
       id: 4,
       nombre: 'Pasantía Internacional',
-      descripcion: 'Experiencia práctica en institución internacional.',
+      descripcion: 'Pasantia con validacion en institucion anfitriona fuera del pais. Solo ciclo profesional (Acuerdo 25 art. 4).',
       icono: 'globe',
       color: '#0277BD',
-      ruta: '/estudiante/listado-estudiante',
+      ruta: '/propuesta-pasantia/informacion-general-pasantia',
+      componente: 'router-link',
     },
     {
       id: 5,
       nombre: 'Publicación de Artículo',
-      descripcion: 'Redacción y publicación de artículo en revista indexada.',
+      descripcion:
+        'Autor o coautor de artículo aceptado en revista indexada (Publindex u homologo). Tecnologo y profesional (Acuerdo 25 art. 4).',
       icono: 'newspaper',
       color: '#E65100',
-      ruta: '/estudiante/listado-estudiante',
+      ruta: '/propuesta-nueva/propuestas-investigador',
+      componente: 'router-link',
     },
     {
       id: 6,
-      nombre: 'Diplomado',
-      descripcion: 'Programa de profundización académica (sin flujo en sistema).',
+      nombre: 'Diplomado de Profundización',
+      descripcion: 'Programa de profundización académica como opción de grado. Solo técnico profesional y tecnólogo (Acuerdo 25 art. 4).',
       icono: 'award',
       color: '#5D4037',
-      ruta: '/estudiante/listado-estudiante',
+      ruta: '/propuesta-diplomado/informacion-general-diplomado',
+      componente: 'router-link',
     },
     {
       id: 7,
       nombre: 'Especialización',
-      descripcion: 'Primer semestre de una especialización de la institución como opción de grado.',
+      descripcion:
+        'Primer semestre de una especialización de la institución cursado como opción de grado. Solo ciclo profesional (Acuerdo 25 art. 37).',
       icono: 'user-graduate',
       color: '#4527A0',
-      ruta: '/estudiante/listado-estudiante',
+      ruta: '/propuesta-nueva/propuestas-investigador',
+      componente: 'router-link',
     },
   ];
 
@@ -71,26 +87,54 @@ export default class Home extends Vue {
   }
 
   public navegarModalidad(modalidad: any): void {
-    if (this.autoridades.includes('ROLE_ESTUDIANTE') || this.autoridades.includes('ROLE_JURADO')) {
-      this.$router.push(modalidad.ruta);
-    } else if (this.autoridades.includes('ROLE_ASESOR')) {
-      this.$router.push('/viabilidad-propuesta/listado-asesor');
-    } else if (this.autoridades.includes('ROLE_CIECYT')) {
-      this.$router.push('/ciecyt/listado-ciecyt');
-    } else if (this.autoridades.includes('ROLE_ADMIN')) {
-      this.$router.push('/viabilidad-propuesta/listado-jurado');
+    // El componente padre del home (template) ya solo muestra las tarjetas
+    // a los estudiantes. Los demas roles tienen su propio panel con enlaces
+    // directos, por lo que esta funcion solo se invoca desde estudiantes.
+    if (!modalidad.ruta) {
+      return;
     }
+    this.$router.push(modalidad.ruta);
   }
 
   public get authenticated(): boolean {
-    return this.$store.getters.authenticated;
+    return Boolean(this.$store?.getters?.authenticated);
   }
 
   public get username(): string {
-    return this.$store.getters.account ? this.$store.getters.account.login : '';
+    const account = this.$store?.getters?.account;
+    return account ? account.login ?? '' : '';
   }
 
   public get autoridades(): string[] {
-    return this.$store.getters.account ? this.$store.getters.account.authorities : [];
+    const authorities = this.$store?.getters?.account?.authorities;
+    return Array.isArray(authorities) ? authorities : [];
+  }
+
+  public tieneRol(rol: string): boolean {
+    return this.autoridades.includes(rol);
+  }
+
+  public get esDecano(): boolean {
+    return this.tieneRol('ROLE_DECANO');
+  }
+
+  public get esAsesor(): boolean {
+    return this.tieneRol('ROLE_ASESOR');
+  }
+
+  public get esJurado(): boolean {
+    return this.tieneRol('ROLE_JURADO');
+  }
+
+  public get esCiecyt(): boolean {
+    return this.tieneRol('ROLE_CIECYT');
+  }
+
+  public get esAdmin(): boolean {
+    return this.tieneRol('ROLE_ADMIN');
+  }
+
+  public get esEstudiante(): boolean {
+    return this.tieneRol('ROLE_ESTUDIANTE');
   }
 }
