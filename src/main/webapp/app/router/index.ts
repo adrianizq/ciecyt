@@ -1424,13 +1424,13 @@ const router = createRouter({
       path: '/propuesta/informacion-general',
       name: 'PropuestaInformacionGeneralView',
       component: PropuestaInformacionGeneral,
-      meta: { authorities: ['ROLE_USER'] }
+      meta: { authorities: ['ROLE_USER', 'ROLE_ESTUDIANTE'] }
     },
     {
       path: '/propuesta/informacion-general/:proyectoId',
       name: 'PropuestaInformacionGeneraEditlView',
       component: PropuestaInformacionGeneral,
-      meta: { authorities: ['ROLE_USER'] }
+      meta: { authorities: ['ROLE_USER', 'ROLE_ESTUDIANTE'] }
     },
     {
 
@@ -1438,50 +1438,50 @@ const router = createRouter({
       name: 'PropuestaIntegrantesView',
       component: PropuestaIntegrantes,
       props: true,
-      meta: { authorities: ['ROLE_USER'] }
+      meta: { authorities: ['ROLE_USER', 'ROLE_ESTUDIANTE'] }
     },
     {
       path: '/propuesta/integrantes/:proyectoId',
       name: 'PropuestaIntegrantesView',
       component: PropuestaIntegrantes,
       props: true,
-      meta: { authorities: ['ROLE_USER'] }
+      meta: { authorities: ['ROLE_USER', 'ROLE_ESTUDIANTE'] }
     },
     {
       path: '/propuesta/cronograma/:proyectoId',
       name: 'PropuestaCronogramaView',
       component: PropuestaCronograma,
-      meta: { authorities: ['ROLE_USER'] }
+      meta: { authorities: ['ROLE_USER', 'ROLE_ESTUDIANTE'] }
     },
     {
       path: '/propuesta/estado_propuestas/:proyectoId',
       name: 'PropuestaEstadoPropuestasView',
       component: PropuestaEstadoPropuestas,
-      meta: { authorities: ['ROLE_USER'] }
+      meta: { authorities: ['ROLE_USER', 'ROLE_ESTUDIANTE'] }
     },
     {
       path: '/propuesta/entidades/:proyectoId',
       name: 'PropuestaEntidadesView',
       component: PropuestaEntidades,
-      meta: { authorities: ['ROLE_USER'] }
+      meta: { authorities: ['ROLE_USER', 'ROLE_ESTUDIANTE'] }
     },
     {
       path: '/propuesta/resultados_esperados/:proyectoId',
       name: 'PropuestaResultadosEsperadosView',
       component: PropuestaResultadosEsperados,
-      meta: { authorities: ['ROLE_USER'] }
+      meta: { authorities: ['ROLE_USER', 'ROLE_ESTUDIANTE'] }
     },
     {
       path: '/propuesta/presupuesto/:proyectoId',
       name: 'PropuestaPresupuestoView',
       component: PropuestaPresupuesto,
-      meta: { authorities: ['ROLE_USER'] }
+      meta: { authorities: ['ROLE_USER', 'ROLE_ESTUDIANTE'] }
     },
     {
       path: '/propuesta/impactos_esperados/:proyectoId',
       name: 'PropuestaImpactosEsperadoView',
       component: PropuestaImpactosEsperado,
-      meta: { authorities: ['ROLE_USER'] }
+      meta: { authorities: ['ROLE_USER', 'ROLE_ESTUDIANTE'] }
     },
  */
 {
@@ -1548,7 +1548,7 @@ const router = createRouter({
       path: '/propuesta-pasantia/informacion-general-pasantia',
       name: 'PropuestaPasantiaInformacionGeneraEditlView',
       component: PropuestaPasantiaInformacionGeneral,
-      meta: { authorities: ['ROLE_USER'] }
+      meta: { authorities: ['ROLE_USER', 'ROLE_ESTUDIANTE'] }
     },
 
     
@@ -1558,7 +1558,7 @@ const router = createRouter({
       name: 'PropuestaPasantiaIntegrantesView',
       component: PropuestaPasantiaIntegrantes,
       props: true,
-      meta: { authorities: ['ROLE_USER'] }
+      meta: { authorities: ['ROLE_USER', 'ROLE_ESTUDIANTE'] }
     },
 
 
@@ -1566,14 +1566,14 @@ const router = createRouter({
       path: '/propuesta-pasantia/informacion-general-pasantia/:proyectoId',
       name: 'PropuestaPasantiaInformacionGeneraEditlView',
       component: PropuestaPasantiaInformacionGeneral,
-      meta: { authorities: ['ROLE_USER'] }
+      meta: { authorities: ['ROLE_USER', 'ROLE_ESTUDIANTE'] }
     },
     {
       path: '/propuesta-pasantia/informacion-empresa/:proyectoId',
       name: 'PropuestaPasantiaInformacionEmpresaView',
       component: PropuestaPasantiaInformacionEmpresa,
       props: true,
-      meta: { authorities: ['ROLE_USER'] }
+      meta: { authorities: ['ROLE_USER', 'ROLE_ESTUDIANTE'] }
     },
     
     {
@@ -1581,7 +1581,7 @@ const router = createRouter({
       name: 'PropuestaPasantiaElementosView',
       component: PropuestaPasantiaElementos,
       props: true,
-      meta: { authorities: ['ROLE_USER'] }
+      meta: { authorities: ['ROLE_USER', 'ROLE_ESTUDIANTE'] }
     },
     
     {
@@ -1589,7 +1589,7 @@ const router = createRouter({
       name: 'PropuestaPasantiaCronogramaView',
       component: PropuestaPasantiaCronograma,
       props: true,
-      meta: { authorities: ['ROLE_USER'] }
+      meta: { authorities: ['ROLE_USER', 'ROLE_ESTUDIANTE'] }
     },
 
      
@@ -1597,7 +1597,7 @@ const router = createRouter({
       path: '/propuesta-pasantia/retroalimentacion-pasantia/:proyectoId',
       name: 'PropuestaRetroalimentacionPasantiaView',
       component: PropuestaRetroalimentacionPasantia,
-      meta: { authorities: ['ROLE_USER'] }
+      meta: { authorities: ['ROLE_USER', 'ROLE_ESTUDIANTE'] }
     },
 
     ///////////////////77
@@ -1605,27 +1605,27 @@ const router = createRouter({
       path: '/propuesta-pasantia/retroalimentacion/:proyectoId',
       name: 'RetroalimentacionPasantiaView',
       component: PropuestaRetroalimentacionPasantia,
-      meta: { authorities: ['ROLE_USER'] }
+      meta: { authorities: ['ROLE_USER', 'ROLE_ESTUDIANTE'] }
     },
     {
       path: '/propuesta-pasantia/retroalimentacion-viabilidad/:proyectoId',
       name: 'RetroalimentacionPasantiaViabilidadView',
       component: PropuestaRetroalimentacionViabilidadPasantia,
-      meta: { authorities: ['ROLE_USER'] }
+      meta: { authorities: ['ROLE_USER', 'ROLE_ESTUDIANTE'] }
     },
     /////////////////////////////
     {
       path: '/propuesta-pasantia/adjuntar-propuesta-pasantia/:proyectoId',
       name: 'PropuestaAdjuntarPropuestaPasantiaView',
       component: PropuestaAdjuntarPropuestaPasantia,
-      meta: { authorities: ['ROLE_USER'] }
+      meta: { authorities: ['ROLE_USER', 'ROLE_ESTUDIANTE'] }
     },
    
     {
       path: '/propuesta-pasantia/enviar-propuesta-pasantia/:proyectoId',
       name: 'PropuestaEnviarPropuestaPasantiaView',
       component: PropuestaEnviarPropuestaPasantia,
-      meta: { authorities: ['ROLE_USER'] }
+      meta: { authorities: ['ROLE_USER', 'ROLE_ESTUDIANTE'] }
     },
     //////////////
     
@@ -1635,7 +1635,7 @@ const router = createRouter({
       path: '/propuesta-diplomado/informacion-general-diplomado',
       name: 'PropuestaDiplomadoInformacionGeneralEditView',
       component: PropuestaDiplomadoInformacionGeneral,
-      meta: { authorities: ['ROLE_USER'] }
+      meta: { authorities: ['ROLE_USER', 'ROLE_ESTUDIANTE'] }
     },
      
     {
@@ -1643,7 +1643,7 @@ const router = createRouter({
       name: 'PropuestaDiplomadoInformacionGeneralEditView',
       component: PropuestaDiplomadoInformacionGeneral,
       props: true,
-      meta: { authorities: ['ROLE_USER'] }
+      meta: { authorities: ['ROLE_USER', 'ROLE_ESTUDIANTE'] }
     },
 
     {
@@ -1651,7 +1651,7 @@ const router = createRouter({
       name: 'PropuestaDiplomadoIntegrantesView',
       component: PropuestaDiplomadoIntegrantes,
       props: true,
-      meta: { authorities: ['ROLE_USER'] }
+      meta: { authorities: ['ROLE_USER', 'ROLE_ESTUDIANTE'] }
     },
       
     {
@@ -1659,7 +1659,7 @@ const router = createRouter({
       name: 'PropuestaDiplomadoElementosView',
       component: PropuestaDiplomadoElementos,
       props: true,
-      meta: { authorities: ['ROLE_USER'] }
+      meta: { authorities: ['ROLE_USER', 'ROLE_ESTUDIANTE'] }
     },
     
     {
@@ -1667,7 +1667,7 @@ const router = createRouter({
       name: 'PropuestaDiplomadoCronogramaView',
       component: PropuestaDiplomadoCronograma,
       props: true,
-      meta: { authorities: ['ROLE_USER'] }
+      meta: { authorities: ['ROLE_USER', 'ROLE_ESTUDIANTE'] }
     },
 
     ////////////////////////////////////////////////77
@@ -1676,26 +1676,26 @@ const router = createRouter({
       path: '/propuesta-diplomado/retroalimentacion/:proyectoId',
       name: 'RetroalimentacionDiplomadoView',
       component: PropuestaRetroalimentacionDiplomado,
-      meta: { authorities: ['ROLE_USER'] }
+      meta: { authorities: ['ROLE_USER', 'ROLE_ESTUDIANTE'] }
     },
     {
       path: '/propuesta-diplomado/retroalimentacion-viabilidad/:proyectoId',
       name: 'RetroalimentacionDiplomadoViabilidadView',
       component: PropuestaRetroalimentacionViabilidadDiplomado,
-      meta: { authorities: ['ROLE_USER'] }
+      meta: { authorities: ['ROLE_USER', 'ROLE_ESTUDIANTE'] }
     },
     {
       path: '/propuesta-diplomado/adjuntar-propuesta-diplomado/:proyectoId',
       name: 'PropuestaAdjuntarPropuestaDiplomadoView',
       component: PropuestaAdjuntarPropuestaDiplomado,
-      meta: { authorities: ['ROLE_USER'] }
+      meta: { authorities: ['ROLE_USER', 'ROLE_ESTUDIANTE'] }
     },
    
     {
       path: '/propuesta-diplomado/enviar-propuesta-diplomado/:proyectoId',
       name: 'PropuestaEnviarPropuestaDiplomadoView',
       component: PropuestaEnviarPropuestaDiplomado,
-      meta: { authorities: ['ROLE_USER'] }
+      meta: { authorities: ['ROLE_USER', 'ROLE_ESTUDIANTE'] }
     },
     //////////////
     ////////////////////////////////////////////////////////7777777
@@ -1711,13 +1711,13 @@ const router = createRouter({
       path: '/propuesta/informacion-general',
       name: 'PropuestaInformacionGeneralView',
       component: PropuestaInformacionGeneral,
-      meta: { authorities: ['ROLE_USER'] }
+      meta: { authorities: ['ROLE_USER', 'ROLE_ESTUDIANTE'] }
     },
     {
       path: '/propuesta/informacion-general/:proyectoId',
       name: 'PropuestaInformacionGeneraEditlView',
       component: PropuestaInformacionGeneral,
-      meta: { authorities: ['ROLE_USER'] }
+      meta: { authorities: ['ROLE_USER', 'ROLE_ESTUDIANTE'] }
     },
     {
 
@@ -1725,49 +1725,49 @@ const router = createRouter({
       name: 'PropuestaIntegrantesView',
       component: PropuestaIntegrantes,
       props: true,
-      meta: { authorities: ['ROLE_USER'] }
+      meta: { authorities: ['ROLE_USER', 'ROLE_ESTUDIANTE'] }
     },
     {
       path: '/propuesta/checklist/:proyectoId',
       name: 'PropuestaChecklistView',
       component: PropuestaChecklist,
-      meta: { authorities: ['ROLE_USER'] }
+      meta: { authorities: ['ROLE_USER', 'ROLE_ESTUDIANTE'] }
     },
     {
       path: '/propuesta/enviar_propuesta/:proyectoId',
       name: 'PropuestaEnviarPropuestaView',
       component: PropuestaEnviarPropuesta,
-      meta: { authorities: ['ROLE_USER'] }
+      meta: { authorities: ['ROLE_USER', 'ROLE_ESTUDIANTE'] }
     },
     {
       path: '/propuesta/documento/certificado-estudiante/:proyectoId',
       name: 'PropuestaDocumentoCertificadoView',
       component: PropuestaDocumento,
-      meta: { authorities: ['ROLE_USER'] }
+      meta: { authorities: ['ROLE_USER', 'ROLE_ESTUDIANTE'] }
     },
     {
       path: '/propuesta/documento/recibo-pago/:proyectoId',
       name: 'PropuestaDocumentoReciboView',
       component: PropuestaDocumento,
-      meta: { authorities: ['ROLE_USER'] }
+      meta: { authorities: ['ROLE_USER', 'ROLE_ESTUDIANTE'] }
     },
     {
       path: '/propuesta/documento/record-academico/:proyectoId',
       name: 'PropuestaDocumentoRecordView',
       component: PropuestaDocumento,
-      meta: { authorities: ['ROLE_USER'] }
+      meta: { authorities: ['ROLE_USER', 'ROLE_ESTUDIANTE'] }
     },
     {
       path: '/propuesta/documento/formato-inscripcion/:proyectoId',
       name: 'PropuestaDocumentoFormatoView',
       component: PropuestaDocumento,
-      meta: { authorities: ['ROLE_USER'] }
+      meta: { authorities: ['ROLE_USER', 'ROLE_ESTUDIANTE'] }
     },
     {
       path: '/proyectos/enviar-proyecto/:proyectoId',
       name: 'ProyectoEnviarProyectoView',
       component: ProyectoEnviarProyecto,
-      meta: { authorities: ['ROLE_USER'] }
+      meta: { authorities: ['ROLE_USER', 'ROLE_ESTUDIANTE'] }
     },
 
     
@@ -1775,20 +1775,20 @@ const router = createRouter({
       path: '/propuesta/retroalimentacion/:proyectoId',
       name: 'RetroalimentacionView',
       component: PropuestaRetroalimentacion,
-      meta: { authorities: ['ROLE_USER'] }
+      meta: { authorities: ['ROLE_USER', 'ROLE_ESTUDIANTE'] }
     },
 
     {
       path: '/proyectos/retroalimentacion/:proyectoId',
       name: 'ProyectoRetroalimentacionView',
       component: ProyectoRetroalimentacion,
-      meta: { authorities: ['ROLE_USER'] }
+      meta: { authorities: ['ROLE_USER', 'ROLE_ESTUDIANTE'] }
     },
     {
       path: '/proyectos/retroalimentacion-jurados/:proyectoId',
       name: 'ProyectoRetroalimentacionJuradosView',
       component: ProyectoRetroalimentacionJurados,
-      meta: { authorities: ['ROLE_USER'] }
+      meta: { authorities: ['ROLE_USER', 'ROLE_ESTUDIANTE'] }
     },
 
     
@@ -1796,20 +1796,20 @@ const router = createRouter({
       path: '/propuesta/retroalimentacion-viabilidad/:proyectoId',
       name: 'RetroalimentacionViabilidadView',
       component: PropuestaRetroalimentacionViabilidad,
-      meta: { authorities: ['ROLE_USER'] }
+      meta: { authorities: ['ROLE_USER', 'ROLE_ESTUDIANTE'] }
     },
     {
       path: '/propuesta/adjuntar_propuesta/:proyectoId',
       name: 'PropuestaAdjuntarPropuestaView',
       component: PropuestaAdjuntarPropuesta,
-      meta: { authorities: ['ROLE_USER'] }
+      meta: { authorities: ['ROLE_USER', 'ROLE_ESTUDIANTE'] }
     },
 
     {
       path: '/proyectos/adjuntar-proyecto/:proyectoId',
       name: 'ProyectoAdjuntarProyectoView',
       component: ProyectoAdjuntarProyecto,
-      meta: { authorities: ['ROLE_USER'] }
+      meta: { authorities: ['ROLE_USER', 'ROLE_ESTUDIANTE'] }
     },
 
     

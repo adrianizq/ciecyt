@@ -118,11 +118,24 @@
                          </div>
                     </td>
 
-                    <!------ Continuidad (Acuerdo 025, art. 10) ---->
+                    <!------ Continuidad (Acuerdo 025, art. 5 par. 3-6) ---->
                     <td class="text-center">
                         <span class="badge" :class="continuidadBadge(proyecto)">
-                            {{ continuidadTexto(proyecto) }}
+                            {{ continuidadEtiquetaCiecyt(proyecto) }}
                         </span>
+                        <div
+                          v-if="alertaLimiteActiva(proyecto)"
+                          class="alert alert-danger mt-1 p-1 small"
+                          role="alert"
+                        >
+                          <strong>Limite de continuidad alcanzado.</strong>
+                          Han transcurrido los
+                          {{ resumenLimiteCiecyt(proyecto).totalPeriodos }} periodos
+          academicos del art. 5 par. 3 y, en su caso, par. 6. Si la
+          sustentacion o socializacion no se realiza, el estudiante
+          pierde definitivamente el derecho a optar al grado
+          (Acuerdo 25 art. 5 par. 5).
+                        </div>
                         <div class="btn-group" v-if="proyecto.estadoContinuidad !== 'CONTINUIDAD_PERDIDA'">
                             <button
                                 v-if="!proyecto.estadoContinuidad || proyecto.estadoContinuidad === 'REGULAR'"
@@ -137,10 +150,15 @@
                                 Aplazar
                             </button>
                             <button
-                                v-if="proyecto.estadoContinuidad === 'CONTINUIDAD'"
-                                type="button" class="btn btn-warning btn-sm"
+                                v-if="proyecto.estadoContinuidad === 'CONTINUIDAD' || proyecto.estadoContinuidad === 'APLAZADO'"
+                                type="button"
+                                class="btn btn-warning btn-sm"
+                                :disabled="renovarBloqueado(proyecto)"
+                                :title="renovarBloqueado(proyecto)
+                                  ? 'Ya se agotaron los periodos disponibles segun el Acuerdo 25 art. 5 par. 5'
+                                  : 'Registrar renovacion de matricula en continuidad'"
                                 @click="registrarRenovacionContinuidad(proyecto)">
-                                Renovar ({{ proyecto.periodosContinuidadUsados || 0 }}/{{ marcadorContinuidad(proyecto) }})
+                                Renovar ({{ proyecto.periodosContinuidadUsados || 0 }}/{{ marcadorContinuidadCiecyt(proyecto) }})
                             </button>
                         </div>
                     </td>
@@ -247,8 +265,33 @@
             @hidden="cerrarRequisitos">
             <div v-if="cargandoRequisitos">Cargando requisitos...</div>
 
-            <div v-else-if="requisitos.length === 0" class="alert alert-info">
-                Este proyecto todavía no tiene requisitos de inscripción.
+            <div v-else>
+              <div v-if="requisitosAdicionalesACargar.length > 0"
+                   class="alert alert-info"
+                   role="note"
+                   data-testid="requisitos-adicionales-acuerdo-25">
+                <strong>Documentos adicionales segun Acuerdo 25, art. 5 par. 2 y Tabla 3.</strong>
+                <span v-if="proyectoRequisitos">
+                  Esta modalidad exige los siguientes {{ requisitosAdicionalesACargar.length }} documentos
+                  ademas del paquete comun (Tabla 2):
+                </span>
+                <ul class="mb-0 mt-2">
+                  <li v-for="req in requisitosAdicionalesACargar" :key="req.codigo">
+                    <strong>{{ req.nombre }}</strong>
+                    <span v-if="req.firmantes.length > 0">
+                      (firmado por {{ req.firmantes.join(', ') }})
+                    </span>
+                    <div class="small text-muted">{{ req.descripcion }}</div>
+                    <div class="small text-muted">{{ req.referencia }}</div>
+                  </li>
+                </ul>
+              </div>
+
+              <div v-if="requisitos.length === 0" class="alert alert-warning">
+                Este proyecto todavía no tiene requisitos de inscripción cargados al sistema.
+                Recuerde al estudiante que, segun la modalidad, debe entregar
+                adicionalmente los documentos listados arriba.
+              </div>
             </div>
 
             <div v-for="requisito in requisitos" :key="requisito.id" class="border rounded p-2 mb-2">
@@ -334,6 +377,13 @@ import {
   etiquetaPlazo,
   variantePlazo,
 } from '@/shared/composables/dias-habiles';
+import {
+  continuidadEtiqueta,
+  marcadorContinuidad,
+  resumenLimite as resumenLimiteContinuidad,
+  totalPeriodosContinuidad,
+} from '@/shared/utils/continuidad-proyecto';
+import { requisitosAdicionalesPorModalidad, RequisitoAdicional } from '@/shared/config/requisitos-modalidad';
 import { TipoRequisito } from '@/shared/model/enumerations/tipo-requisito.model';
 
 
@@ -484,10 +534,23 @@ public abrirRequisitos(proyecto: IProyecto): void {
 }
 
 public cerrarRequisitos(): void {
-  this.proyectoRequisitos = null;
-  this.requisitos = [];
-  this.observacionesRequisito = {};
-}
+    this.proyectoRequisitos = null;
+    this.requisitos = [];
+  }
+
+  /**
+   * Lista de los requisitos adicionales (Tabla 3 del Acuerdo 25) que aplican
+   * a la modalidad del proyecto abierto en el modal. Se calcula desde la
+   * matriz client-side; el backend es libre de tener o no esos mismos
+   * requisitos persistidos como IRequisitoProyecto, pero esta lista sirve
+   * de guia al operador del CIECYT y al estudiante.
+   */
+  get requisitosAdicionalesACargar(): RequisitoAdicional[] {
+    if (!this.proyectoRequisitos) {
+      return [];
+    }
+    return requisitosAdicionalesPorModalidad(this.proyectoRequisitos.proyectoModalidadId);
+  }
 
 public validarRequisito(requisito: IRequisitoProyecto, aprobado: boolean): void {
   const observacion = this.observacionesRequisito[requisito.id];
@@ -545,28 +608,53 @@ public claseEstadoRequisito(requisito: IRequisitoProyecto): string {
 }
 
 public continuidadTexto(proyecto: IProyecto): string {
-    if (proyecto.estadoContinuidad === 'CONTINUIDAD') {
-      const marcador = proyecto.continuidadPeriodoAdicional ? '3+1' : '3';
-      return 'En continuidad ' + (proyecto.periodosContinuidadUsados || 0) + '/' + marcador;
-    }
+    return continuidadEtiqueta(proyecto);
+  }
+
+  public continuidadEtiquetaCiecyt(proyecto: IProyecto): string {
+    return continuidadEtiqueta(proyecto);
+  }
+
+  public marcadorContinuidadCiecyt(proyecto: IProyecto): string {
+    return marcadorContinuidad(proyecto);
+  }
+
+  public resumenLimiteCiecyt(proyecto: IProyecto) {
+    return resumenLimiteContinuidad(proyecto);
+  }
+
+  /**
+   * Devuelve true cuando el proyecto esta en CONTINUIDAD_PERDIDA o cuando el
+   * contador de periodos ya iguala/supera el maximo posible del Acuerdo.
+   * Es la condicion que dispara la alerta visible y el bloqueo de "Renovar".
+   */
+  public alertaLimiteActiva(proyecto: IProyecto): boolean {
     if (proyecto.estadoContinuidad === 'CONTINUIDAD_PERDIDA') {
-      return 'Derecho perdido';
+      return false;
     }
-    return 'Regular';
+    return resumenLimiteContinuidad(proyecto).alLimite;
+  }
+
+  public renovarBloqueado(proyecto: IProyecto): boolean {
+    const resumen = resumenLimiteContinuidad(proyecto);
+    return resumen.alLimite || resumen.excedido;
   }
 
   public continuidadBadge(proyecto: IProyecto): string {
-    if (proyecto.estadoContinuidad === 'CONTINUIDAD') {
-      return 'badge-info';
-    }
+    const resumen = resumenLimiteContinuidad(proyecto);
     if (proyecto.estadoContinuidad === 'CONTINUIDAD_PERDIDA') {
       return 'badge-danger';
     }
+    if (resumen.excedido) {
+      return 'badge-danger';
+    }
+    if (resumen.alLimite) {
+      return 'badge-warning';
+    }
+    if (proyecto.estadoContinuidad === 'CONTINUIDAD') {
+      return 'badge-info';
+    }
     return 'badge-secondary';
-  }
-
-  public marcadorContinuidad(proyecto: IProyecto): string {
-    return proyecto.continuidadPeriodoAdicional ? '3+1' : '3';
   }
 
   /**
