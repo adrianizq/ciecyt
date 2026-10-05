@@ -1,16 +1,21 @@
 import { Component, Inject, Vue } from 'vue-facing-decorator';
 import UserManagementService from '@/admin/user-management/user-management.service';
+import AlertService from '@/shared/alert/alert.service';
 
 @Component
 export default class ResetPasswordDialog extends Vue {
   @Inject({ from: 'userService' })
   private userManagementService: () => UserManagementService;
 
+  @Inject
+  private alertService: () => AlertService;
+
   targetLogin = '';
   newPassword = '';
   confirmPassword = '';
   isSaving = false;
-  error = false;
+  success = false;
+  errorMessage = '';
   doNotMatch = false;
 
   open(login: string): void {
@@ -22,32 +27,48 @@ export default class ResetPasswordDialog extends Vue {
   resetForm(): void {
     this.newPassword = '';
     this.confirmPassword = '';
-    this.error = false;
+    this.success = false;
+    this.errorMessage = '';
     this.doNotMatch = false;
     this.isSaving = false;
   }
 
   confirmReset(): void {
-    this.error = false;
+    this.success = false;
+    this.errorMessage = '';
+
     if (this.newPassword !== this.confirmPassword) {
       this.doNotMatch = true;
       return;
     }
     if (!this.newPassword || this.newPassword.length < 4) {
-      this.error = true;
+      this.errorMessage = this.$t('userManagement.resetPassword.shortPassword').toString();
       return;
     }
     this.doNotMatch = false;
     this.isSaving = true;
+
     this.userManagementService()
       .resetPassword(this.targetLogin, this.newPassword)
       .then(() => {
         this.isSaving = false;
-        (this.$refs.modal as any).hide();
+        this.success = true;
+        this.alertService().success(this.$t('userManagement.resetPassword.noticeSuccess', { login: this.targetLogin }).toString());
       })
-      .catch(() => {
+      .catch(error => {
         this.isSaving = false;
-        this.error = true;
+        this.errorMessage = this.$t('userManagement.resetPassword.errorWithDetail', {
+          detail: this.extractDetail(error),
+        }).toString();
+        this.alertService().error(this.errorMessage);
       });
+  }
+
+  private extractDetail(error: any): string {
+    if (!error) {
+      return 'unknown';
+    }
+    const data = error.response?.data ?? error.data ?? {};
+    return data.message || data.detail || data.title || error.message || 'unknown';
   }
 }

@@ -13,7 +13,12 @@
       "title": "Reset password for {{ login }}",
       "body": "Assigning a new password to <strong>{{ login }}</strong> invalidates the previous one. The administrator applies it and must communicate it through a different channel.",
       "confirm": "Apply",
-      "error": "Could not reset the password. Please try again."
+      "saving": "Applying...",
+      "close": "Close",
+      "success": "Password updated for <strong>{{ login }}</strong>. Remind the user to use the new key (and to change it on next sign-in if institutional policy requires it).",
+      "shortPassword": "The new password must have at least 4 characters.",
+      "errorWithDetail": "Could not reset the password: {{ detail }}",
+      "noticeSuccess": "Password for {{ login }} reset by the administrator."
     },
     "delete": {
       "question": "Are you sure you want to delete user {{ login }}?"
