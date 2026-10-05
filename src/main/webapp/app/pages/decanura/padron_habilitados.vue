@@ -81,7 +81,14 @@
             </div>
         </div>
 
-        <b-modal id="modal-historial" :title="tituloHistorial" ok-only size="lg">
+        <b-modal
+            v-if="mostrarHistorial"
+            id="modal-historial"
+            :title="tituloHistorial"
+            ok-only
+            size="lg"
+            @close="cerrarHistorial"
+        >
             <b-table :items="historial" :fields="camposHistorial" striped responsive small>
                 <template #empty>
                     <b class="text-muted">Sin habilitaciones registradas en esta facultad.</b>
@@ -118,6 +125,7 @@
 
         public historial: any[] = [];
         public tituloHistorial: string = '';
+        public mostrarHistorial: boolean = false;
         public camposHistorial: any[] = [
             { key: 'rol', label: 'Rol' },
             { key: 'fechaDesde', label: 'Desde' },
@@ -270,7 +278,16 @@
                 this.alertService().error(msg);
                 return;
             }
-            (this.$bvModal as any).show('modal-historial');
+            this.mostrarHistorial = true;
+            this.$nextTick(() => {
+                (this.$bvModal as any).show('modal-historial');
+            });
+        }
+
+        public cerrarHistorial(): void {
+            this.mostrarHistorial = false;
+            this.historial = [];
+            this.tituloHistorial = '';
         }
 
         /**
