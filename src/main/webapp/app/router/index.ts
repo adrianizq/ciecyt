@@ -11,6 +11,7 @@ const ResetPasswordFinish = () => import('../account/reset-password/finish/reset
 const ChangePassword = () => import('../account/change-password/change-password.vue');
 const Settings = () => import('../account/settings/settings.vue');
 const JhiUserManagementComponent = () => import('../admin/user-management/user-management.vue');
+const DecanoFacultadPage = () => import('../admin/decano-facultad/decano-facultad.vue');
 const JhiUserManagementViewComponent = () => import('../admin/user-management/user-management-view.vue');
 const JhiUserManagementEditComponent = () => import('../admin/user-management/user-management-edit.vue');
 const JhiConfigurationComponent = () => import('../admin/configuration/configuration.vue');
@@ -394,6 +395,12 @@ const router = createRouter({
       path: '/admin/user-management/:userId/view',
       name: 'JhiUserView',
       component: JhiUserManagementViewComponent,
+      meta: { authorities: ['ROLE_ADMIN'] }
+    },
+    {
+      path: '/admin/decano-facultad',
+      name: 'DecanoFacultadPage',
+      component: DecanoFacultadPage,
       meta: { authorities: ['ROLE_ADMIN'] }
     },
     {

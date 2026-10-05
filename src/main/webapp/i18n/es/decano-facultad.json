@@ -1,0 +1,58 @@
+{
+  "decanoFacultad": {
+    "home": {
+      "title": "Decanos por facultad",
+      "createLabel": "Asignar decano"
+    },
+    "facultad": "Facultad",
+    "login": "Login",
+    "nombre": "Nombre",
+    "cargo": "Cargo",
+    "fechaDesde": "Desde",
+    "fechaHasta": "Hasta",
+    "actoResolucion": "Acto administrativo",
+    "vigente": "Vigente",
+    "deleted": "Se eliminó la asignación de decano para el usuario {{ login }}.",
+    "actions": {
+      "cerrar": "Cerrar vigencia"
+    },
+    "delete": {
+      "question": "¿Eliminar la asignación del decano {{ login }} en la facultad {{ facultad }}? (Sólo para correcciones; use Cerrar vigencia para el cambio formal.)"
+    },
+    "asignar": {
+      "title": "Asignar decano a facultad",
+      "body": "Registra una asignación vigente de decano para una facultad. Use el login del usuario (debe tener rol DECANO). Si la facultad ya tiene un decano vigente, primero <strong>cerrar vigente</strong> con su fecha hasta y luego crear la nueva.",
+      "loginLabel": "Login del usuario",
+      "loginPlaceholder": "Ej. 18128952",
+      "loginResolved": "Usuario encontrado: {{ nombre }}. El rol DECANO se validó.",
+      "loginNotFound": "No existe ningún usuario con ese login.",
+      "loginMissingDecanoRole": "El usuario existe pero no tiene rol ROLE_DECANO. Asígnele el rol antes de registrarlo como decano.",
+      "facultadLabel": "Facultad",
+      "facultadPlaceholder": "Seleccione una facultad",
+      "cargoLabel": "Cargo",
+      "fechaDesdeLabel": "Fecha desde",
+      "actoLabel": "Acto administrativo (resolución)",
+      "actoPlaceholder": "Ej. Resolución Rectoral N-123-2026",
+      "delegadoLabel": "Es delegado",
+      "observacionesLabel": "Observaciones",
+      "confirm": "Asignar",
+      "saving": "Asignando...",
+      "success": "Decano <strong>{{ login }}</strong> asignado correctamente.",
+      "invalidForm": "Complete login, facultad y fecha desde antes de asignar.",
+      "error": "No se pudo asignar el decano.",
+      "facultadesLoadError": "No se pudo cargar la lista de facultades. Verifique la conexión e intente de nuevo.",
+      "noticeSuccess": "Decano {{ login }} asignado a la facultad {{ facultad }}."
+    },
+    "cerrar": {
+      "title": "Cerrar vigencia de {{ login }}",
+      "body": "Esta acción cierra la asignación vigente del decano <strong>{{ login }}</strong>. La fila queda con fecha hasta y el histórico se conserva. Después de cerrar puede asignar un nuevo decano en el formulario principal.",
+      "fechaLabel": "Fecha hasta",
+      "fechaRequerida": "Indique la fecha hasta de la vigencia.",
+      "facultadNoEncontrada": "No se pudo identificar la facultad del decano.",
+      "confirm": "Cerrar vigencia",
+      "saving": "Cerrando...",
+      "success": "Vigencia del decano <strong>{{ login }}</strong> cerrada.",
+      "noticeSuccess": "Vigencia de {{ login }} cerrada al {{ fecha }}."
+    }
+  }
+}

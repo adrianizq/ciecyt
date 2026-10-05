@@ -1,0 +1,58 @@
+{
+  "decanoFacultad": {
+    "home": {
+      "title": "Deans by faculty",
+      "createLabel": "Assign dean"
+    },
+    "facultad": "Faculty",
+    "login": "Login",
+    "nombre": "Name",
+    "cargo": "Position",
+    "fechaDesde": "From",
+    "fechaHasta": "Until",
+    "actoResolucion": "Administrative act",
+    "vigente": "Active",
+    "deleted": "Decano assignment for user {{ login }} was removed.",
+    "actions": {
+      "cerrar": "Close term"
+    },
+    "delete": {
+      "question": "Remove the dean assignment of {{ login }} in faculty {{ facultad }}? (For corrections only. Use \"Close term\" for the formal change.)"
+    },
+    "asignar": {
+      "title": "Assign dean to faculty",
+      "body": "Register an active dean assignment for a faculty. Use the user login (must have ROLE_DECANO). If the faculty already has an active dean, first use the row's <strong>Close term</strong> button with its until date, then create the new one.",
+      "loginLabel": "User login",
+      "loginPlaceholder": "E.g. 18128952",
+      "loginResolved": "User found: {{ nombre }}. ROLE_DECANO was validated.",
+      "loginNotFound": "No user exists with that login.",
+      "loginMissingDecanoRole": "User exists but does not have ROLE_DECANO. Assign the role before registering as dean.",
+      "facultadLabel": "Faculty",
+      "facultadPlaceholder": "Select a faculty",
+      "cargoLabel": "Position",
+      "fechaDesdeLabel": "From date",
+      "actoLabel": "Administrative act (resolution)",
+      "actoPlaceholder": "E.g. Rectoral Resolution N-123-2026",
+      "delegadoLabel": "Is delegate",
+      "observacionesLabel": "Observations",
+      "confirm": "Assign",
+      "saving": "Assigning...",
+      "success": "Dean <strong>{{ login }}</strong> assigned.",
+      "invalidForm": "Fill in login, faculty and from date before assigning.",
+      "error": "Could not assign the dean.",
+      "facultadesLoadError": "Could not load the faculty list. Check your connection and try again.",
+      "noticeSuccess": "Dean {{ login }} assigned to faculty {{ facultad }}."
+    },
+    "cerrar": {
+      "title": "Close term of {{ login }}",
+      "body": "This closes the active assignment of dean <strong>{{ login }}</strong>. The row keeps its data and the until date; the historic is preserved. After closing you can assign a new dean from the main form.",
+      "fechaLabel": "Until date",
+      "fechaRequerida": "Please choose the until date.",
+      "facultadNoEncontrada": "Could not identify the faculty of the dean.",
+      "confirm": "Close term",
+      "saving": "Closing...",
+      "success": "Term of dean <strong>{{ login }}</strong> closed.",
+      "noticeSuccess": "Term of {{ login }} closed on {{ fecha }}."
+    }
+  }
+}

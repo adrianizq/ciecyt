@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/dbchangelog/dbchangelog-3.9.xsd">
+
+    <!--
+      Pantalla /admin/decano-facultad: asignar/cerrar la decanatura de una facultad
+      (Acuerdo 025 art. 8 y 9). Es el dato transversal que define el alcance del
+      rol ROLE_DECANO; sin esta entrada el admin del sistema (ROLE_ADMIN) no tenia
+      un camino operativo para asignar un usuario como decano de una facultad.
+    -->
+    <changeSet id="20261004000001-1-menu-decano-facultad" author="ciecyt">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">SELECT count(*) FROM menu WHERE url = '/admin/decano-facultad'</sqlCheck>
+        </preConditions>
+        <comment>Menu admin para asignar decano a una facultad</comment>
+        <insert tableName="menu">
+            <column name="id" valueNumeric="7001"/>
+            <column name="nombre" value="Decanos por facultad"/>
+            <column name="url" value="/admin/decano-facultad"/>
+            <column name="icono" value="fa fa-university"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="es_publico" valueBoolean="false"/>
+            <column name="rol" value="ADMIN"/>
+            <column name="orden" valueNumeric="12"/>
+        </insert>
+    </changeSet>
+</databaseChangeLog>
