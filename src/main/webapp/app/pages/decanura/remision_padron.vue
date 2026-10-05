@@ -12,12 +12,17 @@
 
         <div class="col-12" v-if="!facultadId">
             <b-alert show variant="warning">
-                No tiene ninguna facultad asignada como decano.
+                No tiene ninguna facultad asignada como decano. Pida al administrador que lo
+                habilite en <em>Decanos por facultad</em>. Mientras tanto el admin puede armar la
+                remisión en esta página.
             </b-alert>
         </div>
 
         <div class="col-12" v-else>
             <div class="col-12 col-md-6">
+                <b-form-group class="mb-3" label="Facultad" label-for="facultad-remision" v-if="facultadesDisponibles.length > 1">
+                    <b-form-select id="facultad-remision" v-model="facultadId" :options="facultadesDisponibles" @change="cargar()"></b-form-select>
+                </b-form-group>
                 <b-form-group class="mb-3" label="Periodo académico" label-for="periodo">
                     <b-form-input id="periodo" v-model="nuevoPeriodo" placeholder="por ejemplo 2026-1"></b-form-input>
                 </b-form-group>
@@ -59,6 +64,7 @@
 
     import AlertService from '@/shared/alert/alert.service';
     import DecanoFacultadService from '@/entities/decano-facultad/decano-facultad.service';
+import FacultadService from '@/entities/facultad/facultad.service';
     import RemisionPadronService from '@/entities/remision-padron/remision-padron.service';
     import { IRemisionPadron, SolicitudRemision } from '@/shared/model/remision-padron.model';
 
@@ -67,8 +73,10 @@
         @Inject  private alertService: () => AlertService;
         @Inject  private decanoFacultadService: () => DecanoFacultadService;
         @Inject  private remisionPadronService: () => RemisionPadronService;
+        @Inject  private facultadService: () => FacultadService;
 
         public facultadId: number = null;
+        public facultadesDisponibles: any[] = [];
         public remisiones: any[] = [];
         public nuevoPeriodo: string = '';
         public nuevasObservaciones: string = '';
@@ -91,13 +99,41 @@
             try {
                 const res = await this.decanoFacultadService().misFacultades();
                 const ids: number[] = res.data || [];
-                if (ids.length === 0) {
+                if (ids.length > 0) {
+                    this.facultadId = ids[0];
+                    this.facultadesDisponibles = ids.map(id => ({ value: id, text: 'Facultad ' + id }));
+                    await this.cargar();
                     return;
                 }
-                this.facultadId = ids[0];
-                await this.cargar();
+                // admin del sistema: listamos todas las facultades y el operador elige.
+                if (this.isAdministrador()) {
+                    await this.cargarTodasLasFacultades();
+                    return;
+                }
             } catch (e) {
                 this.facultadId = null;
+            }
+        }
+
+        public isAdministrador(): boolean {
+            const account: any = this.$store?.getters?.account;
+            const auths: string[] = account?.authorities || [];
+            return auths.includes('ROLE_ADMIN');
+        }
+
+        async cargarTodasLasFacultades(): Promise<void> {
+            try {
+                const res = await this.facultadService().query({ sort: 'facultad,asc' });
+                const lista: any[] = (res.data && res.data) || res || [];
+                this.facultadesDisponibles = lista
+                    .filter((f: any) => f && f.id != null)
+                    .map((f: any) => ({ value: f.id, text: `${f.codigoFacultad || ''} · ${f.facultad || ''}` }));
+                if (this.facultadesDisponibles.length > 0) {
+                    this.facultadId = this.facultadesDisponibles[0].value;
+                    await this.cargar();
+                }
+            } catch (e) {
+                // sin facultades o sin permisos: se queda el mensaje del alert del template
             }
         }
 

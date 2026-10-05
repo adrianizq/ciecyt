@@ -11,8 +11,10 @@
 
         <div class="col-12" v-if="noFacultades">
             <b-alert show variant="warning">
-                No tiene ninguna facultad asignada como decano. Pida que le asignen una para poder
-                mantener la lista de habilitados.
+                No tiene ninguna facultad asignada como decano. Pida que el administrador del
+                sistema le asigne una (Utlima entrada del navbar: <em>Decanos por facultad</em>).
+                Mientras tanto el padrón lo mantiene el admin del sistema desde esta misma página
+                si tiene el rol ROLE_ADMIN.
             </b-alert>
         </div>
 
@@ -96,6 +98,7 @@
         public facultades: any[] = [];
         public facultadId: number = null;
         public noFacultades = false;
+        public cargandoTodas = false;
         public habilitados: IDocenteHabilitado[] = [];
         public filtroRol: string = 'ASESOR';
         public isSaving = false;
@@ -132,27 +135,66 @@
         /**
          * La facultad no se recibe por parametro: la resuelve el backend con la sesion del decano,
          * para que cambiar el id en la barra de direcciones no abra el padron de otra facultad.
+         *
+         * El endpoint /api/decanos-facultad/mis-facultades devuelve las facultades vigentes que
+         * tiene el usuario en decano_facultad. Cuando ese endpoint devuelve vacio y el usuario
+         * es admin (no se le asigna una facultad como decano porque no la necesita para nada),
+         * caemos al fallback de listar TODAS las facultades: admin puede habilitar docentes en
+         * cualquiera. Para decanos sin asignacion el mensaje claro es que contacte al admin.
          */
         async init() {
             try {
                 const res = await this.decanoFacultadService().misFacultades();
                 const ids: number[] = res.data || [];
-                if (ids.length === 0) {
-                    this.noFacultades = true;
+                if (ids.length > 0) {
+                    for (const id of ids) {
+                        try {
+                            const f: any = await this.facultadService().find(id);
+                            this.facultades.push({ value: f.id, text: f.facultad });
+                        } catch (e) {
+                            this.facultades.push({ value: id, text: 'Facultad ' + id });
+                        }
+                    }
+                    this.facultadId = ids[0];
+                    await this.cargar();
                     return;
                 }
-                for (const id of ids) {
-                    try {
-                        const f: any = await this.facultadService().find(id);
-                        this.facultades.push({ value: f.id, text: f.facultad });
-                    } catch (e) {
-                        this.facultades.push({ value: id, text: 'Facultad ' + id });
-                    }
+                // ids vacio: solo el admin del sistema puede habilitar docentes sin tener facultad
+                // asignada como decano. Cae a un selector con TODAS las facultades.
+                if (this.isAdministrador()) {
+                    await this.cargarTodasLasFacultades();
+                    return;
                 }
-                this.facultadId = ids[0];
-                await this.cargar();
+                this.noFacultades = true;
             } catch (e) {
                 this.noFacultades = true;
+            }
+        }
+
+        public isAdministrador(): boolean {
+            const account: any = this.$store?.getters?.account;
+            const auths: string[] = account?.authorities || [];
+            return auths.includes('ROLE_ADMIN');
+        }
+
+        async cargarTodasLasFacultades(): Promise<void> {
+            this.cargandoTodas = true;
+            try {
+                const res = await this.facultadService().query({ sort: 'facultad,asc' });
+                const lista: any[] = (res.data && res.data) || res || [];
+                this.facultades = lista
+                    .filter((f: any) => f && f.id != null)
+                    .map((f: any) => ({ value: f.id, text: `${f.codigoFacultad || ''} · ${f.facultad || ''}` }));
+                if (this.facultades.length > 0) {
+                    this.facultadId = this.facultades[0].value;
+                    await this.cargar();
+                } else {
+                    this.noFacultades = true;
+                }
+            } catch (e) {
+                this.noFacultades = true;
+            } finally {
+                this.cargandoTodas = false;
             }
         }
 
