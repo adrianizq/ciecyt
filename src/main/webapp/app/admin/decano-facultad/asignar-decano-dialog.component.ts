@@ -5,7 +5,19 @@ import axios from 'axios';
 
 @Component
 export default class AsignarDecanoDialog extends Vue {
-  form: any = null;
+  // El form se inicializa aqui (no en null) para que el template del b-modal
+  // no tire "Cannot read properties of null" cuando el padre carga esta pantalla
+  // sin abrir el dialog. reset() lo sobreescribe con datos reales.
+  form: any = {
+    userLogin: '',
+    userId: null,
+    facultadId: null,
+    cargo: 'Decano',
+    esDelegado: false,
+    fechaDesde: new Date().toISOString().slice(0, 10),
+    actoResolucion: '',
+    observaciones: '',
+  };
   facultades: any[] = [];
   isSaving = false;
   success = false;
