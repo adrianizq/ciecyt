@@ -328,13 +328,77 @@ Puede ver remisiones globales de todas las facultades (GET 200).
 
 ## 10. Pendientes que afectan los flujos
 
-- Home de CIECYT: las tarjetas "Asignar jurado / Asignar asesor" eran enlazadas a `AsignarJuradoView` / `AsignarAsesorView` desde el Home (sin `:proyectoId`), lo que rompe Vue Router con `Missing required param "proyectoId"`. Corregido a `PropuestaListadoCiecytView`: el operador CIECYT abre el proyecto en el listado y desde la fila elige la acción Asignar (commit `c7ae622`).
-
 - Módulo "Impedimentos y novedades" — UI y modelos (R7).
 - Validación de conflicto de intereses del jurado (R9).
 - Acta de evaluación (R11) y repositorio final (R12).
 - Páginas de tesis/propuesta `informacion_general_*.vue` aún duplicadas;
   dedup diferido (consolidar con `informacion-general-nueva.vue`).
 - Sin `previousState` en `propuestas_nueva.vue` cuando cambia estado.
-- Liquibase todavía no aplicado todo en BD dev: ejecutar con cuidado;
-  las tablas del padrón y remisión se aplicaron a mano.
+
+### 10.1 Bitácora de la sesión 2026-10-05 (consolidada)
+
+1. **Reset admin + UI de credenciales** (commits `ae9e0e5`–`f293202`)
+   - Backend: `POST /api/admin/users/{login}/reset-password` (bcrypt+force-change por defecto).
+   - Frontend: botón **Resetear contraseña** en `/admin/user-management` con confirmReset + alertService verde/rojo.
+
+2. **Cambio de canal olvidar contraseña** (commit `f293202`)
+   - `/reset/request` y login form reescritos para guiar al operador al canal presencial/admin. Endpoint `/api/account/reset-password/init` se conserva como fallback.
+
+3. **Asignación decano→facultad** (commits `d9141d7`, `df4136e`–`fc6896f`)
+   - Backend: tabla `decano_facultad` (ya pre-existente). Frontend: `/admin/decano-facultad` con buscador de usuario, dropdown de facultad, dos modales (asignar / cerrar vigencia). 4 tests del guard y 2 IT backend cubren la asignación y el cierre.
+
+4. **Home por rol + audit_ux** (commit `dd8b064` + auditoria-ux-por-rol.md)
+   - Estudiante, Decano, CIECYT, Asesor, Jurado, Admin tienen sus 3/4 tarjetas con su propósito. "Sin rol" muestra alerta neutra.
+
+5. **Wizards de estudiante** (commit `0aa6f30`)
+   - 46 rutas de `/propuesta`, `/propuesta-pasantia`, `/propuesta-diplomado`, `/propuestas-investigador` cambiaron de `authorities: ['ROLE_USER']` a `['ROLE_USER','ROLE_ESTUDIANTE']`. Decano/Asesor/Jurado/CIECYT/Admin reciben 403 si entran directo.
+
+6. **Forzar cambio de contraseña post-reset** (commits `ab6ff07`, `c4dbf78`, `c7ae622`)
+   - Backend: `User.needsPasswordChange` (Liquibase changeset `20261005000001`) + creación admin / reset admin / reset por correo lo prenden, `change-password` y reset por correo confirmado lo bajan. Frontend: store getter `needsPasswordChange` + getter público en accountService + guard global en `main.ts router.beforeEach` que redirige a `/account/password` mientras esté prendido. 4 tests (frontend) + 5 IT backend verdes.
+
+7. **Bugfixes UI puntuales** (commits `c7ae622`, `7bef839`, `d1fcf10`, `df4136e`, `fc6896f`)
+   - `c7ae622`: tarjetas CIECYT → en cambio de `AsignarJuradoView` a `PropuestaListadoCiecytView` (sin `:proyectoId`).
+   - `7bef839` + `d1fcf10`: decanura con admin sin facultad → dropdown de TODAS las facultades (`FacultyService.retrieve`).
+   - `df4136e`: b-modal de historial solo se monta al abrir (`v-if="mostrarHistorial"`).
+   - `fc6896f`: `AsignarDecanoDialog.form` inicializado como objeto (no null) para evitar `Cannot read properties of null (reading 'userLogin')`.
+
+8. **CIECYT en modo lectura** (commit `f74ab91`)
+   - `/decanura/padron-habilitados` y `/decanura/remision-padron` abiertos a CIECYT en modo solo-lectura, con banner info y acciones de edición deshabilitadas.
+
+### 10.2 Cómo reproducir el ciclo una vez sembrada la BD
+
+```
+1. admin /admin/decano-facultad
+   Asignar decano: 18128952 → FTICS (id 30001) → Aplicar
+
+2. admin /admin/user-management/new
+   crear login 1098765432 (nombre, rol ROLE_DOCENTE) → Save
+
+3. admin /decanura/padron-habilitados       (role=ADMIN)
+   dropdown: FTICS → Dar de alta login 1098765432 rol ASESOR → Habilitar
+   dropdown: FTICS → rol JURADO → Habilitar
+
+4. admin /decanura/remision-padron
+   dropdown: FTICS, periodo 2026-2 → Armar borrador → Enviar
+
+5. admin /admin/user-management/new     crear Ana Solano (ROLE_ESTUDIANTE)
+
+6. resetearle contrasena a Ana → entra al wizard → tesis → Enviar
+
+7. CIECYT (rosita) /ciecyt/listado-ciecyt
+   click en la propuesta → columna Jurado: dropdown con 1098765432 → Aplicar
+   columna Asesor: mismo dropdown
+
+8. ana vuelve al Home → ve su propuesta con "Cambiar jurado".
+```
+
+### 10.3 Estado de la suite de tests al cierre
+
+- 917/917 tests frontend verdes (vitest).
+- 8 tests IT backend verdes (mvn test -Dskip.npm=true -Denforcer.skip=true).
+
+HUD del cierre:
+
+- Decano FTICS: 18128952 → puede remitir padrón y habilitar docentes.
+- CIECYT: rosita → puede asignar jurado/asesor (y consultar padrón/remisión en modo lectura).
+- Admin → única identidad que puede asignar decanos, crear usuarios, resetear contraseñas y operar todo el padrón.
