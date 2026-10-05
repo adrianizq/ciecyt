@@ -8,18 +8,29 @@
                 Una vez enviada no se edita: si después cambia el padrón, corresponde a la siguiente
                 remisión.
             </p>
+            <b-alert v-if="esCiecyt()" show variant="info" class="mt-2">
+                <strong>Modo lectura.</strong> Esta vista le entrega al CIECYT las remisiones
+                que la decanatura ya envío, para que sepa qué padrón es el vigente al momento de
+                asignar jurado y asesor.
+            </b-alert>
         </div>
 
         <div class="col-12" v-if="!facultadId">
             <b-alert show variant="warning">
-                No tiene ninguna facultad asignada como decano. Pida al administrador que lo
-                habilite en <em>Decanos por facultad</em>. Mientras tanto el admin puede armar la
-                remisión en esta página.
+                <template v-if="puedeEditarRemision()">
+                    No tiene ninguna facultad asignada como decano. Pida al administrador que lo
+                    habilite en <em>Decanos por facultad</em>. Mientras tanto el admin puede armar la
+                    remisión en esta página.
+                </template>
+                <template v-else>
+                    Aún no hay remisiones remitidas al CIECYT. Vuelvas a entrar cuando la
+                    decanatura arme la primera remisión.
+                </template>
             </b-alert>
         </div>
 
         <div class="col-12" v-else>
-            <div class="col-12 col-md-6">
+            <div class="col-12 col-md-6" v-if="puedeEditarRemision()">
                 <b-form-group class="mb-3" label="Facultad" label-for="facultad-remision" v-if="facultadesDisponibles.length > 1">
                     <b-form-select id="facultad-remision" v-model="facultadId" :options="facultadesDisponibles" @change="cargar()"></b-form-select>
                 </b-form-group>
@@ -32,6 +43,11 @@
                 <b-button variant="primary" :disabled="isSaving || !nuevoPeriodo" @click="crearBorrador()">
                     <font-awesome-icon icon="file"></font-awesome-icon>&nbsp;Armar borrador
                 </b-button>
+            </div>
+            <div class="col-12" v-else>
+                <b-form-group class="mb-3" label="Facultad" label-for="facultad-remision" v-if="facultadesDisponibles.length > 1">
+                    <b-form-select id="facultad-remision" v-model="facultadId" :options="facultadesDisponibles" @change="cargar()"></b-form-select>
+                </b-form-group>
             </div>
 
             <div class="col-12">
@@ -49,7 +65,7 @@
                         </span>
                     </template>
                     <template #cell(acciones)="{ item }">
-                        <b-button v-if="item.estado !== 'ENVIADO'" size="sm" variant="outline-primary" @click="enviar(item)">
+                        <b-button v-if="puedeEditarRemision() && item.estado !== 'ENVIADO'" size="sm" variant="outline-primary" @click="enviar(item)">
                             Enviar a CIECYT
                         </b-button>
                     </template>
@@ -119,6 +135,22 @@ import FacultadService from '@/entities/facultad/facultad.service';
             const account: any = this.$store?.getters?.account;
             const auths: string[] = account?.authorities || [];
             return auths.includes('ROLE_ADMIN');
+        }
+
+        /**
+         * Solo decano de la facultad y admin pueden armar/editar remisiones. El CIECYT entra a
+         * esta vista como consulta del histórico de lo remitido por la decanatura.
+         */
+        public puedeEditarRemision(): boolean {
+            const account: any = this.$store?.getters?.account;
+            const auths: string[] = account?.authorities || [];
+            return auths.includes('ROLE_ADMIN') || auths.includes('ROLE_DECANO');
+        }
+
+        public esCiecyt(): boolean {
+            const account: any = this.$store?.getters?.account;
+            const auths: string[] = account?.authorities || [];
+            return auths.includes('ROLE_CIECYT') && !this.puedeEditarRemision();
         }
 
         async cargarTodasLasFacultades(): Promise<void> {

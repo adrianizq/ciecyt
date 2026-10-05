@@ -7,14 +7,26 @@
                 pero de habilitarla se ocupa la decanatura. Quien sale de la lista conserva las
                 designaciones que ya tiene.
             </p>
+            <b-alert v-if="esCiecyt()" show variant="info" class="mt-2">
+                <strong>Modo lectura.</strong> Como Centro de Investigaciones, consulta el
+                padrón pero no puede agregar ni dar de baja docentes: eso lo hace la decanatura
+                de la facultad y el administrador del sistema.
+            </b-alert>
         </div>
 
         <div class="col-12" v-if="noFacultades">
             <b-alert show variant="warning">
-                No tiene ninguna facultad asignada como decano. Pida que el administrador del
-                sistema le asigne una (Utlima entrada del navbar: <em>Decanos por facultad</em>).
-                Mientras tanto el padrón lo mantiene el admin del sistema desde esta misma página
-                si tiene el rol ROLE_ADMIN.
+                <template v-if="puedeModificarPadron()">
+                    No tiene ninguna facultad asignada como decano. Pida que el administrador del
+                    sistema le asigne una (última entrada del navbar: <em>Decanos por facultad</em>).
+                    Mientras tanto el padrón lo mantiene el admin del sistema desde esta misma
+                    página si tiene el rol ROLE_ADMIN.
+                </template>
+                <template v-else>
+                    Aún no hay un padrón remitido al CIECYT para esta facultad. La lista se
+                    completa cuando el decano la habilita y remite (artículo 8 y 9 del Acuerdo
+                    25). Aquí la verá en cuanto llegue la primera remisión.
+                </template>
             </b-alert>
         </div>
 
@@ -36,18 +48,18 @@
                     <template #empty>
                         <b class="text-muted">No hay docentes habilitados en la facultad.</b>
                     </template>
-                    <template #cell(acciones)="{ item }">
-                        <b-button size="sm" variant="outline-secondary" @click="verHistorial(item)">
-                            Historial
-                        </b-button>
-                        <b-button size="sm" variant="outline-danger" @click="cerrar(item)">
-                            Dar de baja
-                        </b-button>
-                    </template>
+<template #cell(acciones)="{ item }">
+                            <b-button size="sm" variant="outline-secondary" @click="verHistorial(item)">
+                                Historial
+                            </b-button>
+                            <b-button v-if="puedeModificarPadron()" size="sm" variant="outline-danger" @click="cerrar(item)">
+                                Dar de baja
+                            </b-button>
+                        </template>
                 </b-table>
             </div>
 
-            <div class="col-12">
+            <div class="col-12" v-if="puedeModificarPadron()">
                 <h5>Dar de alta a un docente</h5>
                 <b-form @submit.prevent="habilitar()">
                     <b-form-group class="mb-3" label="Cédula o login" label-for="alta-login">
@@ -175,6 +187,22 @@
             const account: any = this.$store?.getters?.account;
             const auths: string[] = account?.authorities || [];
             return auths.includes('ROLE_ADMIN');
+        }
+
+        /**
+         * Solo el decano de la facultad y el admin pueden modificar el padron. CIECYT entra
+         * a la pantalla como lectura: ve la lista pero sin poder dar de alta/baja docentes.
+         */
+        public puedeModificarPadron(): boolean {
+            const account: any = this.$store?.getters?.account;
+            const auths: string[] = account?.authorities || [];
+            return auths.includes('ROLE_ADMIN') || auths.includes('ROLE_DECANO');
+        }
+
+        public esCiecyt(): boolean {
+            const account: any = this.$store?.getters?.account;
+            const auths: string[] = account?.authorities || [];
+            return auths.includes('ROLE_CIECYT') && !this.puedeModificarPadron();
         }
 
         async cargarTodasLasFacultades(): Promise<void> {

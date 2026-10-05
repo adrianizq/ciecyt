@@ -1161,7 +1161,7 @@ const router = createRouter({
         path: '/decanura/padron-habilitados',
         name: 'PadronHabilitados',
         component: PadronHabilitados,
-        meta: { authorities: ['ROLE_DECANO', 'ROLE_ADMIN'] }
+        meta: { authorities: ['ROLE_DECANO', 'ROLE_ADMIN', 'ROLE_CIECYT'] }
       },
       /////////////////////////////////////////////////////
       {
@@ -1169,7 +1169,7 @@ const router = createRouter({
         path: '/decanura/remision-padron',
         name: 'RemisionPadron',
         component: RemisionPadron,
-        meta: { authorities: ['ROLE_DECANO', 'ROLE_ADMIN'] }
+        meta: { authorities: ['ROLE_DECANO', 'ROLE_ADMIN', 'ROLE_CIECYT'] }
       },
       /////////////////////////////////////////////////////
       {
