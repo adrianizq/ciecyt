@@ -122,4 +122,10 @@ describe('UserManagement Component', () => {
       expect(userManagement.reverse).toBe(true);
     });
   });
+
+  describe('reset password', () => {
+    it('Should expose the openResetPasswordDialog method', () => {
+      expect(typeof userManagement.openResetPasswordDialog).toBe('function');
+    });
+  });
 });
