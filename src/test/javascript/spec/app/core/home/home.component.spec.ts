@@ -32,7 +32,7 @@ describe('Home', () => {
     menu_lateral_listado: [],
     menu_lateral_ciecyt: [],
     menu_lateral_nueva: [],
-  } as const;
+  } as any;
 
   // Cada test obtiene su propio mock y su propio componente, de modo que los
   // commits al store de un test no contaminen al siguiente (Home.vue invoca varios

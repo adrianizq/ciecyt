@@ -148,8 +148,7 @@ export default class AsignarDecanoDialog extends Vue {
       })
       .catch(error => {
         this.isSaving = false;
-        const msg = this.alertService().showHttpError(this, error) as string;
-        this.errorMessage = msg || this.$t('decanoFacultad.asignar.error').toString();
+        this.errorMessage = this.alertService().showHttpError(this, error);
       });
   }
 

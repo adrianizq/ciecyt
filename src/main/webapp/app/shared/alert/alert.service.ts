@@ -24,8 +24,10 @@ export default class JhiAlertService {
 
   // Varias paginas llamaban este metodo (JHipster lo tenia en versiones anteriores) y al no
   // existir el error se perdia en la consola en lugar de mostrarse al usuario.
-  public showHttpError(component?: any, error?: any) {
-    this.showAlert(this.mensajeDeError(error), 'danger');
+  public showHttpError(component?: any, error?: any): string {
+    const mensaje = this.mensajeDeError(error);
+    this.showAlert(mensaje, 'danger');
+    return mensaje;
   }
 
   private mensajeDeError(error: any): string {

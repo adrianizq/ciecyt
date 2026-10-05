@@ -56,7 +56,7 @@ export default class CerrarVigenciaDialog extends Vue {
       })
       .catch(error => {
         this.isSaving = false;
-        this.errorMessage = this.alertService().showHttpError(this, error) as string;
+        this.errorMessage = this.alertService().showHttpError(this, error);
       });
   }
 }

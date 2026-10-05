@@ -27,7 +27,7 @@ describe('router guard: needsPasswordChange', () => {
         component: { template: '<div />' },
         meta: r.meta ?? { authorities: ['ROLE_USER'] },
       })),
-    });
+    }) as ReturnType<typeof createRouter>;
   }
 
   function buildAccountService(account: any): AccountService {
@@ -35,7 +35,7 @@ describe('router guard: needsPasswordChange', () => {
     return new AccountService(store, { refreshTranslation: () => undefined } as any, fakeRouter);
   }
 
-  function applyGuard(router: Router, account: any, isAuthenticated: boolean): void {
+  function applyGuard(router: ReturnType<typeof createRouter>, account: any, isAuthenticated: boolean): void {
     const accountService = buildAccountService(account);
     if (isAuthenticated) {
       store.commit('authenticated', account);
