@@ -220,17 +220,23 @@ public class UserService {
      * Reset the user's password without knowing the current one. Used by
      * ROLE_ADMIN via {@code POST /api/admin/users/{login}/reset-password}.
      *
-     * @param newPassword the new cleartext password to set.
+     * @param newPassword  the new cleartext password to set.
+     * @param forceChange  if true, marca al usuario como needsPasswordChange=true. Asi, al
+     *                     siguiente login el frontend lo redirige a /account/password antes
+     *                     de poder usar la app.
      * @return empty Optional when the user does not exist.
      */
-    public Optional<UserDTO> adminResetPassword(String login, String newPassword) {
+    public Optional<UserDTO> adminResetPassword(String login, String newPassword, boolean forceChange) {
         return userRepository
             .findOneByLogin(login.toLowerCase())
             .map(user -> {
                 this.clearUserCaches(user);
                 user.setPassword(passwordEncoder.encode(newPassword));
+                if (forceChange) {
+                    user.setNeedsPasswordChange(true);
+                }
                 this.clearUserCaches(user);
-                log.debug("Admin reset password for user: {}", login);
+                log.debug("Admin reset password for user: {} (forceChange={})", login, forceChange);
                 return user;
             })
             .map(UserDTO::new);
@@ -340,6 +346,10 @@ public class UserService {
                 }
                 String encryptedPassword = passwordEncoder.encode(newPassword);
                 user.setPassword(encryptedPassword);
+                // Confirmar una contrasena propia siempre baja el flag de force-change.
+                if (user.isNeedsPasswordChange()) {
+                    user.setNeedsPasswordChange(false);
+                }
                 this.clearUserCaches(user);
                 log.debug("Changed password for User: {}", user);
             });

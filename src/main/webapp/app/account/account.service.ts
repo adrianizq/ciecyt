@@ -146,6 +146,14 @@ export default class AccountService {
     });
   }
 
+  public get accountIdentity(): any {
+    return this.store.getters.account;
+  }
+
+  public get needsPasswordChange(): boolean {
+    return Boolean((this.store.getters.account as any)?.needsPasswordChange);
+  }
+
   public get authenticated(): boolean {
     return this.store.getters.authenticated;
   }

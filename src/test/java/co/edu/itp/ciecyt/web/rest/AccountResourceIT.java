@@ -592,6 +592,7 @@ public class AccountResourceIT {
         user.setPassword(passwordEncoder.encode(currentPassword));
         user.setLogin("change-password");
         user.setEmail("change-password@example.com");
+        user.setNeedsPasswordChange(true); // simulo reset admin previo
         userRepository.saveAndFlush(user);
 
         restAccountMockMvc.perform(post("/api/account/change-password")
@@ -602,6 +603,8 @@ public class AccountResourceIT {
 
         User updatedUser = userRepository.findOneByLogin("change-password").orElse(null);
         assertThat(passwordEncoder.matches("new password", updatedUser.getPassword())).isTrue();
+        // El cambio de contrasena propia baja el flag de force-change.
+        assertThat(updatedUser.isNeedsPasswordChange()).isFalse();
     }
 
     @Test

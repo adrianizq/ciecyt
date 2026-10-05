@@ -40,6 +40,13 @@ public class UserDTO {
 
     private boolean activated = false;
 
+    /**
+     * Marca que el sistema coloca tras un reset admin o creacion sin correo: el frontend
+     * lo lee (vuex account.needsPasswordChange) y un guard global del router fuerza el
+     * cambio de contrasena antes de seguir navegando.
+     */
+    private boolean needsPasswordChange = false;
+
     @Size(min = 2, max = 10)
     private String langKey;
 
@@ -66,6 +73,7 @@ public class UserDTO {
         this.lastName = user.getLastName();
         this.email = user.getEmail();
         this.activated = user.getActivated();
+        this.needsPasswordChange = user.isNeedsPasswordChange();
         this.imageUrl = user.getImageUrl();
         this.langKey = user.getLangKey();
         this.createdBy = user.getCreatedBy();
@@ -131,6 +139,14 @@ public class UserDTO {
 
     public void setActivated(boolean activated) {
         this.activated = activated;
+    }
+
+    public boolean isNeedsPasswordChange() {
+        return needsPasswordChange;
+    }
+
+    public void setNeedsPasswordChange(boolean needsPasswordChange) {
+        this.needsPasswordChange = needsPasswordChange;
     }
 
     public String getLangKey() {

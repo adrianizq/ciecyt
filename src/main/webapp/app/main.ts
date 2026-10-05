@@ -219,6 +219,20 @@ router.beforeEach((to, _from, next) => {
     return;
   }
 
+  // El admin resetea contrasena con forceChange=true. Mientras el flag siga prendido,
+  // cualquier ruta que no sea /account/password lleva al usuario a cambiarla. Los
+  // procesos de login (/reset/request, /reset/finish, /account/password misma) estan
+  // exentos para que el flujo funcione.
+  if (
+    accountService.authenticated &&
+    accountService.needsPasswordChange &&
+    to.path !== '/account/password' &&
+    to.path !== '/reset/finish'
+  ) {
+    next({ path: '/account/password' });
+    return;
+  }
+
   const authorities = to.meta && (to.meta.authorities as string[] | undefined);
   if (authorities && authorities.length > 0) {
     if (!accountService.hasAnyAuthority(authorities)) {

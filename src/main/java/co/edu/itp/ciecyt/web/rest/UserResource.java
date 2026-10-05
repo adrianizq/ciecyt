@@ -209,7 +209,9 @@ public class UserResource {
      * {@code POST /admin/users/{login}/reset-password} : reset a user's password
      * without knowing the current one. Allows ROLE_ADMIN to deliver temporary
      * credentials to a Decano/CIECYT/Asesor/Jurado/Estudiante at any time
-     * without going through the email-based reset flow.
+     * without going through the email-based reset flow. Por defecto fuerza el
+     * cambio al siguiente inicio de sesion; el cliente puede omitirlo con
+     * {@code ?forceChange=false} cuando la entrega ya es definitiva.
      *
      * @param login the login of the user to reset.
      * @param dto   payload with the new cleartext password.
@@ -220,10 +222,11 @@ public class UserResource {
     @PreAuthorize("hasRole(\"" + AuthoritiesConstants.ADMIN + "\")")
     public ResponseEntity<UserDTO> adminResetPassword(
         @PathVariable String login,
+        @RequestParam(name = "forceChange", defaultValue = "true") boolean forceChange,
         @Valid @RequestBody AdminPasswordResetDTO dto
     ) {
         log.debug("REST request to admin-reset password for User: {}", login);
-        Optional<UserDTO> updated = userService.adminResetPassword(login, dto.getNewPassword());
+        Optional<UserDTO> updated = userService.adminResetPassword(login, dto.getNewPassword(), forceChange);
         return ResponseUtil.wrapOrNotFound(
             updated,
             HeaderUtil.createAlert(applicationName, "userManagement.resetPassword", login)

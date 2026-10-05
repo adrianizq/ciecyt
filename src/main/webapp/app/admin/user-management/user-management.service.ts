@@ -31,7 +31,9 @@ export default class UserManagementService {
     return axios.get('api/users/authorities');
   }
 
-  public resetPassword(login: string, newPassword: string): Promise<any> {
-    return axios.post(`api/admin/users/${encodeURIComponent(login)}/reset-password`, { newPassword });
+  public resetPassword(login: string, newPassword: string, forceChange = true): Promise<any> {
+    return axios.post(`api/admin/users/${encodeURIComponent(login)}/reset-password?forceChange=${forceChange ? 'true' : 'false'}`, {
+      newPassword,
+    });
   }
 }

@@ -387,6 +387,7 @@ export function initVueXStore() {
       logon: state => state.logon,
       account: state => state.userIdentity,
       authenticated: state => state.authenticated,
+      needsPasswordChange: state => Boolean((state.userIdentity as any)?.needsPasswordChange),
       activeProfiles: state => state.activeProfiles,
       ribbonOnProfiles: state => state.ribbonOnProfiles,
       menuLateral: state => state.menu_lateral,

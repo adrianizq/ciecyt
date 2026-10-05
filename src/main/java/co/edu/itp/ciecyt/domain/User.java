@@ -64,6 +64,16 @@ public class User extends AbstractAuditingEntity implements Serializable {
     @Column(nullable = false)
     private boolean activated = false;
 
+    /**
+     * El sistema coloca esta marca cuando el admin entrega una contrasena temporal (reset admin
+     * o creacion sin flujo de correo). El usuario en sesion debe cambiarla antes de seguir:
+     * el guard global del router (vue) lo bloquea a /account/password mientras la marca siga
+     * prendida. La baja ocurre al confirmar una contrasena propia en POST /api/account/change-password.
+     */
+    @NotNull
+    @Column(name = "needs_password_change", nullable = false)
+    private boolean needsPasswordChange = false;
+
     @Size(min = 2, max = 10)
     @Column(name = "lang_key", length = 10)
     private String langKey;
@@ -160,6 +170,14 @@ public class User extends AbstractAuditingEntity implements Serializable {
 
     public void setActivated(boolean activated) {
         this.activated = activated;
+    }
+
+    public boolean isNeedsPasswordChange() {
+        return needsPasswordChange;
+    }
+
+    public void setNeedsPasswordChange(boolean needsPasswordChange) {
+        this.needsPasswordChange = needsPasswordChange;
     }
 
     public String getActivationKey() {

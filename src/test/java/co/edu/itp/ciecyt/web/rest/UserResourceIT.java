@@ -514,6 +514,26 @@ public class UserResourceIT {
             .isNotEqualTo(oldPassword)
             // BCrypt prefix used by the project's TruncatingPasswordEncoder.
             .startsWith(updated.getPassword().substring(0, 4));
+        // Por defecto forceChange=true: el siguiente login debe redirigir al usuario a cambiar.
+        assertThat(updated.isNeedsPasswordChange()).isTrue();
+    }
+
+    @Test
+    @Transactional
+    @WithMockUser(authorities = AuthoritiesConstants.ADMIN)
+    public void adminResetPasswordKeepsForceChangeFalseWhenAsked() throws Exception {
+        userRepository.saveAndFlush(user);
+        AdminPasswordResetDTO payload = new AdminPasswordResetDTO("definitiva-2026");
+
+        restUserMockMvc.perform(post("/api/admin/users/{login}/reset-password", user.getLogin())
+            .param("forceChange", "false")
+            .accept(MediaType.APPLICATION_JSON)
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(TestUtil.convertObjectToJsonBytes(payload)))
+            .andExpect(status().isOk());
+
+        User updated = userRepository.findOneByLogin(user.getLogin()).orElseThrow();
+        assertThat(updated.isNeedsPasswordChange()).isFalse();
     }
 
     @Test

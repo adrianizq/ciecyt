@@ -62,7 +62,7 @@ describe('ResetPasswordDialog', () => {
     dialog.confirmReset();
     await flushPromises();
 
-    expect(mockedAxios.post).toHaveBeenCalledWith('api/admin/users/jane/reset-password', {
+    expect(mockedAxios.post).toHaveBeenCalledWith('api/admin/users/jane/reset-password?forceChange=true', {
       newPassword: 'una-clave-nueva-2026',
     });
     expect(dialog.success).toBe(true);
