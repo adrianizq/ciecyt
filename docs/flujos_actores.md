@@ -328,6 +328,8 @@ Puede ver remisiones globales de todas las facultades (GET 200).
 
 ## 10. Pendientes que afectan los flujos
 
+- Home de CIECYT: las tarjetas "Asignar jurado / Asignar asesor" eran enlazadas a `AsignarJuradoView` / `AsignarAsesorView` desde el Home (sin `:proyectoId`), lo que rompe Vue Router con `Missing required param "proyectoId"`. Corregido a `PropuestaListadoCiecytView`: el operador CIECYT abre el proyecto en el listado y desde la fila elige la acción Asignar (commit `c7ae622`).
+
 - Módulo "Impedimentos y novedades" — UI y modelos (R7).
 - Validación de conflicto de intereses del jurado (R9).
 - Acta de evaluación (R11) y repositorio final (R12).

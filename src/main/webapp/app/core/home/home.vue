@@ -337,14 +337,14 @@
           </router-link>
         </div>
         <div class="col-md-6 mb-4">
-          <router-link :to="{ name: 'AsignarJuradoView' }" class="text-decoration-none">
+          <router-link :to="{ name: 'PropuestaListadoCiecytView' }" class="text-decoration-none">
             <div
               class="card modalidad-card"
               role="button"
               tabindex="0"
               aria-label="Asignar jurado a un proyecto"
-              @keydown.enter.prevent="$router.push({ name: 'AsignarJuradoView' })"
-              @keydown.space.prevent="$router.push({ name: 'AsignarJuradoView' })"
+              @keydown.enter.prevent="$router.push({ name: 'PropuestaListadoCiecytView' })"
+              @keydown.space.prevent="$router.push({ name: 'PropuestaListadoCiecytView' })"
             >
               <div class="card-body">
                 <div class="card-icon" style="background-color:#5D4037;">
@@ -352,22 +352,22 @@
                 </div>
                 <h3 class="card-title">Asignar jurado</h3>
                 <p class="card-text">
-                  Designación de jurado a un proyecto (Acuerdo 25, art. 9 par. 3 — plazo máximo 7
-                  días hábiles).
+                  Abra un proyecto del listado general y use la acción Asignar jurado
+                  (Acuerdo 25, art. 9 par. 3 — plazo máximo 7 días hábiles).
                 </p>
               </div>
             </div>
           </router-link>
         </div>
         <div class="col-md-6 mb-4">
-          <router-link :to="{ name: 'AsignarAsesorView' }" class="text-decoration-none">
+          <router-link :to="{ name: 'PropuestaListadoCiecytView' }" class="text-decoration-none">
             <div
               class="card modalidad-card"
               role="button"
               tabindex="0"
               aria-label="Asignar asesor a un proyecto"
-              @keydown.enter.prevent="$router.push({ name: 'AsignarAsesorView' })"
-              @keydown.space.prevent="$router.push({ name: 'AsignarAsesorView' })"
+              @keydown.enter.prevent="$router.push({ name: 'PropuestaListadoCiecytView' })"
+              @keydown.space.prevent="$router.push({ name: 'PropuestaListadoCiecytView' })"
             >
               <div class="card-body">
                 <div class="card-icon" style="background-color:#2E7D32;">
@@ -375,7 +375,8 @@
                 </div>
                 <h3 class="card-title">Asignar asesor</h3>
                 <p class="card-text">
-                  Designación de asesor a un proyecto (Acuerdo 25, art. 8 par. 3).
+                  Abra un proyecto del listado general y use la acción Asignar asesor
+                  (Acuerdo 25, art. 8 par. 3).
                 </p>
               </div>
             </div>
