@@ -8,7 +8,19 @@
       "messages": {
         "info": "Introduzca la dirección de correo electrónico que utilizó para registrarse",
         "success": "Revise su correo electrónico para obtener más información sobre cómo restablecer su contraseña.",
-        "notfound": "<strong>¡Dirección de correo no registrada!</strong> Por favor, compruebe e inténtelo de nuevo"
+        "notfound": "<strong>¡Dirección de correo no registrada!</strong> Por favor, compruebe e inténtelo de nuevo",
+        "contactAdmin": "<strong>En esta institución el restablecimiento de contraseña se hace en persona, no por correo.</strong> Si usted es estudiante, docente, decano, asesor o jurado, debe solicitar la nueva contraseña al administrador del sistema (o a CIECYT). El enlace por correo se mantiene como respaldo pero no es el canal principal.",
+        "emailWarning": "<em>Si su cuenta no tiene correo electrónico configurado, el envío por correo no funcionará: contacte directamente al administrador para que le asigne una nueva clave desde <strong>Usuarios &raquo; Resetear contraseña</strong>.</em>",
+        "requiresLogin": "Para acceder a la opción de reseteo debe iniciar sesión como administrador del sistema."
+      },
+      "steps": {
+        "title": "Procedimiento cuando el usuario olvidó su contraseña",
+        "step1": "El usuario contacta al administrador del sistema (en persona, por teléfono institucional o por la mesa de ayuda de CIECYT) e indica su número de documento (cédula) o login.",
+        "step2": "El administrador entra a <strong>Gestión de usuarios</strong>, busca al usuario y hace clic en <em>Resetear contraseña</em>.",
+        "step3": "El administrador le entrega la nueva clave por canal alterno (en persona o por teléfono); el sistema la cifra al guardarla y queda registrada la fecha de modificación."
+      },
+      "actions": {
+        "gotoAdmin": "Ir a Gestión de usuarios"
       }
     },
     "finish": {

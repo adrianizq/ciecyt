@@ -24,7 +24,9 @@
                 <p></p>
                 <div>
                     <b-alert show variant="warning">
+                        <span v-text="$t('login.password.forgotIntro')"></span>
                         <b-link :to="'/reset/request'" class="alert-link" v-text="$t('login.password.forgot')"></b-link>
+                        <span v-text="$t('login.password.forgotOutro')"></span>
                     </b-alert>
                 </div>
                 <div>

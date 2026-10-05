@@ -8,7 +8,19 @@
       "messages": {
         "info": "Enter the email address you used to register",
         "success": "Check your emails for details on how to reset your password.",
-        "notfound": "<strong>Email address isn't registered!</strong> Please check and try again"
+        "notfound": "<strong>Email address isn't registered!</strong> Please check and try again",
+        "contactAdmin": "<strong>In this institution password reset is handled in person, not by email.</strong> Students, faculty, advisors, jurors and deans must request a new password from the system administrator (or CIECYT). The email channel remains available as a fallback but is not the primary path.",
+        "emailWarning": "<em>If your account has no email address configured the email flow will not work: contact the administrator directly so they can assign a new password from <strong>Users &raquo; Reset password</strong>.</em>",
+        "requiresLogin": "To access the reset option you must log in as the system administrator."
+      },
+      "steps": {
+        "title": "Procedure when a user forgets their password",
+        "step1": "The user contacts the system administrator (in person, by phone, or through the CIECYT help desk) and gives their ID number (cédula) or login.",
+        "step2": "The administrator opens <strong>User management</strong>, finds the user and clicks <em>Reset password</em>.",
+        "step3": "The administrator hands the new password over an alternate channel (in person or by phone); the system hashes it on save and records the modification date."
+      },
+      "actions": {
+        "gotoAdmin": "Go to User management"
       }
     },
     "finish": {

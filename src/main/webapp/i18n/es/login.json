@@ -13,7 +13,9 @@
       }
     },
     "password": {
-      "forgot": "¿Ha olvidado su contraseña?"
+      "forgot": "Recuperar contraseña",
+      "forgotIntro": "¿Olvidó su contraseña? ",
+      "forgotOutro": " — en esta institución el restablecimiento se solicita directamente al administrador del sistema (no por correo)."
     }
   }
 }

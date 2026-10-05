@@ -56,4 +56,8 @@ export default class ResetPasswordInit extends Vue {
         }
       });
   }
+
+  public get authenticated(): boolean {
+    return Boolean(this.$store?.getters?.authenticated);
+  }
 }

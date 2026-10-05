@@ -13,7 +13,9 @@
       }
     },
     "password": {
-      "forgot": "Did you forget your password?"
+      "forgot": "Reset password",
+      "forgotIntro": "Forgot your password? ",
+      "forgotOutro": " — at this institution password reset is requested directly from the system administrator (not by email)."
     }
   }
 }
