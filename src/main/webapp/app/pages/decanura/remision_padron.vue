@@ -123,8 +123,8 @@ import FacultadService from '@/entities/facultad/facultad.service';
 
         async cargarTodasLasFacultades(): Promise<void> {
             try {
-                const res = await this.facultadService().query({ sort: 'facultad,asc' });
-                const lista: any[] = (res.data && res.data) || res || [];
+                const res = await this.facultadService().retrieve({ sort: 'facultad,asc', size: 200 });
+                const lista: any[] = (res.data && res.data) || [];
                 this.facultadesDisponibles = lista
                     .filter((f: any) => f && f.id != null)
                     .map((f: any) => ({ value: f.id, text: `${f.codigoFacultad || ''} · ${f.facultad || ''}` }));
