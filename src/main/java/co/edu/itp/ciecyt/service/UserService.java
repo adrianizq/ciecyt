@@ -82,6 +82,10 @@ public class UserService {
                 user.setPassword(passwordEncoder.encode(newPassword));
                 user.setResetKey(null);
                 user.setResetDate(null);
+                // El usuario eligio su propia contrasena: ya no forzar cambio en el siguiente login.
+                if (user.isNeedsPasswordChange()) {
+                    user.setNeedsPasswordChange(false);
+                }
                 this.clearUserCaches(user);
                 return user;
             });
@@ -116,6 +120,8 @@ public class UserService {
         newUser.setLogin(userDTO.getLogin().toLowerCase());
         // new user gets initially a generated password
         newUser.setPassword(encryptedPassword);
+        // Aqui la contrasena la eligio el usuario durante el registro publico. Cuando active
+        // su cuenta no tiene por que cambiarla; deberia poder entrar con ella directamente.
         newUser.setFirstName(userDTO.getFirstName());
         newUser.setLastName(userDTO.getLastName());
         if (userDTO.getEmail() != null) {
@@ -190,6 +196,9 @@ public class UserService {
         user.setResetKey(RandomUtil.generateResetKey());
         user.setResetDate(Instant.now());
         user.setActivated(true);
+        // El admin le entrega una clave aleatoria generada por el sistema: el usuario debe
+        // cambiarla al iniciar sesion, antes de seguir navegando.
+        user.setNeedsPasswordChange(true);
         if (userDTO.getAuthorities() != null) {
             Set<Authority> authorities = userDTO.getAuthorities().stream()
                 .map(authorityRepository::findById).filter(Optional::isPresent)

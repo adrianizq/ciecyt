@@ -103,6 +103,13 @@ public class AccountResourceIT {
             .andExpect(jsonPath("$.imageUrl").value("http://placehold.it/50x50"))
             .andExpect(jsonPath("$.langKey").value("en"))
             .andExpect(jsonPath("$.authorities").value(AuthoritiesConstants.ADMIN));
+
+        // El sistema entrega una contrasena temporal (generada por RandomUtil), por lo que
+        // el usuario debe cambiarla al iniciar sesion; el guard global del frontend lo
+        // redirige a /account/password.
+        userRepository.findOneByLogin(TEST_USER_LOGIN).ifPresent(u ->
+            assertThat(u.isNeedsPasswordChange()).isTrue()
+        );
     }
 
     @Test
@@ -723,6 +730,7 @@ public class AccountResourceIT {
         user.setEmail("finish-password-reset@example.com");
         user.setResetDate(Instant.now().plusSeconds(60));
         user.setResetKey("reset key");
+        user.setNeedsPasswordChange(true); // simulo reset admin previo
         userRepository.saveAndFlush(user);
 
         KeyAndPasswordVM keyAndPassword = new KeyAndPasswordVM();
@@ -737,6 +745,8 @@ public class AccountResourceIT {
 
         User updatedUser = userRepository.findOneByLogin(user.getLogin()).orElse(null);
         assertThat(passwordEncoder.matches(keyAndPassword.getNewPassword(), updatedUser.getPassword())).isTrue();
+        // Reset por correo con contrasena propia limpia el flag de force-change.
+        assertThat(updatedUser.isNeedsPasswordChange()).isFalse();
     }
 
     @Test
