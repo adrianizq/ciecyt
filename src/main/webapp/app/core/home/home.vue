@@ -23,6 +23,26 @@
           </div>
         </div>
 
+        <!-- Aviso de propuesta vigente: el Acuerdo 25 solo admite una por ciclo y programa. -->
+        <div class="col-12" v-if="propuestasActivas.length > 0">
+          <div class="alert alert-warning" role="alert">
+            <strong>Ya tienes una propuesta en curso.</strong>
+            El Acuerdo 25 permite una sola propuesta vigente por ciclo y programa. Continúa o
+            modifícala en lugar de crear otra:
+            <div class="mt-2">
+              <router-link
+                v-for="propuesta in propuestasActivas"
+                :key="propuesta.id"
+                :to="rutaEdicion(propuesta)"
+                class="btn btn-sm btn-primary me-2 mb-1"
+              >
+                <font-awesome-icon icon="arrow-right" class="me-1" />
+                {{ propuesta.titulo || ('Propuesta #' + propuesta.id) }}
+              </router-link>
+            </div>
+          </div>
+        </div>
+
         <!-- Solicita el listado-estudiante para ver propuestas en curso -->
         <div class="col-md-4 col-lg-4 mb-4">
           <router-link :to="{ name: 'ListadoProyectoView' }" class="text-decoration-none">
@@ -49,14 +69,14 @@
 
         <!-- Inicia una nueva propuesta. -->
         <div class="col-md-4 col-lg-4 mb-4">
-          <router-link :to="{ name: 'PropuestasInvestigadorEditView' }" class="text-decoration-none">
+          <router-link :to="{ name: 'PropuestaInformacionGenearalNuevaView' }" class="text-decoration-none">
             <div
               class="card modalidad-card"
               role="button"
               tabindex="0"
               aria-label="Iniciar nueva propuesta de grado"
-              @keydown.enter.prevent="$router.push({ name: 'PropuestasInvestigadorEditView' })"
-              @keydown.space.prevent="$router.push({ name: 'PropuestasInvestigadorEditView' })"
+              @keydown.enter.prevent="$router.push({ name: 'PropuestaInformacionGenearalNuevaView' })"
+              @keydown.space.prevent="$router.push({ name: 'PropuestaInformacionGenearalNuevaView' })"
             >
               <div class="card-body">
                 <div class="card-icon" style="background-color:#C4A94D;">

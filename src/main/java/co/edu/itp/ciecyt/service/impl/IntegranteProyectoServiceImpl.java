@@ -8,6 +8,7 @@ import co.edu.itp.ciecyt.repository.IntegranteProyectoRepository;
 import co.edu.itp.ciecyt.domain.Authority;
 import co.edu.itp.ciecyt.domain.DocenteHabilitado;
 import co.edu.itp.ciecyt.domain.User;
+import co.edu.itp.ciecyt.domain.enumeration.EnumEstadoProyecto;
 import co.edu.itp.ciecyt.repository.ProyectoRepository;
 import co.edu.itp.ciecyt.repository.UserInfoRepository;
 import co.edu.itp.ciecyt.repository.UserRepository;
@@ -20,9 +21,11 @@ import co.edu.itp.ciecyt.service.dto.ProyectoDTO;
 import co.edu.itp.ciecyt.service.dto.RolesModalidadDTO;
 import co.edu.itp.ciecyt.service.mapper.IntegranteProyectoMapper;
 import java.util.ArrayList;
+import java.util.EnumSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -36,6 +39,17 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @Transactional
 public class IntegranteProyectoServiceImpl implements IntegranteProyectoService {
+
+    /**
+     * Estados que ya cierran la propuesta de un estudiante. Mientras no esté en uno de ellos se
+     * considera vigente y cuenta para la regla de una sola propuesta por estudiante, ciclo y
+     * programa.
+     */
+    private static final Set<EnumEstadoProyecto> ESTADOS_CERRADOS_PROYECTO = EnumSet.of(
+        EnumEstadoProyecto.FINALIZADO,
+        EnumEstadoProyecto.NOTA_DEFINITIVA,
+        EnumEstadoProyecto.NO_VIABLE
+    );
 
     private final Logger log = LoggerFactory.getLogger(IntegranteProyectoServiceImpl.class);
 
@@ -223,6 +237,13 @@ public class IntegranteProyectoServiceImpl implements IntegranteProyectoService 
             }
         }
 
+        // Sumar a un companero a una propuesta colectiva no puede saltarse la regla de una sola
+        // propuesta vigente por estudiante, ciclo y programa: el companero tambien es autor y no
+        // puede figurar en dos trabajos activos de la misma combinacion (doble titulacion aparte).
+        if (DocenteHabilitado.ROL_ESTUDIANTE_MARKER.equals(autoridad) && dto.getIntegranteProyectoUserId() != null) {
+            validarPropuestaUnicaDeEstudiante(idProyecto, dto.getIntegranteProyectoUserId());
+        }
+
         // La designacion tiene que salir del padron de habilitados de la facultad. El externo no
         // pertenece al padron: para el validaron la idoneidad el CIECYT y la facultad, y eso se
         // corresponde con el paragrafo 1 de los articulos 8 y 9 del Acuerdo 25.
@@ -245,6 +266,62 @@ public class IntegranteProyectoServiceImpl implements IntegranteProyectoService 
                         + " y el catalogo admite " + cantidad,
                     "integranteProyecto", "designacion");
             }
+        }
+    }
+
+    /**
+     * Un estudiante no puede figurar en dos propuestas vigentes del mismo ciclo y programa.
+     *
+     * <p>El Acuerdo 25 admite una sola opcion de grado vigente por estudiante, ciclo y programa
+     * (una doble titulacion puede tener una en cada programa). Al sumar a un companero a una tesis
+     * colectiva hay que revisar lo mismo que en el alta de la propuesta. El proyecto actual se
+     * excluye porque agregar companeros a la propia propuesta no puede contar como duplicado.
+     */
+    private void validarPropuestaUnicaDeEstudiante(Long idProyecto, Long idUsuario) {
+        Proyecto proyecto = proyectoRepository.findById(idProyecto).orElse(null);
+        if (proyecto == null) {
+            return;
+        }
+        if (proyecto.getProyectoCiclo() == null || proyecto.getProyectoCiclo().getId() == null) {
+            return;
+        }
+        if (proyecto.getProyectoPrograma() == null || proyecto.getProyectoPrograma().getId() == null) {
+            return;
+        }
+        Long cicloId = proyecto.getProyectoCiclo().getId();
+        Long programaId = proyecto.getProyectoPrograma().getId();
+        for (IntegranteProyecto integrante : integranteProyectoRepository.findByIntegranteProyectoUserId(idUsuario)) {
+            if (
+                integrante.getIntegranteProyectoRolesModalidad() == null ||
+                !DocenteHabilitado.ROL_ESTUDIANTE_MARKER.equals(
+                    integrante.getIntegranteProyectoRolesModalidad().getRolesModalidadAuthorityName()
+                )
+            ) {
+                continue;
+            }
+            Proyecto existente = integrante.getIntegranteProyectoProyecto();
+            if (existente == null || existente.getId() == null || Objects.equals(existente.getId(), idProyecto)) {
+                continue;
+            }
+            if (existente.getProyectoCiclo() == null || existente.getProyectoPrograma() == null) {
+                continue;
+            }
+            if (!Objects.equals(cicloId, existente.getProyectoCiclo().getId())) {
+                continue;
+            }
+            if (!Objects.equals(programaId, existente.getProyectoPrograma().getId())) {
+                continue;
+            }
+            if (existente.getEstado() != null && ESTADOS_CERRADOS_PROYECTO.contains(existente.getEstado())) {
+                continue;
+            }
+            throw new BadRequestAlertException(
+                "El estudiante ya tiene una propuesta activa para este ciclo y programa (proyecto " +
+                    existente.getId() +
+                    "). No se puede vincular a otra propuesta del mismo ciclo y programa.",
+                "integranteProyecto",
+                "propuestaactiva"
+            );
         }
     }
 

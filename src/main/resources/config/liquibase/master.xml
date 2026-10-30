@@ -128,6 +128,8 @@
     <include file="config/liquibase/changelog/20260929000005_proyecto_nota_double.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20261004000001_menu_decano_facultad.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20261005000001_jhi_user_needs_password_change.xml" relativeToChangelogFile="false"/>
+    <!-- Requisitos Acuerdo 025, art. 7 par. 1: la tesis admite hasta 2 estudiantes -->
+    <include file="config/liquibase/changelog/20261011000001_tesis_dos_estudiantes_acuerdo25.xml" relativeToChangelogFile="false"/>
     <!-- jhipster-needle-liquibase-add-constraints-changelog - JHipster will add liquibase constraints changelogs here -->
     <!-- jhipster-needle-liquibase-add-incremental-changelog - JHipster will add incremental liquibase changelogs here -->
 </databaseChangeLog>

@@ -4,7 +4,7 @@
       <menu-lateral :proyectoId="$route.params.proyectoId"></menu-lateral>
     </div>
     <div class="col-sm-8"  v-if="!proyecto.preEnviado">
-      <form @submit.prevent="save()">
+      <form @submit.prevent="solicitarConfirmacion()">
         <div class="row">
           <div class="col-12">
 
@@ -69,16 +69,23 @@
                 </table>
               </div>
 
-              <b-form-checkbox type="checkbox"
-              class="form-control"
-              name="terms"
-              value="terms"
-              id='terms'
-              v-model='terms'
-
+              <b-form-checkbox
+                id="terms"
+                v-model="terms"
+                name="terms"
+                class="mb-2"
               >
                 Enviar al Asesor
               </b-form-checkbox>
+
+              <small v-if="!terms" class="form-text text-muted">
+                Debe marcar "Enviar al Asesor" para habilitar el botón.
+              </small>
+              <small v-else-if="esTesis && !documentosCompletos" class="form-text text-danger">
+                Faltan documentos obligatorios por cargar.
+              </small>
+
+              <div v-if="errorEnvio" class="alert alert-danger mt-3" role="alert">{{ errorEnvio }}</div>
             </div>
           </div>
         </div>
@@ -95,8 +102,43 @@
       </form>
     </div>
     <div class="col-sm-8"  v-if="proyecto.preEnviado">
-     <h2>Enviar la Propuesta</h2><br />
-    La Propuesta ya ha sido enviada al Asesor para su revisión
+      <div class="alert alert-success" role="alert">
+        <h2 class="alert-heading">Propuesta enviada</h2>
+        <p>La propuesta <strong>{{ proyecto.titulo }}</strong> fue enviada al asesor para su revisión.</p>
+        <p class="mb-0">Estado actual: <strong>{{ proyecto.estado }}</strong></p>
+      </div>
+      <router-link :to="{ name: 'ListadoEstudianteView' }" class="btn btn-primary">
+        Volver a Mis Propuestas
+      </router-link>
+    </div>
+
+    <div
+      v-if="mostrarConfirmacion"
+      class="modal fade show d-block"
+      tabindex="-1"
+      role="dialog"
+      style="background: rgba(0, 0, 0, 0.5)"
+    >
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Confirmar envío</h5>
+            <button type="button" class="close" aria-label="Cerrar" v-on:click="cancelarConfirmacion">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <p>¿Enviar la propuesta <strong>{{ proyecto.titulo }}</strong> al asesor?</p>
+            <p class="mb-0">Después del envío no podrá editarla mientras esté en revisión.</p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" v-on:click="cancelarConfirmacion">Cancelar</button>
+            <button type="button" class="btn btn-primary" :disabled="isSaving" v-on:click="confirmarEnvio">
+              Sí, enviar
+            </button>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -129,6 +171,8 @@ export default class EnviarPropuesta extends Vue {
   public proyecto: IProyecto = new Proyecto();
   public proyId: string = null;
   public isSaving = false;
+  public mostrarConfirmacion = false;
+  public errorEnvio: string | null = null;
   public modalidadId: any = null;
   public docFaseId: number = null;
   public faseDocumentos = 'Documentos';
@@ -182,24 +226,56 @@ export default class EnviarPropuesta extends Vue {
     return date;
   }
 
-  public save(): void {
+  public solicitarConfirmacion(): void {
+    if (this.isDisabled || this.isSaving) {
+      return;
+    }
+    this.errorEnvio = null;
+    this.mostrarConfirmacion = true;
+  }
+
+  public cancelarConfirmacion(): void {
+    this.mostrarConfirmacion = false;
+  }
+
+  public async confirmarEnvio(): Promise<void> {
+    this.mostrarConfirmacion = false;
+    await this.save();
+  }
+
+  public async save(): Promise<void> {
+    this.errorEnvio = null;
     this.isSaving = true;
     // El envío de la propuesta actualiza el estado y sincroniza los flags legacy.
-    const estado = 'EN_REVISION_ASESOR';
     const observacion = 'Estudiante envió la propuesta al asesor';
 
-    this.proyectoService()
-      .cambiarEstado(this.proyecto.id, estado, observacion)
-      .then(param => {
-        this.isSaving = false;
-        this.initRelationships();
-        const message = this.$t('ciecytApp.proyecto.updated', { param: param.id });
-        this.alertService().showAlert(message, 'info');
-      })
-      .catch(err => {
-        this.isSaving = false;
-        this.alertService().showAlert('Error al enviar la propuesta', 'danger');
-      });
+    try {
+      // Un proyecto recién creado nace en PREINSCRITA. El flujo exige pasar por
+      // EN_ELABORACION_PROPUESTA (95229) antes de enviarlo al asesor (95230), así que
+      // desde la interfaz se hacen los dos pasos en una sola acción.
+      if (this.proyecto.estado === 'PREINSCRITA') {
+        await this.proyectoService().cambiarEstado(
+          this.proyecto.id,
+          'EN_ELABORACION_PROPUESTA',
+          'Inicio de elaboración de la propuesta'
+        );
+      }
+      const param = await this.proyectoService().cambiarEstado(this.proyecto.id, 'EN_REVISION_ASESOR', observacion);
+      this.proyecto = param;
+      this.proyecto.preEnviado = true;
+      this.isSaving = false;
+      await this.initRelationships();
+      const message = this.$t('ciecytApp.proyecto.updated', { param: param.id });
+      this.alertService().showAlert(message, 'info');
+    } catch (err) {
+      this.isSaving = false;
+      this.errorEnvio = this.mensajeDeError(err);
+    }
+  }
+
+  private mensajeDeError(err: any): string {
+    const detalle = err && err.response && err.response.data ? err.response.data.detail || err.response.data.title : null;
+    return detalle ? 'No se pudo enviar la propuesta: ' + detalle : 'No se pudo enviar la propuesta. Intente de nuevo.';
   }
 
   retrieveProyecto() {

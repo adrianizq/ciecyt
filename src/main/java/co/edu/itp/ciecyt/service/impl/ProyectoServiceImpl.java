@@ -43,6 +43,7 @@ import java.util.Collections;
 import java.util.EnumSet;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -79,6 +80,16 @@ public class ProyectoServiceImpl implements ProyectoService {
             EnumEstadoProyecto.NOTA_DEFINITIVA,
             EnumEstadoProyecto.FINALIZADO
         )
+    );
+
+    /**
+     * Estados que ya cierran la propuesta de un estudiante. Mientras el proyecto no esté en uno de
+     * ellos se considera "activo" y cuenta para la regla de una sola propuesta vigente por
+     * estudiante, ciclo y programa (una doble titulación puede convivir porque el programa
+     * distingue la llave).
+     */
+    private static final Set<EnumEstadoProyecto> ESTADOS_CERRADOS_PROYECTO = Collections.unmodifiableSet(
+        EnumSet.of(EnumEstadoProyecto.FINALIZADO, EnumEstadoProyecto.NOTA_DEFINITIVA, EnumEstadoProyecto.NO_VIABLE)
     );
 
     private final Logger log = LoggerFactory.getLogger(ProyectoServiceImpl.class);
@@ -185,8 +196,140 @@ public class ProyectoServiceImpl implements ProyectoService {
             proyecto.setProyectoPrograma(programa);
         }
 
+        boolean esNuevo = proyecto.getId() == null;
+        if (esNuevo) {
+            validarPropuestaUnicaActiva(proyecto);
+        }
         proyecto = proyectoRepository.save(proyecto);
+        if (esNuevo) {
+            registrarCreadorComoIntegrante(proyecto);
+        }
         return proyectoMapper.toDto(proyecto);
+    }
+
+    /**
+     * Registra al usuario autenticado como integrante "Estudiante" de la propuesta
+     * recién creada.
+     *
+     * <p>El Acuerdo 25 (art. 7 par. 1) permite que la tesis sea individual o colectiva
+     * (hasta dos estudiantes). Quien crea la propuesta es, como mínimo, autor, por lo
+     * que se deja ya designado en el cargo Estudiante de la modalidad y así puede
+     * agregar después a un compañero de forma opcional. Si el cargo no existe, el
+     * usuario no tiene la autoridad exigida o el guardado falla, la creación del
+     * proyecto continúa sin bloquearse.
+     */
+    private void registrarCreadorComoIntegrante(Proyecto proyecto) {
+        try {
+            if (proyecto.getProyectoModalidad() == null) {
+                return;
+            }
+            String login = SecurityUtils.getCurrentUserLogin().orElse(null);
+            if (login == null || Constants.ANONYMOUS_USER.equals(login) || Constants.SYSTEM_ACCOUNT.equals(login)) {
+                return;
+            }
+            User creador = userRepository.findOneWithAuthoritiesByLogin(login).orElse(null);
+            if (creador == null) {
+                return;
+            }
+            RolesModalidadDTO rolEstudiante = rolesModalidadService.findByRolAndRolesModalidadModalidadId(
+                "Estudiante",
+                proyecto.getProyectoModalidad().getId()
+            );
+            if (rolEstudiante == null) {
+                return;
+            }
+            String autoridad = rolEstudiante.getRolesModalidadAuthorityName();
+            if (autoridad != null && !autoridad.isEmpty() && !tieneAutoridad(creador, autoridad)) {
+                return;
+            }
+            IntegranteProyectoDTO integrante = new IntegranteProyectoDTO();
+            integrante.setIntegranteProyectoProyectoId(proyecto.getId());
+            integrante.setIntegranteProyectoUserId(creador.getId());
+            integrante.setIntegranteProyectoRolesModalidadId(rolEstudiante.getId());
+            integranteProyectoService.save(integrante);
+        } catch (Exception e) {
+            log.warn("No se pudo registrar al creador del proyecto {} como integrante: {}", proyecto.getId(), e.getMessage());
+        }
+    }
+
+    private boolean tieneAutoridad(User user, String authority) {
+        return user.getAuthorities() != null && user.getAuthorities().stream().anyMatch(a -> authority.equals(a.getName()));
+    }
+
+    /**
+     * Evita que un estudiante abra mas de una propuesta vigente para el mismo ciclo y programa.
+     *
+     * <p>La llave es (estudiante, ciclo, programa): un mismo estudiante puede tener propuestas en
+     * dos programas distintos a la vez (doble titulacion), pero no dos para la misma combinacion
+     * ciclo+programa. Las propuestas ya cerradas no cuentan. La regla solo aplica al rol
+     * estudiante; CIECYT o administradores pueden registrar proyectos en nombre de terceros sin
+     * esta restriccion.
+     */
+    private void validarPropuestaUnicaActiva(Proyecto proyecto) {
+        if (!SecurityUtils.isCurrentUserInRole(AuthoritiesConstants.ESTUDIANTE)) {
+            return;
+        }
+        if (proyecto == null || proyecto.getProyectoCiclo() == null || proyecto.getProyectoCiclo().getId() == null) {
+            return;
+        }
+        if (proyecto.getProyectoPrograma() == null || proyecto.getProyectoPrograma().getId() == null) {
+            return;
+        }
+        String login = SecurityUtils.getCurrentUserLogin().orElse(null);
+        if (login == null || Constants.ANONYMOUS_USER.equals(login) || Constants.SYSTEM_ACCOUNT.equals(login)) {
+            return;
+        }
+        User estudiante = userRepository.findOneWithAuthoritiesByLogin(login).orElse(null);
+        if (estudiante == null) {
+            return;
+        }
+        List<IntegranteProyecto> integrantes;
+        try {
+            integrantes = integranteProyectoService.findByIntegranteProyectoUserId(estudiante.getId());
+        } catch (Exception e) {
+            log.warn("No se pudo verificar la propuesta activa del estudiante {}: {}", estudiante.getLogin(), e.getMessage());
+            return;
+        }
+        if (integrantes == null) {
+            return;
+        }
+        Long cicloId = proyecto.getProyectoCiclo().getId();
+        Long programaId = proyecto.getProyectoPrograma().getId();
+        for (IntegranteProyecto integrante : integrantes) {
+            if (!esRolEstudiante(integrante)) {
+                continue;
+            }
+            Proyecto existente = integrante.getIntegranteProyectoProyecto();
+            if (existente == null || existente.getId() == null || Objects.equals(existente.getId(), proyecto.getId())) {
+                continue;
+            }
+            if (existente.getProyectoCiclo() == null || existente.getProyectoPrograma() == null) {
+                continue;
+            }
+            if (!Objects.equals(cicloId, existente.getProyectoCiclo().getId())) {
+                continue;
+            }
+            if (!Objects.equals(programaId, existente.getProyectoPrograma().getId())) {
+                continue;
+            }
+            if (existente.getEstado() != null && ESTADOS_CERRADOS_PROYECTO.contains(existente.getEstado())) {
+                continue;
+            }
+            throw new BadRequestAlertException(
+                "Ya tiene una propuesta activa para este ciclo y programa (proyecto " +
+                    existente.getId() +
+                    "). Retómela o modifíquela desde 'Mis propuestas' en lugar de crear una nueva.",
+                "proyecto",
+                "propuestaactiva"
+            );
+        }
+    }
+
+    private boolean esRolEstudiante(IntegranteProyecto integrante) {
+        return (
+            integrante.getIntegranteProyectoRolesModalidad() != null &&
+            AuthoritiesConstants.ESTUDIANTE.equals(integrante.getIntegranteProyectoRolesModalidad().getRolesModalidadAuthorityName())
+        );
     }
 
     /**
@@ -1139,7 +1282,10 @@ public class ProyectoServiceImpl implements ProyectoService {
         List<IntegranteProyectoDTO> lIntegranteProyectoDTO = new ArrayList();
         lIntegranteProyectoDTO =
             integranteProyectoService.findByIntegranteProyectoProyectoIdAndIntegranteProyectoRolesModalidadId(idProyecto, rolesModalidadId);
-        if (lIntegranteProyectoDTO != null) {
+        // Un proyecto puede no tener asesor designado todavia (p. ej. la propuesta
+        // recien creada, antes de que el CIECYT lo asigne). Antes se hacia get(0)
+        // sobre una lista vacia y el endpoint respondia 500.
+        if (lIntegranteProyectoDTO != null && !lIntegranteProyectoDTO.isEmpty()) {
             integranteProyectoDTO = lIntegranteProyectoDTO.get(0);
         }
         Long integranteProyectoId = integranteProyectoDTO.getIntegranteProyectoUserId();

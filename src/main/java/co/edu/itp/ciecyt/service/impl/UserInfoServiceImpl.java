@@ -145,6 +145,7 @@ public class UserInfoServiceImpl implements UserInfoService {
             String nameFile = FileUtils.buildFileName( dto.getId(), ext );
 
             //FileUtils.writeByteArrayToFile(announcementDir.resolve(nameFile), file );
+            Files.createDirectories(userDir);
             Files.write(userDir.resolve(nameFile), file, StandardOpenOption.CREATE);
             //Asigna el nombre el archivo si se pudo crear el archivo cargado
             fileName = nameFile;

@@ -23,7 +23,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
@@ -199,8 +198,13 @@ public class IntegranteProyectoResource {
      * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
     @DeleteMapping("/integrante-proyectos/{id}")
-    @PreAuthorize("hasAnyRole('ADMIN')")
     public ResponseEntity<Void> deleteIntegranteProyecto(@PathVariable Long id) {
+        IntegranteProyectoDTO actual = integridadDe(id);
+        if (actual == null || !autorizacion.puedeDesignarIntegrantesDe(
+                actual.getIntegranteProyectoProyectoId(),
+                actual.getIntegranteProyectoRolesModalidadId())) {
+            throw new AccessDeniedException("No puede retirar los integrantes de este proyecto");
+        }
         log.debug("REST request to delete IntegranteProyecto : {}", id);
         integranteProyectoService.delete(id);
         return ResponseEntity.noContent().headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id.toString())).build();

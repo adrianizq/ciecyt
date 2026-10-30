@@ -199,12 +199,16 @@ public class UserService {
         // El admin le entrega una clave aleatoria generada por el sistema: el usuario debe
         // cambiarla al iniciar sesion, antes de seguir navegando.
         user.setNeedsPasswordChange(true);
+        Set<Authority> authorities = new HashSet<>();
         if (userDTO.getAuthorities() != null) {
-            Set<Authority> authorities = userDTO.getAuthorities().stream()
+            authorities = userDTO.getAuthorities().stream()
                 .map(authorityRepository::findById).filter(Optional::isPresent)
                 .map(Optional::get).collect(Collectors.toSet());
-            user.setAuthorities(authorities);
         }
+        // ROLE_USER es el rol base obligatorio: da acceso a /account/password y /account/settings
+        // y evita que el usuario quede bloqueado. Los roles de negocio se suman a este, no lo reemplazan.
+        authorityRepository.findById(AuthoritiesConstants.USER).ifPresent(authorities::add);
+        user.setAuthorities(authorities);
 
         User u = userRepository.save(user);
         this.clearUserCaches(user);
@@ -280,6 +284,8 @@ public class UserService {
                     .filter(Optional::isPresent)
                     .map(Optional::get)
                     .forEach(managedAuthorities::add);
+                // ROLE_USER es el rol base obligatorio; se asegura aunque el formulario no lo envie.
+                authorityRepository.findById(AuthoritiesConstants.USER).ifPresent(managedAuthorities::add);
                 this.clearUserCaches(user);
                 log.debug("Changed Information for User: {}", user);
 

@@ -382,8 +382,14 @@ public class ProyectoAutorizacionService {
 
         // El estudiante escoge a su asesor y avisa al CIECYT para que la designe formalmente.
         // Escoger el jurado o hacerlo en otra modalidad no es eleccion del estudiante.
-        if (esParticipante(proyecto)) {
-            return Long.valueOf(MODALIDAD_TESIS).equals(modalidad) && "ROLE_ASESOR".equals(autoridad);
+        if (esParticipante(proyecto) && Long.valueOf(MODALIDAD_TESIS).equals(modalidad)) {
+            // En la tesis colectiva (Acuerdo 025, art. 7 par. 1) el propio estudiante agrega o
+            // retira a su companero del cargo Estudiante. Ningun otro participante designa
+            // estudiantes, y el asesor sigue siendo elegible por el estudiante.
+            if ("ROLE_ESTUDIANTE".equals(autoridad)) {
+                return SecurityUtils.isCurrentUserInRole("ROLE_ESTUDIANTE");
+            }
+            return "ROLE_ASESOR".equals(autoridad);
         }
         return false;
     }

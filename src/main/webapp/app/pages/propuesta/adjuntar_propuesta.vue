@@ -55,14 +55,31 @@
           </div>
         </div>
 
+        <div v-if="mensajeExito" class="alert alert-success" role="alert">{{ mensajeExito }}</div>
+        <div v-if="errorGuardado" class="alert alert-danger" role="alert">{{ errorGuardado }}</div>
+
         <div>
           <button type="button" id="cancel-save" class="btn btn-secondary" v-on:click="previousState()">
             <font-awesome-icon icon="ban"></font-awesome-icon>&nbsp;<span v-text="$t('entity.action.cancel')"></span>
           </button>
 
-          <button type="submit" id="save-entity" class="btn btn-primary" :disabled="isDisabled || isSaving">
-            <font-awesome-icon icon="save"></font-awesome-icon>&nbsp;<span>Enviar</span>
+          <button
+            v-if="!adjuntoProyectoFase.id || adjuntoProyectoFase.archivo"
+            type="submit"
+            id="save-entity"
+            class="btn btn-primary"
+            :disabled="isDisabled || isSaving"
+          >
+            <font-awesome-icon icon="save"></font-awesome-icon>&nbsp;<span>Guardar adjunto</span>
           </button>
+
+          <router-link
+            v-if="adjuntoProyectoFase.id && !adjuntoProyectoFase.archivo"
+            :to="{ name: 'PropuestaEnviarPropuestaView', params: { proyectoId: proyId } }"
+            class="btn btn-primary"
+          >
+            Continuar a Enviar Propuesta
+          </router-link>
         </div>
       </form>
     </div>
@@ -138,6 +155,8 @@ export default class EnviarPropuesta extends mixins(JhiDataUtils) {
   public proyecto: IProyecto = new Proyecto();
   public proyId: string = null;
   public isSaving = false;
+  public mensajeExito: string | null = null;
+  public errorGuardado: string | null = null;
   public modalidadId: any;
 
   descargar() {
@@ -148,19 +167,26 @@ export default class EnviarPropuesta extends mixins(JhiDataUtils) {
       if (!window.confirm('¿Está seguro de que desea eliminar este archivo?')) {
         return;
       }
+      this.errorGuardado = null;
       this.adjuntoProyectoFaseService()
       .delete(this.adjuntoProyectoFase.id)
         .then(() => {
+          this.mensajeExito = 'Archivo eliminado. Puede cargar uno nuevo.';
           this.alertService().showAlert('El archivo se eliminó correctamente.', 'success');
           this.initRelationships();
         })
         .catch(err => {
-          this.alertService().showHttpError(null, err);
+          this.errorGuardado = this.mensajeDeError(err);
         });
     }
 
   asignarData(event, entity, field, isImage) {
-    var fileData = event.target.files[0];
+    const fileData = event && event.target && event.target.files ? event.target.files[0] : null;
+    if (!fileData) {
+      return;
+    }
+    this.mensajeExito = null;
+    this.errorGuardado = null;
     this.adjuntoProyectoFase.nombreArchivoOriginal = fileData.name;
 
     this.setFileData(event, entity, field, isImage);
@@ -193,6 +219,8 @@ export default class EnviarPropuesta extends mixins(JhiDataUtils) {
       this.alertService().showAlert('Debe seleccionar un archivo', 'warning');
       return;
     }
+    this.mensajeExito = null;
+    this.errorGuardado = null;
     this.isSaving = true;
 
     this.adjuntoProyectoFase.proyectoFaseProyectoId = this.proyecto.id;
@@ -205,28 +233,35 @@ export default class EnviarPropuesta extends mixins(JhiDataUtils) {
         .update(this.adjuntoProyectoFase)
         .then(param => {
           this.isSaving = false;
+          this.mensajeExito = 'Adjunto actualizado correctamente.';
           const message = this.$t('ciecytApp.adjuntoProyectoFase.updated', { param: param.id });
           this.alertService().showAlert(message, 'info');
           this.initRelationships();
         })
         .catch(err => {
           this.isSaving = false;
-          this.alertService().showHttpError(null, err);
+          this.errorGuardado = this.mensajeDeError(err);
         });
     } else {
       this.adjuntoProyectoFaseService()
         .create(this.adjuntoProyectoFase)
         .then(param => {
           this.isSaving = false;
+          this.mensajeExito = 'Archivo cargado correctamente. Ya puede continuar a Enviar Propuesta.';
           const message = this.$t('ciecytApp.adjuntoProyectoFase.created', { param: param.id });
           this.alertService().showAlert(message, 'success');
           this.initRelationships();
         })
         .catch(err => {
           this.isSaving = false;
-          this.alertService().showHttpError(null, err);
+          this.errorGuardado = this.mensajeDeError(err);
         });
     }
+  }
+
+  private mensajeDeError(err: any): string {
+    const detalle = err && err.response && err.response.data ? err.response.data.detail || err.response.data.title : null;
+    return detalle ? 'No se pudo guardar el adjunto: ' + detalle : 'No se pudo guardar el adjunto. Intente de nuevo.';
   }
 
   async initRelationships() {
@@ -268,7 +303,7 @@ export default class EnviarPropuesta extends mixins(JhiDataUtils) {
   }
 
   get isDisabled() {
-    return !this.adjuntoProyectoFase.archivo && !this.adjuntoProyectoFase.file;
+    return !this.adjuntoProyectoFase.archivo;
   }
 }
 </script>

@@ -153,6 +153,7 @@ public class AdjuntoProyectoFaseServiceImpl implements AdjuntoProyectoFaseServic
             String nameFile = FileUtils.buildFileName(entity.getId(), ext);
 
             //FileUtils.writeByteArrayToFile(announcementDir.resolve(nameFile), file );
+            Files.createDirectories(filesDir);
             Files.write(filesDir.resolve(nameFile), file, StandardOpenOption.CREATE);
 
             entity.setArchivo(nameFile);

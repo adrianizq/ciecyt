@@ -37,7 +37,7 @@
               <td>{{ proyecto.estado }}</td>
               <td class="text-right">
                 <div class="btn-group">
-                  <router-link v-if="proyecto.estado==='EN_ELABORACION_PROPUESTA'"
+                  <router-link v-if="puedeEnviarPropuesta(proyecto)"
                     :to="{ name: 'PropuestaEnviarPropuestaView', params: { proyectoId: proyecto.id } }"
                   >
                     <button type="submit" id="save-entity" class="btn btn-primary">
@@ -214,6 +214,15 @@ export default class Listado extends Vue {
     if (!seConsulto) {
       this.isFetching = false;
     }
+  }
+
+  /**
+   * Un proyecto recién creado nace en PREINSCRITA y no puede saltar directo a
+   * EN_REVISION_ASESOR: el flujo pasa primero por EN_ELABORACION_PROPUESTA. Ambos
+   * estados admiten enviar la propuesta (el envío encadena las dos transiciones).
+   */
+  public puedeEnviarPropuesta(proyecto: IProyecto): boolean {
+    return proyecto.estado === 'PREINSCRITA' || proyecto.estado === 'EN_ELABORACION_PROPUESTA';
   }
 
   public prepareRemove(instance: IProyecto): void {

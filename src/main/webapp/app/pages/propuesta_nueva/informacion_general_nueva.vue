@@ -96,7 +96,7 @@
                 value-field="id"
                 id="ciclo"
                 v-model="proyecto.proyectoCicloId"
-                @change="onCicloChange"
+                @update:model-value="onCicloChange"
                 :class="{
                   'is-invalid': v$.proyecto.proyectoCicloId.$error,
                   'is-valid': !v$.proyecto.proyectoCicloId.$invalid,
@@ -118,7 +118,7 @@
                 value-field="id"
                 id="modalidad"
                 v-model="proyecto.proyectoModalidadId"
-                @input="setModalidad"
+                @update:model-value="setModalidad"
                 :disabled="!proyecto.proyectoCicloId"
                 :class="{
                   'is-invalid': v$.proyecto.proyectoModalidadId.$error,

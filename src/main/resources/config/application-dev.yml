@@ -144,11 +144,11 @@ jhipster:
 application:
   upload:
     root:
-      dir: /home/adrian/ciecyt_backend_vue
+      dir: ${user.home}/ciecyt_backend_vue
     adjuntoproyectofase:
       dir: adjuntoproyectofases      
     adjuntoretroalimentacion:
       dir: adjuntoretroalimentacions     
-  files-path: /home/adrian/ciecyt_backend_vue
+  files-path: ${user.home}/ciecyt_backend_vue
 
 

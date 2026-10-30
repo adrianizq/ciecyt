@@ -146,7 +146,7 @@
                 value-field="id"
                 id="modalidad"
                 v-model="proyecto.proyectoModalidadId"
-                @input="setModalidad"
+                @update:model-value="setModalidad"
                 :class="{
                   'is-invalid': v$.proyecto.proyectoModalidadId.$error,
                   'is-valid': !v$.proyecto.proyectoModalidadId.$invalid,
@@ -167,7 +167,7 @@
                 value-field="id"
                 id="facultad"
                 v-model="proyecto.facultadId"
-                @input="setFacultad"
+                @update:model-value="setFacultad"
                 :class="{
                   'is-invalid': v$.proyecto.facultadId.$error,
                   'is-valid': !v$.proyecto.facultadId.$invalid,
@@ -219,7 +219,7 @@
                 value-field="departamento"
                 id="departamento"
                 v-model="proyecto.departamento"
-                @input="setMunicipios"
+                @update:model-value="setMunicipios"
               >
               </b-form-select>
             </div>

@@ -89,8 +89,12 @@ const store = config.initVueXStore();
 const alertService = new AlertService(store);
 const translationService = new TranslationService(store, i18n);
 const loginService = new LoginService();
-const accountService = new AccountService(store, translationService, router);
 
+// Los interceptores tienen que quedar instalados antes de crear el AccountService:
+// su constructor llama a retrieveAccount(), y ese primer GET /api/account se arma
+// de inmediato. Si el interceptor se registraba después, la petición salía sin el
+// header Authorization y respondía 401, mostrando "sesión expirada" con el token
+// aún vigente (p. ej. al recargar la página con la sesión activa).
 // Antes esto solo escribia un console.log en la consola del navegador: la sesion
 // caducada seguia pareciendo activa y un 403 no mostraba nada al usuario.
 setupAxiosInterceptors(status => {
@@ -108,6 +112,8 @@ setupAxiosInterceptors(status => {
   }
   alertService.showAlert('No tiene permisos para realizar esta acción.', 'danger');
 });
+
+const accountService = new AccountService(store, translationService, router);
 
 // Muchos .then() del frontend no tenian .catch(): el fallo solo aparecia en la
 // consola y al usuario no le llegaba nada. Con esto cualquier peticion HTTP que

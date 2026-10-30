@@ -37,7 +37,18 @@
               <td>{{ proyecto.proyectoModalidadModalidad }}</td>
               <!-- Tesis-->
               <td class="text-right">
-                <div class="btn-group">
+                <!-- Propuesta diligenciada: enviarla al asesor (puede nacer en PREINSCRITA) -->
+                <div class="btn-group" v-if="puedeEnviarPropuesta(proyecto)">
+                  <router-link
+                    :to="{ name: 'PropuestaEnviarPropuestaView', params: { proyectoId: proyecto.id } }"
+                  >
+                    <button type="button" id="enviar-entity" class="btn btn-primary">
+                        <font-awesome-icon icon="paper-plane"></font-awesome-icon>&nbsp;<span>Enviar propuesta</span>
+                    </button>
+                  </router-link>
+                </div>
+                <!-- Proyecto ya viable: continuar en la fase de proyecto -->
+                <div class="btn-group" v-if="proyecto.viabilidad=='VIABLE'">
                   <router-link
                     :to="{ name: 'ProyectoElementosEditlView', params: { proyectoId: proyecto.id } }"
                   >
@@ -45,6 +56,14 @@
                     <!--<button type="submit" id="save-entity"   class="btn btn-info" > -->
                         <font-awesome-icon icon="pencil-alt"></font-awesome-icon>&nbsp;<span v-text="$t('entity.action.edit')"></span>
    
+                    </button>
+                  </router-link>
+                </div>
+                <!-- Propuesta en curso: retomar el asistente en el paso de informacion general -->
+                <div class="btn-group" v-if="proyecto.viabilidad!='VIABLE'">
+                  <router-link :to="rutaEdicion(proyecto)">
+                    <button type="button" id="continuar-entity" class="btn btn-primary">
+                        <font-awesome-icon icon="arrow-right"></font-awesome-icon>&nbsp;<span>Continuar</span>
                     </button>
                   </router-link>
                 </div>
@@ -227,6 +246,36 @@ export default class Listado extends Vue {
 
   public closeDialog(): void {
     (<any>this.$refs.removeEntity).hide();
+  }
+
+  /**
+   * Ruta del asistente para retomar una propuesta que aun no es viable. Se arma por
+   * modalidad para reapuntar al mismo wizard con el que se inicio el borrador
+   * (Acuerdo 25, art. 5): antes solo se ofrecia continuar cuando ya era viable, de
+   * modo que un borrador en elaboracion no se podia retomar desde "Mis propuestas".
+   */
+  public rutaEdicion(proyecto: IProyecto): string {
+    const modalidad = proyecto.proyectoModalidadModalidad || '';
+    if (modalidad === 'Tesis') {
+      return '/propuesta/informacion-general/' + proyecto.id;
+    }
+    if (modalidad.includes('Pasantia')) {
+      return '/propuesta-pasantia/informacion-general-pasantia/' + proyecto.id;
+    }
+    if (modalidad === 'Diplomado') {
+      return '/propuesta-diplomado/informacion-general-diplomado/' + proyecto.id;
+    }
+    // Publicacion de Articulo y Especializacion usan el wizard "nueva".
+    return '/propuesta-nueva/informacion-general-nueva/' + proyecto.id;
+  }
+
+  /**
+   * Un proyecto recién creado nace en PREINSCRITA y no puede saltar directo a
+   * EN_REVISION_ASESOR: el flujo pasa primero por EN_ELABORACION_PROPUESTA. Ambos
+   * estados admiten enviar la propuesta (el envío encadena las dos transiciones).
+   */
+  public puedeEnviarPropuesta(proyecto: IProyecto): boolean {
+    return proyecto.estado === 'PREINSCRITA' || proyecto.estado === 'EN_ELABORACION_PROPUESTA';
   }
 
   public isSaving = false;

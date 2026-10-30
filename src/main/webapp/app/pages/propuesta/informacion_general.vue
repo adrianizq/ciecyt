@@ -92,7 +92,7 @@
                 value-field="id"
                 id="modalidad"
                 v-model="proyecto.proyectoModalidadId"
-                @input="setModalidad"
+                @update:model-value="setModalidad"
                 :class="{
                   'is-invalid': v$.proyecto.proyectoModalidadId.$error,
                   'is-valid': !v$.proyecto.proyectoModalidadId.$invalid,
@@ -112,7 +112,7 @@
                 value-field="id"
                 id="facultad"
                 v-model="proyecto.facultadId"
-                @input="setFacultad"
+                @update:model-value="setFacultad"
                 :class="{
                   'is-invalid': v$.proyecto.facultadId.$error,
                   'is-valid': !v$.proyecto.facultadId.$invalid,
@@ -158,7 +158,7 @@
                 value-field="id"
                 id="linea_investigacion"
                 v-model="proyecto.proyectoLineaInvestigacionId"
-                @input="setLinea"
+                @update:model-value="setLinea"
                 :class="{
                   'is-invalid': v$.proyecto.proyectoLineaInvestigacionId.$error,
                   'is-valid': !v$.proyecto.proyectoLineaInvestigacionId.$invalid,
@@ -181,7 +181,7 @@
                 value-field="id"
                 id="sub_linea_linea_investigacion"
                 v-model="proyecto.subLineaLineaInvestigacionId"
-                @input="setSubLinea"
+                @update:model-value="setSubLinea"
                 :class="{
                   'is-invalid': v$.proyecto.subLineaLineaInvestigacionId.$error,
                   'is-valid': !v$.proyecto.subLineaLineaInvestigacionId.$invalid,
@@ -196,7 +196,7 @@
 
             <!-- ADR   -->
 
-            <div class="mb-3 form-group" :class="{ 'form-group--error': v$.integranteProyecto.integranteProyectoUserId }">
+            <div class="mb-3 form-group">
               <label class="form-control-label" v-text="$t('ciecytApp.proyecto.asesor')" for="asesor"></label>
               <b-form-select
                 :options="users"
@@ -204,15 +204,13 @@
                 value-field="id"
                 id="proyecto-asesorId"
                 v-model="proyecto.asesorId"
-                @input="setAsesor"
-                :class="{
-                  'is-invalid': v$.proyecto.asesorId.$error,
-                  'is-valid': !v$.proyecto.asesorId.$invalid,
-                }"
-                disabled="true"
+                @update:model-value="setAsesor"
               >
               </b-form-select>
-              <div class="text-danger" v-if="!v$.proyecto.asesorId.required">Este campo es requerido</div>
+              <small class="form-text text-muted"
+                >Elija un asesor de la lista habilitada por la decanatura. El CIECYT hará la designación formal. No es
+                requisito para guardar.</small
+              >
             </div>
 
             <div class="mb-3 form-group">
@@ -358,8 +356,10 @@ import DocenteHabilitadoService from '@/entities/docente-habilitado/docente-habi
 import { IDocenteHabilitado } from '@/shared/model/docente-habilitado.model';
 import ProgramaService from '@/entities/programa/programa.service';
 import { IPrograma, Programa } from '@/shared/model/programa.model';
+import RolesModalidadService from '@/entities/roles-modalidad/roles-modalidad.service';
+import IntegranteProyectoService from '@/entities/integrante-proyecto/integrante-proyecto.service';
 
-import { numeric, required, minLength, maxLength, between, url } from '@vuelidate/validators';
+import { numeric, required, minLength, maxLength, url } from '@vuelidate/validators';
 import { id } from 'date-fns/esm/locale';
 import { IIntegranteProyecto, IntegranteProyecto } from '@/shared/model/integrante-proyecto.model';
 import { IInvestigacionTipo } from '@/shared/model/investigacion-tipo.model';
@@ -383,17 +383,11 @@ const validations: any = {
     proyectoProgramaId: { required },
     proyectoLineaInvestigacionId: { required },
     subLineaLineaInvestigacionId: { required },
-    asesorId: { required },
-
-    duracion: { required, between: between(3, 6) },
 
     referencias: { required },
     //contrapartidaPesos: {},
     //contrapartidaEspecie: {},
     //convocatoria: {},
-  },
-  integranteProyecto: {
-    integranteProyectoUserId: { required, between: between(1, 100000000) },
   },
 };
 
@@ -420,6 +414,8 @@ export default class PropuestaInformacionGeneral extends Vue {
   @Inject private docenteHabilitadoService: () => DocenteHabilitadoService;
   @Inject private programaService: () => ProgramaService;
   @Inject private investigacionTipoService: () => InvestigacionTipoService;
+  @Inject private rolesModalidadService: () => RolesModalidadService;
+  @Inject private integranteProyectoService: () => IntegranteProyectoService;
 
   @Inject private grupoSemilleroService: () => GrupoSemilleroService;
   public grupoSemilleros: IGrupoSemillero[] = [];
@@ -459,7 +455,7 @@ export default class PropuestaInformacionGeneral extends Vue {
     });
   }
 
-  public save(accion: 'borrador' | 'continuar' = 'continuar'): void {
+  public async save(accion: 'borrador' | 'continuar' = 'continuar'): Promise<void> {
     this.v$.$touch();
     if (this.v$.$invalid) {
       this.submitStatus = 'ERROR';
@@ -470,49 +466,81 @@ export default class PropuestaInformacionGeneral extends Vue {
     this.submitStatus = 'PENDING';
     this.isSaving = true;
 
-    if (this.proyecto.id) {
-      this.proyectoService()
-        .updateProyecto(this.proyecto)
-        .then(param => {
-          this.isSaving = false;
-          if (accion === 'borrador') {
-            this.alertService().showAlert('Borrador guardado. Aún puedes continuar más tarde.', 'info');
-            return;
-          }
-          this.$router.push({ name: 'PropuestaIntegrantesView', params: { proyectoId: this.proyecto.id.toString() } });
-          const message = this.$t('ciecytApp.proyecto.updated', { param: param.id });
-          this.alertService().showAlert(message, 'info');
-        })
-        .catch(err => {
-          this.isSaving = false;
-          this.submitStatus = 'ERROR';
-          this.alertService().showHttpError(null, err);
-        });
-    } else {
-      this.proyectoService()
-        .createProyecto(this.proyecto)
-        .then(param => {
-          this.isSaving = false;
+    try {
+      const esNuevo = !this.proyecto.id;
+      const param = esNuevo
+        ? await this.proyectoService().createProyecto(this.proyecto)
+        : await this.proyectoService().updateProyecto(this.proyecto);
 
-          this.proyId = String(param.id);
-          this.proyecto.id = param.id;
+      if (esNuevo) {
+        this.proyId = String(param.id);
+        this.proyecto.id = param.id;
+      }
 
-          if (accion === 'borrador') {
-            this.alertService().showAlert('Borrador guardado. Aún puedes continuar más tarde.', 'info');
-            return;
-          }
+      // El asesor no es una columna del proyecto: se guarda como integrante con el cargo
+      // "Asesor". Se sincroniza aqui para que la eleccion del estudiante no se pierda al
+      // recargar y quede disponible para la designacion formal del CIECYT.
+      await this.sincronizarAsesor(param.id);
 
-          this.$router.push({ name: 'PropuestaIntegrantesView', params: { proyectoId: this.proyId } });
+      this.isSaving = false;
+      if (accion === 'borrador') {
+        if (esNuevo) {
+          // Al crear, la URL queda sin id y el menu lateral no habilita los demas pasos.
+          this.$router
+            .replace({ name: 'PropuestaInformacionGeneraEditlView', params: { proyectoId: this.proyId } })
+            .catch(() => undefined);
+        }
+        this.alertService().showAlert('Borrador guardado. Aún puedes continuar más tarde.', 'info');
+        return;
+      }
 
-          const message = 'Se ha creado un nuevo proyecto';
-          this.alertService().showAlert(message, 'success');
-        })
-        .catch(err => {
-          this.isSaving = false;
-          this.submitStatus = 'ERROR';
-          this.alertService().showHttpError(null, err);
-        });
+      this.$router.push({ name: 'PropuestaIntegrantesView', params: { proyectoId: param.id.toString() } });
+      const message = esNuevo ? 'Se ha creado un nuevo proyecto' : this.$t('ciecytApp.proyecto.updated', { param: param.id });
+      this.alertService().showAlert(message, esNuevo ? 'success' : 'info');
+    } catch (err) {
+      this.isSaving = false;
+      // Un error del servidor (permisos, asesor no habilitado, etc.) no significa que
+      // falten campos: se deja que el alert muestre el detalle y no se marca el formulario
+      // como incompleto.
+      this.alertService().showHttpError(null, err);
     }
+  }
+
+  /**
+   * Guarda la eleccion de asesor como integrante del proyecto con el cargo "Asesor".
+   * El endpoint valida que el docente este habilitado por la decanatura y que quien
+   * designa tenga permiso (el estudiante puede hacerlo en Tesis, Acuerdo 025).
+   */
+  private async sincronizarAsesor(proyectoId: number): Promise<void> {
+    const asesorId = this.proyecto.asesorId;
+    const modalidadId = this.proyecto.proyectoModalidadId;
+    if (!asesorId || !modalidadId) {
+      return;
+    }
+
+    const rolAsesor = await this.rolesModalidadService().findRolModalidad('Asesor', modalidadId);
+    if (!rolAsesor || !rolAsesor.id) {
+      return;
+    }
+
+    const res = await this.integranteProyectoService().retrieveAsesoresProyecto(proyectoId);
+    const asesores: IIntegranteProyecto[] = (res && res.data) || [];
+    if (asesores.some(integrante => integrante.integranteProyectoUserId === asesorId)) {
+      return;
+    }
+
+    if (asesores.length > 0) {
+      const designado = asesores[0];
+      designado.integranteProyectoUserId = asesorId;
+      await this.integranteProyectoService().update(designado);
+      return;
+    }
+
+    const nuevo = new IntegranteProyecto();
+    nuevo.integranteProyectoProyectoId = proyectoId;
+    nuevo.integranteProyectoRolesModalidadId = rolAsesor.id;
+    nuevo.integranteProyectoUserId = asesorId;
+    await this.integranteProyectoService().create(nuevo);
   }
 
   get LineasInvestigacion() {
@@ -573,6 +601,9 @@ export default class PropuestaInformacionGeneral extends Vue {
         .retrieveWithAsesor(this.proyId)
         .then(res => {
           this.proyecto = res.data;
+          // La lista de asesores depende de la facultad del proyecto, que solo se conoce
+          // cuando termina esta consulta.
+          this.cargarAsesoresDeLaFacultad();
         });
     }
 
@@ -610,6 +641,8 @@ export default class PropuestaInformacionGeneral extends Vue {
     this.iniciandoFacultad = false;
     this.submitStatus = 'ERROR';
     this.proyecto.facultadId = value;
+    // El padron de habilitados es por facultad: la eleccion anterior deja de ser valida.
+    this.proyecto.asesorId = null;
     this.cargarAsesoresDeLaFacultad();
   }
 
@@ -659,10 +692,41 @@ export default class PropuestaInformacionGeneral extends Vue {
             nombresApellidos: nombre ? nombre + ' (' + (u.login || '') + ')' : u.login,
           });
         });
+        this.agregarAsesorDesignadoFueraDelPadron();
       })
       .catch(err => {
         this.users = [];
+        this.agregarAsesorDesignadoFueraDelPadron();
       });
+  }
+
+  /**
+   * Un asesor ya designado puede no estar en el padron vigente (la habilitacion se renueva
+   * por semestre). Sin esta opcion el select quedaria vacio aunque el proyecto si tenga
+   * asesor, y al guardar se perderia la designacion.
+   */
+  private agregarAsesorDesignadoFueraDelPadron(): void {
+    const asesorId = this.proyecto && this.proyecto.asesorId;
+    const proyectoId = this.proyId;
+    if (!asesorId || !proyectoId || this.users.some(option => option.id === asesorId)) {
+      return;
+    }
+    this.integranteProyectoService()
+      .retrieveAsesoresProyecto(Number(proyectoId))
+      .then(res => {
+        const designado = (res.data || []).find(i => i.integranteProyectoUserId === asesorId);
+        if (!designado || this.users.some(option => option.id === asesorId)) {
+          return;
+        }
+        const nombre = `${designado.integranteProyectoUserFirstName || ''} ${
+          designado.integranteProyectoUserLastName || ''
+        }`.trim();
+        this.users.push({
+          id: asesorId,
+          nombresApellidos: (nombre || designado.integranteProyectoUserLogin || 'Asesor designado') + ' (ya designado)',
+        } as any);
+      })
+      .catch(() => undefined);
   }
 }
 </script>

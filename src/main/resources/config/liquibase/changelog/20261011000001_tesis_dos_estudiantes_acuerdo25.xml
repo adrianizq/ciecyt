@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.9.xsd">
+
+    <!--
+        Acuerdo 025 (deroga el Acuerdo 029), art. 7 par. 1: la tesis puede ser
+        individual o colectiva, con un maximo de dos (2) estudiantes.
+
+        El catalogo de roles_modalidad sembraba el cargo Estudiante de la modalidad
+        Tesis (9004) con cantidad = 1, lo que impedia registrar a un companero. Este
+        changeset corrige el tope a 2. La fila original (id 9130) se creo en
+        20260724000000_added_modalidades_configuracion.xml y no se toca alli porque
+        ese changeset ya esta aplicado.
+    -->
+    <changeSet id="20261011000001-1" author="ciecyt">
+        <preConditions onFail="MARK_RAN">
+            <tableExists tableName="roles_modalidad"/>
+            <sqlCheck expectedResult="1">
+                SELECT COUNT(*) FROM roles_modalidad WHERE id = 9130
+            </sqlCheck>
+        </preConditions>
+        <comment>Tesis (9004) admite hasta 2 estudiantes (Acuerdo 025, art. 7 par. 1)</comment>
+        <update tableName="roles_modalidad">
+            <column name="cantidad" valueNumeric="2"/>
+            <where>id = 9130</where>
+        </update>
+        <rollback>
+            <update tableName="roles_modalidad">
+                <column name="cantidad" valueNumeric="1"/>
+                <where>id = 9130</where>
+            </update>
+        </rollback>
+    </changeSet>
+
+</databaseChangeLog>
