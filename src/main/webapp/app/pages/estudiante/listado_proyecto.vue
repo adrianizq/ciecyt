@@ -37,13 +37,13 @@
               <td>{{ proyecto.proyectoModalidadModalidad }}</td>
               <!-- Tesis-->
               <td class="text-right">
-                <!-- Propuesta diligenciada: enviarla al asesor (puede nacer en PREINSCRITA) -->
+                <!-- Radicación de la propuesta ante el CIECYT / aval del asesor -->
                 <div class="btn-group" v-if="puedeEnviarPropuesta(proyecto)">
                   <router-link
                     :to="{ name: 'PropuestaEnviarPropuestaView', params: { proyectoId: proyecto.id } }"
                   >
                     <button type="button" id="enviar-entity" class="btn btn-primary">
-                        <font-awesome-icon icon="paper-plane"></font-awesome-icon>&nbsp;<span>Enviar propuesta</span>
+                        <font-awesome-icon icon="paper-plane"></font-awesome-icon>&nbsp;<span>{{ etiquetaEnviarPropuesta(proyecto) }}</span>
                     </button>
                   </router-link>
                 </div>
@@ -270,12 +270,33 @@ export default class Listado extends Vue {
   }
 
   /**
-   * Un proyecto recién creado nace en PREINSCRITA y no puede saltar directo a
-   * EN_REVISION_ASESOR: el flujo pasa primero por EN_ELABORACION_PROPUESTA. Ambos
-   * estados admiten enviar la propuesta (el envío encadena las dos transiciones).
+   * Estados en los que el estudiante debe entrar al asistente de radicación:
+   * borradores, documentación observada (para corregir y volver a radicar),
+   * habilitado por CIECYT (para solicitar el aval del asesor) y correcciones
+   * del asesor (para reenviar). El Acuerdo 25 exige radicar ante el CIECYT.
    */
   public puedeEnviarPropuesta(proyecto: IProyecto): boolean {
-    return proyecto.estado === 'PREINSCRITA' || proyecto.estado === 'EN_ELABORACION_PROPUESTA';
+    return (
+      proyecto.estado === 'PREINSCRITA' ||
+      proyecto.estado === 'EN_ELABORACION_PROPUESTA' ||
+      proyecto.estado === 'OBSERVACIONES_DOCUMENTACION' ||
+      proyecto.estado === 'HABILITADO' ||
+      proyecto.estado === 'CORRECCIONES_ASESOR' ||
+      proyecto.estado === 'CORRECCIONES_JURADO_PROPUESTA'
+    );
+  }
+
+  public etiquetaEnviarPropuesta(proyecto: IProyecto): string {
+    if (proyecto.estado === 'HABILITADO') {
+      return 'Solicitar aval';
+    }
+    if (proyecto.estado === 'CORRECCIONES_ASESOR') {
+      return 'Reenviar al asesor';
+    }
+    if (proyecto.estado === 'CORRECCIONES_JURADO_PROPUESTA') {
+      return 'Reenviar al jurado';
+    }
+    return 'Radicar propuesta';
   }
 
   public isSaving = false;

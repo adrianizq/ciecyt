@@ -116,29 +116,48 @@ Alternativos en la BD: `83591` (`PREINSCRITA`), `83641` (`PREINSCRITA`, estudian
 - En Integrantes: el creador queda fijo y puede agregar un segundo estudiante (Acuerdo 25, art. 7).
 - Guardar. **El proyecto nace en `PREINSCRITA`.**
 
-### Paso 2 — Estudiante envía la propuesta
+### Paso 2 — Estudiante radica la propuesta ante el CIECYT
 
-`Mis propuestas` y `Mis proyectos` muestran **Enviar propuesta** tanto en `PREINSCRITA`
-como en `EN_ELABORACION_PROPUESTA`. Como un proyecto recién creado nace en `PREINSCRITA`
-y el flujo no permite saltar directo a `EN_REVISION_ASESOR`, la pantalla
-`/propuesta/enviar_propuesta/:id` encadena las dos transiciones (95229 y 95230,
-`ROLE_ESTUDIANTE`) en una sola acción.
+`Mis propuestas` y `Mis proyectos` muestran **Radicar propuesta** en `PREINSCRITA`,
+`EN_ELABORACION_PROPUESTA` y `OBSERVACIONES_DOCUMENTACION`; **Solicitar aval** en
+`HABILITADO`; y **Reenviar al asesor** en `CORRECCIONES_ASESOR`. La pantalla
+`/propuesta/enviar_propuesta/:id` decide la acción según el estado del proyecto:
 
-Equivalente por API (dos llamadas, en orden):
+- Borrador u observada → `POST /solicitar-validacion-documental`
+  (`PREINSCRITA` 95200, `EN_ELABORACION_PROPUESTA` 95206 u `OBSERVACIONES_DOCUMENTACION`
+  95203 → `EN_VALIDACION_DOCUMENTAL`, `ROLE_ESTUDIANTE`).
+- `HABILITADO` → `EN_REVISION_ASESOR` (95205, `ROLE_ESTUDIANTE`), solicitud de aval.
+- `CORRECCIONES_ASESOR` → `EN_REVISION_ASESOR` (95209, `ROLE_ESTUDIANTE`).
+
+Equivalente por API (radicación):
 
 ```powershell
 $t = (Invoke-RestMethod -Uri 'http://localhost:8080/api/authenticate' -Method POST `
   -ContentType 'application/json' -Body '{"username":"69008257","password":"69008257"}').id_token
 $h = @{ Authorization = "Bearer $t" }
-Invoke-RestMethod -Uri 'http://localhost:8080/api/proyectos/83942/cambiar-estado' `
-  -Method POST -ContentType 'application/json' -Headers $h `
-  -Body '{"estado":"EN_ELABORACION_PROPUESTA","observacion":"inicio de elaboracion"}'
-Invoke-RestMethod -Uri 'http://localhost:8080/api/proyectos/83942/cambiar-estado' `
-  -Method POST -ContentType 'application/json' -Headers $h `
-  -Body '{"estado":"EN_REVISION_ASESOR","observacion":"envio al asesor"}'
+Invoke-RestMethod -Uri 'http://localhost:8080/api/proyectos/83942/solicitar-validacion-documental' `
+  -Method POST -Headers $h
 ```
 
-### Paso 3 — CIECYT confirma asesor y designa jurado
+### Paso 3 — CIECYT valida documentación y habilita
+
+- Ingresar como `prueba_ciecyt` / `admin`.
+- `Espacio para revisar las propuestas del Ciecyt` → proyecto → **Requisitos**.
+- Aprobar cada requisito obligatorio y, en el panel **Validación documental**, usar
+  **Habilitar propuesta** (`{aprobado:true}` → `HABILITADO`) u **Observar documentación**
+  (`{aprobado:false, observacion}` → `OBSERVACIONES_DOCUMENTACION`).
+- Equivalente por API:
+
+```powershell
+$h = @{ Authorization = "Bearer <token CIECYT>" }
+Invoke-RestMethod -Uri 'http://localhost:8080/api/proyectos/83942/validar-documentacion' `
+  -Method POST -ContentType 'application/json' -Headers $h -Body '{"aprobado":true}'
+```
+
+- Con el proyecto en `HABILITADO`, el estudiante entra a **Solicitar aval** y pasa a
+  `EN_REVISION_ASESOR`; en ese momento `enviado=true` y aparece **Asignar jurado**.
+
+### Paso 4 — CIECYT confirma asesor y designa jurado
 
 - Ingresar como `prueba_ciecyt` / `admin`.
 - `Espacio para revisar las propuestas del Ciecyt` → proyecto → **Asignar asesor** y
@@ -157,46 +176,48 @@ Invoke-RestMethod -Uri 'http://localhost:8080/api/integrante-proyectos' -Method 
   -Body '{"integranteProyectoProyectoId":83942,"integranteProyectoUserId":53001,"integranteProyectoRolesModalidadId":4542}'
 ```
 
-### Paso 4 — Asesor evalúa la propuesta
+### Paso 5 — Asesor evalúa la propuesta
 
 - Ingresar como `adrian` / `admin`.
 - `Espacio para revisar las propuestas a cargo` → el proyecto → **Evaluar**.
 - Guardar borrador = `CORRECCIONES_ASESOR`; Enviar = `EN_REVISION_JURADO_PROPUESTA`
   (para Tesis, que tiene jurado).
 
-### Paso 5 — Jurado evalúa la viabilidad
+### Paso 6 — Jurado evalúa la viabilidad
 
 - Ingresar como `juanfernandorevelo93` / `admin`.
 - `Evaluar la viabilidad de las propuestas y los proyectos` → **Viable** / **No viable** /
   **Pendente con correcciones** → `VIABLE` / `NO_VIABLE` / `CORRECCIONES_JURADO_PROPUESTA`.
 
-### Paso 6 — Estudiante elabora el proyecto
+### Paso 7 — Estudiante elabora el proyecto
 
 - `Mis propuestas` → con `VIABLE` aparece **Enviar proyecto** → `/proyectos/enviar-proyecto/:id`.
 - Deja el proyecto en `EN_REVISION_JURADO_PROYECTO`.
 
-### Paso 7 — Jurado evalúa el proyecto
+### Paso 8 — Jurado evalúa el proyecto
 
 - `Espacio para revisar los proyectos a cargo` → **Aprobado** → `LISTO_PARA_SUSTENTAR`.
 
-### Paso 8 — CIECYT programa y registra el acto público
+### Paso 9 — CIECYT programa y registra el acto público
 
 - `Espacio para revisar las propuestas del Ciecyt` → columna de acto público → **Programar**
   (requiere estado `LISTO_PARA_SUSTENTAR`) → **Registrar realizada**.
 
-### Paso 9 — Jurado evalúa la sustentación
+### Paso 10 — Jurado evalúa la sustentación
 
 - `Evaluar la Sustentación de los Proyectos` → `EN_EVALUACION_SUSTENTACION` →
   `NOTA_DEFINITIVA` (o `AJUSTES_SUSTENTACION`).
 
-### Paso 10 — CIECYT finaliza
+### Paso 11 — CIECYT finaliza
 
 - `NOTA_DEFINITIVA` → `FINALIZADO` (transition 95228, `ROLE_CIECYT`).
 
-## 6. Ruta alternativa de validación documental
+## 6. Ruta de radicación y validación documental (flujo principal)
 
-Es la ruta que empieza en `PREINSCRITA → EN_VALIDACION_DOCUMENTAL` (95200) en lugar de
-`EN_ELABORACION_PROPUESTA` (95229). Los requisitos generados para Tesis son 7:
+Es la ruta que usa la pantalla `/propuesta/enviar_propuesta/:id`: el estudiante radica
+(`PREINSCRITA`/`EN_ELABORACION_PROPUESTA`/`OBSERVACIONES_DOCUMENTACION → EN_VALIDACION_DOCUMENTAL`,
+95200/95206/95203), el CIECYT valida y habilita, y luego el estudiante solicita el aval
+(`HABILITADO → EN_REVISION_ASESOR`, 95205). Los requisitos generados para Tesis son 7:
 
 1. Avance minimo del 75% del trabajo de grado (tipo CAMPO, se entrega un dato numérico)
 2. Certificado de estudiante activo (DOCUMENTO)
@@ -206,7 +227,7 @@ Es la ruta que empieza en `PREINSCRITA → EN_VALIDACION_DOCUMENTAL` (95200) en 
 6. Recibo de pago de la opcion de grado (DOCUMENTO)
 7. Record academico (DOCUMENTO)
 
-Endpoints (no hay wiring en el frontend; se invocan por API):
+Endpoints (ya usados por `/propuesta/enviar_propuesta/:id` y por el modal de requisitos del CIECYT):
 
 ```powershell
 # Estudiante: PREINSCRITA -> EN_VALIDACION_DOCUMENTAL (genera los 7 requisitos)
@@ -228,8 +249,8 @@ POST /api/proyectos/{id}/validar-documentacion
   body: {"aprobado":false,"observacion":"falta certificado"}   # -> OBSERVACIONES_DOCUMENTACION
 ```
 
-Con el proyecto en `HABILITADO`, el estudiante puede ir a `EN_ELABORACION_PROPUESTA` (95204)
-o directo a `EN_REVISION_ASESOR` (95205).
+Con el proyecto en `HABILITADO`, el estudiante solicita el aval del asesor y pasa a
+`EN_REVISION_ASESOR` (95205).
 
 ## 7. Reglas de autorización que conviene conocer
 

@@ -27,6 +27,7 @@ import '../content/scss/vendor.scss';
 import 'bootstrap-vue-next/dist/bootstrap-vue-next.css';
 import '../content/scss/global.scss';
 import AlertService from '@/shared/alert/alert.service';
+import NotificacionService from '@/shared/alert/notificacion.service';
 import TranslationService from '@/locale/translation.service';
 import ConfigurationService from '@/admin/configuration/configuration.service';
 
@@ -147,6 +148,7 @@ const provide: Record<string, unknown> = {
   logsService: () => new LogsService(),
   metricsService: () => new MetricsService(),
   alertService: () => alertService,
+  notificacionService: () => new NotificacionService(),
   translationService: () => translationService,
   proyectoService: () => new ProyectoService(),
   docenteHabilitadoService: () => new DocenteHabilitadoService(),

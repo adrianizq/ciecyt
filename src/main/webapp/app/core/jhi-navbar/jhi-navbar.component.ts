@@ -6,8 +6,11 @@ import TranslationService from '@/locale/translation.service';
 
 import MenuService from '@/entities/menu/menu.service';
 import { IMenu, MenuBar } from '@/shared/model/menu.model';
+import NotificacionBell from '@/core/notificaciones/notificacion-bell.vue';
 
-@Component
+@Component({
+  components: { NotificacionBell },
+})
 export default class JhiNavbar extends Vue {
   @Inject
   private loginService: () => LoginService;

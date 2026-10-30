@@ -204,6 +204,32 @@ export default class ProyectoService {
     });
   }
 
+  public solicitarValidacionDocumental(id: number): Promise<IProyecto> {
+    return new Promise<IProyecto>((resolve, reject) => {
+      axios
+        .post(`${baseApiUrl}/${id}/solicitar-validacion-documental`)
+        .then(res => {
+          resolve(res.data);
+        })
+        .catch(err => {
+          reject(err);
+        });
+    });
+  }
+
+  public validarDocumentacion(id: number, aprobado: boolean, observacion?: string): Promise<IProyecto> {
+    return new Promise<IProyecto>((resolve, reject) => {
+      axios
+        .post(`${baseApiUrl}/${id}/validar-documentacion`, { aprobado, observacion })
+        .then(res => {
+          resolve(res.data);
+        })
+        .catch(err => {
+          reject(err);
+        });
+    });
+  }
+
   public programarActo(id: number, fecha: string): Promise<IProyecto> {
     return new Promise<IProyecto>((resolve, reject) => {
       axios

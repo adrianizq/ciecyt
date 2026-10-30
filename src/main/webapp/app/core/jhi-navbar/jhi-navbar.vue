@@ -47,6 +47,7 @@
                         </template>
                     </b-nav-item-dropdown>
                 </template>
+                <notificacion-bell></notificacion-bell>
             </b-navbar-nav>
         </b-collapse>
     </b-navbar>

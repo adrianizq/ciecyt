@@ -337,6 +337,41 @@
                     </button>
                 </div>
             </div>
+
+            <div
+                v-if="proyectoRequisitos && proyectoRequisitos.estado === 'EN_VALIDACION_DOCUMENTAL'"
+                class="border rounded p-3 mt-3 bg-light"
+                data-testid="validacion-documental">
+                <h5 class="mb-2">Validación documental</h5>
+                <p class="small text-muted mb-2">
+                    Cuando todos los requisitos obligatorios estén aprobados, habilite la propuesta para que el
+                    estudiante solicite el aval del asesor. Si falta algo, registre la observación y devuélvala.
+                </p>
+                <label class="small mb-0" for="observacion-documentacion">
+                    Observación general (obligatoria al observar)
+                </label>
+                <textarea
+                    id="observacion-documentacion"
+                    class="form-control form-control-sm mb-2"
+                    rows="2"
+                    v-model="observacionDocumentacion"></textarea>
+                <div class="btn-group">
+                    <button
+                        type="button"
+                        class="btn btn-success btn-sm"
+                        :disabled="guardandoDocumentacion"
+                        @click="validarDocumentacionProyecto(true)">
+                        Habilitar propuesta
+                    </button>
+                    <button
+                        type="button"
+                        class="btn btn-warning btn-sm"
+                        :disabled="guardandoDocumentacion"
+                        @click="validarDocumentacionProyecto(false)">
+                        Observar documentación
+                    </button>
+                </div>
+            </div>
         </b-modal>
     </div>
     </div>
@@ -439,6 +474,8 @@ export default class ListadoCiecyt extends Vue {
   public observacionesRequisito: { [id: number]: string } = {};
   public cargandoRequisitos = false;
   public guardandoRequisito = false;
+  public guardandoDocumentacion = false;
+  public observacionDocumentacion = '';
   public dismissCountDown: number = this.$store.getters.dismissCountDown;
   public dismissSecs: number = this.$store.getters.dismissSecs;
   public alertType: string = this.$store.getters.alertType;
@@ -515,6 +552,8 @@ public abrirRequisitos(proyecto: IProyecto): void {
   this.proyectoRequisitos = proyecto;
   this.requisitos = [];
   this.observacionesRequisito = {};
+  this.observacionDocumentacion = '';
+  this.guardandoDocumentacion = false;
   this.cargandoRequisitos = true;
   (this.$bvModal as any).show('modal-requisitos');
 
@@ -536,6 +575,7 @@ public abrirRequisitos(proyecto: IProyecto): void {
 public cerrarRequisitos(): void {
     this.proyectoRequisitos = null;
     this.requisitos = [];
+    this.observacionDocumentacion = '';
   }
 
   /**
@@ -574,6 +614,36 @@ public validarRequisito(requisito: IRequisitoProyecto, aprobado: boolean): void 
     .catch(err => {
       this.guardandoRequisito = false;
       this.alertService().showAlert('No se pudo validar el requisito', 'danger');
+    });
+}
+
+public validarDocumentacionProyecto(aprobado: boolean): void {
+  if (!this.proyectoRequisitos) {
+    return;
+  }
+  if (!aprobado && !this.observacionDocumentacion) {
+    this.alertService().showAlert('Indique la observación de la documentación', 'warning');
+    return;
+  }
+
+  this.guardandoDocumentacion = true;
+  this.proyectoService()
+    .validarDocumentacion(this.proyectoRequisitos.id, aprobado, this.observacionDocumentacion)
+    .then(() => {
+      this.guardandoDocumentacion = false;
+      (this.$bvModal as any).hide('modal-requisitos');
+      this.alertService().showAlert(
+        aprobado
+          ? 'Documentación aprobada: propuesta habilitada para solicitar el aval del asesor'
+          : 'Documentación observada: se notificó al estudiante para que corrija y vuelva a radicar',
+        'success'
+      );
+      this.retrieveAllProyectos();
+    })
+    .catch(err => {
+      this.guardandoDocumentacion = false;
+      const detalle = err && err.response && err.response.data ? err.response.data.detail : null;
+      this.alertService().showAlert(detalle || 'No se pudo validar la documentación', 'danger');
     });
 }
 
