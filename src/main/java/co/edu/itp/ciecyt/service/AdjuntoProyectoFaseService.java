@@ -64,4 +64,6 @@ public interface AdjuntoProyectoFaseService {
 
     List<AdjuntoProyectoFaseDTO> findByProyectoFaseProyectoIdAndAdjuntoProyectoFaseFaseId(Long idProyecto, Long idFase) throws Exception;
 
+    List<AdjuntoProyectoFaseDTO> findByProyectoId(Long idProyecto) throws Exception;
+
 }

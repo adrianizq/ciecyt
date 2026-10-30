@@ -1,6 +1,7 @@
 package co.edu.itp.ciecyt.service.dto;
 
 import java.io.Serializable;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZonedDateTime;
 import java.util.List;
@@ -82,6 +83,8 @@ public class ProyectoDTO implements Serializable {
     private LocalDate fechaInicioContinuidad;
 
     private LocalDate fechaSustentacionProyecto;
+
+    private Instant fechaUltimoCambio;
 
     private Integer periodosContinuidadUsados;
 
@@ -413,6 +416,14 @@ public class ProyectoDTO implements Serializable {
 
     public void setFechaSustentacionProyecto(LocalDate fechaSustentacionProyecto) {
         this.fechaSustentacionProyecto = fechaSustentacionProyecto;
+    }
+
+    public Instant getFechaUltimoCambio() {
+        return fechaUltimoCambio;
+    }
+
+    public void setFechaUltimoCambio(Instant fechaUltimoCambio) {
+        this.fechaUltimoCambio = fechaUltimoCambio;
     }
 
     public Integer getPeriodosContinuidadUsados() {

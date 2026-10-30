@@ -292,7 +292,7 @@ const ProyectoListadoJurado = () => import('../pages/viabilidad_propuesta/listad
 const ProyectoListadoSustentacion = () => import('../pages/viabilidad_propuesta/listado_sustentacion.vue');
 const PropuestaListadoAsesor = () => import('../pages/viabilidad_propuesta/listado_asesor.vue');
 const ProyectoListadoAsesor = () => import('../pages/viabilidad_propuesta/listado_asesor_proyecto.vue');
-const PropuestaListadoCiecyt = () => import('../pages/ciecyt/listado_ciecyt.vue');
+const PropuestaListadoCiecyt = () => import('../pages/ciecyt/bandeja_ciecyt.vue');
 const PropuestaEvaluar = () => import('../pages/viabilidad_propuesta/propuesta_evaluar.vue');
 const ProyectoElementos = () => import('../pages/proyectos/elementos.vue');
 //const ElementosSusentacion = () => import('../pages/proyectos/elementos_sustentacion.vue');

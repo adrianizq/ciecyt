@@ -14,4 +14,6 @@ import java.util.List;
 @Repository
 public interface AdjuntoProyectoFaseRepository extends JpaRepository<AdjuntoProyectoFase, Long> {
     List<AdjuntoProyectoFase> findByProyectoFaseProyectoIdAndAdjuntoProyectoFaseFaseId(Long idProyecto, Long idFase);
+
+    List<AdjuntoProyectoFase> findByProyectoFaseProyectoId(Long idProyecto);
 }

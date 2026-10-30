@@ -66,6 +66,7 @@ import InformacionPasantiaService from '@/entities/informacion-pasantia/informac
 import SolicitudService from '@/entities/solicitud/solicitud.service';
 import AdjuntoProyectoFaseService from '@/entities/adjunto-proyecto-fase/adjunto-proyecto-fase.service';
 import RequisitoProyectoService from '@/entities/requisito-proyecto/requisito-proyecto.service';
+import ProyectoHistorialEstadoService from '@/entities/proyecto-historial-estado/proyecto-historial-estado.service';
 import RetroalimentacionService from '@/entities/retroalimentacion/retroalimentacion.service';
 import AdjuntoRetroalimentacionService from '@/entities/adjunto-retroalimentacion/adjunto-retroalimentacion.service';
 import FichaTecnicaService from '@/entities/ficha-tecnica/ficha-tecnica.service';
@@ -186,6 +187,7 @@ const provide: Record<string, unknown> = {
   solicitudService: () => new SolicitudService(),
   adjuntoProyectoFaseService: () => new AdjuntoProyectoFaseService(),
   requisitoProyectoService: () => new RequisitoProyectoService(),
+  proyectoHistorialEstadoService: () => new ProyectoHistorialEstadoService(),
   retroalimentacionService: () => new RetroalimentacionService(),
   adjuntoRetroalimentacionService: () => new AdjuntoRetroalimentacionService(),
   fichaTecnicaService: () => new FichaTecnicaService(),

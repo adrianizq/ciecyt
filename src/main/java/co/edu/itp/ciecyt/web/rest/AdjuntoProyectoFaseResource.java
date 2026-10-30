@@ -221,6 +221,18 @@ public class AdjuntoProyectoFaseResource {
      * @param idFase the id of the adjuntoProyectoFaseDTO to retrieve.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the integranteProyectoDTO, or with status {@code 404 (Not Found)}.
      */
+    @GetMapping("/adjunto-proyecto-fases/proyecto/{proyectoId}")
+    @PreAuthorize("@proyectoAutorizacionService.puedeLeer(#proyectoId)")
+    public ResponseEntity<List<AdjuntoProyectoFaseDTO>> getAdjuntosByProyecto(@PathVariable Long proyectoId) {
+        log.debug("REST request to get AdjuntoProyectoFase by Proyecto : {}", proyectoId);
+        try {
+            return ResponseEntity.ok(adjuntoProyectoFaseService.findByProyectoId(proyectoId));
+        } catch (Exception e) {
+            log.error("Error consultando adjuntos del proyecto {}", proyectoId, e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
     @GetMapping("/adjunto-proyecto-fases/traer/{idProyecto}/{idFase}")
     public ResponseEntity<?> findByProyectoFaseProyectoIdAndAdjuntoProyectoFaseFaseId(
         @PathVariable Long idProyecto,

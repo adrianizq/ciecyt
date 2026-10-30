@@ -80,6 +80,17 @@ export default class AdjuntoProyectoFaseService {
     });
   }
 
+  public findByProyecto(proyectoId: number): Promise<IAdjuntoProyectoFase[]> {
+    return new Promise<IAdjuntoProyectoFase[]>((resolve, reject) => {
+      axios
+        .get(`${baseApiUrl}/proyecto/${proyectoId}`)
+        .then(res => {
+          resolve(res.data);
+        })
+        .catch(reject);
+    });
+  }
+
   public findAdjuntoProyectoFase(idProyecto?: any, idFase?: any): Promise<any> {
     return new Promise<any>((resolve, reject) => {
       axios

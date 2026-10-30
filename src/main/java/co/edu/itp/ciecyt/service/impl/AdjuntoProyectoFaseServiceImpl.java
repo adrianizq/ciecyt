@@ -219,4 +219,15 @@ public class AdjuntoProyectoFaseServiceImpl implements AdjuntoProyectoFaseServic
         }
         return listDTO;
     }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<AdjuntoProyectoFaseDTO> findByProyectoId(Long idProyecto) throws Exception {
+        List<AdjuntoProyectoFase> list = adjuntoProyectoFaseRepository.findByProyectoFaseProyectoId(idProyecto);
+        List<AdjuntoProyectoFaseDTO> listDTO = new ArrayList<>();
+        for (AdjuntoProyectoFase adjunto : list) {
+            listDTO.add(adjuntoProyectoFaseMapper.toDto(adjunto));
+        }
+        return listDTO;
+    }
 }

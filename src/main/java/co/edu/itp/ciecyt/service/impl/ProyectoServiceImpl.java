@@ -41,8 +41,10 @@ import jakarta.persistence.EntityNotFoundException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.EnumSet;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
@@ -1175,7 +1177,7 @@ public class ProyectoServiceImpl implements ProyectoService {
         if (facultades.isEmpty()) {
             throw new AccessDeniedException("No tiene alcance para listar proyectos");
         }
-        return aDtoConIntegrantes(proyectoRepository.findByFacultadIdIn(facultades));
+        return aDtoConIntegrantes(ordenarPorUltimoCambio(proyectoRepository.findByFacultadIdIn(facultades)));
     }
 
     /**ADR
@@ -1188,7 +1190,46 @@ public class ProyectoServiceImpl implements ProyectoService {
     @Transactional(readOnly = true)
     public List<ProyectoDTO> findAllProyectosIntegrantes() throws Exception {
         log.debug("Request to get all Proyectos");
-        return aDtoConIntegrantes(proyectoRepository.findAll());
+        return aDtoConIntegrantes(ordenarPorUltimoCambio(proyectoRepository.findAll()));
+    }
+
+    /**
+     * Ordena los proyectos como una bandeja de entrada: primero el que tuvo
+     * actividad mas reciente. La fecha se toma del historial de estados, que es
+     * donde queda registrada la radicacion y cada cambio posterior. Los proyectos
+     * sin historial van al final, ordenados por id descendente.
+     */
+    private List<Proyecto> ordenarPorUltimoCambio(List<Proyecto> proyectos) {
+        if (proyectos == null || proyectos.size() < 2) {
+            return proyectos;
+        }
+        Map<Long, Instant> ultimoCambio = ultimosCambiosPorProyecto();
+        proyectos.sort((a, b) -> {
+            Instant fechaA = ultimoCambio.get(a.getId());
+            Instant fechaB = ultimoCambio.get(b.getId());
+            if (fechaA == null && fechaB == null) {
+                return Long.compare(b.getId(), a.getId());
+            }
+            if (fechaA == null) {
+                return 1;
+            }
+            if (fechaB == null) {
+                return -1;
+            }
+            int comparacion = fechaB.compareTo(fechaA);
+            return comparacion != 0 ? comparacion : Long.compare(b.getId(), a.getId());
+        });
+        return proyectos;
+    }
+
+    private Map<Long, Instant> ultimosCambiosPorProyecto() {
+        Map<Long, Instant> ultimoCambio = new HashMap<>();
+        for (ProyectoHistorialEstado historial : proyectoHistorialEstadoRepository.findAllOrderByFechaCambioDesc()) {
+            if (historial.getProyecto() != null && historial.getProyecto().getId() != null) {
+                ultimoCambio.putIfAbsent(historial.getProyecto().getId(), historial.getFechaCambio());
+            }
+        }
+        return ultimoCambio;
     }
 
     /**
@@ -1196,10 +1237,12 @@ public class ProyectoServiceImpl implements ProyectoService {
      * o asesor, que es lo que consume la pantalla de seguimiento.
      */
     private List<ProyectoDTO> aDtoConIntegrantes(List<Proyecto> lProyectos) throws Exception {
+        Map<Long, Instant> ultimoCambio = ultimosCambiosPorProyecto();
         List<ProyectoDTO> proyectoDTOList = new ArrayList<ProyectoDTO>();
         for (Proyecto proyecto : lProyectos) {
             ProyectoDTO dto;
             dto = proyectoMapper.toDto(proyecto);
+            dto.setFechaUltimoCambio(ultimoCambio.get(proyecto.getId()));
             dto.setTieneJurado(false);
             dto.setTieneAsesor(false);
             List<IntegranteProyectoDTO> lIntegrantes = integranteProyectoService.findByIntegranteProyectoProyectoId(proyecto.getId());

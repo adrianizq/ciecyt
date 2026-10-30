@@ -16,4 +16,7 @@ public interface ProyectoHistorialEstadoRepository extends JpaRepository<Proyect
 
     @Query("SELECT h FROM ProyectoHistorialEstado h WHERE h.proyecto.id = :proyectoId ORDER BY h.fechaCambio DESC")
     List<ProyectoHistorialEstado> findByProyectoIdOrderByFechaCambioDesc(@Param("proyectoId") Long proyectoId);
+
+    @Query("SELECT h FROM ProyectoHistorialEstado h JOIN FETCH h.proyecto ORDER BY h.fechaCambio DESC")
+    List<ProyectoHistorialEstado> findAllOrderByFechaCambioDesc();
 }

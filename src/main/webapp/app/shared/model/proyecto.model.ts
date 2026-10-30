@@ -53,6 +53,7 @@ export interface IProyecto {
   sustentar?: boolean;
   fechaInicioContinuidad?: Date;
   fechaSustentacionProyecto?: Date;
+  fechaUltimoCambio?: Date;
   periodosContinuidadUsados?: number;
   continuidadPeriodoAdicional?: boolean;
   estadoContinuidad?: EnumEstadoContinuidad;
@@ -116,6 +117,7 @@ export class Proyecto implements IProyecto {
     public sustentar?: boolean,
     public fechaInicioContinuidad?: Date,
     public fechaSustentacionProyecto?: Date,
+    public fechaUltimoCambio?: Date,
     public periodosContinuidadUsados?: number,
     public continuidadPeriodoAdicional?: boolean,
     public estadoContinuidad?: EnumEstadoContinuidad
