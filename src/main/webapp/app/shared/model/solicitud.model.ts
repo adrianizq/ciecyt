@@ -6,6 +6,9 @@ export interface ISolicitud {
   fechaSolicitud?: Date;
   solicitudIntegranteProyectoIntegrante?: string;
   solicitudIntegranteProyectoId?: number;
+  proyectoId?: number;
+  proyectoTitulo?: string;
+  usuarioLogin?: string;
 }
 
 export class Solicitud implements ISolicitud {
@@ -16,7 +19,10 @@ export class Solicitud implements ISolicitud {
     public textoSolicitud?: string,
     public fechaSolicitud?: Date,
     public solicitudIntegranteProyectoIntegrante?: string,
-    public solicitudIntegranteProyectoId?: number
+    public solicitudIntegranteProyectoId?: number,
+    public proyectoId?: number,
+    public proyectoTitulo?: string,
+    public usuarioLogin?: string
   ) {
     this.estado = this.estado || false;
   }

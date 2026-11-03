@@ -12,6 +12,8 @@ const ChangePassword = () => import('../account/change-password/change-password.
 const Settings = () => import('../account/settings/settings.vue');
 const JhiUserManagementComponent = () => import('../admin/user-management/user-management.vue');
 const DecanoFacultadPage = () => import('../admin/decano-facultad/decano-facultad.vue');
+const ConfiguracionAcademica = () => import('../pages/admin/configuracion_academica.vue');
+const CiclosAdmin = () => import('../pages/admin/ciclos.vue');
 const JhiUserManagementViewComponent = () => import('../admin/user-management/user-management-view.vue');
 const JhiUserManagementEditComponent = () => import('../admin/user-management/user-management-edit.vue');
 const JhiConfigurationComponent = () => import('../admin/configuration/configuration.vue');
@@ -310,6 +312,9 @@ const PadronHabilitados = () => import('../pages/decanura/padron_habilitados.vue
 const RemisionPadron = () => import('../pages/decanura/remision_padron.vue');
 const ProyectosDecanura = () => import('../pages/decanura/proyectos_decanura.vue');
 const ConvocatoriasPasantia = () => import('../pages/pasantia/convocatorias_pasantia.vue');
+const SolicitudesCiecyt = () => import('../pages/ciecyt/solicitudes_ciecyt.vue');
+const PlazosCiecyt = () => import('../pages/ciecyt/plazos_ciecyt.vue');
+const AsesoresExternosCiecyt = () => import('../pages/ciecyt/asesores_externos_ciecyt.vue');
 
 const PropuestaInformacionGeneralNueva = () => import('../pages/propuesta_nueva/informacion_general_nueva.vue');
 const PropuestaIntegrantesNueva = () => import('../pages/propuesta_nueva/integrantes_nueva.vue');
@@ -379,6 +384,10 @@ const router = createRouter({
       meta: { authorities: ['ROLE_USER'] }
     },
     {
+      path: '/admin',
+      redirect: '/admin/configuracion-academica'
+    },
+    {
       path: '/admin/user-management',
       name: 'JhiUser',
       component: JhiUserManagementComponent,
@@ -406,6 +415,18 @@ const router = createRouter({
       path: '/admin/decano-facultad',
       name: 'DecanoFacultadPage',
       component: DecanoFacultadPage,
+      meta: { authorities: ['ROLE_ADMIN'] }
+    },
+    {
+      path: '/admin/configuracion-academica',
+      name: 'ConfiguracionAcademicaView',
+      component: ConfiguracionAcademica,
+      meta: { authorities: ['ROLE_ADMIN'] }
+    },
+    {
+      path: '/admin/ciclos',
+      name: 'CicloView',
+      component: CiclosAdmin,
       meta: { authorities: ['ROLE_ADMIN'] }
     },
     {
@@ -1179,6 +1200,24 @@ const router = createRouter({
       path: '/ciecyt/asignar-coordinador/:proyectoId',
       redirect: to => ({ path: `/ciecyt/asignar-coordinador/${to.params.proyectoId}/view` })
     },
+    {
+      path: '/ciecyt/solicitudes',
+      name: 'SolicitudesCiecytView',
+      component: SolicitudesCiecyt,
+      meta: { authorities: ['ROLE_CIECYT', 'ROLE_ADMIN'] }
+    },
+    {
+      path: '/ciecyt/plazos',
+      name: 'PlazosCiecytView',
+      component: PlazosCiecyt,
+      meta: { authorities: ['ROLE_CIECYT', 'ROLE_ADMIN'] }
+    },
+    {
+      path: '/ciecyt/asesores-externos',
+      name: 'AsesoresExternosCiecytView',
+      component: AsesoresExternosCiecyt,
+      meta: { authorities: ['ROLE_CIECYT', 'ROLE_ADMIN'] }
+    },
       /////////////////////////////////////////////////////
       {
         // La decanatura mantiene la lista de la que el CIECYT designa. El backend comprueba que
@@ -1417,7 +1456,7 @@ const router = createRouter({
       path: '/admin/aplicaciones',
       name: 'Menu',
       component: Menu,
-      meta: { authorities: ['ROLE_USER'] }
+      meta: { authorities: ['ROLE_ADMIN'] }
     },
     {
       path: '/entity/menu/new',

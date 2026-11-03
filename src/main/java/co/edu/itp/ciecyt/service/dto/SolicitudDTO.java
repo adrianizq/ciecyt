@@ -23,6 +23,12 @@ public class SolicitudDTO implements Serializable {
 
     private String solicitudIntegranteProyectoIntegrante;
 
+    private Long proyectoId;
+
+    private String proyectoTitulo;
+
+    private String usuarioLogin;
+
     public Long getId() {
         return id;
     }
@@ -77,6 +83,30 @@ public class SolicitudDTO implements Serializable {
 
     public void setSolicitudIntegranteProyectoIntegrante(String integranteProyectoIntegrante) {
         this.solicitudIntegranteProyectoIntegrante = integranteProyectoIntegrante;
+    }
+
+    public Long getProyectoId() {
+        return proyectoId;
+    }
+
+    public void setProyectoId(Long proyectoId) {
+        this.proyectoId = proyectoId;
+    }
+
+    public String getProyectoTitulo() {
+        return proyectoTitulo;
+    }
+
+    public void setProyectoTitulo(String proyectoTitulo) {
+        this.proyectoTitulo = proyectoTitulo;
+    }
+
+    public String getUsuarioLogin() {
+        return usuarioLogin;
+    }
+
+    public void setUsuarioLogin(String usuarioLogin) {
+        this.usuarioLogin = usuarioLogin;
     }
 
     @Override

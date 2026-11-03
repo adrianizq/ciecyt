@@ -2,19 +2,39 @@
   <div>
     <div class="d-flex flex-wrap justify-content-between align-items-start gap-2 mb-3">
       <div>
-        <h2 class="mb-1">Proyectos de mi facultad</h2>
+        <h2 class="mb-1">{{ esAdmin ? 'Proyectos por facultad' : 'Proyectos de mi facultad' }}</h2>
         <p class="text-muted mb-0">
-          Desde aquí la decanatura designa el asesor de pasantías y diplomado, y el jurado de la Pasantía Investigativa.
+          <template v-if="esAdmin">
+            Como administrador puede consultar y designar en todas las facultades; use el filtro para acotar.
+          </template>
+          <template v-else>
+            Desde aquí la decanatura designa el asesor de pasantías y diplomado, y el jurado de la Pasantía Investigativa.
+          </template>
         </p>
       </div>
-      <button type="button" class="btn btn-outline-secondary btn-sm" :disabled="isFetching" @click="retrieve">
-        <font-awesome-icon icon="sync" :spin="isFetching" /> Actualizar
-      </button>
+      <div class="d-flex flex-wrap gap-2 align-items-end">
+        <div v-if="esAdmin">
+          <label class="form-label small mb-1" for="facultad-proyectos">Facultad</label>
+          <select id="facultad-proyectos" v-model.number="facultadFiltro" class="form-select form-select-sm">
+            <option :value="null">Todas las facultades</option>
+            <option v-for="facultad in facultades" :key="facultad.id" :value="facultad.id">
+              {{ facultad.facultad }}
+            </option>
+          </select>
+        </div>
+        <button type="button" class="btn btn-outline-secondary btn-sm" :disabled="isFetching" @click="retrieve">
+          <font-awesome-icon icon="sync" :spin="isFetching" /> Actualizar
+        </button>
+      </div>
     </div>
 
+    <p v-if="esAdmin" class="small text-muted mb-2">
+      Mostrando {{ proyectosFiltrados.length }} de {{ proyectos.length }} proyectos.
+    </p>
+
     <jhi-loading v-if="isFetching"></jhi-loading>
-    <div v-else-if="proyectos.length === 0" class="alert alert-light border text-center text-muted">
-      No hay proyectos en sus facultades.
+    <div v-else-if="proyectosFiltrados.length === 0" class="alert alert-light border text-center text-muted">
+      No hay proyectos para la facultad seleccionada.
     </div>
     <div v-else class="table-responsive">
       <table class="table table-hover align-middle mb-0">
@@ -30,7 +50,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="proyecto in proyectos" :key="proyecto.id">
+          <tr v-for="proyecto in proyectosFiltrados" :key="proyecto.id">
             <td>
               <span class="badge" :class="claseEstado(proyecto.estado)">{{ etiquetaEstado(proyecto.estado) }}</span>
             </td>
@@ -97,6 +117,7 @@ import { Component, Inject, Vue } from 'vue-facing-decorator';
 import AlertService from '@/shared/alert/alert.service';
 import { IProyecto } from '@/shared/model/proyecto.model';
 import ProyectoService from '@/entities/proyecto/proyecto.service';
+import FacultadService from '@/entities/facultad/facultad.service';
 import { tieneJurado } from '@/shared/config/opcion_grado';
 
 @Component
@@ -107,11 +128,44 @@ export default class ProyectosDecanura extends Vue {
   @Inject
   private alertService: () => AlertService;
 
+  @Inject
+  private facultadService: () => FacultadService;
+
   public proyectos: IProyecto[] = [];
+  public facultades: any[] = [];
+  public facultadFiltro: number | null = null;
   public isFetching = false;
 
+  public get esAdmin(): boolean {
+    const account: any = this.$store?.getters?.account;
+    const auths: string[] = account?.authorities || [];
+    return auths.includes('ROLE_ADMIN');
+  }
+
+  public get proyectosFiltrados(): IProyecto[] {
+    if (!this.facultadFiltro) {
+      return this.proyectos;
+    }
+    return this.proyectos.filter(proyecto => Number(proyecto.facultadId) === Number(this.facultadFiltro));
+  }
+
   public mounted(): void {
+    this.cargarFacultades();
     this.retrieve();
+  }
+
+  public cargarFacultades(): void {
+    const servicio = this.facultadService ? this.facultadService() : new FacultadService();
+    servicio
+      .retrieve({ sort: ['facultad,asc'], size: 200 })
+      .then(res => {
+        const data = Array.isArray(res) ? res : res && res.data;
+        const lista = Array.isArray(data) ? data : data && Array.isArray(data.content) ? data.content : [];
+        this.facultades = lista.filter((facultad: any) => facultad && facultad.id != null);
+      })
+      .catch(() => {
+        this.facultades = [];
+      });
   }
 
   public retrieve(): void {

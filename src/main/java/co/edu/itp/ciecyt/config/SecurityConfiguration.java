@@ -77,6 +77,46 @@ public class SecurityConfiguration {
                 .requestMatchers("/api/menus-roles/**").permitAll()
                 .requestMatchers("/api/account/reset-password/init").permitAll()
                 .requestMatchers("/api/account/reset-password/finish").permitAll()
+                .requestMatchers(HttpMethod.POST,
+                    "/api/acuerdos", "/api/acuerdos/**",
+                    "/api/ciclo-propedeuticos", "/api/ciclo-propedeuticos/**",
+                    "/api/formatoes", "/api/formatoes/**",
+                    "/api/investigacion-tipos", "/api/investigacion-tipos/**",
+                    "/api/modalidads", "/api/modalidads/**",
+                    "/api/programas", "/api/programas/**",
+                    "/api/menus", "/api/menus/**",
+                    "/api/ciclos", "/api/ciclos/**"
+                ).hasAuthority(AuthoritiesConstants.ADMIN)
+                .requestMatchers(HttpMethod.PUT,
+                    "/api/acuerdos", "/api/acuerdos/**",
+                    "/api/ciclo-propedeuticos", "/api/ciclo-propedeuticos/**",
+                    "/api/formatoes", "/api/formatoes/**",
+                    "/api/investigacion-tipos", "/api/investigacion-tipos/**",
+                    "/api/modalidads", "/api/modalidads/**",
+                    "/api/programas", "/api/programas/**",
+                    "/api/menus", "/api/menus/**",
+                    "/api/ciclos", "/api/ciclos/**"
+                ).hasAuthority(AuthoritiesConstants.ADMIN)
+                .requestMatchers(HttpMethod.POST,
+                    "/api/facultads", "/api/facultads/**",
+                    "/api/tipo-preguntas", "/api/tipo-preguntas/**",
+                    "/api/roles-modalidads", "/api/roles-modalidads/**",
+                    "/api/preguntas", "/api/preguntas/**",
+                    "/api/pregunta-authorities", "/api/pregunta-authorities/**",
+                    "/api/pregunta-modalidads", "/api/pregunta-modalidads/**",
+                    "/api/linea-investigacions", "/api/linea-investigacions/**",
+                    "/api/grupo-semilleros", "/api/grupo-semilleros/**"
+                ).hasAnyAuthority(AuthoritiesConstants.ADMIN, AuthoritiesConstants.CIECYT)
+                .requestMatchers(HttpMethod.PUT,
+                    "/api/facultads", "/api/facultads/**",
+                    "/api/tipo-preguntas", "/api/tipo-preguntas/**",
+                    "/api/roles-modalidads", "/api/roles-modalidads/**",
+                    "/api/preguntas", "/api/preguntas/**",
+                    "/api/pregunta-authorities", "/api/pregunta-authorities/**",
+                    "/api/pregunta-modalidads", "/api/pregunta-modalidads/**",
+                    "/api/linea-investigacions", "/api/linea-investigacions/**",
+                    "/api/grupo-semilleros", "/api/grupo-semilleros/**"
+                ).hasAnyAuthority(AuthoritiesConstants.ADMIN, AuthoritiesConstants.CIECYT)
                 .requestMatchers("/api/**").authenticated()
                 .requestMatchers("/management/health").permitAll()
                 .requestMatchers("/management/info").permitAll()

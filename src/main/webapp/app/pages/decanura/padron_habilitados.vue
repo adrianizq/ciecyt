@@ -43,35 +43,55 @@
             </div>
 
             <div class="col-12 col-md-4">
-                <b-form-group class="mb-3" label="Docentes con rol de" label-for="filtro-rol">
-                    <b-form-select id="filtro-rol" v-model="filtroRol" :options="rolesDisponibles" @change="cargar()"></b-form-select>
+                <b-form-group class="mb-3" label="Mostrar roles">
+                    <div class="d-flex gap-3">
+                        <b-form-checkbox v-model="filtroAsesor">Asesor</b-form-checkbox>
+                        <b-form-checkbox v-model="filtroJurado">Jurado</b-form-checkbox>
+                    </div>
                 </b-form-group>
             </div>
 
             <div class="col-12">
-                <b-table :items="habilitados" :fields="campos" striped responsive small>
+                <b-table :items="docentesAgrupados" :fields="campos" striped responsive small>
                     <template #empty>
-                        <b class="text-muted">No hay docentes habilitados en la facultad.</b>
+                        <b class="text-muted">No hay docentes habilitados con los roles seleccionados.</b>
                     </template>
-<template #cell(acciones)="{ item }">
-                            <b-button size="sm" variant="outline-secondary" @click="verHistorial(item)">
-                                Historial
+                    <template #cell(roles)="{ item }">
+                        <div v-for="rol in item.roles" :key="rol.id" class="d-flex flex-wrap align-items-center gap-2 mb-1">
+                            <b-badge :variant="rol.rol === 'ASESOR' ? 'primary' : 'dark'">{{ rol.rol }}</b-badge>
+                            <span class="small text-muted">Desde {{ fechaCorta(rol.fechaDesde) }}</span>
+                            <b-button
+                                v-if="puedeModificarPadron()"
+                                size="sm"
+                                variant="outline-danger"
+                                @click="cerrar(item, rol.rol)"
+                            >
+                                Baja
                             </b-button>
-                            <b-button v-if="puedeModificarPadron()" size="sm" variant="outline-danger" @click="cerrar(item)">
-                                Dar de baja
-                            </b-button>
-                        </template>
+                        </div>
+                    </template>
+                    <template #cell(acciones)="{ item }">
+                        <b-button size="sm" variant="outline-secondary" @click="verHistorial(item)">
+                            Historial
+                        </b-button>
+                    </template>
                 </b-table>
             </div>
 
             <div class="col-12" v-if="puedeModificarPadron()">
                 <h5>Dar de alta a un docente</h5>
+                <p class="text-muted small">
+                    Un docente puede estar habilitado como asesor y como jurado. Marque uno o ambos roles.
+                </p>
                 <b-form @submit.prevent="habilitar()">
                     <b-form-group class="mb-3" label="Cédula o login" label-for="alta-login">
                         <b-form-input id="alta-login" v-model="nuevo.login" placeholder="cédula o login del docente"></b-form-input>
                     </b-form-group>
-                    <b-form-group class="mb-3" label="Rol" label-for="alta-rol">
-                        <b-form-select id="alta-rol" v-model="nuevo.rol" :options="rolesDisponibles"></b-form-select>
+                    <b-form-group class="mb-3" label="Roles a habilitar">
+                        <div class="d-flex gap-3">
+                            <b-form-checkbox v-model="nuevo.habilitarAsesor">Asesor</b-form-checkbox>
+                            <b-form-checkbox v-model="nuevo.habilitarJurado">Jurado</b-form-checkbox>
+                        </div>
                     </b-form-group>
                     <b-form-group class="mb-3" label="Acto de resolución" label-for="alta-acto">
                         <b-form-input id="alta-acto" v-model="nuevo.actoResolucion" placeholder="número de resolución, si existe"></b-form-input>
@@ -123,10 +143,11 @@
         public facultadId: number = null;
         public noFacultades = false;
         public cargandoTodas = false;
-        public habilitados: IDocenteHabilitado[] = [];
-        public filtroRol: string = 'ASESOR';
+        public habilitados: any[] = [];
+        public filtroAsesor = true;
+        public filtroJurado = true;
         public isSaving = false;
-        public nuevo: any = { login: '', rol: 'ASESOR', actoResolucion: '', observaciones: '' };
+        public nuevo: any = { login: '', habilitarAsesor: true, habilitarJurado: false, actoResolucion: '', observaciones: '' };
 
         public historial: any[] = [];
         public tituloHistorial: string = '';
@@ -139,17 +160,9 @@
             { key: 'observaciones', label: 'Observaciones' }
         ];
 
-        public rolesDisponibles: any[] = [
-            { value: 'ASESOR', text: 'Asesor' },
-            { value: 'JURADO', text: 'Jurado' }
-        ];
-
         public campos: any[] = [
             { key: 'docente', label: 'Docente' },
-            { key: 'rol', label: 'Rol' },
-            { key: 'fechaDesde', label: 'Desde' },
-            { key: 'fechaHasta', label: 'Hasta' },
-            { key: 'actoResolucion', label: 'Acto de resolución' },
+            { key: 'roles', label: 'Roles' },
             { key: 'acciones', label: '' }
         ];
 
@@ -221,7 +234,7 @@
         async cargarTodasLasFacultades(): Promise<void> {
             this.cargandoTodas = true;
             try {
-                const res = await this.facultadService().retrieve({ sort: 'facultad,asc', size: 200 });
+                const res = await this.facultadService().retrieve({ sort: ['facultad,asc'], size: 200 });
                 const lista: any[] = (res.data && res.data) || [];
                 this.facultades = lista
                     .filter((f: any) => f && f.id != null)
@@ -245,7 +258,7 @@
                 return;
             }
             try {
-                const res = await this.docenteHabilitadoService().retrieveDeFacultad(this.facultadId, this.filtroRol);
+                const res = await this.docenteHabilitadoService().retrieveDeFacultad(this.facultadId);
                 this.habilitados = (res.data || []).map((h: IDocenteHabilitado) => {
                     const u: any = h.user || {};
                     return {
@@ -262,6 +275,43 @@
             } catch (e) {
                 this.habilitados = [];
             }
+        }
+
+        public get docentesAgrupados(): any[] {
+            const mapa = new Map<number, any>();
+            for (const h of this.habilitados) {
+                if (h.rol === 'ASESOR' && !this.filtroAsesor) {
+                    continue;
+                }
+                if (h.rol === 'JURADO' && !this.filtroJurado) {
+                    continue;
+                }
+                let docente = mapa.get(h.userId);
+                if (!docente) {
+                    docente = { userId: h.userId, docente: h.docente, login: h.login, roles: [] };
+                    mapa.set(h.userId, docente);
+                }
+                docente.roles.push({
+                    id: h.id,
+                    rol: h.rol,
+                    fechaDesde: h.fechaDesde,
+                    fechaHasta: h.fechaHasta,
+                    actoResolucion: h.actoResolucion
+                });
+            }
+            return Array.from(mapa.values());
+        }
+
+        public fechaCorta(value: any): string {
+            if (!value) {
+                return '—';
+            }
+            const texto = String(value);
+            if (/^\d{4}-\d{2}-\d{2}/.test(texto)) {
+                const partes = texto.substring(0, 10).split('-');
+                return `${partes[2]}/${partes[1]}/${partes[0]}`;
+            }
+            return texto;
         }
 
         async verHistorial(docente: any) {
@@ -300,39 +350,62 @@
          * y no se crea nada, sin que el navegador tenga que consultar el directorio de usuarios.
          */
         async habilitar() {
-            this.isSaving = true;
-            try {
-                const solicitud = new SolicitudHabilitacion();
-                solicitud.login = this.nuevo.login;
-                solicitud.facultadId = this.facultadId;
-                solicitud.rol = this.nuevo.rol;
-                solicitud.actoResolucion = this.nuevo.actoResolucion || null;
-                solicitud.observaciones = this.nuevo.observaciones || null;
-
-                await this.docenteHabilitadoService().habilitar(solicitud);
-                this.alertService().success('Docente habilitado');
-                this.nuevo = { login: '', rol: this.filtroRol, actoResolucion: '', observaciones: '' };
-                await this.cargar();
-            } catch (e) {
-                const msg = e && e.response && e.response.data && e.response.data.title
-                    ? e.response.data.title
-                    : 'No se pudo habilitar al docente';
-                this.alertService().error(msg);
-            } finally {
-                this.isSaving = false;
+            const roles: string[] = [];
+            if (this.nuevo.habilitarAsesor) {
+                roles.push('ASESOR');
             }
+            if (this.nuevo.habilitarJurado) {
+                roles.push('JURADO');
+            }
+            if (roles.length === 0) {
+                this.alertService().showAlert('Seleccione al menos un rol para habilitar.', 'warning');
+                return;
+            }
+            this.isSaving = true;
+            const errores: string[] = [];
+            let habilitados = 0;
+            for (const rol of roles) {
+                try {
+                    const solicitud = new SolicitudHabilitacion();
+                    solicitud.login = this.nuevo.login;
+                    solicitud.facultadId = this.facultadId;
+                    solicitud.rol = rol;
+                    solicitud.actoResolucion = this.nuevo.actoResolucion || null;
+                    solicitud.observaciones = this.nuevo.observaciones || null;
+                    await this.docenteHabilitadoService().habilitar(solicitud);
+                    habilitados++;
+                } catch (e) {
+                    const msg = e && e.response && e.response.data && e.response.data.title
+                        ? e.response.data.title
+                        : 'No se pudo habilitar al docente';
+                    errores.push(`${rol}: ${msg}`);
+                }
+            }
+            if (habilitados > 0) {
+                this.alertService().success(
+                    habilitados === 1 ? 'Docente habilitado' : `Docente habilitado en ${habilitados} roles`
+                );
+                this.filtroAsesor = true;
+                this.filtroJurado = true;
+                this.nuevo = { login: '', habilitarAsesor: true, habilitarJurado: false, actoResolucion: '', observaciones: '' };
+                await this.cargar();
+            }
+            if (errores.length > 0) {
+                this.alertService().error(errores.join(' | '));
+            }
+            this.isSaving = false;
         }
 
         /**
          * Cerrar la habilitacion no borra el registro: deja hasta cuando estuvo vigente. Quien ya
          * estaba designado conserva su designacion.
          */
-        async cerrar(docente: any) {
+        async cerrar(docente: any, rol: string) {
             try {
                 const solicitud = new SolicitudHabilitacion();
                 solicitud.userId = docente.userId;
                 solicitud.facultadId = this.facultadId;
-                solicitud.rol = docente.rol;
+                solicitud.rol = rol;
                 await this.docenteHabilitadoService().cerrar(solicitud);
                 this.alertService().success('Habilitación cerrada');
                 await this.cargar();

@@ -13,6 +13,9 @@ public interface SolicitudMapper extends EntityMapper<SolicitudDTO, Solicitud> {
 
     @Mapping(source = "solicitudIntegranteProyecto.id", target = "solicitudIntegranteProyectoId")
     @Mapping(source = "solicitudIntegranteProyecto.integrante", target = "solicitudIntegranteProyectoIntegrante")
+    @Mapping(source = "solicitudIntegranteProyecto.integranteProyectoProyecto.id", target = "proyectoId")
+    @Mapping(source = "solicitudIntegranteProyecto.integranteProyectoProyecto.titulo", target = "proyectoTitulo")
+    @Mapping(source = "solicitudIntegranteProyecto.integranteProyectoUser.login", target = "usuarioLogin")
     SolicitudDTO toDto(Solicitud solicitud);
 
     @Mapping(source = "solicitudIntegranteProyectoId", target = "solicitudIntegranteProyecto")

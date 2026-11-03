@@ -666,7 +666,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Inject, Vue } from 'vue-facing-decorator';
+import { Component, Hook, Inject, Vue } from 'vue-facing-decorator';
 import AlertService from '@/shared/alert/alert.service';
 import NotificacionService from '@/shared/alert/notificacion.service';
 import { INotificacion } from '@/shared/model/notificacion.model';
@@ -738,8 +738,12 @@ export default class BandejaCiecyt extends Vue {
     { id: 'todos', etiqueta: 'Todos' },
     { id: 'validar', etiqueta: 'Por validar' },
     { id: 'jurado', etiqueta: 'Por asignar jurado' },
+    { id: 'asesor', etiqueta: 'Por asignar asesor' },
     { id: 'acto', etiqueta: 'Por programar acto' },
     { id: 'continuidad', etiqueta: 'Continuidad' },
+    { id: 'publicacion', etiqueta: 'Publicación' },
+    { id: 'certificacion', etiqueta: 'Certificación' },
+    { id: 'repositorio', etiqueta: 'Repositorio' },
   ];
 
   public seccionesDetalle = [
@@ -782,8 +786,19 @@ export default class BandejaCiecyt extends Vue {
   public fechasActo: { [proyectoId: number]: string } = {};
 
   public mounted(): void {
+    const filtro = String(this.$route.query.filtro || '');
+    if (this.filtros.some(item => item.id === filtro)) {
+      this.filtroActivo = filtro;
+    }
     this.retrieveAllProyectos();
     this.cargarNotificacionesNoLeidas();
+  }
+
+  @Hook
+  beforeRouteUpdate(to: any, from: any, next: () => void): void {
+    const filtro = String(to.query.filtro || '');
+    this.filtroActivo = this.filtros.some(item => item.id === filtro) ? filtro : 'todos';
+    next();
   }
 
   public retrieveAllProyectos(): void {
@@ -841,10 +856,28 @@ export default class BandejaCiecyt extends Vue {
         return proyecto.estado === 'EN_VALIDACION_DOCUMENTAL';
       case 'jurado':
         return requiereJuradoModalidad(proyecto.proyectoModalidadId) && this.juradosDe(proyecto).length === 0 && !!proyecto.enviado;
+      case 'asesor':
+        return this.asesoresDe(proyecto).length === 0 && !!proyecto.enviado;
       case 'acto':
-        return this.esListoParaProgramarActo(proyecto);
+        return this.esListoParaProgramarActo(proyecto) || this.esActoProgramado(proyecto);
       case 'continuidad':
         return this.tieneContinuidadEspecial(proyecto) || this.alertaLimiteActiva(proyecto);
+      case 'publicacion':
+        return (
+          Number(proyecto.proyectoModalidadId) === 9006 &&
+          ['NOTA_DEFINITIVA', 'FINALIZADO'].indexOf(String(proyecto.estado)) >= 0 &&
+          !proyecto.url
+        );
+      case 'certificacion':
+        return (
+          [9005, 9007].indexOf(Number(proyecto.proyectoModalidadId)) >= 0 &&
+          ['EN_ELABORACION_PROYECTO', 'NOTA_DEFINITIVA'].indexOf(String(proyecto.estado)) >= 0
+        );
+      case 'repositorio':
+        return (
+          ['NOTA_DEFINITIVA', 'FINALIZADO'].indexOf(String(proyecto.estado)) >= 0 &&
+          !proyecto.repositorioUrl
+        );
       default:
         return true;
     }

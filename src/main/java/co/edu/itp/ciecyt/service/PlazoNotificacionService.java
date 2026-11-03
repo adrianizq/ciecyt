@@ -9,6 +9,7 @@ import co.edu.itp.ciecyt.repository.ProyectoHistorialEstadoRepository;
 import co.edu.itp.ciecyt.repository.ProyectoRepository;
 import co.edu.itp.ciecyt.repository.UserRepository;
 import co.edu.itp.ciecyt.security.AuthoritiesConstants;
+import co.edu.itp.ciecyt.service.dto.IntegranteProyectoDTO;
 import java.time.DayOfWeek;
 import java.time.Instant;
 import java.time.LocalDate;
@@ -37,9 +38,12 @@ public class PlazoNotificacionService {
     private static final int UMBRAL_AVISO = 2;
 
     private static final Set<Long> MODALIDADES_CON_JURADO = Set.of(9002L, 9004L);
+    private static final Set<String> ROLES_ASESOR = Set.of("Asesor", "Asesor Internacional", "Co-asesor");
+    private static final Set<String> ROLES_JURADO = Set.of("Jurado");
     private static final Set<EnumEstadoProyecto> ESTADOS_CON_PLAZO = EnumSet.of(
         EnumEstadoProyecto.HABILITADO,
         EnumEstadoProyecto.EN_REVISION_ASESOR,
+        EnumEstadoProyecto.EN_REVISION_ASESOR_PROYECTO,
         EnumEstadoProyecto.APROBADA_POR_ASESOR,
         EnumEstadoProyecto.EN_REVISION_JURADO_PROPUESTA,
         EnumEstadoProyecto.EN_REVISION_JURADO_PROYECTO,
@@ -120,14 +124,40 @@ public class PlazoNotificacionService {
             }
         }
 
+        if (
+            proyecto.getEstado() == EnumEstadoProyecto.EN_REVISION_ASESOR ||
+            proyecto.getEstado() == EnumEstadoProyecto.EN_REVISION_ASESOR_PROYECTO
+        ) {
+            Instant inicio = fechaDe(historial, proyecto.getEstado());
+            int creadas = notificarSiAplica(
+                proyecto,
+                inicio,
+                DIAS_EVALUACION,
+                "Revisión de la propuesta por el asesor",
+                ahora
+            );
+            if (plazoVencido(inicio, DIAS_EVALUACION, ahora)) {
+                liberarDesignaciones(proyecto, ROLES_ASESOR);
+            }
+            return creadas;
+        }
+
         if (proyecto.getEstado() == EnumEstadoProyecto.EN_REVISION_JURADO_PROPUESTA) {
             Instant inicio = fechaDe(historial, EnumEstadoProyecto.EN_REVISION_JURADO_PROPUESTA);
-            return notificarSiAplica(proyecto, inicio, DIAS_EVALUACION, "Revisión de la propuesta por el jurado", ahora);
+            int creadas = notificarSiAplica(proyecto, inicio, DIAS_EVALUACION, "Revisión de la propuesta por el jurado", ahora);
+            if (plazoVencido(inicio, DIAS_EVALUACION, ahora)) {
+                liberarDesignaciones(proyecto, ROLES_JURADO);
+            }
+            return creadas;
         }
 
         if (proyecto.getEstado() == EnumEstadoProyecto.EN_REVISION_JURADO_PROYECTO) {
             Instant inicio = fechaDe(historial, EnumEstadoProyecto.EN_REVISION_JURADO_PROYECTO);
-            return notificarSiAplica(proyecto, inicio, DIAS_EVALUACION, "Revisión del documento final", ahora);
+            int creadas = notificarSiAplica(proyecto, inicio, DIAS_EVALUACION, "Revisión del documento final", ahora);
+            if (plazoVencido(inicio, DIAS_EVALUACION, ahora)) {
+                liberarDesignaciones(proyecto, ROLES_JURADO);
+            }
+            return creadas;
         }
 
         if (proyecto.getEstado().name().startsWith("CORRECCIONES_")) {
@@ -143,6 +173,43 @@ public class PlazoNotificacionService {
             return integranteProyectoService.findJuradosIntegranteProyectoId(proyectoId, "Jurado").isEmpty();
         } catch (Exception e) {
             return false;
+        }
+    }
+
+    private boolean plazoVencido(Instant inicio, int diasPlazo, Instant ahora) {
+        return inicio != null && diasHabilesEntre(inicio, ahora) > diasPlazo;
+    }
+
+    /**
+     * Libera las designaciones vencidas del rol indicado para que CIECYT pueda reasignarlas.
+     * No se toca el estado del proyecto: la nueva persona trabaja sobre el mismo paso del flujo.
+     */
+    private void liberarDesignaciones(Proyecto proyecto, Set<String> roles) {
+        try {
+            List<IntegranteProyectoDTO> integrantes = integranteProyectoService.findByIntegranteProyectoProyectoId(proyecto.getId());
+            for (IntegranteProyectoDTO integrante : integrantes) {
+                String rol = integrante.getIntegranteProyectoRolesModalidadRol();
+                if (rol == null || !roles.contains(rol)) {
+                    continue;
+                }
+                try {
+                    integranteProyectoService.delete(integrante.getId());
+                    log.info(
+                        "Designacion {} liberada por vencimiento en el proyecto {}",
+                        rol,
+                        proyecto.getId()
+                    );
+                } catch (Exception e) {
+                    log.warn(
+                        "No se pudo liberar la designacion {} del proyecto {}: {}",
+                        rol,
+                        proyecto.getId(),
+                        e.getMessage()
+                    );
+                }
+            }
+        } catch (Exception e) {
+            log.warn("No se pudieron consultar las designaciones del proyecto {}: {}", proyecto.getId(), e.getMessage());
         }
     }
 

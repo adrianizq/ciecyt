@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.20.xsd">
+
+    <!-- Bandeja global de solicitudes/novedades del CIECYT. -->
+    <changeSet id="20261102000001-1" author="ciecyt">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">SELECT COUNT(*) FROM menu WHERE id = 7011</sqlCheck>
+        </preConditions>
+        <insert tableName="menu">
+            <column name="id" valueNumeric="7011"/>
+            <column name="nombre" value="Solicitudes y novedades"/>
+            <column name="url" value="/ciecyt/solicitudes"/>
+            <column name="icono" value="file-alt"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="es_publico" valueBoolean="false"/>
+            <column name="orden" valueNumeric="6"/>
+            <column name="rol" value="CIECYT ADMIN"/>
+        </insert>
+    </changeSet>
+
+    <!-- Panel global de plazos, actos y continuidad. -->
+    <changeSet id="20261102000001-2" author="ciecyt">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">SELECT COUNT(*) FROM menu WHERE id = 7012</sqlCheck>
+        </preConditions>
+        <insert tableName="menu">
+            <column name="id" valueNumeric="7012"/>
+            <column name="nombre" value="Plazos y continuidad"/>
+            <column name="url" value="/ciecyt/plazos"/>
+            <column name="icono" value="bell"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="es_publico" valueBoolean="false"/>
+            <column name="orden" valueNumeric="7"/>
+            <column name="rol" value="CIECYT ADMIN"/>
+        </insert>
+    </changeSet>
+
+    <!-- Registro y verificacion de profesionales externos. -->
+    <changeSet id="20261102000001-3" author="ciecyt">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">SELECT COUNT(*) FROM menu WHERE id = 7013</sqlCheck>
+        </preConditions>
+        <insert tableName="menu">
+            <column name="id" valueNumeric="7013"/>
+            <column name="nombre" value="Asesores externos"/>
+            <column name="url" value="/ciecyt/asesores-externos"/>
+            <column name="icono" value="users"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="es_publico" valueBoolean="false"/>
+            <column name="orden" valueNumeric="8"/>
+            <column name="rol" value="CIECYT ADMIN"/>
+        </insert>
+    </changeSet>
+
+</databaseChangeLog>

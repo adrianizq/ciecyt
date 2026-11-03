@@ -2,6 +2,12 @@
   <div class="row">
     <div class="col-12">
       <form @submit.prevent="save()">
+        <b-alert v-if="!cargandoOpciones && candidateSource === 'padron' && options.length === 0" show variant="warning">
+          No hay docentes habilitados como <strong>{{ rolTitulo }}</strong> en esta facultad.
+          Si el docente ya está habilitado para el otro rol, la decanatura debe habilitarlo también
+          para este en
+          <router-link to="/decanura/padron-habilitados">Docentes habilitados</router-link>.
+        </b-alert>
         <div class="row">
           <div class="col-12" v-for="(integrante, i) in integrantesProyecto" :key="i">
             <b-form-group class="mb-3"
@@ -104,6 +110,7 @@ export default class AsignarIntegrantes extends Vue {
   public cantidadEsperada = 0;
   public options: any[] = [];
   public opcionesExternos: any[] = [];
+  public cargandoOpciones = false;
 
   get rolMayusculas(): string {
     return (this.candidateRole || this.role).toUpperCase();
@@ -137,7 +144,29 @@ export default class AsignarIntegrantes extends Vue {
     this.$router.go(-1);
   }
 
+  public validarDesignacionesCompletas(): boolean {
+    const vacios = this.integrantesProyecto.filter(integrante =>
+      integrante.esExterno ? integrante.integranteProyectoExternoId == null : integrante.integranteProyectoUserId == null
+    );
+    if (vacios.length > 0) {
+      const total = this.cantidadEsperada > 0 ? this.cantidadEsperada : this.integrantesProyecto.length;
+      this.alertService().showAlert(`Debe completar las ${total} designaciones de ${this.rolTitulo}.`, 'warning');
+      return false;
+    }
+    const ids = this.integrantesProyecto.map(integrante =>
+      integrante.esExterno ? `externo-${integrante.integranteProyectoExternoId}` : `usuario-${integrante.integranteProyectoUserId}`
+    );
+    if (new Set(ids).size !== ids.length) {
+      this.alertService().showAlert(`No puede repetir la misma persona en dos designaciones de ${this.rolTitulo}.`, 'warning');
+      return false;
+    }
+    return true;
+  }
+
   public async save(): Promise<void> {
+    if (!this.validarDesignacionesCompletas()) {
+      return;
+    }
     this.isSaving = true;
     try {
       for (const integrante of this.integrantesProyecto) {
@@ -310,27 +339,29 @@ export default class AsignarIntegrantes extends Vue {
       this.cantidadEsperada = rol.cantidad;
       this.rolModalidadId = rol.id;
 
+      this.cargandoOpciones = true;
       if (this.candidateSource === 'usuarios') {
         await this.cargarUsuarios();
       } else {
         await this.cargarHabilitados();
         await this.cargarExternos();
       }
+      this.cargandoOpciones = false;
 
       const resIntegrantes = await this.integranteProyectoService().retrieveEstudiantes(this.proyId, this.rolModalidadId);
       this.integrantesProyecto = resIntegrantes.data || [];
       this.anadirDesignadosFueraDelPadron();
 
-      if (this.integrantesProyecto.length === 0) {
-        for (let i = 0; i < this.cantidadEsperada; i++) {
-          const integrante = new IntegranteProyecto();
-          integrante.integranteProyectoProyectoId = this.proyId;
-          integrante.integranteProyectoRolesModalidadId = this.rolModalidadId;
-          integrante.esExterno = false;
-          this.integrantesProyecto.push(integrante);
-        }
+      const faltantes = Math.max(0, Number(this.cantidadEsperada || 0) - this.integrantesProyecto.length);
+      for (let i = 0; i < faltantes; i++) {
+        const integrante = new IntegranteProyecto();
+        integrante.integranteProyectoProyectoId = this.proyId;
+        integrante.integranteProyectoRolesModalidadId = this.rolModalidadId;
+        integrante.esExterno = false;
+        this.integrantesProyecto.push(integrante);
       }
     } catch (e) {
+      this.cargandoOpciones = false;
       // La pagina padre delega el manejo del error en el alert global.
     }
   }

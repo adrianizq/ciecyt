@@ -1,4 +1,4 @@
-import { createApp } from 'vue';
+﻿import { createApp } from 'vue';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 
 import App from './app.vue';
@@ -96,9 +96,9 @@ const loginService = new LoginService();
 
 // Los interceptores tienen que quedar instalados antes de crear el AccountService:
 // su constructor llama a retrieveAccount(), y ese primer GET /api/account se arma
-// de inmediato. Si el interceptor se registraba después, la petición salía sin el
-// header Authorization y respondía 401, mostrando "sesión expirada" con el token
-// aún vigente (p. ej. al recargar la página con la sesión activa).
+// de inmediato. Si el interceptor se registraba despuÃ©s, la peticiÃ³n salÃ­a sin el
+// header Authorization y respondÃ­a 401, mostrando "sesiÃ³n expirada" con el token
+// aÃºn vigente (p. ej. al recargar la pÃ¡gina con la sesiÃ³n activa).
 // Antes esto solo escribia un console.log en la consola del navegador: la sesion
 // caducada seguia pareciendo activa y un 403 no mostraba nada al usuario.
 setupAxiosInterceptors(status => {
@@ -108,13 +108,13 @@ setupAxiosInterceptors(status => {
       return;
     }
     store.commit('logout');
-    alertService.showAlert('Su sesión ha expirado. Vuelva a iniciar sesión para continuar.', 'warning');
+    alertService.showAlert('Su sesiÃ³n ha expirado. Vuelva a iniciar sesiÃ³n para continuar.', 'warning');
     if (router.currentRoute.value.path !== '/') {
       router.push('/').catch(() => {});
     }
     return;
   }
-  alertService.showAlert('No tiene permisos para realizar esta acción.', 'danger');
+  alertService.showAlert('No tiene permisos para realizar esta acciÃ³n.', 'danger');
 });
 
 const accountService = new AccountService(store, translationService, router);
@@ -244,6 +244,40 @@ router.beforeEach((to, _from, next) => {
     to.path !== '/reset/finish'
   ) {
     next({ path: '/account/password' });
+    return;
+  }
+
+  const adminOnlyPrefixes = [
+    '/admin',
+    '/pendiente/acuerdo',
+    '/entity/acuerdo',
+    '/pendiente/ciclo-propedeutico',
+    '/entity/ciclo-propedeutico',
+    '/pendiente/modalidad',
+    '/entity/modalidad',
+    '/pendiente/formato',
+    '/entity/programa',
+    '/pendientes/investigacion-tipo',
+  ];
+  const adminCiecytPrefixes = [
+    '/pendientes/facultad',
+    '/pendientes/linea-investigacion',
+    '/pendientes/grupo-semillero',
+    '/pendientes/proyecto',
+    '/pendientes/tipos-pregunta',
+    '/pendientes/roles-modalidad',
+    '/pendientes/preguntas',
+  ];
+  const enPrefijo = (path: string, prefixes: string[]) => prefixes.some(prefix => path === prefix || path.startsWith(prefix + '/'));
+
+  if (enPrefijo(to.path, adminOnlyPrefixes) && !accountService.hasAnyAuthority(['ROLE_ADMIN'])) {
+    sessionStorage.setItem('requested-url', to.fullPath);
+    next('/forbidden');
+    return;
+  }
+  if (enPrefijo(to.path, adminCiecytPrefixes) && !accountService.hasAnyAuthority(['ROLE_ADMIN', 'ROLE_CIECYT'])) {
+    sessionStorage.setItem('requested-url', to.fullPath);
+    next('/forbidden');
     return;
   }
 

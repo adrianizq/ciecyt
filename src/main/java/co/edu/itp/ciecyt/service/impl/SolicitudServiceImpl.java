@@ -1,8 +1,11 @@
 package co.edu.itp.ciecyt.service.impl;
 
 import co.edu.itp.ciecyt.service.SolicitudService;
+import co.edu.itp.ciecyt.domain.IntegranteProyecto;
 import co.edu.itp.ciecyt.domain.Solicitud;
+import co.edu.itp.ciecyt.repository.IntegranteProyectoRepository;
 import co.edu.itp.ciecyt.repository.SolicitudRepository;
+import co.edu.itp.ciecyt.service.NotificacionService;
 import co.edu.itp.ciecyt.service.dto.SolicitudDTO;
 import co.edu.itp.ciecyt.service.mapper.SolicitudMapper;
 import org.slf4j.Logger;
@@ -30,9 +33,20 @@ public class SolicitudServiceImpl implements SolicitudService {
 
     private final SolicitudMapper solicitudMapper;
 
-    public SolicitudServiceImpl(SolicitudRepository solicitudRepository, SolicitudMapper solicitudMapper) {
+    private final IntegranteProyectoRepository integranteProyectoRepository;
+
+    private final NotificacionService notificacionService;
+
+    public SolicitudServiceImpl(
+        SolicitudRepository solicitudRepository,
+        SolicitudMapper solicitudMapper,
+        IntegranteProyectoRepository integranteProyectoRepository,
+        NotificacionService notificacionService
+    ) {
         this.solicitudRepository = solicitudRepository;
         this.solicitudMapper = solicitudMapper;
+        this.integranteProyectoRepository = integranteProyectoRepository;
+        this.notificacionService = notificacionService;
     }
 
     /**
@@ -44,9 +58,47 @@ public class SolicitudServiceImpl implements SolicitudService {
     @Override
     public SolicitudDTO save(SolicitudDTO solicitudDTO) {
         log.debug("Request to save Solicitud : {}", solicitudDTO);
+        Optional<Solicitud> anterior = solicitudDTO.getId() != null
+            ? solicitudRepository.findById(solicitudDTO.getId())
+            : Optional.empty();
+        boolean estabaResuelta = anterior.map(item -> Boolean.TRUE.equals(item.isEstado())).orElse(true);
         Solicitud solicitud = solicitudMapper.toEntity(solicitudDTO);
         solicitud = solicitudRepository.save(solicitud);
+        if (!estabaResuelta && Boolean.TRUE.equals(solicitud.isEstado())) {
+            notificarSolicitudResuelta(solicitudDTO);
+        }
         return solicitudMapper.toDto(solicitud);
+    }
+
+    /**
+     * Avisa al integrante que radico la solicitud cuando el CIECYT la marca como resuelta.
+     * El aviso se genera una sola vez, en la transicion de pendiente a resuelta.
+     */
+    private void notificarSolicitudResuelta(SolicitudDTO solicitudDTO) {
+        log.debug("Notificando solicitud resuelta id={} integrante={}", solicitudDTO.getId(), solicitudDTO.getSolicitudIntegranteProyectoId());
+        if (solicitudDTO.getSolicitudIntegranteProyectoId() == null) {
+            return;
+        }
+        IntegranteProyecto integrante = integranteProyectoRepository
+            .findById(solicitudDTO.getSolicitudIntegranteProyectoId())
+            .orElse(null);
+        if (
+            integrante == null ||
+            integrante.getIntegranteProyectoUser() == null ||
+            integrante.getIntegranteProyectoProyecto() == null
+        ) {
+            return;
+        }
+        String asunto = solicitudDTO.getAsunto() != null && !solicitudDTO.getAsunto().trim().isEmpty()
+            ? solicitudDTO.getAsunto()
+            : "solicitud";
+        notificacionService.crearNotificacion(
+            integrante.getIntegranteProyectoUser().getId(),
+            "Solicitud resuelta",
+            "El CIECYT resolvio su solicitud: " + asunto,
+            integrante.getIntegranteProyectoProyecto().getId(),
+            "SOLICITUD"
+        );
     }
 
     /**

@@ -15,6 +15,7 @@ import co.edu.itp.ciecyt.repository.UserRepository;
 import co.edu.itp.ciecyt.errors.BadRequestAlertException;
 import co.edu.itp.ciecyt.service.DocenteHabilitadoService;
 import co.edu.itp.ciecyt.service.IntegranteProyectoService;
+import co.edu.itp.ciecyt.service.NotificacionService;
 import co.edu.itp.ciecyt.service.RolesModalidadService;
 import co.edu.itp.ciecyt.security.AuthoritiesConstants;
 import co.edu.itp.ciecyt.service.dto.IntegranteProyectoDTO;
@@ -66,6 +67,8 @@ public class IntegranteProyectoServiceImpl implements IntegranteProyectoService 
 
     private final DocenteHabilitadoService docenteHabilitadoService;
 
+    private final NotificacionService notificacionService;
+
     public IntegranteProyectoServiceImpl(
         IntegranteProyectoRepository integranteProyectoRepository,
         IntegranteProyectoMapper integranteProyectoMapper,
@@ -73,7 +76,8 @@ public class IntegranteProyectoServiceImpl implements IntegranteProyectoService 
         RolesModalidadService rolesModalidadService,
         UserRepository userRepository,
         UserInfoRepository userInfoRepository,
-        DocenteHabilitadoService docenteHabilitadoService
+        DocenteHabilitadoService docenteHabilitadoService,
+        NotificacionService notificacionService
     ) {
         this.integranteProyectoRepository = integranteProyectoRepository;
         this.integranteProyectoMapper = integranteProyectoMapper;
@@ -82,6 +86,7 @@ public class IntegranteProyectoServiceImpl implements IntegranteProyectoService 
         this.userRepository = userRepository;
         this.userInfoRepository = userInfoRepository;
         this.docenteHabilitadoService = docenteHabilitadoService;
+        this.notificacionService = notificacionService;
     }
 
     /**
@@ -114,9 +119,57 @@ public class IntegranteProyectoServiceImpl implements IntegranteProyectoService 
     public IntegranteProyectoDTO save(IntegranteProyectoDTO integranteProyectoDTO) {
         log.debug("Request to save IntegranteProyecto : {}", integranteProyectoDTO);
         validarDesignacion(integranteProyectoDTO);
+        IntegranteProyecto anterior = integranteProyectoDTO.getId() == null
+            ? null
+            : integranteProyectoRepository.findById(integranteProyectoDTO.getId()).orElse(null);
         IntegranteProyecto integranteProyecto = integranteProyectoMapper.toEntity(integranteProyectoDTO);
         integranteProyecto = integranteProyectoRepository.save(integranteProyecto);
+        notificarDesignacion(integranteProyecto, anterior, integranteProyectoDTO);
         return toDto(integranteProyecto);
+    }
+
+    /**
+     * Avisa al docente cuando queda designado como asesor, jurado, asesor internacional o
+     * coordinador. No se notifica a estudiantes ni a profesionales externos (no tienen cuenta).
+     * Si la designacion se guarda de nuevo sin cambiar de persona, no se repite el aviso.
+     */
+    private void notificarDesignacion(IntegranteProyecto actual, IntegranteProyecto anterior, IntegranteProyectoDTO dto) {
+        if (dto == null || dto.getIntegranteProyectoUserId() == null || dto.getIntegranteProyectoProyectoId() == null) {
+            return;
+        }
+        String rol = dto.getIntegranteProyectoRolesModalidadRol();
+        if (rol == null && dto.getIntegranteProyectoRolesModalidadId() != null) {
+            rol = rolesModalidadService
+                .findOne(dto.getIntegranteProyectoRolesModalidadId())
+                .map(RolesModalidadDTO::getRol)
+                .orElse(null);
+        }
+        if (rol == null || "Estudiante".equalsIgnoreCase(rol)) {
+            return;
+        }
+        Long usuarioAnterior = anterior != null && anterior.getIntegranteProyectoUser() != null
+            ? anterior.getIntegranteProyectoUser().getId()
+            : null;
+        if (Objects.equals(usuarioAnterior, dto.getIntegranteProyectoUserId())) {
+            return;
+        }
+        String nombreProyecto = dto.getIntegranteProyectoProyectoTitulo();
+        if (nombreProyecto == null && actual != null && actual.getIntegranteProyectoProyecto() != null) {
+            nombreProyecto = actual.getIntegranteProyectoProyecto().getTitulo();
+        }
+        String titulo = "Designacion como " + rol;
+        String mensaje = "El CIECYT le designo como " + rol + " en el proyecto '" + (nombreProyecto != null ? nombreProyecto : "") + "'.";
+        try {
+            notificacionService.crearNotificacion(
+                dto.getIntegranteProyectoUserId(),
+                titulo,
+                mensaje,
+                dto.getIntegranteProyectoProyectoId(),
+                "DESIGNACION"
+            );
+        } catch (Exception e) {
+            log.warn("No se pudo notificar la designacion al usuario {}: {}", dto.getIntegranteProyectoUserId(), e.getMessage());
+        }
     }
 
     /**
