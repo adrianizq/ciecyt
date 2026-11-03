@@ -25,4 +25,15 @@ public interface NotificacionRepository extends JpaRepository<Notificacion, Long
     @Modifying
     @Query("UPDATE Notificacion n SET n.leido = true, n.fechaLectura = :now WHERE n.id = :id AND n.user.login = :login")
     int marcarLeida(@Param("id") Long id, @Param("login") String login, @Param("now") Instant now);
+
+    @Query(
+        "SELECT COUNT(n) FROM Notificacion n WHERE n.proyecto.id = :proyectoId AND n.tipo = :tipo " +
+        "AND n.titulo = :titulo AND n.fechaCreacion >= :desde"
+    )
+    long countSince(
+        @Param("proyectoId") Long proyectoId,
+        @Param("tipo") String tipo,
+        @Param("titulo") String titulo,
+        @Param("desde") Instant desde
+    );
 }

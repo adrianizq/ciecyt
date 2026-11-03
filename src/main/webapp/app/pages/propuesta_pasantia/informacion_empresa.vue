@@ -52,8 +52,11 @@
                   'is-invalid': v$.informacionPasantia.duracionHoras.$error,
                   'is-valid': !v$.informacionPasantia.duracionHoras.$invalid,
                 }"
-                placeholder="Horas de pasantía: tecnico 480, tecnólogo 640, profesional 880"
+                placeholder="Horas de pasantía: técnico 480, tecnólogo 576, profesional 672"
               />
+              <small v-if="horasEsperadasPasantia" class="text-muted">
+                Para este ciclo se esperan {{ horasEsperadasPasantia }} horas efectivas.
+              </small>
               <div class="valid-feedback"></div>
               <div class="text-danger" v-if="!v$.informacionPasantia.duracionHoras.required">Este campo es requerido</div>
               <div class="text-danger" v-if="!v$.informacionPasantia.duracionHoras.between">
@@ -668,6 +671,8 @@ import MunicipioService from '@/entities/municipio/municipio.service';
 
 import { IDepartamento, Departamento } from '@/shared/model/departamento.model';
 import DepartamentoService from '@/entities/departamento/departamento.service';
+import ProyectoService from '@/entities/proyecto/proyecto.service';
+import { IProyecto, Proyecto } from '@/shared/model/proyecto.model';
 
 import { numeric, required, minLength, maxLength, between, url, email, alpha, helpers } from '@vuelidate/validators';
 const alphaAndSpaceValidator = helpers.regex('alphaAndSpace', /^[A-Za-z\u00C0-\u017F- ]+$/i);
@@ -721,9 +726,12 @@ export default class PasantiaInformacionEmpresa extends Vue {
   @Inject private municipioService: () => MunicipioService;
   @Inject private departamentoService: () => DepartamentoService;
 
+  @Inject private proyectoService: () => ProyectoService;
+
   @Inject private alertService: () => AlertService;
 
   public informacionPasantia: IInformacionPasantia = new InformacionPasantia();
+  public proyecto: IProyecto = new Proyecto();
 
   public proyId: any;
 
@@ -737,6 +745,20 @@ export default class PasantiaInformacionEmpresa extends Vue {
   public departamentos = [];
   public municipiosEmpresa = [];
   public isFetching = false;
+
+  public get horasEsperadasPasantia(): number | null {
+    const ciclo = Number(this.proyecto.proyectoCicloId);
+    if (ciclo === 1) {
+      return 480;
+    }
+    if (ciclo === 2) {
+      return 576;
+    }
+    if (ciclo === 3) {
+      return 672;
+    }
+    return null;
+  }
 
   mounted() {
     this.proyId = this.$route.params.proyectoId;
@@ -774,6 +796,28 @@ export default class PasantiaInformacionEmpresa extends Vue {
     if (this.v$.$invalid && accion === 'continuar') {
       this.isSaving = false;
       return;
+    }
+
+    if (accion === 'continuar' && this.horasEsperadasPasantia && this.informacionPasantia.duracionHoras !== this.horasEsperadasPasantia) {
+      this.isSaving = false;
+      this.alertService().showAlert(
+        `Para este ciclo la pasantía debe ser de ${this.horasEsperadasPasantia} horas efectivas.`,
+        'danger'
+      );
+      return;
+    }
+
+    if (accion === 'continuar' && Number(this.proyecto.proyectoModalidadId) === 9003) {
+      const inicio = this.proyecto.fechaIni ? new Date(this.proyecto.fechaIni) : null;
+      const fin = this.proyecto.fechaFin ? new Date(this.proyecto.fechaFin) : null;
+      if (inicio && fin) {
+        const meses = (fin.getTime() - inicio.getTime()) / (1000 * 60 * 60 * 24 * 30);
+        if (meses < 3) {
+          this.isSaving = false;
+          this.alertService().showAlert('La pasantía internacional debe durar mínimo tres (3) meses.', 'danger');
+          return;
+        }
+      }
     }
 
     if (this.informacionPasantia.id) {
@@ -822,6 +866,7 @@ export default class PasantiaInformacionEmpresa extends Vue {
   async initRelationships() {
     this.proyId = this.$route.params.proyectoId;
 
+    this.proyecto = await this.proyectoService().find(parseInt(this.proyId, 10));
     this.isFetching = true;
     await this.informacionPasantiaService()
       .findInformacionPasantiaProyecto(this.proyId)

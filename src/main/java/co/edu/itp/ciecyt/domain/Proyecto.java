@@ -30,6 +30,15 @@ public class Proyecto implements Serializable {
     @Column(name = "url")
     private String url;
 
+    @Column(name = "repositorio_url")
+    private String repositorioUrl;
+
+    @Column(name = "repositorio_excluido")
+    private Boolean repositorioExcluido;
+
+    @Column(name = "repositorio_justificacion")
+    private String repositorioJustificacion;
+
     @Column(name = "lugar_ejecucion")
     private String lugarEjecucion;
 
@@ -212,6 +221,30 @@ public class Proyecto implements Serializable {
 
     public void setUrl(String url) {
         this.url = url;
+    }
+
+    public String getRepositorioUrl() {
+        return repositorioUrl;
+    }
+
+    public void setRepositorioUrl(String repositorioUrl) {
+        this.repositorioUrl = repositorioUrl;
+    }
+
+    public Boolean getRepositorioExcluido() {
+        return repositorioExcluido;
+    }
+
+    public void setRepositorioExcluido(Boolean repositorioExcluido) {
+        this.repositorioExcluido = repositorioExcluido;
+    }
+
+    public String getRepositorioJustificacion() {
+        return repositorioJustificacion;
+    }
+
+    public void setRepositorioJustificacion(String repositorioJustificacion) {
+        this.repositorioJustificacion = repositorioJustificacion;
     }
 
     public String getLugarEjecucion() {

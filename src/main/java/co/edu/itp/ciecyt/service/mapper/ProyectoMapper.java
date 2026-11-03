@@ -30,6 +30,7 @@ public interface ProyectoMapper extends EntityMapper<ProyectoDTO, Proyecto> {
     @Mapping(source = "estado", target = "estado", qualifiedByName = "estadoToString")
     @Mapping(source = "estadoContinuidad", target = "estadoContinuidad", qualifiedByName = "estadoContinuidadToString")
     @Mapping(source = "proyectoCiclo.id", target = "proyectoCicloId")
+    @Mapping(source = "proyectoCiclo.ciclo", target = "ciclo")
     ProyectoDTO toDto(Proyecto proyecto);
 
     @Named("estadoToString")

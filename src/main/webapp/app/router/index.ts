@@ -304,8 +304,12 @@ const ProyectoEvaluarSustentacion = () => import('../pages/viabilidad_propuesta/
 const AsignarJurado = () => import('../pages/ciecyt/asignar_jurado.vue');
 
 const AsignarAsesor = () => import('../pages/ciecyt/asignar_asesor.vue');
+const AsignarAsesorInternacional = () => import('../pages/ciecyt/asignar_asesor_internacional.vue');
+const AsignarCoordinador = () => import('../pages/ciecyt/asignar_coordinador.vue');
 const PadronHabilitados = () => import('../pages/decanura/padron_habilitados.vue');
 const RemisionPadron = () => import('../pages/decanura/remision_padron.vue');
+const ProyectosDecanura = () => import('../pages/decanura/proyectos_decanura.vue');
+const ConvocatoriasPasantia = () => import('../pages/pasantia/convocatorias_pasantia.vue');
 
 const PropuestaInformacionGeneralNueva = () => import('../pages/propuesta_nueva/informacion_general_nueva.vue');
 const PropuestaIntegrantesNueva = () => import('../pages/propuesta_nueva/integrantes_nueva.vue');
@@ -314,6 +318,7 @@ const PropuestaInscripcionNueva = () => import('../pages/propuesta_nueva/inscrip
 const PropuestaAsesorNueva = () => import('../pages/propuesta_nueva/asesor_nueva.vue');
 const ListadoEstudiante = () => import('../pages/estudiante/listado_estudiante.vue');
 const ListadoProyecto = () => import('../pages/estudiante/listado_proyecto.vue');
+const SolicitarNovedad = () => import('../pages/proyectos/solicitar_novedad.vue');
 
 const PropuestasInvestigador = () => import('../pages/propuesta_nueva/propuestas_investigador.vue');
 
@@ -1137,7 +1142,7 @@ const router = createRouter({
       path: '/ciecyt/asignar-jurado/:proyectoId/view',
       name: 'AsignarJuradoView',
       component: AsignarJurado,
-      meta: { authorities: ['ROLE_ADMIN', 'ROLE_CIECYT'] }
+      meta: { authorities: ['ROLE_ADMIN', 'ROLE_CIECYT', 'ROLE_DECANO'] }
     },
     {
       path: '/ciecyt/asignar-jurado/:proyectoId',
@@ -1148,11 +1153,31 @@ const router = createRouter({
       path: '/ciecyt/asignar-asesor/:proyectoId/view',
       name: 'AsignarAsesorView',
       component: AsignarAsesor,
-      meta: { authorities: ['ROLE_ADMIN', 'ROLE_CIECYT'] }
+      meta: { authorities: ['ROLE_ADMIN', 'ROLE_CIECYT', 'ROLE_DECANO'] }
     },
     {
       path: '/ciecyt/asignar-asesor/:proyectoId',
       redirect: to => ({ path: `/ciecyt/asignar-asesor/${to.params.proyectoId}/view` })
+    },
+    {
+      path: '/ciecyt/asignar-asesor-internacional/:proyectoId/view',
+      name: 'AsignarAsesorInternacionalView',
+      component: AsignarAsesorInternacional,
+      meta: { authorities: ['ROLE_ADMIN', 'ROLE_CIECYT'] }
+    },
+    {
+      path: '/ciecyt/asignar-asesor-internacional/:proyectoId',
+      redirect: to => ({ path: `/ciecyt/asignar-asesor-internacional/${to.params.proyectoId}/view` })
+    },
+    {
+      path: '/ciecyt/asignar-coordinador/:proyectoId/view',
+      name: 'AsignarCoordinadorView',
+      component: AsignarCoordinador,
+      meta: { authorities: ['ROLE_ADMIN', 'ROLE_CIECYT'] }
+    },
+    {
+      path: '/ciecyt/asignar-coordinador/:proyectoId',
+      redirect: to => ({ path: `/ciecyt/asignar-coordinador/${to.params.proyectoId}/view` })
     },
       /////////////////////////////////////////////////////
       {
@@ -1170,6 +1195,21 @@ const router = createRouter({
         name: 'RemisionPadron',
         component: RemisionPadron,
         meta: { authorities: ['ROLE_DECANO', 'ROLE_ADMIN', 'ROLE_CIECYT'] }
+      },
+      {
+        // Designacion de asesores y jurados que el reglamento asigna a la decanatura
+        // (pasantias y diplomado). El backend valida que sea decano de la facultad.
+        path: '/decanura/proyectos',
+        name: 'ProyectosDecanuraView',
+        component: ProyectosDecanura,
+        meta: { authorities: ['ROLE_DECANO', 'ROLE_ADMIN', 'ROLE_CIECYT'] }
+      },
+      {
+        // Convocatorias de pasantia (Acuerdo 025, art. 16 par. 2 y art. 19).
+        path: '/convocatorias-pasantia',
+        name: 'ConvocatoriasPasantiaView',
+        component: ConvocatoriasPasantia,
+        meta: { authorities: ['ROLE_USER', 'ROLE_ESTUDIANTE', 'ROLE_DECANO', 'ROLE_CIECYT', 'ROLE_ADMIN'] }
       },
       /////////////////////////////////////////////////////
       {
@@ -1791,6 +1831,12 @@ const router = createRouter({
       name: 'ListadoEstudianteView',
       component: ListadoEstudiante,
       meta: { authorities: ['ROLE_ESTUDIANTE', 'ROLE_ADMIN']  }
+    },
+    {
+      path: '/proyectos/solicitar-novedad/:proyectoId',
+      name: 'SolicitarNovedadView',
+      component: SolicitarNovedad,
+      meta: { authorities: ['ROLE_USER', 'ROLE_ESTUDIANTE', 'ROLE_ASESOR', 'ROLE_ADMIN', 'ROLE_CIECYT'] }
     },
 
     {

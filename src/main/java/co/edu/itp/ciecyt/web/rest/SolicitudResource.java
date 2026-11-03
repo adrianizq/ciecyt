@@ -1,7 +1,10 @@
 package co.edu.itp.ciecyt.web.rest;
 
 import co.edu.itp.ciecyt.service.SolicitudService;
+import co.edu.itp.ciecyt.service.IntegranteProyectoService;
+import co.edu.itp.ciecyt.service.ProyectoAutorizacionService;
 import co.edu.itp.ciecyt.errors.BadRequestAlertException;
+import co.edu.itp.ciecyt.service.dto.IntegranteProyectoDTO;
 import co.edu.itp.ciecyt.service.dto.SolicitudDTO;
 
 import tech.jhipster.web.util.HeaderUtil;
@@ -16,12 +19,14 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 import java.net.URISyntaxException;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -40,9 +45,17 @@ public class SolicitudResource {
     private String applicationName;
 
     private final SolicitudService solicitudService;
+    private final IntegranteProyectoService integranteProyectoService;
+    private final ProyectoAutorizacionService autorizacion;
 
-    public SolicitudResource(SolicitudService solicitudService) {
+    public SolicitudResource(
+        SolicitudService solicitudService,
+        IntegranteProyectoService integranteProyectoService,
+        ProyectoAutorizacionService autorizacion
+    ) {
         this.solicitudService = solicitudService;
+        this.integranteProyectoService = integranteProyectoService;
+        this.autorizacion = autorizacion;
     }
 
     /**
@@ -57,6 +70,28 @@ public class SolicitudResource {
         log.debug("REST request to save Solicitud : {}", solicitudDTO);
         if (solicitudDTO.getId() != null) {
             throw new BadRequestAlertException("A new solicitud cannot already have an ID", ENTITY_NAME, "idexists");
+        }
+        if (solicitudDTO.getSolicitudIntegranteProyectoId() == null) {
+            throw new BadRequestAlertException("La solicitud debe indicar el integrante que la radica", ENTITY_NAME, "integranteRequerido");
+        }
+        IntegranteProyectoDTO integrante = integranteProyectoService
+            .findOne(solicitudDTO.getSolicitudIntegranteProyectoId())
+            .orElseThrow(() -> new BadRequestAlertException("El integrante no existe", ENTITY_NAME, "integranteInexistente"));
+        Long proyectoId = integrante.getIntegranteProyectoProyectoId();
+        if (proyectoId == null) {
+            throw new BadRequestAlertException("El integrante no pertenece a un proyecto", ENTITY_NAME, "proyectoRequerido");
+        }
+        if (
+            !autorizacion.puedeLeer(proyectoId) ||
+            !autorizacion.esUsuarioActualOGestor(integrante.getIntegranteProyectoUserId())
+        ) {
+            throw new AccessDeniedException("No puede radicar solicitudes en este proyecto");
+        }
+        if (solicitudDTO.isEstado() == null) {
+            solicitudDTO.setEstado(false);
+        }
+        if (solicitudDTO.getFechaSolicitud() == null) {
+            solicitudDTO.setFechaSolicitud(LocalDate.now());
         }
         SolicitudDTO result = solicitudService.save(solicitudDTO);
         return ResponseEntity.created(new URI("/api/solicituds/" + result.getId()))
@@ -74,6 +109,7 @@ public class SolicitudResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PutMapping("/solicituds")
+    @PreAuthorize("hasAnyRole('CIECYT', 'ADMIN')")
     public ResponseEntity<SolicitudDTO> updateSolicitud(@RequestBody SolicitudDTO solicitudDTO) throws URISyntaxException {
         log.debug("REST request to update Solicitud : {}", solicitudDTO);
         if (solicitudDTO.getId() == null) {
@@ -94,11 +130,25 @@ public class SolicitudResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of solicituds in body.
      */
     @GetMapping("/solicituds")
+    @PreAuthorize("hasAnyRole('CIECYT', 'ADMIN')")
     public ResponseEntity<List<SolicitudDTO>> getAllSolicituds(Pageable pageable) {
         log.debug("REST request to get a page of Solicituds");
         Page<SolicitudDTO> page = solicitudService.findAll(pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return ResponseEntity.ok().headers(headers).body(page.getContent());
+    }
+
+    /**
+     * {@code GET  /solicituds/proyecto/:proyectoId} : get the solicitudes of a project.
+     *
+     * @param proyectoId the project id.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list in body.
+     */
+    @GetMapping("/solicituds/proyecto/{proyectoId}")
+    @PreAuthorize("@proyectoAutorizacionService.puedeLeer(#proyectoId)")
+    public ResponseEntity<List<SolicitudDTO>> getSolicitudesByProyecto(@PathVariable Long proyectoId) {
+        log.debug("REST request to get Solicituds by Proyecto : {}", proyectoId);
+        return ResponseEntity.ok().body(solicitudService.findByProyectoId(proyectoId));
     }
 
     /**
@@ -108,6 +158,7 @@ public class SolicitudResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the solicitudDTO, or with status {@code 404 (Not Found)}.
      */
     @GetMapping("/solicituds/{id}")
+    @PreAuthorize("hasAnyRole('CIECYT', 'ADMIN')")
     public ResponseEntity<SolicitudDTO> getSolicitud(@PathVariable Long id) {
         log.debug("REST request to get Solicitud : {}", id);
         Optional<SolicitudDTO> solicitudDTO = solicitudService.findOne(id);

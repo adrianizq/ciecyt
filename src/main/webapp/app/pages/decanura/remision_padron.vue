@@ -8,6 +8,11 @@
                 Una vez enviada no se edita: si después cambia el padrón, corresponde a la siguiente
                 remisión.
             </p>
+            <div class="mb-3">
+                <router-link class="btn btn-primary btn-sm" :to="{ name: 'ProyectosDecanuraView' }">
+                    Proyectos de mi facultad: designar asesor o jurado
+                </router-link>
+            </div>
             <b-alert v-if="esCiecyt()" show variant="info" class="mt-2">
                 <strong>Modo lectura.</strong> Esta vista le entrega al CIECYT las remisiones
                 que la decanatura ya envío, para que sepa qué padrón es el vigente al momento de

@@ -13,7 +13,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * Service Implementation for managing {@link Solicitud}.
@@ -61,6 +63,13 @@ public class SolicitudServiceImpl implements SolicitudService {
             .map(solicitudMapper::toDto);
     }
 
+    @Override
+    @Transactional(readOnly = true)
+    public List<SolicitudDTO> findByProyectoId(Long proyectoId) {
+        return solicitudRepository.findByProyectoId(proyectoId).stream()
+            .map(solicitudMapper::toDto)
+            .collect(Collectors.toList());
+    }
 
     /**
      * Get one solicitud by id.

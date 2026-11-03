@@ -342,6 +342,64 @@ public class ProyectoResource {
     }
 
     /**
+     * {@code POST  /proyectos/:id/publicacion} :
+     * Registra el DOI o URL del articulo para la opcion de grado Publicacion de Articulo.
+     */
+    @PostMapping("/proyectos/{id}/publicacion")
+    @PreAuthorize("hasAnyRole('CIECYT', 'ADMIN')")
+    public ResponseEntity<ProyectoDTO> registrarPublicacion(
+        @PathVariable Long id,
+        @RequestBody Map<String, String> payload
+    ) {
+        log.debug("REST request to registrarPublicacion Proyecto : {}, payload : {}", id, payload);
+        String url = payload.get("url");
+        String observacion = payload.get("observacion");
+        ProyectoDTO result = proyectoService.registrarPublicacion(id, url, observacion);
+        return ResponseEntity.ok()
+            .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, id.toString()))
+            .body(result);
+    }
+
+    /**
+     * {@code POST  /proyectos/:id/certificacion} :
+     * Registra la certificacion de modulos del Diplomado o del primer semestre de la Especializacion.
+     */
+    @PostMapping("/proyectos/{id}/certificacion")
+    @PreAuthorize("hasAnyRole('CIECYT', 'ADMIN')")
+    public ResponseEntity<ProyectoDTO> registrarCertificacion(
+        @PathVariable Long id,
+        @RequestBody Map<String, Object> payload
+    ) {
+        log.debug("REST request to registrarCertificacion Proyecto : {}, payload : {}", id, payload);
+        boolean aprobado = Boolean.TRUE.equals(payload.get("aprobado"));
+        String observacion = payload.get("observacion") != null ? payload.get("observacion").toString() : null;
+        ProyectoDTO result = proyectoService.registrarCertificacion(id, aprobado, observacion);
+        return ResponseEntity.ok()
+            .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, id.toString()))
+            .body(result);
+    }
+
+    /**
+     * {@code POST  /proyectos/:id/repositorio} :
+     * Registra la URL del documento en el repositorio y la eventual exclusion (Acuerdo 025, art. 15).
+     */
+    @PostMapping("/proyectos/{id}/repositorio")
+    @PreAuthorize("hasAnyRole('CIECYT', 'ADMIN')")
+    public ResponseEntity<ProyectoDTO> registrarRepositorio(
+        @PathVariable Long id,
+        @RequestBody Map<String, Object> payload
+    ) {
+        log.debug("REST request to registrarRepositorio Proyecto : {}, payload : {}", id, payload);
+        String url = payload.get("url") != null ? payload.get("url").toString() : null;
+        boolean excluido = Boolean.TRUE.equals(payload.get("excluido"));
+        String justificacion = payload.get("justificacion") != null ? payload.get("justificacion").toString() : null;
+        ProyectoDTO result = proyectoService.registrarRepositorio(id, url, excluido, justificacion);
+        return ResponseEntity.ok()
+            .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, id.toString()))
+            .body(result);
+    }
+
+    /**
      * {@code GET  /proyectos/:id/requisitos} : obtiene los requisitos del proyecto.
      */
     @GetMapping("/proyectos/{id}/requisitos")

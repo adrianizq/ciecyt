@@ -1,9 +1,6 @@
 <template>
   <div class="row">
-    <div class="col-sm-4">
-      <menu-lateral-ciecyt :proyectoId="$route.params.proyectoId"></menu-lateral-ciecyt>
-    </div>
-    <div class="col-sm-8">
+    <div class="col-12">
       <form @submit.prevent="save()">
         <div class="row">
           <div class="col-12" v-for="(integrante, i) in integrantesProyecto" :key="i">
@@ -24,6 +21,7 @@
                 v-model="integrante.integranteProyectoExternoId"
               ></b-form-select>
               <b-form-checkbox
+                v-if="candidateSource === 'padron'"
                 class="mt-2"
                 v-model="integrante.esExterno"
                 @change="alternarExterno(integrante)"
@@ -54,7 +52,6 @@
 import { Component, Inject, Vue, Hook, Prop } from 'vue-facing-decorator';
 
 import AlertService from '@/shared/alert/alert.service';
-import MenuLateralCiecyt from '@/components/ciecyt/menu_lateral_ciecyt.vue';
 import RolesModalidadService from '@/entities/roles-modalidad/roles-modalidad.service';
 import { IRolesModalidad } from '@/shared/model/roles-modalidad.model';
 import ProyectoService from '@/entities/proyecto/proyecto.service';
@@ -66,12 +63,10 @@ import { IAsesorExterno } from '@/shared/model/asesor-externo.model';
 import { IIntegranteProyecto, IntegranteProyecto } from '@/shared/model/integrante-proyecto.model';
 import { withPlaceholder as withPlaceholderOptions } from '@/shared/filter/filter';
 import IntegranteProyectoService from '@/entities/integrante-proyecto/integrante-proyecto.service';
+import UserManagementService from '@/admin/user-management/user-management.service';
+import { IUser } from '@/shared/model/user.model';
 
-type RoleAsignar = 'jurado' | 'asesor';
-
-@Component({
-  components: { MenuLateralCiecyt },
-})
+@Component
 export default class AsignarIntegrantes extends Vue {
   /**
    * 'jurado' o 'asesor': parametrizado por la pagina padre.
@@ -79,13 +74,23 @@ export default class AsignarIntegrantes extends Vue {
    * las designaciones actuales del proyecto.
    */
   @Prop({ default: 'jurado' })
-  role: RoleAsignar;
+  role: string;
+
+  @Prop({ default: '' })
+  rolNombre: string;
+
+  @Prop({ default: '' })
+  candidateRole: string;
+
+  @Prop({ default: 'padron' })
+  candidateSource: string;
 
   @Inject private proyectoService: () => ProyectoService;
   @Inject private integranteProyectoService: () => IntegranteProyectoService;
   @Inject private rolesModalidadService: () => RolesModalidadService;
   @Inject private docenteHabilitadoService: () => DocenteHabilitadoService;
   @Inject private asesorExternoService: () => AsesorExternoService;
+  @Inject({ from: 'userService' }) private userManagementService: () => UserManagementService;
   @Inject private alertService: () => AlertService;
 
   public integrantesProyecto: IIntegranteProyecto[] = [];
@@ -101,11 +106,11 @@ export default class AsignarIntegrantes extends Vue {
   public opcionesExternos: any[] = [];
 
   get rolMayusculas(): string {
-    return this.role.toUpperCase();
+    return (this.candidateRole || this.role).toUpperCase();
   }
 
   get rolTitulo(): string {
-    return this.role === 'jurado' ? 'Jurado' : 'Asesor';
+    return this.rolNombre || (this.role === 'jurado' ? 'Jurado' : 'Asesor');
   }
 
   get labelTitulo(): string {
@@ -296,21 +301,27 @@ export default class AsignarIntegrantes extends Vue {
       this.facultadId = this.proyecto.facultadId;
       this.modalidadId = this.proyecto.proyectoModalidadId;
 
-      await this.cargarHabilitados();
-      await this.cargarExternos();
+      const rol = await this.rolesModalidadService().findRolModalidad(this.rolTitulo, this.modalidadId);
+      if (!rol || !rol.id) {
+        this.alertService().showAlert(`La modalidad no tiene configurado el rol ${this.rolTitulo}.`, 'danger');
+        return;
+      }
+      this.rolesModalidad = rol;
+      this.cantidadEsperada = rol.cantidad;
+      this.rolModalidadId = rol.id;
 
-      const resIntegrantes =
-        this.role === 'jurado'
-          ? await this.integranteProyectoService().retrieveJuradosProyecto(this.proyId, this.rolTitulo)
-          : await this.integranteProyectoService().retrieveAsesoresProyecto(this.proyId);
-      this.integrantesProyecto = resIntegrantes.data;
+      if (this.candidateSource === 'usuarios') {
+        await this.cargarUsuarios();
+      } else {
+        await this.cargarHabilitados();
+        await this.cargarExternos();
+      }
+
+      const resIntegrantes = await this.integranteProyectoService().retrieveEstudiantes(this.proyId, this.rolModalidadId);
+      this.integrantesProyecto = resIntegrantes.data || [];
       this.anadirDesignadosFueraDelPadron();
 
       if (this.integrantesProyecto.length === 0) {
-        const res = await this.rolesModalidadService().findRolModalidad(this.rolTitulo, this.modalidadId);
-        this.rolesModalidad = res;
-        this.cantidadEsperada = res.cantidad;
-        this.rolModalidadId = res.id;
         for (let i = 0; i < this.cantidadEsperada; i++) {
           const integrante = new IntegranteProyecto();
           integrante.integranteProyectoProyectoId = this.proyId;
@@ -321,6 +332,27 @@ export default class AsignarIntegrantes extends Vue {
       }
     } catch (e) {
       // La pagina padre delega el manejo del error en el alert global.
+    }
+  }
+
+  async cargarUsuarios() {
+    try {
+      const res = await this.userManagementService().retrieveAll();
+      const users: IUser[] = res.data || [];
+      const authority = this.rolMayusculas.startsWith('ROLE_') ? this.rolMayusculas : `ROLE_${this.rolMayusculas}`;
+      this.options = users
+        .filter(user => (user.authorities || []).indexOf(authority) >= 0)
+        .map(user => {
+          const nombre = `${user.firstName || ''} ${user.lastName || ''}`.trim();
+          return {
+            value: user.id,
+            text: nombre ? `${nombre} (${user.login})` : user.login,
+          };
+        });
+      this.opcionesExternos = [];
+    } catch (e) {
+      this.options = [];
+      this.opcionesExternos = [];
     }
   }
 }

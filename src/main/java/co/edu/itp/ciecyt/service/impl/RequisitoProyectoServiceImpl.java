@@ -3,6 +3,7 @@ package co.edu.itp.ciecyt.service.impl;
 import co.edu.itp.ciecyt.domain.Proyecto;
 import co.edu.itp.ciecyt.domain.Requisito;
 import co.edu.itp.ciecyt.domain.RequisitoProyecto;
+import co.edu.itp.ciecyt.domain.enumeration.EnumEstadoProyecto;
 import co.edu.itp.ciecyt.domain.enumeration.EnumEstadoRequisito;
 import co.edu.itp.ciecyt.repository.ProyectoRepository;
 import co.edu.itp.ciecyt.repository.RequisitoProyectoRepository;
@@ -37,6 +38,16 @@ public class RequisitoProyectoServiceImpl implements RequisitoProyectoService {
 
     /** Codigo del requisito de avance minimo del 75% (Acuerdo 025, art. 5, par. 1). */
     private static final String CODIGO_AVANCE_75 = "REQ_AVANCE_75";
+
+    /** Codigo del requisito de asistencia a sustentaciones (solo pregrado). */
+    private static final String CODIGO_ASISTENCIA_SUSTENTACIONES = "REQ_ASISTENCIA_SUSTENTACIONES";
+
+    /** Requisitos propios de Tesis de pregrado. */
+    private static final String CODIGO_FORMATO_TESIS = "T-FORMATO-INSCRIPCION-TESIS";
+    private static final String CODIGO_CARTA_AVAL_TESIS = "T-CARTA-AVAL-ASESOR";
+
+    private static final long MODALIDAD_TESIS = 9004L;
+    private static final long CICLO_POSGRADO = 4L;
 
     /**
      * Modalidades en las que no se exige el avance del 75%: 9005 Diplomado y 9007 Especializacion.
@@ -100,7 +111,12 @@ public class RequisitoProyectoServiceImpl implements RequisitoProyectoService {
 
     @Override
     public List<RequisitoProyectoDTO> generarParaProyecto(Long proyectoId) {
-        log.debug("Generando requisitos pendientes para el proyecto : {}", proyectoId);
+        return generarParaProyecto(proyectoId, EnumEstadoProyecto.EN_VALIDACION_DOCUMENTAL);
+    }
+
+    @Override
+    public List<RequisitoProyectoDTO> generarParaProyecto(Long proyectoId, EnumEstadoProyecto fase) {
+        log.debug("Generando requisitos de la fase {} para el proyecto : {}", fase, proyectoId);
         Proyecto proyecto = proyectoRepository.findById(proyectoId)
             .orElseThrow(() -> new IllegalArgumentException("Proyecto no encontrado: " + proyectoId));
 
@@ -108,11 +124,13 @@ public class RequisitoProyectoServiceImpl implements RequisitoProyectoService {
         if (modalidadId == null) {
             return new ArrayList<>();
         }
+        Long cicloId = proyecto.getProyectoCiclo() != null ? proyecto.getProyectoCiclo().getId() : null;
 
         List<Requisito> requisitos = requisitoRepository
             .findByRequisitoModalidadIdOrRequisitoModalidadIsNullOrderByNombreAsc(modalidadId).stream()
             .filter(r -> Boolean.TRUE.equals(r.getActivo()))
-            .filter(r -> aplicaAlProyecto(r, modalidadId))
+            .filter(r -> r.getRequisitoEstado() == null || r.getRequisitoEstado() == fase)
+            .filter(r -> aplicaAlProyecto(r, modalidadId, cicloId))
             .collect(Collectors.toList());
 
         for (Requisito requisito : requisitos) {
@@ -133,16 +151,30 @@ public class RequisitoProyectoServiceImpl implements RequisitoProyectoService {
     }
 
     /**
-     * Indica si un requisito aplica al proyecto dada su modalidad.
-     * Solo tiene reglas de exclusion el requisito de avance del 75%.
+     * Indica si un requisito aplica al proyecto dada su modalidad y ciclo.
+     * Las reglas reflejan el Acuerdo 025: el avance del 75 % no aplica a
+     * Diplomado, Especializacion ni Tesis de posgrado; la asistencia a
+     * sustentaciones y los requisitos propios de Tesis de pregrado no aplican
+     * al ciclo de posgrado.
      *
      * @param requisito requisito evaluado.
      * @param modalidadId id de la modalidad del proyecto.
+     * @param cicloId id del ciclo del proyecto.
      * @return {@code true} si el requisito debe generarse para el proyecto.
      */
-    private boolean aplicaAlProyecto(Requisito requisito, Long modalidadId) {
+    private boolean aplicaAlProyecto(Requisito requisito, Long modalidadId, Long cicloId) {
+        boolean posgrado = Long.valueOf(CICLO_POSGRADO).equals(cicloId);
         if (CODIGO_AVANCE_75.equals(requisito.getCodigo())) {
+            if (Long.valueOf(MODALIDAD_TESIS).equals(modalidadId) && posgrado) {
+                return false;
+            }
             return !MODALIDADES_SIN_AVANCE_75.contains(modalidadId);
+        }
+        if (CODIGO_ASISTENCIA_SUSTENTACIONES.equals(requisito.getCodigo())) {
+            return !posgrado;
+        }
+        if (CODIGO_FORMATO_TESIS.equals(requisito.getCodigo()) || CODIGO_CARTA_AVAL_TESIS.equals(requisito.getCodigo())) {
+            return !posgrado;
         }
         return true;
     }

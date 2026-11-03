@@ -5,6 +5,7 @@ import co.edu.itp.ciecyt.service.dto.SolicitudDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -28,6 +29,7 @@ public interface SolicitudService {
      */
     Page<SolicitudDTO> findAll(Pageable pageable);
 
+    List<SolicitudDTO> findByProyectoId(Long proyectoId);
 
     /**
      * Get the "id" solicitud.

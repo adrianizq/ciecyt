@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.9.xsd">
+
+    <!-- ==================================================================== -->
+    <!-- REQUISITOS ADICIONALES - ACUERDO 025, ART. 5 PAR. 2, TABLA 3         -->
+    <!-- Tesis de pregrado, Diplomado, Publicacion y Especializacion.         -->
+    <!-- ==================================================================== -->
+
+    <changeSet id="20261031000002-1" author="ciecyt">
+        <comment>Requisitos adicionales Tesis de pregrado (9004)</comment>
+
+        <insert tableName="requisito">
+            <column name="id" valueNumeric="95300"/>
+            <column name="codigo" value="T-FORMATO-INSCRIPCION-TESIS"/>
+            <column name="nombre" value="Formato de inscripcion de la propuesta de tesis"/>
+            <column name="descripcion" value="Diligenciado por el estudiante y avalado por el asesor (Acuerdo 025, art. 5 par. 2 y art. 28 par. 1)."/>
+            <column name="tipo" value="DOCUMENTO"/>
+            <column name="obligatorio" valueBoolean="true"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="requisito_estado" value="EN_VALIDACION_DOCUMENTAL"/>
+            <column name="requisito_modalidad_id" valueNumeric="9004"/>
+        </insert>
+
+        <insert tableName="requisito">
+            <column name="id" valueNumeric="95301"/>
+            <column name="codigo" value="T-CARTA-AVAL-ASESOR"/>
+            <column name="nombre" value="Carta de aval del asesor de tesis"/>
+            <column name="descripcion" value="Dirigida al CIECYT por el asesor de tesis (Acuerdo 025, art. 5 par. 2 y art. 28 par. 1)."/>
+            <column name="tipo" value="DOCUMENTO"/>
+            <column name="obligatorio" valueBoolean="true"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="requisito_estado" value="EN_VALIDACION_DOCUMENTAL"/>
+            <column name="requisito_modalidad_id" valueNumeric="9004"/>
+        </insert>
+    </changeSet>
+
+    <changeSet id="20261031000002-2" author="ciecyt">
+        <comment>Requisito adicional Diplomado de profundizacion (9005)</comment>
+
+        <insert tableName="requisito">
+            <column name="id" valueNumeric="95310"/>
+            <column name="codigo" value="D-SOPORTE-PAGO"/>
+            <column name="nombre" value="Soporte de pago del diplomado"/>
+            <column name="descripcion" value="Comprobante de pago ante tesoreria por el valor del diplomado contratado como opcion de grado (Acuerdo 025, art. 5 par. 2 y art. 32)."/>
+            <column name="tipo" value="DOCUMENTO"/>
+            <column name="obligatorio" valueBoolean="true"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="requisito_estado" value="EN_VALIDACION_DOCUMENTAL"/>
+            <column name="requisito_modalidad_id" valueNumeric="9005"/>
+        </insert>
+    </changeSet>
+
+    <changeSet id="20261031000002-3" author="ciecyt">
+        <comment>Requisito adicional Publicacion de articulo (9006)</comment>
+
+        <insert tableName="requisito">
+            <column name="id" valueNumeric="95320"/>
+            <column name="codigo" value="PA-CARTA-ACEPTACION"/>
+            <column name="nombre" value="Carta de aceptacion del articulo en la revista"/>
+            <column name="descripcion" value="Documento expedido por la revista indexada (Publindex u homologo internacional) que confirma la aceptacion del articulo (Acuerdo 025, art. 5 par. 2 y art. 34)."/>
+            <column name="tipo" value="DOCUMENTO"/>
+            <column name="obligatorio" valueBoolean="true"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="requisito_estado" value="EN_VALIDACION_DOCUMENTAL"/>
+            <column name="requisito_modalidad_id" valueNumeric="9006"/>
+        </insert>
+    </changeSet>
+
+    <changeSet id="20261031000002-4" author="ciecyt">
+        <comment>Requisito adicional Especializacion como opcion de grado (9007)</comment>
+
+        <insert tableName="requisito">
+            <column name="id" valueNumeric="95330"/>
+            <column name="codigo" value="E-PROPUESTA-INVESTIGACION"/>
+            <column name="nombre" value="Propuesta de investigacion para la especializacion"/>
+            <column name="descripcion" value="Presentada ante el programa de posgrado al momento de la matricula y remitida al CIECYT para seguimiento (Acuerdo 025, art. 5 par. 2 y art. 39)."/>
+            <column name="tipo" value="DOCUMENTO"/>
+            <column name="obligatorio" valueBoolean="true"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="requisito_estado" value="EN_VALIDACION_DOCUMENTAL"/>
+            <column name="requisito_modalidad_id" valueNumeric="9007"/>
+        </insert>
+    </changeSet>
+
+    <changeSet id="20261031000002-5" author="ciecyt">
+        <comment>Productos finales obligatorios de Tesis (documento y articulo cientifico)</comment>
+
+        <insert tableName="requisito">
+            <column name="id" valueNumeric="95302"/>
+            <column name="codigo" value="T-DOCUMENTO-FINAL-TESIS"/>
+            <column name="nombre" value="Documento final de tesis"/>
+            <column name="descripcion" value="Informe completo de la investigacion, en norma APA y con la estructura del metodo cientifico (Acuerdo 025, art. 28 par. 5 y art. 29 par. 6)."/>
+            <column name="tipo" value="DOCUMENTO"/>
+            <column name="obligatorio" valueBoolean="true"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="requisito_estado" value="EN_ELABORACION_PROYECTO"/>
+            <column name="requisito_modalidad_id" valueNumeric="9004"/>
+        </insert>
+
+        <insert tableName="requisito">
+            <column name="id" valueNumeric="95303"/>
+            <column name="codigo" value="T-ARTICULO-CIENTIFICO"/>
+            <column name="nombre" value="Articulo cientifico o de divulgacion"/>
+            <column name="descripcion" value="Producto obligatorio de la investigacion, elaborado segun el formato de una revista cientifica definida por el CIECYT; no es calificado por el jurado (Acuerdo 025, art. 28 par. 5 y art. 29 par. 6)."/>
+            <column name="tipo" value="DOCUMENTO"/>
+            <column name="obligatorio" valueBoolean="true"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="requisito_estado" value="EN_ELABORACION_PROYECTO"/>
+            <column name="requisito_modalidad_id" valueNumeric="9004"/>
+        </insert>
+    </changeSet>
+
+</databaseChangeLog>

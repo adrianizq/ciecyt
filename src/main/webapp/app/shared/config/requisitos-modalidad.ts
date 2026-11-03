@@ -153,19 +153,19 @@ export const REQUISITOS_ADICIONALES_POR_MODALIDAD: Record<number, RequisitoAdici
     },
   ],
   9004: [
-    // Tesis: pregrado y posgrado. La propuesta diferenciada la distingue el art. 28/29.
+    // Tesis de pregrado (no aplica al ciclo de posgrado).
     {
-      codigo: 'T-FORM-INSCRIPCION',
+      codigo: 'T-FORMATO-INSCRIPCION-TESIS',
       nombre: 'Formato de inscripcion de la propuesta de tesis',
       descripcion: 'Diligenciado por el estudiante y avalado por el asesor.',
-      referencia: 'Acuerdo 25 art. 28 par. 1 (pregrado) / art. 29 par. 1 (posgrado)',
+      referencia: 'Acuerdo 25 art. 5 par. 2 y art. 28 par. 1',
       firmantes: ['Estudiante', 'Asesor'],
     },
     {
-      codigo: 'T-CARTA-AVAL',
+      codigo: 'T-CARTA-AVAL-ASESOR',
       nombre: 'Carta de aval del asesor de tesis',
-      descripcion: 'Dirigida al CIECYT, firmada por el asesor.',
-      referencia: 'Acuerdo 25 art. 28 par. 1 (pregrado) / art. 29 par. 1 (posgrado)',
+      descripcion: 'Dirigida al CIECYT por el asesor de tesis.',
+      referencia: 'Acuerdo 25 art. 5 par. 2 y art. 28 par. 1',
       firmantes: ['Asesor'],
     },
   ],

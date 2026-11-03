@@ -122,6 +122,14 @@
     <include file="config/liquibase/changelog/20260929000000_adjunto_archivo_varchar.xml" relativeToChangelogFile="false"/>
     <!-- Requisitos Acuerdo 025, art. 5: requiere la tabla `requisito` creada en 20260811000001 -->
     <include file="config/liquibase/changelog/20260929000001_requisitos_art5_acuerdo25.xml" relativeToChangelogFile="false"/>
+    <!-- Requisitos adicionales de pasantias (Acuerdo 025, art. 5 par. 2, Tabla 3) -->
+    <include file="config/liquibase/changelog/20261031000001_requisitos_pasantias_acuerdo25.xml" relativeToChangelogFile="false"/>
+    <!-- Requisitos adicionales de Tesis pregrado, Diplomado, Publicacion y Especializacion -->
+    <include file="config/liquibase/changelog/20261031000002_requisitos_tesis_diplomado_publicacion_especializacion.xml" relativeToChangelogFile="false"/>
+    <!-- Repositorio institucional y derechos de autor (Acuerdo 025, art. 15) -->
+    <include file="config/liquibase/changelog/20261031000003_repositorio_derechos_autor.xml" relativeToChangelogFile="false"/>
+    <!-- Convocatorias de pasantia (Acuerdo 025, art. 16 par. 2 y art. 19) -->
+    <include file="config/liquibase/changelog/20261031000004_convocatorias_pasantia.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20260929000002_elemento_proyecto_guia.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20260929000003_informacion_pasantia_convenio.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20260929000004_pregunta_authority_authority_name.xml" relativeToChangelogFile="false"/>

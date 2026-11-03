@@ -1,5 +1,6 @@
 package co.edu.itp.ciecyt.service;
 
+import co.edu.itp.ciecyt.domain.enumeration.EnumEstadoProyecto;
 import co.edu.itp.ciecyt.domain.enumeration.EnumEstadoRequisito;
 import co.edu.itp.ciecyt.service.dto.RequisitoProyectoDTO;
 import java.util.List;
@@ -58,6 +59,15 @@ public interface RequisitoProyectoService {
      * @return the list of entities.
      */
     List<RequisitoProyectoDTO> generarParaProyecto(Long proyectoId);
+
+    /**
+     * Genera los requisitos que aplican a una fase concreta del proyecto.
+     *
+     * @param proyectoId id del proyecto.
+     * @param fase estado del flujo en el que se exigen los requisitos.
+     * @return the list of entities.
+     */
+    List<RequisitoProyectoDTO> generarParaProyecto(Long proyectoId, EnumEstadoProyecto fase);
 
     /**
      * Marca un requisito como entregado por parte del estudiante.

@@ -76,6 +76,41 @@ public interface ProyectoService {
     ProyectoDTO validarDocumentacion(Long proyectoId, boolean aprobado, String observacion);
 
     /**
+     * Registra el DOI o URL del artículo publicado para la opción de grado
+     * Publicación de Artículo (Acuerdo 025, art. 35 y 36).
+     *
+     * @param proyectoId id del proyecto.
+     * @param url DOI o URL del artículo.
+     * @param observacion observación opcional.
+     * @return el proyecto actualizado.
+     */
+    ProyectoDTO registrarPublicacion(Long proyectoId, String url, String observacion);
+
+    /**
+     * Registra la certificación de módulos del Diplomado o del primer semestre
+     * de la Especialización y pasa el proyecto a nota definitiva (Acuerdo 025,
+     * art. 32 y art. 39).
+     *
+     * @param proyectoId id del proyecto.
+     * @param aprobado true si la certificación es aprobatoria.
+     * @param observacion observación de la certificación.
+     * @return el proyecto actualizado.
+     */
+    ProyectoDTO registrarCertificacion(Long proyectoId, boolean aprobado, String observacion);
+
+    /**
+     * Registra la URL del documento en el repositorio institucional y, si
+     * aplica, la solicitud de exclusión con su justificación (Acuerdo 025, art. 15).
+     *
+     * @param proyectoId id del proyecto.
+     * @param url URL del documento en el repositorio.
+     * @param excluido true si se solicita exclusión del repositorio.
+     * @param justificacion justificación de la exclusión.
+     * @return el proyecto actualizado.
+     */
+    ProyectoDTO registrarRepositorio(Long proyectoId, String url, boolean excluido, String justificacion);
+
+    /**
      * Inicia la calidad de continuidad del proyecto (Acuerdo 025, art. 10, parágrafo 3):
      * terminado el plan de estudios, el estudiante dispone de tres (3) periodos académicos
      * para sustentar o socializar su opción de grado.

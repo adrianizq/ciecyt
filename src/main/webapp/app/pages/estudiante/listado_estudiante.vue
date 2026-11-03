@@ -83,6 +83,13 @@
                   </router-link>
                 </div>
                 <!-- Diplomado y Especialización: SIN FLUJO -->
+                <div class="btn-group">
+                  <router-link :to="{ name: 'SolicitarNovedadView', params: { proyectoId: proyecto.id } }">
+                    <button type="button" class="btn btn-outline-secondary">
+                      <font-awesome-icon icon="comment-dots" />&nbsp;<span>Solicitar novedad</span>
+                    </button>
+                  </router-link>
+                </div>
               </td>
             </tr>
 

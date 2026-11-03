@@ -16,6 +16,7 @@ import co.edu.itp.ciecyt.errors.BadRequestAlertException;
 import co.edu.itp.ciecyt.service.DocenteHabilitadoService;
 import co.edu.itp.ciecyt.service.IntegranteProyectoService;
 import co.edu.itp.ciecyt.service.RolesModalidadService;
+import co.edu.itp.ciecyt.security.AuthoritiesConstants;
 import co.edu.itp.ciecyt.service.dto.IntegranteProyectoDTO;
 import co.edu.itp.ciecyt.service.dto.ProyectoDTO;
 import co.edu.itp.ciecyt.service.dto.RolesModalidadDTO;
@@ -136,6 +137,9 @@ public class IntegranteProyectoServiceImpl implements IntegranteProyectoService 
      */
     private void validarPadronDeHabilitados(IntegranteProyectoDTO dto, Long idProyecto, String autoridad) {
         if (autoridad == null) {
+            return;
+        }
+        if (AuthoritiesConstants.CIECYT.equals(autoridad) || AuthoritiesConstants.ADMIN.equals(autoridad)) {
             return;
         }
         String rol = "ROLE_JURADO".equals(autoridad)

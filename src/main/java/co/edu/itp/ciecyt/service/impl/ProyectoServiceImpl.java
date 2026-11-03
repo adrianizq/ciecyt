@@ -10,8 +10,10 @@ import co.edu.itp.ciecyt.domain.TransicionEstado;
 import co.edu.itp.ciecyt.domain.User;
 import co.edu.itp.ciecyt.domain.enumeration.EnumEstadoProyecto;
 import co.edu.itp.ciecyt.domain.enumeration.EnumEstadoContinuidad;
+import co.edu.itp.ciecyt.domain.enumeration.EnumEstadoPostulacion;
 import co.edu.itp.ciecyt.domain.enumeration.EnumEstadoRequisito;
 import co.edu.itp.ciecyt.repository.EstadoModalidadRepository;
+import co.edu.itp.ciecyt.repository.PostulacionPasantiaRepository;
 import co.edu.itp.ciecyt.repository.LineaInvestigacionRepository;
 import co.edu.itp.ciecyt.repository.ProgramaRepository;
 import co.edu.itp.ciecyt.repository.ProyectoHistorialEstadoRepository;
@@ -109,6 +111,7 @@ public class ProyectoServiceImpl implements ProyectoService {
     private final UserRepository userRepository;
     private final RequisitoProyectoService requisitoProyectoService;
     private final ProyectoAutorizacionService proyectoAutorizacionService;
+    private final PostulacionPasantiaRepository postulacionPasantiaRepository;
 
     private final DecanoFacultadService decanoFacultadService;
 
@@ -128,7 +131,8 @@ public class ProyectoServiceImpl implements ProyectoService {
         UserRepository userRepository,
         RequisitoProyectoService requisitoProyectoService,
         ProyectoAutorizacionService proyectoAutorizacionService,
-        DecanoFacultadService decanoFacultadService
+        DecanoFacultadService decanoFacultadService,
+        PostulacionPasantiaRepository postulacionPasantiaRepository
     ) {
         this.proyectoRepository = proyectoRepository;
         this.proyectoMapper = proyectoMapper;
@@ -144,6 +148,7 @@ public class ProyectoServiceImpl implements ProyectoService {
         this.proyectoAutorizacionService = proyectoAutorizacionService;
         this.decanoFacultadService = decanoFacultadService;
         this.requisitoProyectoService = requisitoProyectoService;
+        this.postulacionPasantiaRepository = postulacionPasantiaRepository;
     }
 
     /**
@@ -366,11 +371,54 @@ public class ProyectoServiceImpl implements ProyectoService {
 
         validarContinuidadParaSustentacion(proyecto, nuevoEstado);
 
+        if (
+            nuevoEstado == EnumEstadoProyecto.EN_VALIDACION_DOCUMENTAL &&
+            proyecto.getProyectoModalidad() != null &&
+            Long.valueOf(9003L).equals(proyecto.getProyectoModalidad().getId()) &&
+            !postulacionPasantiaRepository.existsByProyectoIdAndEstado(proyectoId, EnumEstadoPostulacion.SELECCIONADO)
+        ) {
+            throw new BadRequestAlertException(
+                "Para la pasantia internacional debe tener una postulacion seleccionada por el CIECYT",
+                "proyecto",
+                "postulacionrequerida"
+            );
+        }
+
         validarTransicionPermitida(proyecto, estadoAnterior, nuevoEstado);
+
+        if (
+            nuevoEstado == EnumEstadoProyecto.EN_REVISION_JURADO_PROYECTO &&
+            proyecto.getProyectoModalidad() != null &&
+            Long.valueOf(9004L).equals(proyecto.getProyectoModalidad().getId())
+        ) {
+            boolean faltan = requisitoProyectoService
+                .findByProyectoId(proyectoId)
+                .stream()
+                .filter(r ->
+                    "T-DOCUMENTO-FINAL-TESIS".equals(r.getRequisitoProyectoRequisitoCodigo()) ||
+                    "T-ARTICULO-CIENTIFICO".equals(r.getRequisitoProyectoRequisitoCodigo())
+                )
+                .anyMatch(r ->
+                    r.getEstado() != EnumEstadoRequisito.ENTREGADO && r.getEstado() != EnumEstadoRequisito.APROBADO
+                );
+            if (faltan) {
+                throw new IllegalArgumentException(
+                    "Antes de enviar al jurado debe cargar el documento final y el articulo cientifico de la tesis."
+                );
+            }
+        }
 
         proyecto.setEstado(nuevoEstado);
         sincronizarFlagsLegacy(proyecto, nuevoEstado);
         proyecto = proyectoRepository.save(proyecto);
+
+        if (
+            nuevoEstado == EnumEstadoProyecto.EN_ELABORACION_PROYECTO &&
+            proyecto.getProyectoModalidad() != null &&
+            Long.valueOf(9004L).equals(proyecto.getProyectoModalidad().getId())
+        ) {
+            requisitoProyectoService.generarParaProyecto(proyectoId, EnumEstadoProyecto.EN_ELABORACION_PROYECTO);
+        }
 
         ProyectoHistorialEstado historial = new ProyectoHistorialEstado();
         historial.setProyecto(proyecto);
@@ -691,6 +739,16 @@ public class ProyectoServiceImpl implements ProyectoService {
      */
     @Override
     public ProyectoDTO solicitarValidacionDocumental(Long proyectoId) {        log.debug("Solicitando validacion documental del proyecto : {}", proyectoId);
+        Proyecto proyecto = proyectoRepository.findById(proyectoId)
+            .orElseThrow(() -> new IllegalArgumentException("Proyecto no encontrado: " + proyectoId));
+        Long modalidadId = proyecto.getProyectoModalidad() != null ? proyecto.getProyectoModalidad().getId() : null;
+        if (Long.valueOf(9003L).equals(modalidadId) && !postulacionPasantiaRepository.existsByProyectoIdAndEstado(proyectoId, EnumEstadoPostulacion.SELECCIONADO)) {
+            throw new BadRequestAlertException(
+                "Para la pasantia internacional debe tener una postulacion seleccionada por el CIECYT",
+                "proyecto",
+                "postulacionrequerida"
+            );
+        }
         requisitoProyectoService.generarParaProyecto(proyectoId);
         return cambiarEstado(proyectoId, EnumEstadoProyecto.EN_VALIDACION_DOCUMENTAL, "Solicitud de validación documental");
     }
@@ -727,6 +785,98 @@ public class ProyectoServiceImpl implements ProyectoService {
         }
 
         return cambiarEstado(proyectoId, EnumEstadoProyecto.OBSERVACIONES_DOCUMENTACION, observacion);
+    }
+
+    @Override
+    public ProyectoDTO registrarPublicacion(Long proyectoId, String url, String observacion) {
+        Proyecto proyecto = proyectoRepository.findById(proyectoId)
+            .orElseThrow(() -> new IllegalArgumentException("Proyecto no encontrado: " + proyectoId));
+        if (proyecto.getProyectoModalidad() == null || !Long.valueOf(9006L).equals(proyecto.getProyectoModalidad().getId())) {
+            throw new BadRequestAlertException(
+                "El registro de DOI/URL solo aplica a la opcion de grado Publicacion de Articulo",
+                "proyecto",
+                "modalidadinvalida"
+            );
+        }
+        proyecto.setUrl(url);
+        proyecto = proyectoRepository.save(proyecto);
+
+        ProyectoHistorialEstado historial = new ProyectoHistorialEstado();
+        historial.setProyecto(proyecto);
+        historial.setEstadoAnterior(proyecto.getEstado());
+        historial.setEstadoNuevo(proyecto.getEstado());
+        historial.setObservacion(
+            observacion != null && !observacion.trim().isEmpty()
+                ? observacion
+                : "DOI/URL del articulo registrado: " + (url != null ? url : "sin dato")
+        );
+        historial.setUsuarioLogin(SecurityUtils.getCurrentUserLogin().orElse(Constants.SYSTEM_ACCOUNT));
+        historial.setFechaCambio(Instant.now());
+        proyectoHistorialEstadoRepository.save(historial);
+
+        return proyectoMapper.toDto(proyecto);
+    }
+
+    @Override
+    public ProyectoDTO registrarCertificacion(Long proyectoId, boolean aprobado, String observacion) {
+        Proyecto proyecto = proyectoRepository.findById(proyectoId)
+            .orElseThrow(() -> new IllegalArgumentException("Proyecto no encontrado: " + proyectoId));
+        Long modalidad = proyecto.getProyectoModalidad() != null ? proyecto.getProyectoModalidad().getId() : null;
+        if (modalidad == null || !(Long.valueOf(9005L).equals(modalidad) || Long.valueOf(9007L).equals(modalidad))) {
+            throw new BadRequestAlertException(
+                "La certificacion de modulos solo aplica a Diplomado o Especializacion",
+                "proyecto",
+                "modalidadinvalida"
+            );
+        }
+        if (proyecto.getEstado() != EnumEstadoProyecto.EN_ELABORACION_PROYECTO) {
+            throw new BadRequestAlertException(
+                "La certificacion se registra cuando el proyecto esta en elaboracion",
+                "proyecto",
+                "estadoinvalido"
+            );
+        }
+        proyecto.setNota(aprobado ? 5.0 : 0.0);
+        proyectoRepository.save(proyecto);
+        return cambiarEstado(
+            proyectoId,
+            EnumEstadoProyecto.NOTA_DEFINITIVA,
+            observacion != null && !observacion.trim().isEmpty()
+                ? observacion
+                : (aprobado ? "Certificacion de la opcion de grado aprobada" : "Certificacion de la opcion de grado reprobada")
+        );
+    }
+
+    @Override
+    public ProyectoDTO registrarRepositorio(Long proyectoId, String url, boolean excluido, String justificacion) {
+        Proyecto proyecto = proyectoRepository.findById(proyectoId)
+            .orElseThrow(() -> new IllegalArgumentException("Proyecto no encontrado: " + proyectoId));
+        if (excluido && (justificacion == null || justificacion.trim().isEmpty())) {
+            throw new BadRequestAlertException(
+                "La solicitud de exclusion del repositorio requiere justificacion",
+                "proyecto",
+                "justificacionRequerida"
+            );
+        }
+        proyecto.setRepositorioUrl(url);
+        proyecto.setRepositorioExcluido(excluido);
+        proyecto.setRepositorioJustificacion(excluido ? justificacion : null);
+        proyecto = proyectoRepository.save(proyecto);
+
+        ProyectoHistorialEstado historial = new ProyectoHistorialEstado();
+        historial.setProyecto(proyecto);
+        historial.setEstadoAnterior(proyecto.getEstado());
+        historial.setEstadoNuevo(proyecto.getEstado());
+        historial.setObservacion(
+            excluido
+                ? "Repositorio: exclusion solicitada - " + justificacion
+                : "Repositorio: " + (url != null && !url.trim().isEmpty() ? url : "sin URL registrada")
+        );
+        historial.setUsuarioLogin(SecurityUtils.getCurrentUserLogin().orElse(Constants.SYSTEM_ACCOUNT));
+        historial.setFechaCambio(Instant.now());
+        proyectoHistorialEstadoRepository.save(historial);
+
+        return proyectoMapper.toDto(proyecto);
     }
 
     /**

@@ -230,6 +230,45 @@ export default class ProyectoService {
     });
   }
 
+  public registrarPublicacion(id: number, url: string, observacion?: string): Promise<IProyecto> {
+    return new Promise<IProyecto>((resolve, reject) => {
+      axios
+        .post(`${baseApiUrl}/${id}/publicacion`, { url, observacion })
+        .then(res => {
+          resolve(res.data);
+        })
+        .catch(err => {
+          reject(err);
+        });
+    });
+  }
+
+  public registrarCertificacion(id: number, aprobado: boolean, observacion?: string): Promise<IProyecto> {
+    return new Promise<IProyecto>((resolve, reject) => {
+      axios
+        .post(`${baseApiUrl}/${id}/certificacion`, { aprobado, observacion })
+        .then(res => {
+          resolve(res.data);
+        })
+        .catch(err => {
+          reject(err);
+        });
+    });
+  }
+
+  public registrarRepositorio(id: number, url: string, excluido: boolean, justificacion?: string): Promise<IProyecto> {
+    return new Promise<IProyecto>((resolve, reject) => {
+      axios
+        .post(`${baseApiUrl}/${id}/repositorio`, { url, excluido, justificacion })
+        .then(res => {
+          resolve(res.data);
+        })
+        .catch(err => {
+          reject(err);
+        });
+    });
+  }
+
   public programarActo(id: number, fecha: string): Promise<IProyecto> {
     return new Promise<IProyecto>((resolve, reject) => {
       axios

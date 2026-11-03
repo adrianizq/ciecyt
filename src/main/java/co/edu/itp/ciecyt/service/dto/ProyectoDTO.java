@@ -18,6 +18,12 @@ public class ProyectoDTO implements Serializable {
 
     private String url;
 
+    private String repositorioUrl;
+
+    private Boolean repositorioExcluido;
+
+    private String repositorioJustificacion;
+
     private String lugarEjecucion;
 
     private String duracion;
@@ -152,6 +158,30 @@ public class ProyectoDTO implements Serializable {
 
     public void setUrl(String url) {
         this.url = url;
+    }
+
+    public String getRepositorioUrl() {
+        return repositorioUrl;
+    }
+
+    public void setRepositorioUrl(String repositorioUrl) {
+        this.repositorioUrl = repositorioUrl;
+    }
+
+    public Boolean getRepositorioExcluido() {
+        return repositorioExcluido;
+    }
+
+    public void setRepositorioExcluido(Boolean repositorioExcluido) {
+        this.repositorioExcluido = repositorioExcluido;
+    }
+
+    public String getRepositorioJustificacion() {
+        return repositorioJustificacion;
+    }
+
+    public void setRepositorioJustificacion(String repositorioJustificacion) {
+        this.repositorioJustificacion = repositorioJustificacion;
     }
 
     public String getLugarEjecucion() {

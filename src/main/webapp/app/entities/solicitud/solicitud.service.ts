@@ -29,6 +29,17 @@ export default class SolicitudService {
     });
   }
 
+  public findByProyecto(proyectoId: number): Promise<ISolicitud[]> {
+    return new Promise<ISolicitud[]>((resolve, reject) => {
+      axios
+        .get(`${baseApiUrl}/proyecto/${proyectoId}`)
+        .then(res => {
+          resolve(res.data);
+        })
+        .catch(reject);
+    });
+  }
+
   public delete(id: number): Promise<any> {
     return new Promise<any>((resolve, reject) => {
       axios

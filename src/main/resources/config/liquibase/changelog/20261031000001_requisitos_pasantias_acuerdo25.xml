@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.9.xsd">
+
+    <!-- ==================================================================== -->
+    <!-- REQUISITOS ADICIONALES DE PASANTIAS - ACUERDO 025, ART. 5, PAR. 2    -->
+    <!-- Tabla 3: documentos propios de cada modalidad de pasantia.           -->
+    <!-- Se persisten para que el estudiante los entregue y el CIECYT los     -->
+    <!-- valide antes de habilitar la propuesta.                              -->
+    <!-- ==================================================================== -->
+
+    <changeSet id="20261031000001-1" author="ciecyt">
+        <comment>Requisitos adicionales Pasantia Tecnologica (9001)</comment>
+
+        <insert tableName="requisito">
+            <column name="id" valueNumeric="95200"/>
+            <column name="codigo" value="PT-OFICIO-DECANO"/>
+            <column name="nombre" value="Oficio de presentacion del pasante"/>
+            <column name="descripcion" value="Expedido por el decano de la facultad a la que pertenece el estudiante (Acuerdo 025, art. 5 par. 2, Tabla 3)."/>
+            <column name="tipo" value="DOCUMENTO"/>
+            <column name="obligatorio" valueBoolean="true"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="requisito_estado" value="EN_VALIDACION_DOCUMENTAL"/>
+            <column name="requisito_modalidad_id" valueNumeric="9001"/>
+        </insert>
+
+        <insert tableName="requisito">
+            <column name="id" valueNumeric="95201"/>
+            <column name="codigo" value="PT-FORM-AUTORIZACION"/>
+            <column name="nombre" value="Formato de autorizacion para el desarrollo de la pasantia"/>
+            <column name="descripcion" value="Firmado por el decano de facultad (Acuerdo 025, art. 5 par. 2, Tabla 3)."/>
+            <column name="tipo" value="DOCUMENTO"/>
+            <column name="obligatorio" valueBoolean="true"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="requisito_estado" value="EN_VALIDACION_DOCUMENTAL"/>
+            <column name="requisito_modalidad_id" valueNumeric="9001"/>
+        </insert>
+
+        <insert tableName="requisito">
+            <column name="id" valueNumeric="95202"/>
+            <column name="codigo" value="PT-FORM-PROPUESTA"/>
+            <column name="nombre" value="Formato de presentacion de la propuesta de pasantia"/>
+            <column name="descripcion" value="Viabilizado por el decano de facultad (o quien haga sus veces), el asesor y el representante legal de la empresa u organizacion (Acuerdo 025, art. 5 par. 2, Tabla 3)."/>
+            <column name="tipo" value="DOCUMENTO"/>
+            <column name="obligatorio" valueBoolean="true"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="requisito_estado" value="EN_VALIDACION_DOCUMENTAL"/>
+            <column name="requisito_modalidad_id" valueNumeric="9001"/>
+        </insert>
+
+        <insert tableName="requisito">
+            <column name="id" valueNumeric="95203"/>
+            <column name="codigo" value="PT-ACTA-INICIO"/>
+            <column name="nombre" value="Acta de inicio de la pasantia"/>
+            <column name="descripcion" value="Firmada por el estudiante, el asesor y el representante legal de la empresa u organizacion (Acuerdo 025, art. 5 par. 2, Tabla 3)."/>
+            <column name="tipo" value="DOCUMENTO"/>
+            <column name="obligatorio" valueBoolean="true"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="requisito_estado" value="EN_VALIDACION_DOCUMENTAL"/>
+            <column name="requisito_modalidad_id" valueNumeric="9001"/>
+        </insert>
+    </changeSet>
+
+    <changeSet id="20261031000001-2" author="ciecyt">
+        <comment>Requisitos adicionales Pasantia Investigativa Profesional (9002)</comment>
+
+        <insert tableName="requisito">
+            <column name="id" valueNumeric="95210"/>
+            <column name="codigo" value="PIP-OFICIO-DECANO"/>
+            <column name="nombre" value="Oficio de presentacion del pasante"/>
+            <column name="descripcion" value="Expedido por el decano de la facultad a la que pertenece el estudiante (Acuerdo 025, art. 5 par. 2, Tabla 3)."/>
+            <column name="tipo" value="DOCUMENTO"/>
+            <column name="obligatorio" valueBoolean="true"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="requisito_estado" value="EN_VALIDACION_DOCUMENTAL"/>
+            <column name="requisito_modalidad_id" valueNumeric="9002"/>
+        </insert>
+
+        <insert tableName="requisito">
+            <column name="id" valueNumeric="95211"/>
+            <column name="codigo" value="PIP-FORM-AUTORIZACION"/>
+            <column name="nombre" value="Formato de autorizacion para el desarrollo de la pasantia"/>
+            <column name="descripcion" value="Firmado por el decano de facultad (Acuerdo 025, art. 5 par. 2, Tabla 3)."/>
+            <column name="tipo" value="DOCUMENTO"/>
+            <column name="obligatorio" valueBoolean="true"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="requisito_estado" value="EN_VALIDACION_DOCUMENTAL"/>
+            <column name="requisito_modalidad_id" valueNumeric="9002"/>
+        </insert>
+
+        <insert tableName="requisito">
+            <column name="id" valueNumeric="95212"/>
+            <column name="codigo" value="PIP-FORM-PROPUESTA"/>
+            <column name="nombre" value="Formato de presentacion de la propuesta de pasantia"/>
+            <column name="descripcion" value="Viabilizado por el decano de facultad (o quien haga sus veces), el asesor y el representante legal (Acuerdo 025, art. 5 par. 2, Tabla 3)."/>
+            <column name="tipo" value="DOCUMENTO"/>
+            <column name="obligatorio" valueBoolean="true"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="requisito_estado" value="EN_VALIDACION_DOCUMENTAL"/>
+            <column name="requisito_modalidad_id" valueNumeric="9002"/>
+        </insert>
+
+        <insert tableName="requisito">
+            <column name="id" valueNumeric="95213"/>
+            <column name="codigo" value="PIP-ACTA-INICIO"/>
+            <column name="nombre" value="Acta de inicio de la pasantia"/>
+            <column name="descripcion" value="Firmada por el estudiante, el asesor y el representante legal (Acuerdo 025, art. 5 par. 2, Tabla 3)."/>
+            <column name="tipo" value="DOCUMENTO"/>
+            <column name="obligatorio" valueBoolean="true"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="requisito_estado" value="EN_VALIDACION_DOCUMENTAL"/>
+            <column name="requisito_modalidad_id" valueNumeric="9002"/>
+        </insert>
+    </changeSet>
+
+    <changeSet id="20261031000001-3" author="ciecyt">
+        <comment>Requisitos adicionales Pasantia Internacional (9003)</comment>
+
+        <insert tableName="requisito">
+            <column name="id" valueNumeric="95220"/>
+            <column name="codigo" value="PI-OFICIO-DECANO"/>
+            <column name="nombre" value="Oficio de presentacion del pasante"/>
+            <column name="descripcion" value="Expedido por el decano de la facultad (Acuerdo 025, art. 5 par. 2, Tabla 3)."/>
+            <column name="tipo" value="DOCUMENTO"/>
+            <column name="obligatorio" valueBoolean="true"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="requisito_estado" value="EN_VALIDACION_DOCUMENTAL"/>
+            <column name="requisito_modalidad_id" valueNumeric="9003"/>
+        </insert>
+
+        <insert tableName="requisito">
+            <column name="id" valueNumeric="95221"/>
+            <column name="codigo" value="PI-FORM-AUTORIZACION"/>
+            <column name="nombre" value="Formato de autorizacion para el desarrollo de la pasantia"/>
+            <column name="descripcion" value="Firmado por el decano de facultad (Acuerdo 025, art. 5 par. 2, Tabla 3)."/>
+            <column name="tipo" value="DOCUMENTO"/>
+            <column name="obligatorio" valueBoolean="true"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="requisito_estado" value="EN_VALIDACION_DOCUMENTAL"/>
+            <column name="requisito_modalidad_id" valueNumeric="9003"/>
+        </insert>
+
+        <insert tableName="requisito">
+            <column name="id" valueNumeric="95222"/>
+            <column name="codigo" value="PI-FORM-PROPUESTA"/>
+            <column name="nombre" value="Formato de presentacion de la propuesta de pasantia"/>
+            <column name="descripcion" value="Viabilizado por el decano, el asesor y el representante legal (Acuerdo 025, art. 5 par. 2, Tabla 3)."/>
+            <column name="tipo" value="DOCUMENTO"/>
+            <column name="obligatorio" valueBoolean="true"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="requisito_estado" value="EN_VALIDACION_DOCUMENTAL"/>
+            <column name="requisito_modalidad_id" valueNumeric="9003"/>
+        </insert>
+
+        <insert tableName="requisito">
+            <column name="id" valueNumeric="95223"/>
+            <column name="codigo" value="PI-ACTA-INICIO"/>
+            <column name="nombre" value="Acta de inicio de la pasantia"/>
+            <column name="descripcion" value="Firmada por el estudiante, el asesor y el representante legal (Acuerdo 025, art. 5 par. 2, Tabla 3)."/>
+            <column name="tipo" value="DOCUMENTO"/>
+            <column name="obligatorio" valueBoolean="true"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="requisito_estado" value="EN_VALIDACION_DOCUMENTAL"/>
+            <column name="requisito_modalidad_id" valueNumeric="9003"/>
+        </insert>
+
+        <insert tableName="requisito">
+            <column name="id" valueNumeric="95224"/>
+            <column name="codigo" value="PI-CARTA-ACEPTACION"/>
+            <column name="nombre" value="Carta de aceptacion de la institucion anfitriona"/>
+            <column name="descripcion" value="Documento original expedido por la institucion donde se realizara la pasantia internacional (Acuerdo 025, art. 5 par. 2, Tabla 3)."/>
+            <column name="tipo" value="DOCUMENTO"/>
+            <column name="obligatorio" valueBoolean="true"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="requisito_estado" value="EN_VALIDACION_DOCUMENTAL"/>
+            <column name="requisito_modalidad_id" valueNumeric="9003"/>
+        </insert>
+
+        <insert tableName="requisito">
+            <column name="id" valueNumeric="95225"/>
+            <column name="codigo" value="PI-PASAPORTE-VISA"/>
+            <column name="nombre" value="Copia del pasaporte y visa (si aplica)"/>
+            <column name="descripcion" value="Copia vigente del pasaporte del estudiante y de la visa cuando el pais lo requiera (Acuerdo 025, art. 5 par. 2, Tabla 3)."/>
+            <column name="tipo" value="DOCUMENTO"/>
+            <column name="obligatorio" valueBoolean="true"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="requisito_estado" value="EN_VALIDACION_DOCUMENTAL"/>
+            <column name="requisito_modalidad_id" valueNumeric="9003"/>
+        </insert>
+    </changeSet>
+
+</databaseChangeLog>

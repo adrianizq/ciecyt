@@ -28,6 +28,7 @@ import 'bootstrap-vue-next/dist/bootstrap-vue-next.css';
 import '../content/scss/global.scss';
 import AlertService from '@/shared/alert/alert.service';
 import NotificacionService from '@/shared/alert/notificacion.service';
+import PlazoService from '@/entities/plazo/plazo.service';
 import TranslationService from '@/locale/translation.service';
 import ConfigurationService from '@/admin/configuration/configuration.service';
 
@@ -67,6 +68,7 @@ import SolicitudService from '@/entities/solicitud/solicitud.service';
 import AdjuntoProyectoFaseService from '@/entities/adjunto-proyecto-fase/adjunto-proyecto-fase.service';
 import RequisitoProyectoService from '@/entities/requisito-proyecto/requisito-proyecto.service';
 import ProyectoHistorialEstadoService from '@/entities/proyecto-historial-estado/proyecto-historial-estado.service';
+import ConvocatoriaPasantiaService from '@/entities/convocatoria-pasantia/convocatoria-pasantia.service';
 import RetroalimentacionService from '@/entities/retroalimentacion/retroalimentacion.service';
 import AdjuntoRetroalimentacionService from '@/entities/adjunto-retroalimentacion/adjunto-retroalimentacion.service';
 import FichaTecnicaService from '@/entities/ficha-tecnica/ficha-tecnica.service';
@@ -150,6 +152,7 @@ const provide: Record<string, unknown> = {
   metricsService: () => new MetricsService(),
   alertService: () => alertService,
   notificacionService: () => new NotificacionService(),
+  plazoService: () => new PlazoService(),
   translationService: () => translationService,
   proyectoService: () => new ProyectoService(),
   docenteHabilitadoService: () => new DocenteHabilitadoService(),
@@ -188,6 +191,7 @@ const provide: Record<string, unknown> = {
   adjuntoProyectoFaseService: () => new AdjuntoProyectoFaseService(),
   requisitoProyectoService: () => new RequisitoProyectoService(),
   proyectoHistorialEstadoService: () => new ProyectoHistorialEstadoService(),
+  convocatoriaPasantiaService: () => new ConvocatoriaPasantiaService(),
   retroalimentacionService: () => new RetroalimentacionService(),
   adjuntoRetroalimentacionService: () => new AdjuntoRetroalimentacionService(),
   fichaTecnicaService: () => new FichaTecnicaService(),

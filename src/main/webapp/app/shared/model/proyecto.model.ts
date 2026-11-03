@@ -6,6 +6,9 @@ export interface IProyecto {
   id?: number;
   titulo?: string;
   url?: string;
+  repositorioUrl?: string;
+  repositorioExcluido?: boolean;
+  repositorioJustificacion?: string;
   lugarEjecucion?: string;
   duracion?: string;
   fechaIni?: Date;
@@ -120,6 +123,9 @@ export class Proyecto implements IProyecto {
     public fechaUltimoCambio?: Date,
     public periodosContinuidadUsados?: number,
     public continuidadPeriodoAdicional?: boolean,
-    public estadoContinuidad?: EnumEstadoContinuidad
+    public estadoContinuidad?: EnumEstadoContinuidad,
+    public repositorioUrl?: string,
+    public repositorioExcluido?: boolean,
+    public repositorioJustificacion?: string
   ) {}
 }

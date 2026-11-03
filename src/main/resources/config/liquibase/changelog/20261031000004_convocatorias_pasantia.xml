@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.9.xsd">
+
+    <changeSet id="20261031000004-1" author="ciecyt">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="convocatoria_pasantia"/>
+            </not>
+        </preConditions>
+        <createTable tableName="convocatoria_pasantia">
+            <column name="id" type="bigint">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="titulo" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="descripcion" type="text"/>
+            <column name="modalidad_id" type="bigint"/>
+            <column name="entidad" type="varchar(255)"/>
+            <column name="convenio" type="varchar(255)"/>
+            <column name="cupos" type="integer"/>
+            <column name="fecha_apertura" type="date"/>
+            <column name="fecha_cierre" type="date"/>
+            <column name="requisitos" type="text"/>
+            <column name="criterios_seleccion" type="text"/>
+            <column name="estado" type="varchar(30)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="activo" type="boolean" defaultValueBoolean="true">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="20261031000004-2" author="ciecyt">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="postulacion_pasantia"/>
+            </not>
+        </preConditions>
+        <createTable tableName="postulacion_pasantia">
+            <column name="id" type="bigint">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="convocatoria_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="proyecto_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="usuario_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="estado" type="varchar(30)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="fecha_postulacion" type="date">
+                <constraints nullable="false"/>
+            </column>
+            <column name="observacion" type="text"/>
+            <column name="fecha_decision" type="date"/>
+        </createTable>
+        <addForeignKeyConstraint
+            baseTableName="postulacion_pasantia"
+            baseColumnNames="convocatoria_id"
+            constraintName="fk_postulacion_convocatoria"
+            referencedTableName="convocatoria_pasantia"
+            referencedColumnNames="id"/>
+        <addForeignKeyConstraint
+            baseTableName="postulacion_pasantia"
+            baseColumnNames="proyecto_id"
+            constraintName="fk_postulacion_proyecto"
+            referencedTableName="proyecto"
+            referencedColumnNames="id"/>
+        <addUniqueConstraint
+            tableName="postulacion_pasantia"
+            columnNames="convocatoria_id, proyecto_id"
+            constraintName="ux_postulacion_convocatoria_proyecto"/>
+    </changeSet>
+
+    <changeSet id="20261031000004-3" author="ciecyt">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">SELECT COUNT(*) FROM menu WHERE id = 7001</sqlCheck>
+        </preConditions>
+        <insert tableName="menu">
+            <column name="id" valueNumeric="7001"/>
+            <column name="nombre" value="Convocatorias de pasantia"/>
+            <column name="url" value="/convocatorias-pasantia"/>
+            <column name="icono" value="file-alt"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="es_publico" valueBoolean="false"/>
+            <column name="orden" valueNumeric="5"/>
+            <column name="rol" value="CIECYT ADMIN DECANO ESTUDIANTE"/>
+        </insert>
+    </changeSet>
+
+    <changeSet id="20261031000004-4" author="ciecyt">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">SELECT COUNT(*) FROM menu WHERE id = 7010</sqlCheck>
+        </preConditions>
+        <insert tableName="menu">
+            <column name="id" valueNumeric="7010"/>
+            <column name="nombre" value="Convocatorias de pasantia"/>
+            <column name="url" value="/convocatorias-pasantia"/>
+            <column name="icono" value="file-alt"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="es_publico" valueBoolean="false"/>
+            <column name="orden" valueNumeric="5"/>
+            <column name="rol" value="CIECYT ADMIN DECANO ESTUDIANTE"/>
+        </insert>
+    </changeSet>
+
+</databaseChangeLog>

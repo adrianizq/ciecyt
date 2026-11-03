@@ -7,6 +7,11 @@
                 pero de habilitarla se ocupa la decanatura. Quien sale de la lista conserva las
                 designaciones que ya tiene.
             </p>
+            <div class="mb-3">
+                <router-link class="btn btn-primary btn-sm" :to="{ name: 'ProyectosDecanuraView' }">
+                    Proyectos de mi facultad: designar asesor o jurado
+                </router-link>
+            </div>
             <b-alert v-if="esCiecyt()" show variant="info" class="mt-2">
                 <strong>Modo lectura.</strong> Como Centro de Investigaciones, consulta el
                 padrón pero no puede agregar ni dar de baja docentes: eso lo hace la decanatura

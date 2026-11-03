@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.9.xsd">
+
+    <!--
+        Acuerdo 025, art. 15: almacenamiento, publicacion y derechos de autor.
+        Se registra la URL del documento en el repositorio institucional y, si
+        aplica, la solicitud de exclusion con su justificacion.
+    -->
+    <changeSet id="20261031000003-1" author="ciecyt">
+        <preConditions onFail="MARK_RAN">
+            <and>
+                <tableExists tableName="proyecto"/>
+                <not>
+                    <columnExists tableName="proyecto" columnName="repositorio_url"/>
+                </not>
+            </and>
+        </preConditions>
+        <addColumn tableName="proyecto">
+            <column name="repositorio_url" type="varchar(500)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="repositorio_excluido" type="boolean" defaultValueBoolean="false">
+                <constraints nullable="true"/>
+            </column>
+            <column name="repositorio_justificacion" type="varchar(2000)">
+                <constraints nullable="true"/>
+            </column>
+        </addColumn>
+        <rollback>
+            <dropColumn tableName="proyecto" columnName="repositorio_url"/>
+            <dropColumn tableName="proyecto" columnName="repositorio_excluido"/>
+            <dropColumn tableName="proyecto" columnName="repositorio_justificacion"/>
+        </rollback>
+    </changeSet>
+
+</databaseChangeLog>
