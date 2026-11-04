@@ -382,8 +382,8 @@ public class ProyectoAutorizacionService {
 
         // El estudiante escoge a su asesor y avisa al CIECYT para que la designe formalmente.
         // En tesis y publicacion de articulo tambien puede agregar a sus companeros de trabajo
-        // (Acuerdo 025, art. 7 par. 1 y 2). Escoger el jurado o hacerlo en otra modalidad no es
-        // eleccion del estudiante.
+        // (Acuerdo 025, art. 7 par. 1 y 2). En publicacion el docente que orienta no tiene una
+        // designacion formal del CIECYT (art. 8), pero el estudiante si debe poder registrarlo.
         boolean modalidadColectiva =
             Long.valueOf(MODALIDAD_TESIS).equals(modalidad) ||
             Long.valueOf(MODALIDAD_PUBLICACION_ARTICULO).equals(modalidad);
@@ -391,8 +391,7 @@ public class ProyectoAutorizacionService {
             if ("ROLE_ESTUDIANTE".equals(autoridad)) {
                 return SecurityUtils.isCurrentUserInRole("ROLE_ESTUDIANTE");
             }
-            // Solo en tesis el estudiante elige a su asesor.
-            return "ROLE_ASESOR".equals(autoridad) && Long.valueOf(MODALIDAD_TESIS).equals(modalidad);
+            return "ROLE_ASESOR".equals(autoridad);
         }
         return false;
     }

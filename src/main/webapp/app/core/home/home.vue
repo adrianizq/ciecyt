@@ -91,34 +91,28 @@
           </router-link>
         </div>
 
-        <!-- Modality cards -->
-        <div
-          class="col-md-4 col-lg-4 mb-4"
-          v-for="modalidad in modalidades"
-          :key="modalidad.id"
-        >
-          <component
-            :is="modalidad.componente"
-            class="d-block text-decoration-none"
-          >
+        <!-- Convocatorias abiertas para estudiantes (Acuerdo 25, art. 16 par. 2 y art. 19). -->
+        <div class="col-md-4 col-lg-4 mb-4">
+          <router-link :to="{ name: 'ConvocatoriasPasantiaView' }" class="text-decoration-none">
             <div
               class="card modalidad-card"
               role="button"
               tabindex="0"
-              :aria-label="modalidad.nombre + '. ' + modalidad.descripcion"
-              @click="navegarModalidad(modalidad)"
-              @keydown.enter.prevent="navegarModalidad(modalidad)"
-              @keydown.space.prevent="navegarModalidad(modalidad)"
+              aria-label="Ver convocatorias de pasantía"
+              @keydown.enter.prevent="$router.push({ name: 'ConvocatoriasPasantiaView' })"
+              @keydown.space.prevent="$router.push({ name: 'ConvocatoriasPasantiaView' })"
             >
               <div class="card-body">
-                <div class="card-icon" :style="{ backgroundColor: modalidad.color }">
-                  <font-awesome-icon :icon="modalidad.icono" />
+                <div class="card-icon" style="background-color:#1565C0;">
+                  <font-awesome-icon icon="book" />
                 </div>
-                <h3 class="card-title">{{ modalidad.nombre }}</h3>
-                <p class="card-text">{{ modalidad.descripcion }}</p>
+                <h3 class="card-title">Convocatorias de pasantía</h3>
+                <p class="card-text">
+                  Consulta las plazas abiertas y postúlate a una pasantía.
+                </p>
               </div>
             </div>
-          </component>
+          </router-link>
         </div>
       </div>
 

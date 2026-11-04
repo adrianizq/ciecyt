@@ -16,6 +16,10 @@ import { useVuelidate } from '@vuelidate/core';
                               :options="withPlaceholder(options, 'busque por nombre o cedula')"
                               v-model="integranteProyecto.integranteProyectoUserId"
                             ></b-form-select>
+                            <div v-if="!isSaving && options.length === 0" class="alert alert-warning mt-2 mb-0">
+                              No hay docentes habilitados como asesores para la facultad de este proyecto.
+                              La decanatura debe cargar el padrón de habilitados, o CIECYT/ADMIN debe registrarlo.
+                            </div>
                         </b-form-group>
                     </div>
                 </div>

@@ -209,7 +209,7 @@ import { useVuelidate } from '@vuelidate/core';
                     }
                 }
                 if (accion === 'borrador') {
-                    this.alertService().showAlert('Borrador guardado. Aún puedes continuar más tarde.', 'info');
+                    this.alertService().showAlert('Borrador guardado. Aǧn puedes continuar mǭs tarde.', 'info');
                 } else {
                     this.$router.push({ name: 'PropuestaAsesorNuevaEditView', params: { proyectoId: this.proyId } });
                 }

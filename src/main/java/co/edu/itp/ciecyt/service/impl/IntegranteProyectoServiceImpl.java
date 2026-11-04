@@ -534,6 +534,9 @@ public class IntegranteProyectoServiceImpl implements IntegranteProyectoService 
 
         RolesModalidadDTO rolesModalidad;
         rolesModalidad = rolesModalidadService.findByRolAndRolesModalidadModalidadId("Estudiante", modalidadId);
+        if (rolesModalidad == null || rolesModalidad.getId() == null) {
+            return new ArrayList<>();
+        }
         Long rolesModalidadId = rolesModalidad.getId();
         List<IntegranteProyectoDTO> listDTO = new ArrayList<>();
         List<IntegranteProyecto> list = integranteProyectoRepository.findByIntegranteProyectoProyectoIdAndIntegranteProyectoRolesModalidadId(
@@ -560,6 +563,9 @@ public class IntegranteProyectoServiceImpl implements IntegranteProyectoService 
 
         RolesModalidadDTO rolesModalidad;
         rolesModalidad = rolesModalidadService.findByRolAndRolesModalidadModalidadId(tipoJurado, modalidadId);
+        if (rolesModalidad == null || rolesModalidad.getId() == null) {
+            return new ArrayList<>();
+        }
         Long rolesModalidadId = rolesModalidad.getId();
         List<IntegranteProyectoDTO> listDTO = new ArrayList<>();
         List<IntegranteProyecto> list = integranteProyectoRepository.findByIntegranteProyectoProyectoIdAndIntegranteProyectoRolesModalidadId(
@@ -586,6 +592,9 @@ public class IntegranteProyectoServiceImpl implements IntegranteProyectoService 
 
         RolesModalidadDTO rolesModalidad;
         rolesModalidad = rolesModalidadService.findByRolAndRolesModalidadModalidadId("Asesor", modalidadId);
+        if (rolesModalidad == null || rolesModalidad.getId() == null) {
+            return new ArrayList<>();
+        }
         Long rolesModalidadId = rolesModalidad.getId();
         List<IntegranteProyectoDTO> listDTO = new ArrayList<>();
         List<IntegranteProyecto> list = integranteProyectoRepository.findByIntegranteProyectoProyectoIdAndIntegranteProyectoRolesModalidadId(
