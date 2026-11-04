@@ -4,6 +4,7 @@ import co.edu.itp.ciecyt.domain.ImpactosEsperados;
 import co.edu.itp.ciecyt.domain.IntegranteProyecto;
 import co.edu.itp.ciecyt.domain.RolesModalidad;
 import co.edu.itp.ciecyt.repository.RolesModalidadRepository;
+import co.edu.itp.ciecyt.security.AuthoritiesConstants;
 import co.edu.itp.ciecyt.service.RolesModalidadService;
 import co.edu.itp.ciecyt.service.dto.ImpactosEsperadosDTO;
 import co.edu.itp.ciecyt.service.dto.IntegranteProyectoDTO;
@@ -93,7 +94,39 @@ public class RolesModalidadServiceImpl implements RolesModalidadService {
     public RolesModalidadDTO findByRolAndRolesModalidadModalidadId(String rol, Long rolModalidad) throws Exception {
         log.debug("Request to get all ImpactosEsperados whit a idProyecto");
         RolesModalidad rolesModalidad = rolesModalidadRepository.findByRolAndRolesModalidadModalidadId(rol, rolModalidad);
+        if (rolesModalidad == null) {
+            // En Publicacion de Articulo el cargo se llama "Autor", aunque la autoridad siga
+            // siendo ROLE_ESTUDIANTE. Se resuelve por autoridad para no depender del texto.
+            String authority = authorityDeRol(rol);
+            if (authority != null) {
+                rolesModalidad = rolesModalidadRepository.findFirstByRolesModalidadAuthorityNameAndRolesModalidadModalidadIdOrderByIdAsc(
+                    authority,
+                    rolModalidad
+                );
+            }
+        }
         return rolesModalidadMapper.toDto(rolesModalidad);
+    }
+
+    private String authorityDeRol(String rol) {
+        if (rol == null) {
+            return null;
+        }
+        switch (rol.trim()) {
+            case "Estudiante":
+            case "Autor":
+                return AuthoritiesConstants.ESTUDIANTE;
+            case "Asesor":
+            case "Asesor Internacional":
+            case "Co-asesor":
+                return AuthoritiesConstants.ASESOR;
+            case "Jurado":
+                return AuthoritiesConstants.JURADO;
+            case "Coordinador":
+                return AuthoritiesConstants.CIECYT;
+            default:
+                return rol.startsWith("ROLE_") ? rol : null;
+        }
     }
 
     public List<RolesModalidad> findByRolesModalidadAuthorityName(String authority) throws Exception {

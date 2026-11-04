@@ -5,6 +5,7 @@ import {
   etiquetaPlazo,
   variantePlazo,
   PLAZOS_ACUERDO_25,
+  setFestivos,
 } from '@/shared/composables/dias-habiles';
 
 describe('dias-habiles (Acuerdo 25 - plazos art. 9, 10, 13)', () => {
@@ -33,6 +34,12 @@ describe('dias-habiles (Acuerdo 25 - plazos art. 9, 10, 13)', () => {
     it('no incluye sabado ni domingo', () => {
       // 2024-01-05 (viernes) a 2024-01-08 (lunes) = 2 habiles (viernes + lunes)
       expect(diasHabilesEntre('2024-01-05', '2024-01-08')).toBe(2);
+    });
+
+    it('excluye los festivos configurados', () => {
+      setFestivos(['2024-01-02']);
+      expect(diasHabilesEntre('2024-01-01', '2024-01-07')).toBe(4);
+      setFestivos([]);
     });
 
     it('devuelve negativo cuando hasta es anterior a desde', () => {

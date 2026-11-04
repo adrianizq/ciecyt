@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div>
     <div class="d-flex flex-wrap justify-content-between align-items-start gap-2 mb-3">
       <div>
@@ -19,7 +19,7 @@
             <label class="form-label small mb-1" for="buscar-solicitud">Buscar</label>
             <input
               id="buscar-solicitud"
-              v-model="busqueda"
+              v-model="busqueda" @input="page = 1"
               type="search"
               class="form-control form-control-sm"
               placeholder="Asunto, proyecto, integrante o texto"
@@ -27,7 +27,7 @@
           </div>
           <div class="col-md-3">
             <label class="form-label small mb-1" for="estado-solicitud">Estado</label>
-            <select id="estado-solicitud" v-model="filtro" class="form-select form-select-sm">
+            <select id="estado-solicitud" v-model="filtro" class="form-select form-select-sm" @change="page = 1">
               <option value="pendientes">Pendientes</option>
               <option value="resueltas">Resueltas</option>
               <option value="todas">Todas</option>
@@ -58,22 +58,22 @@
             <th>Integrante</th>
             <th>Texto</th>
             <th>Estado</th>
-            <th class="text-end">Acción</th>
+            <th class="text-end">AcciÃ³n</th>
           </tr>
         </thead>
         <tbody>
-          <tr v-for="solicitud in filtradas" :key="solicitud.id">
+          <tr v-for="solicitud in paginadas" :key="solicitud.id">
             <td class="small">{{ fechaCorta(solicitud.fechaSolicitud) }}</td>
             <td class="fw-semibold">{{ solicitud.asunto || 'Sin asunto' }}</td>
             <td>
-              <div>{{ solicitud.proyectoTitulo || '—' }}</div>
+              <div>{{ solicitud.proyectoTitulo || 'â€”' }}</div>
               <div v-if="solicitud.proyectoId" class="small text-muted">#{{ solicitud.proyectoId }}</div>
             </td>
             <td>
-              <div>{{ solicitud.solicitudIntegranteProyectoIntegrante || '—' }}</div>
+              <div>{{ solicitud.solicitudIntegranteProyectoIntegrante || 'â€”' }}</div>
               <div v-if="solicitud.usuarioLogin" class="small text-muted">{{ solicitud.usuarioLogin }}</div>
             </td>
-            <td class="small" style="max-width: 28rem">{{ solicitud.textoSolicitud || '—' }}</td>
+            <td class="small" style="max-width: 28rem">{{ solicitud.textoSolicitud || 'â€”' }}</td>
             <td>
               <span class="badge" :class="solicitud.estado ? 'bg-success' : 'bg-warning text-dark'">
                 {{ solicitud.estado ? 'Resuelta' : 'Pendiente' }}
@@ -94,6 +94,10 @@
           </tr>
         </tbody>
       </table>
+      <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mt-3">
+        <jhi-item-count :page="page" :total="filtradas.length" :itemsPerPage="itemsPerPage"></jhi-item-count>
+        <b-pagination size="sm" :total-rows="filtradas.length" v-model="page" :per-page="itemsPerPage"></b-pagination>
+      </div>
     </div>
   </div>
 </template>
@@ -117,6 +121,8 @@ export default class SolicitudesCiecyt extends Vue {
   public guardandoId: number | null = null;
   public busqueda = '';
   public filtro = 'pendientes';
+  public page = 1;
+  public itemsPerPage = 20;
 
   public mounted(): void {
     this.cargar();
@@ -152,6 +158,11 @@ export default class SolicitudesCiecyt extends Vue {
     });
   }
 
+  public get paginadas(): ISolicitud[] {
+    const inicio = (this.page - 1) * this.itemsPerPage;
+    return this.filtradas.slice(inicio, inicio + this.itemsPerPage);
+  }
+
   public cargar(): void {
     this.cargando = true;
     this.solicitudService()
@@ -184,7 +195,7 @@ export default class SolicitudesCiecyt extends Vue {
 
   public fechaCorta(value: any): string {
     if (!value) {
-      return '—';
+      return 'â€”';
     }
     const texto = String(value);
     if (/^\d{4}-\d{2}-\d{2}/.test(texto)) {
@@ -192,7 +203,8 @@ export default class SolicitudesCiecyt extends Vue {
       return `${partes[2]}/${partes[1]}/${partes[0]}`;
     }
     const fecha = new Date(value);
-    return isNaN(fecha.getTime()) ? '—' : fecha.toLocaleDateString('es-CO');
+    return isNaN(fecha.getTime()) ? 'â€”' : fecha.toLocaleDateString('es-CO');
   }
 }
 </script>
+

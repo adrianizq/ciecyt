@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Calculo de dias habiles a partir de fechas, alineado con los plazos del
  * Acuerdo 025 (reglamento de opciones de grado):
  *   - 2 dias habiles: jurado impedido informa (art. 9 par. 5)
@@ -15,6 +15,16 @@
  */
 
 const MS_PER_DAY = 24 * 60 * 60 * 1000;
+
+let festivosConfigurados = new Set<string>();
+
+export function setFestivos(fechas: Array<string | Date>): void {
+  festivosConfigurados = new Set((fechas || []).map(fecha => String(fecha).substring(0, 10)));
+}
+
+function esFestivo(d: Date): boolean {
+  return festivosConfigurados.has(d.toISOString().substring(0, 10));
+}
 
 function esFinDeSemana(d: Date): boolean {
   const dow = d.getUTCDay();
@@ -55,7 +65,7 @@ export function diasHabilesEntre(desde: string | Date | null | undefined, hasta:
   if (dDesde.getTime() <= dHasta.getTime()) {
     const cursor = new Date(dDesde.getTime());
     while (cursor.getTime() <= dHasta.getTime()) {
-      if (!esFinDeSemana(cursor)) {
+      if (!esFinDeSemana(cursor) && !esFestivo(cursor)) {
         cuenta++;
       }
       cursor.setUTCDate(cursor.getUTCDate() + 1);
@@ -63,7 +73,7 @@ export function diasHabilesEntre(desde: string | Date | null | undefined, hasta:
   } else {
     const cursor = new Date(dHasta.getTime());
     while (cursor.getTime() <= dDesde.getTime()) {
-      if (!esFinDeSemana(cursor)) {
+      if (!esFinDeSemana(cursor) && !esFestivo(cursor)) {
         cuenta--;
       }
       cursor.setUTCDate(cursor.getUTCDate() + 1);

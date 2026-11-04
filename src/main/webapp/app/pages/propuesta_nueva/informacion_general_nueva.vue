@@ -53,37 +53,19 @@
             </div>
 
             <div class="mb-3 form-group">
-              <label for="datepicker-sm">Fecha de Inicio</label>
+              <label for="datepicker-sm">Fecha estimada de inicio (opcional)</label>
               <b-form-datepicker
                 size="sm-6"
                 local="ESP"
                 id="fecha-inicio"
                 name="fecha-inicio"
                 value="value"
-                :class="{
-                  'is-invalid': v$.proyecto.fechaIni.$error,
-                  'is-valid': !v$.proyecto.fechaIni.$invalid,
-                }"
                 v-model="proyecto.fechaIni"
               >
               </b-form-datepicker>
-              <div class="text-danger" v-if="!v$.proyecto.fechaIni.required">Este campo es requerido</div>
-
-              <label for="datepicker-lg">Fecha de Finalización</label>
-              <b-form-datepicker
-                size="sm-6"
-                local="ESP"
-                id="fecha-fin"
-                name="fecha-fin"
-                value="value"
-                :class="{
-                  'is-invalid': v$.proyecto.fechaFin.$error,
-                  'is-valid': !v$.proyecto.fechaFin.$invalid,
-                }"
-                v-model="proyecto.fechaFin"
-              >
-              </b-form-datepicker>
-              <div class="text-danger" v-if="!v$.proyecto.fechaFin.required">Este campo es requerido</div>
+              <small class="text-muted">
+                Los plazos del Acuerdo 25 se cuentan desde la radicación y el aval, no desde esta fecha.
+              </small>
             </div>
           </div>
 
@@ -128,6 +110,22 @@
               </b-form-select>
               <div class="text-danger" v-if="!v$.proyecto.proyectoModalidadId.required">Este campo es requerido</div>
               <small class="text-muted" v-if="!proyecto.proyectoCicloId">Seleccione un ciclo primero</small>
+            </div>
+          </div>
+
+          <div class="col-md-6 col-12" v-if="esPublicacionArticulo">
+            <div class="mb-3 form-group">
+              <label class="form-control-label" for="categoria-revista">
+                Categoría de la revista indexada
+              </label>
+              <b-form-select
+                id="categoria-revista"
+                v-model="proyecto.publicacionCategoriaRevista"
+                :options="categoriaRevistaOpciones"
+              ></b-form-select>
+              <small class="text-muted">
+                Acuerdo 25, art. 7 par. 2: A1/A2 permiten hasta 3 estudiantes; B/C hasta 2.
+              </small>
             </div>
           </div>
 
@@ -207,6 +205,9 @@
                 :options="SubLineasOptions"
               >
               </b-form-select>
+              <small class="text-muted" v-if="proyecto.proyectoLineaInvestigacionId && SubLineas.length === 0">
+                No hay sublineas de investigacion configuradas para este programa; CIECYT debe cargarlas.
+              </small>
             </div>
           </div>
         </div>
@@ -252,6 +253,9 @@ import { ICiclo } from '@/shared/model/ciclo.model';
 
 import { numeric, required, minLength, maxLength, between, url } from '@vuelidate/validators';
 import { IIntegranteProyecto, IntegranteProyecto } from '@/shared/model/integrante-proyecto.model';
+import { EnumCategoriaRevista } from '@/shared/model/enumerations/enum-categoria-revista.model';
+
+const MODALIDAD_PUBLICACION_ARTICULO = 9006;
 
 const validations: any = {
   proyecto: {
@@ -267,8 +271,7 @@ const validations: any = {
     //url: { url},
     lugarEjecucion: { required },
     //duracion: {},
-    fechaIni: { required },
-    fechaFin: { required },
+    fechaIni: {},
     //contrapartidaPesos: {},
     //contrapartidaEspecie: {},
     //convocatoria: {}
@@ -299,6 +302,13 @@ export default class PropuestaInformacionGeneral extends Vue {
 
   public modalidads: IModalidad[] = [];
   public modalidad: IModalidad = new Modalidad();
+  public categoriaRevistaOpciones: any[] = [
+    { value: null, text: 'Seleccione una categoria' },
+    { value: EnumCategoriaRevista.A1, text: 'A1 (hasta 3 estudiantes)' },
+    { value: EnumCategoriaRevista.A2, text: 'A2 (hasta 3 estudiantes)' },
+    { value: EnumCategoriaRevista.B, text: 'B (hasta 2 estudiantes)' },
+    { value: EnumCategoriaRevista.C, text: 'C (hasta 2 estudiantes)' },
+  ];
   public facultades: IFacultad[] = [];
   public lineas_investigacion: ILineaInvestigacion[] = [];
   public ciclos: ICiclo[] = [];
@@ -331,6 +341,13 @@ export default class PropuestaInformacionGeneral extends Vue {
   }
 
   public save(accion: 'borrador' | 'continuar' = 'continuar'): void {
+    if (this.esPublicacionArticulo && !this.proyecto.publicacionCategoriaRevista) {
+      this.alertService().showAlert(
+        'Seleccione la categoria de la revista indexada para la opcion de grado Publicacion de Articulo (Acuerdo 25, art. 7 par. 2).',
+        'danger'
+      );
+      return;
+    }
     this.isSaving = true;
 
     // this.v$.$touch();
@@ -437,8 +454,10 @@ export default class PropuestaInformacionGeneral extends Vue {
   }
 
   get SubLineas() {
+    const programaId = this.proyecto.proyectoProgramaId;
     return this.lineas_investigacion.filter(linea => {
-      return linea.lineaPadreId == this.proyecto.proyectoLineaInvestigacionId && linea.lineaPadreId;
+      const perteneceAlPrograma = programaId == null || linea.lineaInvestigacionProgramaId == programaId;
+      return linea.lineaPadreId == this.proyecto.proyectoLineaInvestigacionId && linea.lineaPadreId && perteneceAlPrograma;
     });
   }
 
@@ -466,6 +485,10 @@ export default class PropuestaInformacionGeneral extends Vue {
       return [];
     }
     return this.modalidads;
+  }
+
+  get esPublicacionArticulo(): boolean {
+    return this.proyecto.proyectoModalidadId === MODALIDAD_PUBLICACION_ARTICULO;
   }
 
   get esSinFlujo(): boolean {

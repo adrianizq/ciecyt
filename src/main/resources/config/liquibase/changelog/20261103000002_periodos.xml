@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.20.xsd">
+
+    <changeSet id="20261103000002-1" author="ciecyt">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="periodo"/>
+            </not>
+        </preConditions>
+        <createTable tableName="periodo">
+            <column name="id" type="bigint">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="nombre" type="varchar(100)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="fecha_inicio" type="date"/>
+            <column name="fecha_fin" type="date"/>
+            <column name="activo" type="boolean" defaultValueBoolean="true">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="20261103000002-2" author="ciecyt">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">SELECT COUNT(*) FROM menu WHERE id = 7022</sqlCheck>
+        </preConditions>
+        <insert tableName="menu">
+            <column name="id" valueNumeric="7022"/>
+            <column name="nombre" value="Periodos académicos"/>
+            <column name="url" value="/admin/periodos"/>
+            <column name="icono" value="calendar"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="es_publico" valueBoolean="false"/>
+            <column name="orden" valueNumeric="5"/>
+            <column name="rol" value="ADMIN"/>
+            <column name="menu_padre_id" valueNumeric="1052"/>
+        </insert>
+    </changeSet>
+
+</databaseChangeLog>

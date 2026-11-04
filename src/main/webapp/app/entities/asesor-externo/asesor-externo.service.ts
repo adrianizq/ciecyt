@@ -55,4 +55,12 @@ export default class AsesorExternoService {
         .catch(err => reject(err));
     });
   }
+
+  public activar(id: number): Promise<any> {
+    return axios.post(`${baseApiUrl}/${id}/activar`).then(res => res.data);
+  }
+
+  public desactivar(id: number): Promise<any> {
+    return axios.post(`${baseApiUrl}/${id}/desactivar`).then(res => res.data);
+  }
 }

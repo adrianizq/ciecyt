@@ -23,7 +23,7 @@ public interface AsesorExternoRepository extends JpaRepository<AsesorExterno, Lo
      * Los externos de una facultad para un rol que han pasado la verificacion de idoneidad del
      * CIECYT; solo esos se pueden designar.
      */
-    @Query("select e from AsesorExterno e where e.facultad.id = :facultadId and e.rol = :rol and e.idoneidadVerificada = true"
+    @Query("select e from AsesorExterno e where e.facultad.id = :facultadId and e.rol = :rol and e.idoneidadVerificada = true and e.activo = true"
         + " order by e.apellidos, e.nombres")
     List<AsesorExterno> findVerificadosPorFacultadYRol(@Param("facultadId") Long facultadId, @Param("rol") String rol);
 

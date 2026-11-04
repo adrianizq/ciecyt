@@ -63,6 +63,13 @@ public class Proyecto implements Serializable {
     @Column(name = "convocatoria")
     private String convocatoria;
 
+    /**
+     * Categoria de la revista indexada para la modalidad Publicacion de Articulo
+     * (Acuerdo 025, art. 7 par. 2): A1, A2, B o C.
+     */
+    @Column(name = "publicacion_categoria_revista", length = 2)
+    private String publicacionCategoriaRevista;
+
     @Column(name = "tipo", columnDefinition = "text")
     private String tipo;
 
@@ -349,6 +356,19 @@ public class Proyecto implements Serializable {
 
     public void setConvocatoria(String convocatoria) {
         this.convocatoria = convocatoria;
+    }
+
+    public String getPublicacionCategoriaRevista() {
+        return publicacionCategoriaRevista;
+    }
+
+    public Proyecto publicacionCategoriaRevista(String publicacionCategoriaRevista) {
+        this.publicacionCategoriaRevista = publicacionCategoriaRevista;
+        return this;
+    }
+
+    public void setPublicacionCategoriaRevista(String publicacionCategoriaRevista) {
+        this.publicacionCategoriaRevista = publicacionCategoriaRevista;
     }
 
     public String getTipo() {

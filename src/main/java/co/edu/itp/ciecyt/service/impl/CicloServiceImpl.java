@@ -2,7 +2,10 @@ package co.edu.itp.ciecyt.service.impl;
 
 import co.edu.itp.ciecyt.service.CicloService;
 import co.edu.itp.ciecyt.domain.Ciclo;
+import co.edu.itp.ciecyt.domain.Modalidad;
 import co.edu.itp.ciecyt.repository.CicloRepository;
+import co.edu.itp.ciecyt.repository.ModalidadRepository;
+import java.util.HashSet;
 import co.edu.itp.ciecyt.service.dto.CicloDTO;
 import co.edu.itp.ciecyt.service.dto.ModalidadDTO;
 import co.edu.itp.ciecyt.service.mapper.CicloMapper;
@@ -32,10 +35,18 @@ public class CicloServiceImpl implements CicloService {
 
     private final ModalidadMapper modalidadMapper;
 
-    public CicloServiceImpl(CicloRepository cicloRepository, CicloMapper cicloMapper, ModalidadMapper modalidadMapper) {
+    private final ModalidadRepository modalidadRepository;
+
+    public CicloServiceImpl(
+        CicloRepository cicloRepository,
+        CicloMapper cicloMapper,
+        ModalidadMapper modalidadMapper,
+        ModalidadRepository modalidadRepository
+    ) {
         this.cicloRepository = cicloRepository;
         this.cicloMapper = cicloMapper;
         this.modalidadMapper = modalidadMapper;
+        this.modalidadRepository = modalidadRepository;
     }
 
     /**
@@ -48,6 +59,9 @@ public class CicloServiceImpl implements CicloService {
     public CicloDTO save(CicloDTO cicloDTO) {
         log.debug("Request to save Ciclo : {}", cicloDTO);
         Ciclo ciclo = cicloMapper.toEntity(cicloDTO);
+        if (cicloDTO.getModalidadIds() != null) {
+            ciclo.setModalidades(new HashSet<Modalidad>(modalidadRepository.findAllById(cicloDTO.getModalidadIds())));
+        }
         ciclo = cicloRepository.save(ciclo);
         return cicloMapper.toDto(ciclo);
     }

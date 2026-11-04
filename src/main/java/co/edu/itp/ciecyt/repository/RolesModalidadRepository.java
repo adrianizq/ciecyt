@@ -15,6 +15,11 @@ import org.springframework.stereotype.Repository;
 public interface RolesModalidadRepository extends JpaRepository<RolesModalidad, Long> {
     RolesModalidad findByRolAndRolesModalidadModalidadId(String rol, Long rolModalidad);
 
+    RolesModalidad findFirstByRolesModalidadAuthorityNameAndRolesModalidadModalidadIdOrderByIdAsc(
+        String authority,
+        Long rolModalidad
+    );
+
     List<RolesModalidad> findByRolesModalidadAuthorityName(String authority);
     List<RolesModalidad> findByRol(String rol);
 }

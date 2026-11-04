@@ -76,6 +76,16 @@ public class IntegranteProyectoResource {
     }
 
     /**
+     * Una fila de integrante solo tiene sentido si designa a alguien: usuario institucional o
+     * profesional externo. Las filas vacias que usa el formulario no deben persistirse.
+     */
+    private void validarPersona(IntegranteProyectoDTO dto) {
+        if (dto.getIntegranteProyectoUserId() == null && dto.getIntegranteProyectoExternoId() == null) {
+            throw new BadRequestAlertException("Seleccione la persona a designar", ENTITY_NAME, "personarequerida");
+        }
+    }
+
+    /**
      * Cuando se designa a un profesional externo (Acuerdo 25, paragrafos 1 de los articulos 8 y
      * 9) se verifican tres cosas: que esa persona exista, que el CIECYT haya constatado su
      * idoneidad, y que pertenezca a la misma facultad del proyecto. Ademas se exige que la
@@ -117,6 +127,7 @@ public class IntegranteProyectoResource {
                 integranteProyectoDTO.getIntegranteProyectoRolesModalidadId())) {
             throw new AccessDeniedException("No puede designar integrantes en este proyecto");
         }
+        validarPersona(integranteProyectoDTO);
         validarExterno(integranteProyectoDTO);
         log.debug("REST request to save IntegranteProyecto : {}", integranteProyectoDTO);
         if (integranteProyectoDTO.getId() != null) {
@@ -151,6 +162,7 @@ public class IntegranteProyectoResource {
                 integranteProyectoDTO.getIntegranteProyectoRolesModalidadId())) {
             throw new AccessDeniedException("No puede designar integrantes en este proyecto");
         }
+        validarPersona(integranteProyectoDTO);
         validarExterno(integranteProyectoDTO);
         log.debug("REST request to update IntegranteProyecto : {}", integranteProyectoDTO);
         if (integranteProyectoDTO.getId() == null) {

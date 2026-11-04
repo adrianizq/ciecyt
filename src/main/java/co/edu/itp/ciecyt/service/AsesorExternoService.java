@@ -83,6 +83,7 @@ public class AsesorExternoService {
         externo.setFuenteVerificacion(datos.getFuenteVerificacion());
         externo.setObservaciones(datos.getObservaciones());
         externo.setIdoneidadVerificada(Boolean.FALSE);
+        externo.setActivo(Boolean.TRUE);
         externo.setFacultad(facultad);
         return asesorExternoRepository.save(externo);
     }
@@ -116,6 +117,14 @@ public class AsesorExternoService {
             actual.setVerificadorLogin(null);
         }
         return asesorExternoRepository.save(actual);
+    }
+
+    @Transactional
+    public AsesorExterno cambiarActivo(Long id, boolean activo) {
+        AsesorExterno externo = asesorExternoRepository.findById(id)
+            .orElseThrow(() -> new BadRequestAlertException("La persona externa no existe", "asesorExterno", "noExiste"));
+        externo.setActivo(activo);
+        return asesorExternoRepository.save(externo);
     }
 
     /**

@@ -14,6 +14,10 @@ const JhiUserManagementComponent = () => import('../admin/user-management/user-m
 const DecanoFacultadPage = () => import('../admin/decano-facultad/decano-facultad.vue');
 const ConfiguracionAcademica = () => import('../pages/admin/configuracion_academica.vue');
 const CiclosAdmin = () => import('../pages/admin/ciclos.vue');
+const PeriodosAdmin = () => import('../pages/admin/periodos.vue');
+const MetricasNegocio = () => import('../pages/admin/metricas_negocio.vue');
+const ReportesAdmin = () => import('../pages/admin/reportes.vue');
+const FestivosAdmin = () => import('../pages/admin/festivos.vue');
 const JhiUserManagementViewComponent = () => import('../admin/user-management/user-management-view.vue');
 const JhiUserManagementEditComponent = () => import('../admin/user-management/user-management-edit.vue');
 const JhiConfigurationComponent = () => import('../admin/configuration/configuration.vue');
@@ -428,6 +432,30 @@ const router = createRouter({
       name: 'CicloView',
       component: CiclosAdmin,
       meta: { authorities: ['ROLE_ADMIN'] }
+    },
+    {
+      path: '/admin/periodos',
+      name: 'PeriodoView',
+      component: PeriodosAdmin,
+      meta: { authorities: ['ROLE_ADMIN'] }
+    },
+    {
+      path: '/admin/metricas-negocio',
+      name: 'MetricasNegocioView',
+      component: MetricasNegocio,
+      meta: { authorities: ['ROLE_ADMIN'] }
+    },
+    {
+      path: '/admin/reportes',
+      name: 'ReportesAdminView',
+      component: ReportesAdmin,
+      meta: { authorities: ['ROLE_ADMIN'] }
+    },
+    {
+      path: '/admin/festivos',
+      name: 'FestivoView',
+      component: FestivosAdmin,
+      meta: { authorities: ['ROLE_ADMIN', 'ROLE_CIECYT'] }
     },
     {
       path: '/admin/docs',

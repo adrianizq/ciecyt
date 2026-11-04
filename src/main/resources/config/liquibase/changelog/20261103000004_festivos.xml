@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.20.xsd">
+
+    <changeSet id="20261103000004-1" author="ciecyt">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="festivo"/>
+            </not>
+        </preConditions>
+        <createTable tableName="festivo">
+            <column name="id" type="bigint">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="fecha" type="date">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="descripcion" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="activo" type="boolean" defaultValueBoolean="true">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="20261103000004-2" author="ciecyt">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">SELECT COUNT(*) FROM menu WHERE id = 7025</sqlCheck>
+        </preConditions>
+        <insert tableName="menu">
+            <column name="id" valueNumeric="7025"/>
+            <column name="nombre" value="Días no hábiles"/>
+            <column name="url" value="/admin/festivos"/>
+            <column name="icono" value="calendar"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="es_publico" valueBoolean="false"/>
+            <column name="orden" valueNumeric="6"/>
+            <column name="rol" value="ADMIN"/>
+            <column name="menu_padre_id" valueNumeric="1052"/>
+        </insert>
+    </changeSet>
+
+</databaseChangeLog>

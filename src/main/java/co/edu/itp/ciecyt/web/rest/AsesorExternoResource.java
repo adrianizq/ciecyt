@@ -83,6 +83,18 @@ public class AsesorExternoResource {
         return ResponseEntity.ok(asesorExternoService.verificar(id));
     }
 
+    @PostMapping("/asesores-externos/{id}/activar")
+    public ResponseEntity<AsesorExterno> activar(@PathVariable Long id) {
+        exigirGestion();
+        return ResponseEntity.ok(asesorExternoService.cambiarActivo(id, true));
+    }
+
+    @PostMapping("/asesores-externos/{id}/desactivar")
+    public ResponseEntity<AsesorExterno> desactivar(@PathVariable Long id) {
+        exigirGestion();
+        return ResponseEntity.ok(asesorExternoService.cambiarActivo(id, false));
+    }
+
     /**
      * {@code GET /api/asesores-externos/facultad/{facultadId}} : listado de la facultad. Con
      * el parametro opcional {@code rol} solo devuelve los ya verificados para ese cargo, que es

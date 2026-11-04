@@ -38,9 +38,9 @@ spring:
       max-file-size: 50MB
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
-    url: jdbc:postgresql://10.10.13.7:5432/ciecyt_db
-    username: ciecyt_admin
-    password: ciecyt2020
+    url: "${DB_URL:jdbc:postgresql://10.10.13.7:5432/ciecyt_db}"
+    username: "${DB_USER:ciecyt_admin}"
+    password: "${DB_PASSWORD}"
     hikari:
       poolName: Hikari
       auto-commit: false
@@ -54,8 +54,8 @@ spring:
     host: smtp.gmail.com
     port: 587
     #from: Ciecyt ITP<noreply@itp.edu.co>
-    username: noreply@itp.edu.co
-    password: R!M^rIDd5ePDBM9PQvs*kQXo9v52g*ugoQN2
+    username: "${MAIL_USER:noreply@itp.edu.co}"
+    password: "${MAIL_PASSWORD}"
     protocol: smtp
     tls: true
     properties.mail.smtp:
@@ -113,13 +113,13 @@ jhipster:
         # - In the JHipster Registry (which includes a Spring Cloud Config server)
         # - In a separate `application-prod.yml` file, in the same folder as your executable JAR file
         # - In the `JHIPSTER_SECURITY_AUTHENTICATION_JWT_BASE64_SECRET` environment variable
-        base64-secret: MWRkODA5MWIwMTIyODQzY2EzNjM1ODljYTQwMjEyNzE2NDYyMmZmMTYxNGNiYTJlZTg5MzVjYjk0MzlhMTk1ZmM5NWIzMGE3ZTg1NDE3ODIxNDIxOGI4MDBhMjU0ZWEyODlmNjlkY2M3ZjRjYzg2NWU3NmRlODQ5NmZjNDBiNzI=
+        base64-secret: "${JHIPSTER_SECURITY_AUTHENTICATION_JWT_BASE64_SECRET}"
         # Token is valid 24 hours
         token-validity-in-seconds: 86400
         token-validity-in-seconds-for-remember-me: 2592000
   mail: # specific JHipster mail property, for standard properties see MailProperties
-    from: Ciecyt ITP<noreply@itp.edu.co>
-    base-url: https://ciecyt1.itp.edu.co # Modify according to your server's URL
+    from: "${MAIL_FROM:Ciecyt ITP<noreply@itp.edu.co>}"
+    base-url: "${APP_BASE_URL:https://ciecyt1.itp.edu.co}" # Modify according to your server's URL
   logging:
     use-json-format: false # By default, logs are not in Json format
     logstash: # Forward logs to logstash over a socket, used by LoggingConfiguration

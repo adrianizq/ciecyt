@@ -108,6 +108,7 @@
             <th>Rol</th>
             <th>Institucion</th>
             <th>Contacto</th>
+            <th>Estado</th>
             <th>Idoneidad</th>
             <th class="text-end">Accion</th>
           </tr>
@@ -123,6 +124,11 @@
               <div class="text-muted">{{ externo.telefono || '' }}</div>
             </td>
             <td>
+              <span class="badge" :class="externo.activo !== false ? 'bg-success' : 'bg-secondary'">
+                {{ externo.activo !== false ? 'Activo' : 'Inactivo' }}
+              </span>
+            </td>
+            <td>
               <span class="badge" :class="externo.idoneidadVerificada ? 'bg-success' : 'bg-warning text-dark'">
                 {{ externo.idoneidadVerificada ? 'Verificada' : 'Pendiente' }}
               </span>
@@ -131,16 +137,29 @@
               </div>
             </td>
             <td class="text-end">
-              <button
-                v-if="!externo.idoneidadVerificada"
-                type="button"
-                class="btn btn-outline-success btn-sm"
-                :disabled="verificandoId === externo.id"
-                @click="verificar(externo)"
-              >
-                Verificar idoneidad
-              </button>
-              <span v-else class="small text-muted">Habilitado para designar</span>
+              <div class="d-flex flex-wrap justify-content-end gap-2">
+                <button type="button" class="btn btn-outline-secondary btn-sm" @click="editar(externo)">Editar</button>
+                <button
+                  v-if="!externo.idoneidadVerificada"
+                  type="button"
+                  class="btn btn-outline-success btn-sm"
+                  :disabled="verificandoId === externo.id"
+                  @click="verificar(externo)"
+                >
+                  Verificar
+                </button>
+                <button
+                  v-if="externo.activo !== false"
+                  type="button"
+                  class="btn btn-outline-danger btn-sm"
+                  @click="desactivar(externo)"
+                >
+                  Desactivar
+                </button>
+                <button v-else type="button" class="btn btn-outline-success btn-sm" @click="activar(externo)">
+                  Activar
+                </button>
+              </div>
             </td>
           </tr>
         </tbody>
@@ -175,6 +194,7 @@ export default class AsesoresExternosCiecyt extends Vue {
   public cargando = false;
   public guardando = false;
   public verificandoId: number | null = null;
+  public editandoId: number | null = null;
   public mostrarFormulario = false;
   public roles = ['Asesor', 'Jurado', 'Asesor Internacional', 'Coordinador'];
   public form: any = new SolicitudAsesorExterno();
@@ -205,8 +225,15 @@ export default class AsesoresExternosCiecyt extends Vue {
   }
 
   public nuevo(): void {
+    this.editandoId = null;
     this.form = new SolicitudAsesorExterno();
     this.form.rol = 'Asesor';
+    this.mostrarFormulario = true;
+  }
+
+  public editar(externo: IAsesorExterno): void {
+    this.editandoId = externo.id;
+    this.form = { ...externo };
     this.mostrarFormulario = true;
   }
 
@@ -252,19 +279,49 @@ export default class AsesoresExternosCiecyt extends Vue {
       this.form.fuenteVerificacion,
       this.form.observaciones
     );
-    this.asesorExternoService()
-      .registrar(solicitud)
+    const editando = !!this.editandoId;
+    const accion = this.editandoId
+      ? this.asesorExternoService().actualizar(this.editandoId, this.form)
+      : this.asesorExternoService().registrar(solicitud);
+    accion
       .then(() => {
         this.guardando = false;
         this.mostrarFormulario = false;
+        this.editandoId = null;
         this.form = new SolicitudAsesorExterno();
-        this.alertService().showAlert('Profesional externo registrado. Verifique su idoneidad para poder designarlo.', 'success');
+        this.alertService().showAlert(
+          editando ? 'Profesional externo actualizado' : 'Profesional externo registrado. Verifique su idoneidad para poder designarlo.',
+          'success'
+        );
         this.cargar();
       })
       .catch(err => {
         this.guardando = false;
         this.alertService().showHttpError(this, err.response);
       });
+  }
+
+  public activar(externo: IAsesorExterno): void {
+    this.asesorExternoService()
+      .activar(externo.id)
+      .then(() => {
+        this.alertService().showAlert('Profesional externo activado', 'success');
+        this.cargar();
+      })
+      .catch(err => this.alertService().showHttpError(this, err.response));
+  }
+
+  public desactivar(externo: IAsesorExterno): void {
+    if (!window.confirm(`¿Desactivar a ${this.nombre(externo)}?`)) {
+      return;
+    }
+    this.asesorExternoService()
+      .desactivar(externo.id)
+      .then(() => {
+        this.alertService().showAlert('Profesional externo desactivado', 'success');
+        this.cargar();
+      })
+      .catch(err => this.alertService().showHttpError(this, err.response));
   }
 
   public verificar(externo: IAsesorExterno): void {

@@ -40,6 +40,8 @@ public class ProyectoDTO implements Serializable {
 
     private String convocatoria;
 
+    private String publicacionCategoriaRevista;
+
     private String tipo;
 
     private String referencias;
@@ -246,6 +248,14 @@ public class ProyectoDTO implements Serializable {
 
     public void setConvocatoria(String convocatoria) {
         this.convocatoria = convocatoria;
+    }
+
+    public String getPublicacionCategoriaRevista() {
+        return publicacionCategoriaRevista;
+    }
+
+    public void setPublicacionCategoriaRevista(String publicacionCategoriaRevista) {
+        this.publicacionCategoriaRevista = publicacionCategoriaRevista;
     }
 
     public String getTipo() {

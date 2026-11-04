@@ -23,37 +23,30 @@
                   Acuerdo 25, art. 7 par. 2 y Tabla 9: la opcion de grado Publicacion
                   de Articulo aplica limite de estudiantes segun la categoria de la
                   revista indexada. A1|A2 admiten hasta 3, B|C admiten hasta 2.
+                  La categoria se diligencia en Informacion General de la propuesta.
                 -->
-                <div v-if="esPublicacionArticulo" class="row mt-3 mb-3">
-                  <div class="col-12">
-                    <b-form-group
-                      label="Categoria de la revista indexada (Publindex u homologo)"
-                      label-for="categoria-revista"
-                    >
-                      <b-form-select
-                        id="categoria-revista"
-                        v-model="proyecto.publicacionCategoriaRevista"
-                        :options="categoriaRevistaOpciones"
-                      ></b-form-select>
-                    </b-form-group>
+                <div v-if="esPublicacionArticulo" class="mt-3 mb-3">
+                  <div class="alert alert-info mb-2">
+                    Categoria de la revista: <strong>{{ proyecto.publicacionCategoriaRevista || 'Sin definir' }}</strong>.
+                    Maximo de integrantes: <strong>{{ integrantesMaxPermitidos }}</strong>.
+                  </div>
 
-                    <div
-                      class="alert alert-warning"
-                      role="alert"
-                      v-if="limiteExcedido"
-                    >
-                      <strong>Excede el maximo permitido.</strong>
-                      La categoria
-                      <em>{{ proyecto.publicacionCategoriaRevista }}</em>
-                      admite hasta {{ integrantesMaxPermitidos }} estudiantes pero
-                      hay {{ conteoIntegrantesDesignados }}. Ajuste la categoria o
-                      reduzca el numero de integrantes antes de guardar.
-                    </div>
+                  <div
+                    class="alert alert-warning"
+                    role="alert"
+                    v-if="limiteExcedido"
+                  >
+                    <strong>Excede el maximo permitido.</strong>
+                    La categoria
+                    <em>{{ proyecto.publicacionCategoriaRevista }}</em>
+                    admite hasta {{ integrantesMaxPermitidos }} estudiantes pero
+                    hay {{ conteoIntegrantesDesignados }}. Reduzca el numero de
+                    integrantes antes de guardar.
+                  </div>
 
-                    <div class="small text-muted">
-                      Integrantes designados: <strong>{{ conteoIntegrantesDesignados }}</strong>
-                      / {{ integrantesMaxPermitidos }} permitidos por la categoria seleccionada.
-                    </div>
+                  <div class="small text-muted">
+                    Integrantes designados: <strong>{{ conteoIntegrantesDesignados }}</strong>
+                    / {{ integrantesMaxPermitidos }} permitidos por la categoria seleccionada.
                   </div>
                 </div>
 
@@ -134,14 +127,6 @@ import { useVuelidate } from '@vuelidate/core';
          * Opciones del selector de categoria de revista para la opcion de grado
          * Publicacion de Articulo.
          */
-        public categoriaRevistaOpciones: any[] = [
-          { value: null, text: 'Seleccione una categoria' },
-          { value: EnumCategoriaRevista.A1, text: 'A1 (hasta 3 estudiantes)' },
-          { value: EnumCategoriaRevista.A2, text: 'A2 (hasta 3 estudiantes)' },
-          { value: EnumCategoriaRevista.B, text: 'B (hasta 2 estudiantes)' },
-          { value: EnumCategoriaRevista.C, text: 'C (hasta 2 estudiantes)' },
-        ];
-
         get esPublicacionArticulo(): boolean {
           return this.modalidadId === MODALIDAD_PUBLICACION_ARTICULO;
         }
@@ -185,6 +170,13 @@ import { useVuelidate } from '@vuelidate/core';
         }
 
         public async save(accion: 'borrador' | 'continuar' = 'continuar'): Promise<void> {
+            if (this.esPublicacionArticulo && !this.proyecto.publicacionCategoriaRevista) {
+              this.alertService().showAlert(
+                'Defina la categoria de la revista en Informacion General antes de cargar los integrantes.',
+                'danger',
+              );
+              return;
+            }
             if (this.limiteExcedido) {
               this.alertService().showAlert(
                 `La categoria ${this.proyecto.publicacionCategoriaRevista || 'sin categoria'} ` +
@@ -198,6 +190,17 @@ import { useVuelidate } from '@vuelidate/core';
             this.isSaving = true;
             try {
                 for (const integrante of this.integrantesProyecto) {
+                    const tienePersona =
+                        integrante.integranteProyectoUserId != null ||
+                        integrante.integranteProyectoExternoId != null;
+                    if (!tienePersona) {
+                        // Si existia y el usuario la dejo vacia, se retira; si nunca se guardo,
+                        // simplemente se ignora. No se envian filas vacias al backend.
+                        if (integrante.id) {
+                            await this.integranteProyectoService().delete(integrante.id);
+                        }
+                        continue;
+                    }
                     if (integrante.id) {
                         await this.integranteProyectoService().update(integrante);
                     } else {
@@ -244,24 +247,24 @@ import { useVuelidate } from '@vuelidate/core';
                        this.integrantesProyecto = res.data;
                    });
 
-                  if(this.integrantesProyecto.length==0){
-                    await this.rolesModalidadService()
-                        .findRolModalidad('Estudiante', this.modalidadId )
-                        .then(res => {
-                            this.rolesModalidad = res;
-                            this.cantEstudiantes = res.cantidad;
-                            this.rolModalidadId = res.id;
+                  await this.rolesModalidadService()
+                      .findRolModalidad('Estudiante', this.modalidadId)
+                      .then(res => {
+                          this.rolesModalidad = res;
+                          this.cantEstudiantes = res.cantidad;
+                          this.rolModalidadId = res.id;
 
-                            for (var i = 0; i < this.cantEstudiantes; i++) {
-                                let integrante = new IntegranteProyecto();
-
-                                integrante.integranteProyectoProyectoId = this.proyId;
-                                integrante.integranteProyectoRolesModalidadId = this.rolModalidadId;
-
-                                this.integrantesProyecto.push(integrante);
-                            }
-                    });
-                  }
+                          // Completar los espacios que falten hasta el maximo de estudiantes
+                          // de la modalidad. Si el creador ya quedo registrado, igual debe poder
+                          // agregar a sus companeros (tesis y publicacion de articulo).
+                          const faltantes = Math.max(0, this.cantEstudiantes - this.integrantesProyecto.length);
+                          for (let i = 0; i < faltantes; i++) {
+                              const integrante = new IntegranteProyecto();
+                              integrante.integranteProyectoProyectoId = this.proyId;
+                              integrante.integranteProyectoRolesModalidadId = this.rolModalidadId;
+                              this.integrantesProyecto.push(integrante);
+                          }
+                      });
             } catch (e) {
             }
         }

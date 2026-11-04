@@ -58,6 +58,9 @@ public class AsesorExterno implements Serializable {
     @Column(name = "idoneidad_verificada", nullable = false)
     private Boolean idoneidadVerificada;
 
+    @Column(name = "activo", nullable = false)
+    private Boolean activo = true;
+
     @Column(name = "fecha_verificacion_idoneidad")
     private LocalDate fechaVerificacionIdoneidad;
 
@@ -155,6 +158,14 @@ public class AsesorExterno implements Serializable {
 
     public void setIdoneidadVerificada(Boolean idoneidadVerificada) {
         this.idoneidadVerificada = idoneidadVerificada;
+    }
+
+    public Boolean getActivo() {
+        return activo;
+    }
+
+    public void setActivo(Boolean activo) {
+        this.activo = activo != null ? activo : true;
     }
 
     public LocalDate getFechaVerificacionIdoneidad() {

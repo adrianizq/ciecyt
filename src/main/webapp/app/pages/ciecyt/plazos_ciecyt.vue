@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div>
     <div class="d-flex flex-wrap justify-content-between align-items-start gap-2 mb-3">
       <div>
@@ -61,11 +61,11 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="alerta in alertas" :key="alerta.proyecto.id + '-' + alerta.tipo">
+          <tr v-for="alerta in alertasPaginadas" :key="alerta.proyecto.id + '-' + alerta.tipo">
             <td>
               <div class="fw-semibold">{{ alerta.proyecto.titulo }}</div>
               <div class="small text-muted">
-                #{{ alerta.proyecto.id }}<span v-if="alerta.proyecto.programa"> · {{ alerta.proyecto.programa }}</span>
+                #{{ alerta.proyecto.id }}<span v-if="alerta.proyecto.programa"> Â· {{ alerta.proyecto.programa }}</span>
               </div>
             </td>
             <td class="small">{{ alerta.proyecto.estado }}</td>
@@ -80,6 +80,10 @@
           </tr>
         </tbody>
       </table>
+      <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mt-3">
+        <jhi-item-count :page="page" :total="alertas.length" :itemsPerPage="itemsPerPage"></jhi-item-count>
+        <b-pagination size="sm" :total-rows="alertas.length" v-model="page" :per-page="itemsPerPage"></b-pagination>
+      </div>
     </div>
   </div>
 </template>
@@ -117,6 +121,8 @@ export default class PlazosCiecyt extends Vue {
   public proyectos: IProyecto[] = [];
   public cargando = false;
   public verificando = false;
+  public page = 1;
+  public itemsPerPage = 20;
 
   public mounted(): void {
     this.cargar();
@@ -175,6 +181,11 @@ export default class PlazosCiecyt extends Vue {
     return filas.sort((a, b) => (prioridad[a.variant] ?? 9) - (prioridad[b.variant] ?? 9));
   }
 
+  public get alertasPaginadas(): AlertaPlazo[] {
+    const inicio = (this.page - 1) * this.itemsPerPage;
+    return this.alertas.slice(inicio, inicio + this.itemsPerPage);
+  }
+
   public get vencidas(): number {
     return this.alertas.filter(alerta => alerta.variant === 'danger').length;
   }
@@ -230,7 +241,7 @@ export default class PlazosCiecyt extends Vue {
 
   public fechaCorta(value: any): string {
     if (!value) {
-      return '—';
+      return 'â€”';
     }
     const texto = String(value);
     if (/^\d{4}-\d{2}-\d{2}/.test(texto)) {
@@ -238,7 +249,8 @@ export default class PlazosCiecyt extends Vue {
       return `${partes[2]}/${partes[1]}/${partes[0]}`;
     }
     const fecha = new Date(value);
-    return isNaN(fecha.getTime()) ? '—' : fecha.toLocaleDateString('es-CO');
+    return isNaN(fecha.getTime()) ? 'â€”' : fecha.toLocaleDateString('es-CO');
   }
 }
 </script>
+

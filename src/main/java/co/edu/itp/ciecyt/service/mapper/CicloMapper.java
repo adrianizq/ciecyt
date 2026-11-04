@@ -7,12 +7,17 @@ import java.util.Collections;
 import java.util.Set;
 import java.util.stream.Collectors;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 
 /**
  * Mapper for the entity {@link Ciclo} and its DTO {@link CicloDTO}.
  */
 @Mapper(componentModel = "spring", uses = {})
 public interface CicloMapper extends EntityMapper<CicloDTO, Ciclo> {
+
+    @Mapping(source = "modalidades", target = "modalidadIds")
+    @Mapping(source = "modalidades", target = "modalidadNombres")
+    CicloDTO toDto(Ciclo ciclo);
 
     default Ciclo fromId(Long id) {
         if (id == null) {

@@ -381,15 +381,18 @@ public class ProyectoAutorizacionService {
         }
 
         // El estudiante escoge a su asesor y avisa al CIECYT para que la designe formalmente.
-        // Escoger el jurado o hacerlo en otra modalidad no es eleccion del estudiante.
-        if (esParticipante(proyecto) && Long.valueOf(MODALIDAD_TESIS).equals(modalidad)) {
-            // En la tesis colectiva (Acuerdo 025, art. 7 par. 1) el propio estudiante agrega o
-            // retira a su companero del cargo Estudiante. Ningun otro participante designa
-            // estudiantes, y el asesor sigue siendo elegible por el estudiante.
+        // En tesis y publicacion de articulo tambien puede agregar a sus companeros de trabajo
+        // (Acuerdo 025, art. 7 par. 1 y 2). Escoger el jurado o hacerlo en otra modalidad no es
+        // eleccion del estudiante.
+        boolean modalidadColectiva =
+            Long.valueOf(MODALIDAD_TESIS).equals(modalidad) ||
+            Long.valueOf(MODALIDAD_PUBLICACION_ARTICULO).equals(modalidad);
+        if (esParticipante(proyecto) && modalidadColectiva) {
             if ("ROLE_ESTUDIANTE".equals(autoridad)) {
                 return SecurityUtils.isCurrentUserInRole("ROLE_ESTUDIANTE");
             }
-            return "ROLE_ASESOR".equals(autoridad);
+            // Solo en tesis el estudiante elige a su asesor.
+            return "ROLE_ASESOR".equals(autoridad) && Long.valueOf(MODALIDAD_TESIS).equals(modalidad);
         }
         return false;
     }
@@ -456,6 +459,12 @@ public class ProyectoAutorizacionService {
      * formalmente. En el resto, escoger el asesor no es decision del estudiante.
      */
     private static final long MODALIDAD_TESIS = 9004L;
+
+    /**
+     * Modalidad de publicacion de articulo. El art. 7 par. 2 permite varios autores segun la
+     * categoria de la revista, pero el art. 8 no exige una designacion formal de asesor.
+     */
+    private static final long MODALIDAD_PUBLICACION_ARTICULO = 9006L;
 
     /**
      * Operar el flujo de estados de un proyecto.

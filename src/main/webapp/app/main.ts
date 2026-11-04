@@ -80,6 +80,9 @@ import RolMenuService from '@/entities/rol-menu/rol-menu.service';
 import InvestigacionTipoService from '@/entities/investigacion-tipo/investigacion-tipo.service';
 import ProgramaService from '@/entities/programa/programa.service';
 import CicloService from '@/entities/ciclo/ciclo.service';
+import PeriodoService from '@/entities/periodo/periodo.service';
+import FestivoService from '@/entities/festivo/festivo.service';
+import { setFestivos } from '@/shared/composables/dias-habiles';
 // jhipster-needle-add-entity-service-to-main-import - JHipster will import entities services here
 
 //Complement model select
@@ -206,6 +209,8 @@ const provide: Record<string, unknown> = {
 
   programaService: () => new ProgramaService(),
   cicloService: () => new CicloService(),
+  periodoService: () => new PeriodoService(),
+  festivoService: () => new FestivoService(),
   // jhipster-needle-add-entity-service-to-main - JHipster will import entities services here
   accountService: () => accountService,
 };
@@ -226,6 +231,8 @@ app.component('menu-lateral-wizard', MenuLateralWizard);
 app.use(store);
 app.use(i18n);
 app.use(router);
+
+let festivosCargados = false;
 
 router.beforeEach((to, _from, next) => {
   if (!to.matched.length) {
@@ -270,7 +277,8 @@ router.beforeEach((to, _from, next) => {
   ];
   const enPrefijo = (path: string, prefixes: string[]) => prefixes.some(prefix => path === prefix || path.startsWith(prefix + '/'));
 
-  if (enPrefijo(to.path, adminOnlyPrefixes) && !accountService.hasAnyAuthority(['ROLE_ADMIN'])) {
+  const festivosParaCiecyt = to.path === '/admin/festivos' && accountService.hasAnyAuthority(['ROLE_CIECYT']);
+  if (enPrefijo(to.path, adminOnlyPrefixes) && !accountService.hasAnyAuthority(['ROLE_ADMIN']) && !festivosParaCiecyt) {
     sessionStorage.setItem('requested-url', to.fullPath);
     next('/forbidden');
     return;
@@ -288,6 +296,15 @@ router.beforeEach((to, _from, next) => {
       next('/forbidden');
       return;
     }
+  }
+  if (accountService.authenticated && !festivosCargados) {
+    festivosCargados = true;
+    new FestivoService()
+      .retrieveAll()
+      .then(lista => setFestivos((lista || []).map(festivo => festivo.fecha)))
+      .catch(() => {})
+      .finally(() => next());
+    return;
   }
   next();
 });

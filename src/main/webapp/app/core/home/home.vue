@@ -419,6 +419,20 @@
         </div>
 
         <div class="col-md-4 mb-4">
+          <router-link :to="{ name: 'FestivoView' }" class="text-decoration-none">
+            <div class="card modalidad-card" role="button" tabindex="0" aria-label="Días no hábiles"
+              @keydown.enter.prevent="$router.push({ name: 'FestivoView' })"
+              @keydown.space.prevent="$router.push({ name: 'FestivoView' })">
+              <div class="card-body">
+                <div class="card-icon" style="background-color:#C62828;"><font-awesome-icon icon="calendar" /></div>
+                <h3 class="card-title">Días no hábiles</h3>
+                <p class="card-text">Festivos y carga masiva CSV para el cálculo de plazos.</p>
+              </div>
+            </div>
+          </router-link>
+        </div>
+
+        <div class="col-md-4 mb-4">
           <router-link :to="{ name: 'ConvocatoriasPasantiaView' }" class="text-decoration-none">
             <div class="card modalidad-card" role="button" tabindex="0" aria-label="Convocatorias de pasantia"
               @keydown.enter.prevent="$router.push({ name: 'ConvocatoriasPasantiaView' })"
@@ -649,6 +663,20 @@
                 <div class="card-icon" style="background-color:#1565C0;"><font-awesome-icon icon="calendar" /></div>
                 <h3 class="card-title">Ciclos académicos</h3>
                 <p class="card-text">Técnico, Tecnológico, Profesional y Posgrado.</p>
+              </div>
+            </div>
+          </router-link>
+        </div>
+
+        <div class="col-md-4 mb-4">
+          <router-link :to="{ name: 'PeriodoView' }" class="text-decoration-none">
+            <div class="card modalidad-card" role="button" tabindex="0" aria-label="Periodos académicos"
+              @keydown.enter.prevent="$router.push({ name: 'PeriodoView' })"
+              @keydown.space.prevent="$router.push({ name: 'PeriodoView' })">
+              <div class="card-body">
+                <div class="card-icon" style="background-color:#00838F;"><font-awesome-icon icon="calendar" /></div>
+                <h3 class="card-title">Periodos académicos</h3>
+                <p class="card-text">Periodos usados por la remisión del padrón.</p>
               </div>
             </div>
           </router-link>

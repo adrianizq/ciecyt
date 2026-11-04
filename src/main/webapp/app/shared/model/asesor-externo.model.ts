@@ -15,6 +15,7 @@ export interface IAsesorExterno {
   institucionOrigen?: string;
   rol?: string;
   idoneidadVerificada?: boolean;
+  activo?: boolean;
   fechaVerificacionIdoneidad?: string;
   verificadorLogin?: string;
   fuenteVerificacion?: string;

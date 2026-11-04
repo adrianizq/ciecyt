@@ -23,6 +23,23 @@
               <font-awesome-icon icon="sync" :spin="cargando" /> Actualizar
             </button>
           </div>
+          <div class="col-12">
+            <label class="form-label small">Modalidades del ciclo</label>
+            <div class="d-flex flex-wrap gap-3">
+              <div v-for="modalidad in modalidades" :key="modalidad.id" class="form-check">
+                <input
+                  :id="'ciclo-modalidad-' + modalidad.id"
+                  v-model="form.modalidadIds"
+                  type="checkbox"
+                  class="form-check-input"
+                  :value="modalidad.id"
+                />
+                <label class="form-check-label small" :for="'ciclo-modalidad-' + modalidad.id">
+                  {{ modalidad.modalidad }}
+                </label>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -37,6 +54,7 @@
           <tr>
             <th>ID</th>
             <th>Ciclo</th>
+            <th>Modalidades</th>
             <th class="text-end">Acciones</th>
           </tr>
         </thead>
@@ -44,6 +62,11 @@
           <tr v-for="ciclo in ciclos" :key="ciclo.id">
             <td>{{ ciclo.id }}</td>
             <td class="fw-semibold">{{ ciclo.ciclo }}</td>
+            <td>
+              <span v-for="nombre in ciclo.modalidadNombres || []" :key="nombre" class="badge bg-secondary me-1 mb-1">
+                {{ nombre }}
+              </span>
+            </td>
             <td class="text-end">
               <div class="d-flex justify-content-end gap-2">
                 <button type="button" class="btn btn-outline-secondary btn-sm" @click="editar(ciclo)">Editar</button>
@@ -61,7 +84,9 @@
 import { Component, Inject, Vue } from 'vue-facing-decorator';
 import AlertService from '@/shared/alert/alert.service';
 import CicloService from '@/entities/ciclo/ciclo.service';
+import ModalidadService from '@/entities/modalidad/modalidad.service';
 import { Ciclo, ICiclo } from '@/shared/model/ciclo.model';
+import { IModalidad } from '@/shared/model/modalidad.model';
 
 @Component
 export default class Ciclos extends Vue {
@@ -69,16 +94,32 @@ export default class Ciclos extends Vue {
   private cicloService: () => CicloService;
 
   @Inject
+  private modalidadService: () => ModalidadService;
+
+  @Inject
   private alertService: () => AlertService;
 
   public ciclos: ICiclo[] = [];
-  public form: any = new Ciclo();
+  public modalidades: IModalidad[] = [];
+  public form: any = { ...new Ciclo(), modalidadIds: [] };
   public editandoId: number | null = null;
   public cargando = false;
   public guardando = false;
 
   public mounted(): void {
     this.cargar();
+    this.cargarModalidades();
+  }
+
+  public cargarModalidades(): void {
+    this.modalidadService()
+      .retrieve({ page: 0, size: 200, sort: ['modalidad,asc'] })
+      .then(res => {
+        this.modalidades = res.data || [];
+      })
+      .catch(() => {
+        this.modalidades = [];
+      });
   }
 
   public cargar(): void {
@@ -97,12 +138,12 @@ export default class Ciclos extends Vue {
 
   public editar(ciclo: ICiclo): void {
     this.editandoId = ciclo.id;
-    this.form = { ...ciclo };
+    this.form = { ...ciclo, modalidadIds: ciclo.modalidadIds || [] };
   }
 
   public cancelar(): void {
     this.editandoId = null;
-    this.form = new Ciclo();
+    this.form = { ...new Ciclo(), modalidadIds: [] };
   }
 
   public guardar(): void {

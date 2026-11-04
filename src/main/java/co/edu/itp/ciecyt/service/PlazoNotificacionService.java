@@ -7,7 +7,9 @@ import co.edu.itp.ciecyt.domain.enumeration.EnumEstadoProyecto;
 import co.edu.itp.ciecyt.repository.NotificacionRepository;
 import co.edu.itp.ciecyt.repository.ProyectoHistorialEstadoRepository;
 import co.edu.itp.ciecyt.repository.ProyectoRepository;
+import co.edu.itp.ciecyt.repository.FestivoRepository;
 import co.edu.itp.ciecyt.repository.UserRepository;
+import java.util.HashSet;
 import co.edu.itp.ciecyt.security.AuthoritiesConstants;
 import co.edu.itp.ciecyt.service.dto.IntegranteProyectoDTO;
 import java.time.DayOfWeek;
@@ -19,6 +21,7 @@ import java.util.List;
 import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,9 +36,18 @@ public class PlazoNotificacionService {
     private static final Logger log = LoggerFactory.getLogger(PlazoNotificacionService.class);
 
     private static final String TIPO_PLAZO = "PLAZO";
-    private static final int DIAS_JURADO = 7;
-    private static final int DIAS_EVALUACION = 10;
-    private static final int UMBRAL_AVISO = 2;
+
+    @Value("${app.plazos.dias-jurado:7}")
+    private int diasJurado;
+
+    @Value("${app.plazos.dias-evaluacion:10}")
+    private int diasEvaluacion;
+
+    @Value("${app.plazos.umbral-aviso:2}")
+    private int umbralAviso;
+
+    @Value("${app.plazos.liberar-automaticamente:false}")
+    private boolean liberarAutomaticamente;
 
     private static final Set<Long> MODALIDADES_CON_JURADO = Set.of(9002L, 9004L);
     private static final Set<String> ROLES_ASESOR = Set.of("Asesor", "Asesor Internacional", "Co-asesor");
@@ -59,6 +71,7 @@ public class PlazoNotificacionService {
     private final NotificacionService notificacionService;
     private final IntegranteProyectoService integranteProyectoService;
     private final UserRepository userRepository;
+    private final FestivoRepository festivoRepository;
 
     public PlazoNotificacionService(
         ProyectoRepository proyectoRepository,
@@ -66,7 +79,8 @@ public class PlazoNotificacionService {
         NotificacionRepository notificacionRepository,
         NotificacionService notificacionService,
         IntegranteProyectoService integranteProyectoService,
-        UserRepository userRepository
+        UserRepository userRepository,
+        FestivoRepository festivoRepository
     ) {
         this.proyectoRepository = proyectoRepository;
         this.historialRepository = historialRepository;
@@ -74,6 +88,7 @@ public class PlazoNotificacionService {
         this.notificacionService = notificacionService;
         this.integranteProyectoService = integranteProyectoService;
         this.userRepository = userRepository;
+        this.festivoRepository = festivoRepository;
     }
 
     @Scheduled(cron = "0 0 7 * * ?")
@@ -117,7 +132,7 @@ public class PlazoNotificacionService {
         ) {
             if (sinJurado(proyecto.getId())) {
                 Instant inicio = fechaDe(historial, EnumEstadoProyecto.HABILITADO);
-                int creadas = notificarSiAplica(proyecto, inicio, DIAS_JURADO, "Designación de jurado", ahora);
+                int creadas = notificarSiAplica(proyecto, inicio, diasJurado, "Designación de jurado", ahora);
                 if (creadas > 0) {
                     return creadas;
                 }
@@ -132,11 +147,11 @@ public class PlazoNotificacionService {
             int creadas = notificarSiAplica(
                 proyecto,
                 inicio,
-                DIAS_EVALUACION,
+                diasEvaluacion,
                 "Revisión de la propuesta por el asesor",
                 ahora
             );
-            if (plazoVencido(inicio, DIAS_EVALUACION, ahora)) {
+            if (liberarAutomaticamente && plazoVencido(inicio, diasEvaluacion, ahora)) {
                 liberarDesignaciones(proyecto, ROLES_ASESOR);
             }
             return creadas;
@@ -144,8 +159,8 @@ public class PlazoNotificacionService {
 
         if (proyecto.getEstado() == EnumEstadoProyecto.EN_REVISION_JURADO_PROPUESTA) {
             Instant inicio = fechaDe(historial, EnumEstadoProyecto.EN_REVISION_JURADO_PROPUESTA);
-            int creadas = notificarSiAplica(proyecto, inicio, DIAS_EVALUACION, "Revisión de la propuesta por el jurado", ahora);
-            if (plazoVencido(inicio, DIAS_EVALUACION, ahora)) {
+            int creadas = notificarSiAplica(proyecto, inicio, diasEvaluacion, "Revisión de la propuesta por el jurado", ahora);
+            if (liberarAutomaticamente && plazoVencido(inicio, diasEvaluacion, ahora)) {
                 liberarDesignaciones(proyecto, ROLES_JURADO);
             }
             return creadas;
@@ -153,8 +168,8 @@ public class PlazoNotificacionService {
 
         if (proyecto.getEstado() == EnumEstadoProyecto.EN_REVISION_JURADO_PROYECTO) {
             Instant inicio = fechaDe(historial, EnumEstadoProyecto.EN_REVISION_JURADO_PROYECTO);
-            int creadas = notificarSiAplica(proyecto, inicio, DIAS_EVALUACION, "Revisión del documento final", ahora);
-            if (plazoVencido(inicio, DIAS_EVALUACION, ahora)) {
+            int creadas = notificarSiAplica(proyecto, inicio, diasEvaluacion, "Revisión del documento final", ahora);
+            if (liberarAutomaticamente && plazoVencido(inicio, diasEvaluacion, ahora)) {
                 liberarDesignaciones(proyecto, ROLES_JURADO);
             }
             return creadas;
@@ -162,7 +177,7 @@ public class PlazoNotificacionService {
 
         if (proyecto.getEstado().name().startsWith("CORRECCIONES_")) {
             Instant inicio = fechaDe(historial, proyecto.getEstado());
-            return notificarSiAplica(proyecto, inicio, DIAS_EVALUACION, "Correcciones", ahora);
+            return notificarSiAplica(proyecto, inicio, diasEvaluacion, "Correcciones", ahora);
         }
 
         return 0;
@@ -228,7 +243,7 @@ public class PlazoNotificacionService {
         }
         long transcurridos = diasHabilesEntre(inicio, ahora);
         long restantes = diasPlazo - transcurridos;
-        if (restantes > UMBRAL_AVISO) {
+        if (restantes > umbralAviso) {
             return 0;
         }
 
@@ -265,13 +280,19 @@ public class PlazoNotificacionService {
     private long diasHabilesEntre(Instant desde, Instant hasta) {
         LocalDate inicio = desde.atZone(ZoneId.systemDefault()).toLocalDate();
         LocalDate fin = hasta.atZone(ZoneId.systemDefault()).toLocalDate();
+        boolean invertido = inicio.isAfter(fin);
+        LocalDate cursorInicio = invertido ? fin : inicio;
+        LocalDate cursorFin = invertido ? inicio : fin;
+        Set<LocalDate> festivos = new HashSet<>(festivoRepository.findFechasActivasEntre(cursorInicio, cursorFin));
         long cuenta = 0;
-        for (LocalDate cursor = inicio; !cursor.isAfter(fin); cursor = cursor.plusDays(1)) {
+        for (LocalDate cursor = cursorInicio; !cursor.isAfter(cursorFin); cursor = cursor.plusDays(1)) {
             DayOfWeek dia = cursor.getDayOfWeek();
-            if (dia != DayOfWeek.SATURDAY && dia != DayOfWeek.SUNDAY) {
+            if (dia != DayOfWeek.SATURDAY && dia != DayOfWeek.SUNDAY && !festivos.contains(cursor)) {
                 cuenta++;
             }
         }
-        return cuenta;
+        return invertido ? -cuenta : cuenta;
     }
 }
+
+

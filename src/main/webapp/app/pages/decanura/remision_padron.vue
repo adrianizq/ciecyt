@@ -40,7 +40,10 @@
                     <b-form-select id="facultad-remision" v-model="facultadId" :options="facultadesDisponibles" @change="cargar()"></b-form-select>
                 </b-form-group>
                 <b-form-group class="mb-3" label="Periodo académico" label-for="periodo">
-                    <b-form-input id="periodo" v-model="nuevoPeriodo" placeholder="por ejemplo 2026-1"></b-form-input>
+                    <b-form-input id="periodo" v-model="nuevoPeriodo" list="periodos-academicos" placeholder="por ejemplo 2026-1"></b-form-input>
+                    <datalist id="periodos-academicos">
+                        <option v-for="periodo in periodos" :key="periodo.id" :value="periodo.nombre"></option>
+                    </datalist>
                 </b-form-group>
                 <b-form-group class="mb-3" label="Observaciones" label-for="obs-remision">
                     <b-form-input id="obs-remision" v-model="nuevasObservaciones"></b-form-input>
@@ -86,6 +89,7 @@
     import AlertService from '@/shared/alert/alert.service';
     import DecanoFacultadService from '@/entities/decano-facultad/decano-facultad.service';
 import FacultadService from '@/entities/facultad/facultad.service';
+    import PeriodoService from '@/entities/periodo/periodo.service';
     import RemisionPadronService from '@/entities/remision-padron/remision-padron.service';
     import { IRemisionPadron, SolicitudRemision } from '@/shared/model/remision-padron.model';
 
@@ -95,8 +99,10 @@ import FacultadService from '@/entities/facultad/facultad.service';
         @Inject  private decanoFacultadService: () => DecanoFacultadService;
         @Inject  private remisionPadronService: () => RemisionPadronService;
         @Inject  private facultadService: () => FacultadService;
+        @Inject  private periodoService: () => PeriodoService;
 
         public facultadId: number = null;
+        public periodos: any[] = [];
         public facultadesDisponibles: any[] = [];
         public remisiones: any[] = [];
         public nuevoPeriodo: string = '';
@@ -113,7 +119,19 @@ import FacultadService from '@/entities/facultad/facultad.service';
         ];
 
         created() {
+            this.cargarPeriodos();
             this.init();
+        }
+
+        public cargarPeriodos(): void {
+            this.periodoService()
+                .retrieveAll()
+                .then(lista => {
+                    this.periodos = lista || [];
+                })
+                .catch(() => {
+                    this.periodos = [];
+                });
         }
 
         async init() {
