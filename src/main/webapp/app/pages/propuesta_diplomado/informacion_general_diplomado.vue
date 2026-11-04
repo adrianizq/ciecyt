@@ -582,8 +582,10 @@ export default class DiplomadoInformacionGeneral extends Vue {
   }
 
   get SubLineas() {
+    const programaId = this.proyecto.proyectoProgramaId;
     return this.lineas_investigacion.filter(linea => {
-      return linea.lineaPadreId == this.proyecto.proyectoLineaInvestigacionId && linea.lineaPadreId;
+      const perteneceAlPrograma = programaId == null || linea.lineaInvestigacionProgramaId == programaId;
+      return linea.lineaPadreId == this.proyecto.proyectoLineaInvestigacionId && linea.lineaPadreId && perteneceAlPrograma;
     });
   }
 
@@ -644,9 +646,9 @@ export default class DiplomadoInformacionGeneral extends Vue {
 
     //Obteniendo las lineas de investigacion
     this.lineaInvestigacionService()
-      .retrieve()
+      .retrieveAll()
       .then(res => {
-        this.lineas_investigacion = res.data;
+        this.lineas_investigacion = res;
       });
   }
   //metodos para las validaciones

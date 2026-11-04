@@ -510,7 +510,7 @@ export default class PropuestaInformacionGeneral extends Vue {
 
     this.facultades = (await this.facultadService().retrieve()).data;
 
-    this.lineas_investigacion = (await this.lineaInvestigacionService().retrieve()).data;
+    this.lineas_investigacion = await this.lineaInvestigacionService().retrieveAll();
 
     // Si estamos editando un proyecto existente, cargar sus datos y relaciones
     if (this.proyId) {

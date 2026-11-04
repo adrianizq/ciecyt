@@ -551,8 +551,10 @@ export default class PropuestaInformacionGeneral extends Vue {
   }
 
   get SubLineas() {
+    const programaId = this.proyecto.proyectoProgramaId;
     return this.lineas_investigacion.filter(linea => {
-      return linea.lineaPadreId == this.proyecto.proyectoLineaInvestigacionId && linea.lineaPadreId;
+      const perteneceAlPrograma = programaId == null || linea.lineaInvestigacionProgramaId == programaId;
+      return linea.lineaPadreId == this.proyecto.proyectoLineaInvestigacionId && linea.lineaPadreId && perteneceAlPrograma;
     });
   }
 
@@ -616,9 +618,9 @@ export default class PropuestaInformacionGeneral extends Vue {
 
     //Obteniendo las lineas de investigacion
     this.lineaInvestigacionService()
-      .retrieve()
+      .retrieveAll()
       .then(res => {
-        this.lineas_investigacion = res.data;
+        this.lineas_investigacion = res;
       });
 
     //Obteniendo los asesores habilitados de la facultad. La designacion sale de la lista que

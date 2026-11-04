@@ -137,6 +137,8 @@
     <include file="config/liquibase/changelog/20261103000003_asesor_externo_activo.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20261103000004_festivos.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20261104000001_publicacion_categoria_revista.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20261104000002_lineas_investigacion_acuerdo24.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20261104000003_programas_facultades_lineas.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20260929000002_elemento_proyecto_guia.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20260929000003_informacion_pasantia_convenio.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20260929000004_pregunta_authority_authority_name.xml" relativeToChangelogFile="false"/>

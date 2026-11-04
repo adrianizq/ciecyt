@@ -29,6 +29,10 @@ export default class LineaInvestigacionService {
     });
   }
 
+  public retrieveAll(): Promise<ILineaInvestigacion[]> {
+    return axios.get(`${baseApiUrl}?size=2000`).then(res => res.data);
+  }
+
   public delete(id: number): Promise<any> {
     return new Promise<any>((resolve, reject) => {
       axios
