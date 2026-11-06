@@ -83,6 +83,31 @@ export function diasHabilesEntre(desde: string | Date | null | undefined, hasta:
 }
 
 /**
+ * Suma una cantidad de dias habiles a una fecha, saltando fines de semana y festivos.
+ * Devuelve la fecha (medianoche UTC) o null si la entrada no es valida.
+ */
+export function sumarDiasHabiles(fechaInicio: string | Date | null | undefined, dias: number | null | undefined): Date | null {
+  if (!fechaInicio || dias == null || isNaN(Number(dias))) {
+    return null;
+  }
+  const cursor = aMedianocheUtc(fechaInicio);
+  if (isNaN(cursor.getTime())) {
+    return null;
+  }
+  let restantes = Math.max(0, Math.floor(Number(dias)));
+  while (restantes > 0) {
+    cursor.setUTCDate(cursor.getUTCDate() + 1);
+    if (!esFinDeSemana(cursor) && !esFestivo(cursor)) {
+      restantes--;
+    }
+  }
+  while (esFinDeSemana(cursor) || esFestivo(cursor)) {
+    cursor.setUTCDate(cursor.getUTCDate() + 1);
+  }
+  return cursor;
+}
+
+/**
  * Cuenta los dias habiles transcurridos desde una fecha de inicio hasta hoy.
  * Devuelve null si la fecha es faltante.
  */

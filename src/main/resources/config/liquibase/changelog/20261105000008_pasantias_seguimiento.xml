@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.20.xsd">
+
+    <!--
+      Seguimiento de pasantias:
+        - La ficha de inicio se solicita cuando se firma el acta de inicio.
+        - El asesor de la empresa solo certifica el cumplimiento de los objetivos.
+      Ambas se piden en la fase de elaboracion del proyecto, no en la inscripcion.
+    -->
+
+    <changeSet id="20261105000008-1" author="ciecyt">
+        <comment>Ficha de inicio y certificacion de objetivos - Pasantia Tecnologica (9001)</comment>
+        <insert tableName="requisito">
+            <column name="id" valueNumeric="95400"/>
+            <column name="codigo" value="PT-FICHA-INICIO"/>
+            <column name="nombre" value="Ficha de inicio de la pasantia"/>
+            <column name="descripcion" value="Se diligencia y firma cuando se suscribe el acta de inicio de la pasantia; el coordinador de seguimiento del CIECYT la revisa (Acuerdo 025, art. 5 par. 2 y art. 16)."/>
+            <column name="tipo" value="DOCUMENTO"/>
+            <column name="obligatorio" valueBoolean="true"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="requisito_estado" value="EN_ELABORACION_PROYECTO"/>
+            <column name="requisito_modalidad_id" valueNumeric="9001"/>
+        </insert>
+        <insert tableName="requisito">
+            <column name="id" valueNumeric="95401"/>
+            <column name="codigo" value="PT-CERT-OBJETIVOS"/>
+            <column name="nombre" value="Certificacion de cumplimiento de objetivos"/>
+            <column name="descripcion" value="Expedida por el asesor de la empresa u organizacion, quien solo certifica el cumplimiento de los objetivos de la pasantia (Acuerdo 025, art. 16 y art. 20)."/>
+            <column name="tipo" value="DOCUMENTO"/>
+            <column name="obligatorio" valueBoolean="true"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="requisito_estado" value="EN_ELABORACION_PROYECTO"/>
+            <column name="requisito_modalidad_id" valueNumeric="9001"/>
+        </insert>
+    </changeSet>
+
+    <changeSet id="20261105000008-2" author="ciecyt">
+        <comment>Ficha de inicio y certificacion de objetivos - Pasantia Investigativa (9002)</comment>
+        <insert tableName="requisito">
+            <column name="id" valueNumeric="95410"/>
+            <column name="codigo" value="PIP-FICHA-INICIO"/>
+            <column name="nombre" value="Ficha de inicio de la pasantia"/>
+            <column name="descripcion" value="Se diligencia y firma cuando se suscribe el acta de inicio de la pasantia; el coordinador de seguimiento del CIECYT la revisa (Acuerdo 025, art. 5 par. 2 y art. 16)."/>
+            <column name="tipo" value="DOCUMENTO"/>
+            <column name="obligatorio" valueBoolean="true"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="requisito_estado" value="EN_ELABORACION_PROYECTO"/>
+            <column name="requisito_modalidad_id" valueNumeric="9002"/>
+        </insert>
+        <insert tableName="requisito">
+            <column name="id" valueNumeric="95411"/>
+            <column name="codigo" value="PIP-CERT-OBJETIVOS"/>
+            <column name="nombre" value="Certificacion de cumplimiento de objetivos"/>
+            <column name="descripcion" value="Expedida por el asesor de la empresa u organizacion, quien solo certifica el cumplimiento de los objetivos de la pasantia (Acuerdo 025, art. 16 y art. 20)."/>
+            <column name="tipo" value="DOCUMENTO"/>
+            <column name="obligatorio" valueBoolean="true"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="requisito_estado" value="EN_ELABORACION_PROYECTO"/>
+            <column name="requisito_modalidad_id" valueNumeric="9002"/>
+        </insert>
+    </changeSet>
+
+    <changeSet id="20261105000008-3" author="ciecyt">
+        <comment>Ficha de inicio y certificacion de objetivos - Pasantia Internacional (9003)</comment>
+        <insert tableName="requisito">
+            <column name="id" valueNumeric="95420"/>
+            <column name="codigo" value="PI-FICHA-INICIO"/>
+            <column name="nombre" value="Ficha de inicio de la pasantia"/>
+            <column name="descripcion" value="Se diligencia y firma cuando se suscribe el acta de inicio de la pasantia; el coordinador de seguimiento del CIECYT la revisa (Acuerdo 025, art. 5 par. 2 y art. 16)."/>
+            <column name="tipo" value="DOCUMENTO"/>
+            <column name="obligatorio" valueBoolean="true"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="requisito_estado" value="EN_ELABORACION_PROYECTO"/>
+            <column name="requisito_modalidad_id" valueNumeric="9003"/>
+        </insert>
+        <insert tableName="requisito">
+            <column name="id" valueNumeric="95421"/>
+            <column name="codigo" value="PI-CERT-OBJETIVOS"/>
+            <column name="nombre" value="Certificacion de cumplimiento de objetivos"/>
+            <column name="descripcion" value="Expedida por el asesor de la empresa u organizacion, quien solo certifica el cumplimiento de los objetivos de la pasantia (Acuerdo 025, art. 16 y art. 20)."/>
+            <column name="tipo" value="DOCUMENTO"/>
+            <column name="obligatorio" valueBoolean="true"/>
+            <column name="activo" valueBoolean="true"/>
+            <column name="requisito_estado" value="EN_ELABORACION_PROYECTO"/>
+            <column name="requisito_modalidad_id" valueNumeric="9003"/>
+        </insert>
+    </changeSet>
+
+</databaseChangeLog>

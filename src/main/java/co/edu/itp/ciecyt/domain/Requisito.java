@@ -38,6 +38,13 @@ public class Requisito implements Serializable {
     @Column(name = "activo")
     private Boolean activo;
 
+    /**
+     * Extensiones permitidas para el archivo del requisito, separadas por coma. Por ejemplo
+     * ".pdf" para documentos firmados o ".doc,.docx,.pdf" para documentos editables.
+     */
+    @Column(name = "acepta_tipos", length = 100)
+    private String aceptaTipos;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "requisito_modalidad_id")
     private Modalidad requisitoModalidad;
@@ -100,6 +107,14 @@ public class Requisito implements Serializable {
 
     public void setActivo(Boolean activo) {
         this.activo = activo;
+    }
+
+    public String getAceptaTipos() {
+        return aceptaTipos;
+    }
+
+    public void setAceptaTipos(String aceptaTipos) {
+        this.aceptaTipos = aceptaTipos;
     }
 
     public Modalidad getRequisitoModalidad() {

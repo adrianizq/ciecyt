@@ -115,7 +115,8 @@ export function estadosActoPublico(modalidadId: number | undefined | null): stri
 }
 
 export function textoEnvioRevision(modalidadId: number | undefined | null): string {
-  return tieneJurado(modalidadId) ? 'Enviar al jurado' : 'Emitir concepto favorable';
+  // El asesor entrega la evaluacion al CIECYT; el CIECYT es quien la remite al jurado.
+  return tieneJurado(modalidadId) ? 'Enviar al CIECYT' : 'Emitir concepto favorable';
 }
 
 export function tipoActoPublico(modalidadId: number | undefined | null): string {

@@ -6,11 +6,18 @@
     <div class="col-sm-8">
       <form name="checklistRequisitos" role="form" novalidate v-on:submit.prevent>
         <div class="mb-3 form-group">
-          <h2>Requisitos de Inscripción</h2>
+          <h2>{{ tituloRequisitos }}</h2>
           <span>
             Complete todos los requisitos obligatorios. El CIECYT revisa cada uno y lo aprueba o lo
             rechaza con una observación (Acuerdo 025, art. 5, parágrafo 1).
           </span>
+        </div>
+
+        <div v-if="esTesis && faseActual === 'EN_VALIDACION_DOCUMENTAL'" class="alert alert-info">
+          El documento extenso de la propuesta se carga en
+          <router-link :to="{ name: 'PropuestaAdjuntarPropuestaView', params: { proyectoId: proyId } }">
+            Adjuntar propuesta </router-link
+          >. No se solicita de nuevo en este checklist.
         </div>
 
         <div v-if="cargando" class="mb-3 form-group">Cargando requisitos...</div>
@@ -30,12 +37,15 @@
                   class="badge badge-danger ml-2"
                   >Obligatorio</span
                 >
+                <div v-if="requisito.requisitoProyectoRequisitoDescripcion" class="small text-muted mt-1">
+                  {{ requisito.requisitoProyectoRequisitoDescripcion }}
+                </div>
               </div>
               <span class="badge" :class="claseEstado(requisito)">{{ etiquetaEstado(requisito) }}</span>
             </div>
 
             <div v-if="esCampo(requisito)" class="mt-3">
-              <label :for="'dato-' + requisito.id">Avance del trabajo de grado (%)</label>
+              <label :for="'dato-' + requisito.id">{{ requisito.requisitoProyectoRequisitoNombre }}</label>
               <input
                 :id="'dato-' + requisito.id"
                 type="number"
@@ -52,17 +62,22 @@
             <div v-else class="mt-3">
               <label :for="'archivo-' + requisito.id">Archivo</label>
               <div>
-                <a
-                  v-if="requisito.archivo"
-                  href="#"
-                  class="mr-3"
-                  v-on:click.prevent="descargar(requisito)"
-                  >Ver archivo entregado</a
-                >
+                <template v-if="requisito.archivo">
+                  <button
+                    type="button"
+                    class="btn btn-sm btn-outline-primary mr-2"
+                    v-on:click="previsualizar(requisito)"
+                  >
+                    <font-awesome-icon icon="eye"></font-awesome-icon>&nbsp;Previsualizar
+                  </button>
+                  <button type="button" class="btn btn-sm btn-outline-secondary" v-on:click="descargar(requisito)">
+                    <font-awesome-icon icon="download"></font-awesome-icon>&nbsp;Descargar
+                  </button>
+                </template>
                 <file-upload
                   v-if="editable(requisito)"
-                  :accept="requisito.aceptaTipos || '.pdf,.doc,.docx,.zip'"
-                  :help="'Adjunte un archivo de hasta 20 MB'"
+                  :accept="requisito.requisitoProyectoRequisitoAceptaTipos || '.pdf'"
+                  :help="'Adjunte un archivo de hasta 20 MB. Formatos permitidos: ' + (requisito.requisitoProyectoRequisitoAceptaTipos || '.pdf')"
                   label="Adjuntar archivo de requisito"
                   @change="archivo => asignarArchivo(archivo, requisito)"
                 />
@@ -71,6 +86,11 @@
 
             <div v-if="requisito.observacion" class="mt-3">
               <strong>Observación:</strong> {{ requisito.observacion }}
+            </div>
+            <div v-if="requisito.fechaValidacion" class="small text-muted mt-1">
+              {{ requisito.estado === 'RECHAZADO' ? 'Rechazado' : 'Validado' }} el
+              {{ fechaHora(requisito.fechaValidacion) }}
+              <span v-if="requisito.validadoPor">por {{ requisito.validadoPor }}</span>
             </div>
 
             <button
@@ -127,9 +147,46 @@ export default class ChecklistPropuesta extends mixins(JhiDataUtils) {
   public fase: IFases = new Fases();
   public cargando = true;
   public guardando = false;
+  public faseActual = 'EN_VALIDACION_DOCUMENTAL';
 
   get proyId(): number {
     return parseInt(this.$route.params.proyectoId, 10);
+  }
+
+  get esTesis(): boolean {
+    return Number(this.proyecto.proyectoModalidadId) === 9004;
+  }
+
+  get tituloRequisitos(): string {
+    return this.faseActual === 'EN_ELABORACION_PROYECTO'
+      ? 'Requisitos de la fase de proyecto'
+      : 'Requisitos de Inscripcion';
+  }
+
+  private calcularFaseActual(): string {
+    const estado = String(this.proyecto.estado || '');
+    const fasesProyecto = [
+      'EN_ELABORACION_PROYECTO',
+      'EN_REVISION_ASESOR_PROYECTO',
+      'CORRECCIONES_ASESOR_PROYECTO',
+      'APROBADA_POR_ASESOR_PROYECTO',
+      'EN_REVISION_JURADO_PROYECTO',
+      'EVALUACION_JURADO_PROYECTO_ENTREGADA',
+      'CORRECCIONES_JURADO_PROYECTO',
+      'LISTO_PARA_SUSTENTAR',
+      'SUSTENTACION_PROGRAMADA',
+      'SUSTENTACION_REALIZADA',
+      'EN_EVALUACION_SUSTENTACION',
+      'EVALUACION_SUSTENTACION_ENTREGADA',
+      'AJUSTES_SUSTENTACION',
+      'LISTO_PARA_SOCIALIZAR',
+      'SOCIALIZACION_PROGRAMADA',
+      'SOCIALIZACION_REALIZADA',
+      'EN_EVALUACION_SOCIALIZACION',
+      'NOTA_DEFINITIVA',
+      'FINALIZADO',
+    ];
+    return fasesProyecto.indexOf(estado) >= 0 ? 'EN_ELABORACION_PROYECTO' : 'EN_VALIDACION_DOCUMENTAL';
   }
 
   esCampo(requisito: IRequisitoProyecto): boolean {
@@ -194,6 +251,30 @@ export default class ChecklistPropuesta extends mixins(JhiDataUtils) {
     }
   }
 
+  previsualizar(requisito: IRequisitoProyecto) {
+    const adjunto = this.adjuntoDe(requisito);
+    if (adjunto) {
+      this.adjuntoProyectoFaseService().previewFile(
+        adjunto.id,
+        adjunto.nombreArchivoOriginal || adjunto.nombreAdjunto || ''
+      );
+    }
+  }
+
+  fechaHora(value: any): string {
+    if (!value) {
+      return '';
+    }
+    const fecha = value instanceof Date ? value : new Date(value);
+    if (isNaN(fecha.getTime())) {
+      return String(value);
+    }
+    const dos = (numero: number) => String(numero).padStart(2, '0');
+    return `${dos(fecha.getDate())}/${dos(fecha.getMonth() + 1)}/${fecha.getFullYear()} ${dos(
+      fecha.getHours()
+    )}:${dos(fecha.getMinutes())}`;
+  }
+
   entregar(requisito: IRequisitoProyecto) {
     if (this.esCampo(requisito)) {
       this.entregarDato(requisito);
@@ -223,7 +304,11 @@ export default class ChecklistPropuesta extends mixins(JhiDataUtils) {
       })
       .catch(err => {
         this.guardando = false;
-        this.alertService().showAlert('No se pudo entregar el requisito', 'danger');
+        const detalle =
+          err && err.response && err.response.data
+            ? err.response.data.detail || err.response.data.title || err.response.data.message
+            : null;
+        this.alertService().showAlert(detalle || 'No se pudo entregar el requisito', 'danger');
       });
   }
 
@@ -262,7 +347,11 @@ export default class ChecklistPropuesta extends mixins(JhiDataUtils) {
       })
       .catch(err => {
         this.guardando = false;
-        this.alertService().showAlert('No se pudo entregar el requisito', 'danger');
+        const detalle =
+          err && err.response && err.response.data
+            ? err.response.data.detail || err.response.data.title || err.response.data.message
+            : null;
+        this.alertService().showAlert(detalle || 'No se pudo entregar el requisito', 'danger');
       });
   }
 
@@ -300,10 +389,15 @@ export default class ChecklistPropuesta extends mixins(JhiDataUtils) {
         this.fase = res;
       });
 
+    this.faseActual = this.calcularFaseActual();
     await this.requisitoProyectoService()
-      .generarPorProyecto(this.proyId)
+      .generarPorProyecto(this.proyId, this.faseActual)
       .then(lista => {
-        this.requisitos = lista || [];
+        this.requisitos = (lista || []).filter(
+          requisito =>
+            !requisito.requisitoProyectoRequisitoEstado ||
+            String(requisito.requisitoProyectoRequisitoEstado) === this.faseActual
+        );
         this.requisitos.forEach(requisito => {
           if (this.esCampo(requisito) && requisito.observacion) {
             this.datos[requisito.id] = requisito.observacion;

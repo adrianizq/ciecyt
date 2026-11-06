@@ -13,6 +13,8 @@ export interface IRequisitoProyecto {
   requisitoProyectoRequisitoId?: number;
   requisitoProyectoRequisitoNombre?: string;
   requisitoProyectoRequisitoCodigo?: string;
+  requisitoProyectoRequisitoDescripcion?: string;
+  requisitoProyectoRequisitoAceptaTipos?: string;
   requisitoProyectoRequisitoObligatorio?: boolean;
   requisitoProyectoRequisitoTipo?: TipoRequisito;
   requisitoProyectoRequisitoEstado?: EnumEstadoProyecto;
@@ -32,6 +34,8 @@ export class RequisitoProyecto implements IRequisitoProyecto {
     public requisitoProyectoRequisitoId?: number,
     public requisitoProyectoRequisitoNombre?: string,
     public requisitoProyectoRequisitoCodigo?: string,
+    public requisitoProyectoRequisitoDescripcion?: string,
+    public requisitoProyectoRequisitoAceptaTipos?: string,
     public requisitoProyectoRequisitoObligatorio?: boolean,
     public requisitoProyectoRequisitoTipo?: TipoRequisito,
     public requisitoProyectoRequisitoEstado?: EnumEstadoProyecto,

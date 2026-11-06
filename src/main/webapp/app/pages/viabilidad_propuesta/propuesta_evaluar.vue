@@ -714,9 +714,18 @@ export default class PropuestaEvaluar extends mixins(JhiDataUtils) {
     } else if (viabilidad === 'NO_VIABLE') {
       nuevoEstado = 'NO_VIABLE';
       observacion = 'Propuesta no viable';
-    } else if (viabilidad === 'PENDIENTE') {
+    } else if (viabilidad === 'PENDIENTE' || viabilidad === 'VIABLE_CON_MODIFICACIONES') {
       nuevoEstado = 'CORRECCIONES_JURADO_PROPUESTA';
       observacion = 'Propuesta viable con correcciones pendientes';
+    }
+    // Las correcciones se envian directamente al estudiante, sin pasar por el CIECYT.
+    if (viabilidad === 'PENDIENTE' || viabilidad === 'VIABLE_CON_MODIFICACIONES') {
+      nuevoEstado = 'CORRECCIONES_JURADO_PROPUESTA';
+      observacion = 'Propuesta viable con correcciones pendientes';
+    } else if ([9002, 9004].indexOf(Number(this.modalidadId)) >= 0) {
+      // Las decisiones finales (viable / no viable) si pasan por el CIECYT.
+      nuevoEstado = 'EVALUACION_JURADO_ENTREGADA';
+      observacion = `Evaluacion del jurado entregada al CIECYT. Concepto: ${viabilidad}`;
     }
     if (!nuevoEstado) {
       return Promise.resolve();
@@ -724,8 +733,11 @@ export default class PropuestaEvaluar extends mixins(JhiDataUtils) {
     return this.proyectoService()
       .cambiarEstado(this.proyecto.id, nuevoEstado, observacion)
       .then(() => {
-        const message = this.$t('ciecytApp.proyecto.estadoActualizado', { estado: nuevoEstado });
-        this.alertService().showAlert(message, 'success');
+        const mensaje =
+          nuevoEstado === 'CORRECCIONES_JURADO_PROPUESTA'
+            ? 'Correcciones enviadas directamente al estudiante.'
+            : 'Evaluación entregada al CIECYT. El CIECYT publicará el concepto al estudiante.';
+        this.alertService().showAlert(mensaje, 'success');
       });
   }
 

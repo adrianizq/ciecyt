@@ -46,6 +46,12 @@ public class RequisitoProyectoServiceImpl implements RequisitoProyectoService {
     private static final String CODIGO_FORMATO_TESIS = "T-FORMATO-INSCRIPCION-TESIS";
     private static final String CODIGO_CARTA_AVAL_TESIS = "T-CARTA-AVAL-ASESOR";
 
+    /**
+     * La propuesta extensa de tesis se carga en la pantalla "Adjuntar propuesta", no en el
+     * checklist de inscripcion. Para las demas modalidades el requisito sigue vigente.
+     */
+    private static final String CODIGO_PROPUESTA = "REQ_PROPUESTA";
+
     private static final long MODALIDAD_TESIS = 9004L;
     private static final long CICLO_POSGRADO = 4L;
 
@@ -175,6 +181,9 @@ public class RequisitoProyectoServiceImpl implements RequisitoProyectoService {
         }
         if (CODIGO_FORMATO_TESIS.equals(requisito.getCodigo()) || CODIGO_CARTA_AVAL_TESIS.equals(requisito.getCodigo())) {
             return !posgrado;
+        }
+        if (CODIGO_PROPUESTA.equals(requisito.getCodigo()) && Long.valueOf(MODALIDAD_TESIS).equals(modalidadId)) {
+            return false;
         }
         return true;
     }

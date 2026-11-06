@@ -24,7 +24,7 @@
                     <font-awesome-icon icon="times"></font-awesome-icon>
                   </button>
                 </div>
-                <input v-if="adjuntoProyectoFase.file == null" type="file" ref="file_archivo" id="file_archivo" v-on:change="asignarData($event, adjuntoProyectoFase, 'archivo', false)" v-text="$t('entity.action.addblob')"/>
+                <input v-if="adjuntoProyectoFase.file == null" type="file" accept=".pdf" ref="file_archivo" id="file_archivo" v-on:change="asignarData($event, adjuntoProyectoFase, 'archivo', false)" v-text="$t('entity.action.addblob')"/>
                 <span v-if="adjuntoProyectoFase.file != null">Si desea subir otro adjunto de este documento, deberá eliminar el archivo actual</span>
               </div>
               <input type="hidden" class="form-control" name="archivo" id="adjunto-proyecto-fase-archivo" v-model="adjuntoProyectoFase.archivo" />

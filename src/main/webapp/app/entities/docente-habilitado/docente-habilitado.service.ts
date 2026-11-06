@@ -21,6 +21,30 @@ export default class DocenteHabilitadoService {
   }
 
   /**
+   * Padron vigente de todas las facultades. Lo usa el reporte de estado de docentes del CIECYT.
+   */
+  public retrieveVigentesGlobal(): Promise<any> {
+    return new Promise<any>((resolve, reject) => {
+      axios
+        .get(`${baseApiUrl}/vigentes`)
+        .then(res => resolve(res))
+        .catch(err => reject(err));
+    });
+  }
+
+  /**
+   * Horas semanales de carga academica asignadas al docente dentro del padron.
+   */
+  public actualizarHorasSemanales(id: number, horasSemanales: number | null): Promise<any> {
+    return new Promise<any>((resolve, reject) => {
+      axios
+        .post(`${baseApiUrl}/${id}/horas-semanales`, { horasSemanales })
+        .then(res => resolve(res))
+        .catch(err => reject(err));
+    });
+  }
+
+  /**
    * Historial de una persona en una facultad. Se pide por facultad porque la habilitacion es por
    * facultad y quien consulta solo puede ver las autorizadas: pedirlo por persona y sin facultad
    * dejaria ver las habilitaciones de otras facultades.

@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.20.xsd">
+
+    <!--
+      Ajustes pedidos por el CIECYT sobre los requisitos de inscripcion:
+        - El formato valido de inscripcion de la opcion de grado es el FINV001.
+        - El "Formato de inscripcion de la propuesta de tesis" (T-FORMATO-INSCRIPCION-TESIS)
+          duplicaba el FINV001 y se retira.
+        - En tesis la "Propuesta de trabajo de grado" ya se carga en la pantalla
+          "Adjuntar propuesta" (documento extenso), asi que no se vuelve a pedir en el checklist.
+        - El "Avance del trabajo de grado (%)" no es un requisito de inscripcion: pasa a la
+          fase de elaboracion del proyecto.
+    -->
+
+    <changeSet id="20261105000002-1" author="ciecyt">
+        <comment>Formato de inscripcion de la opcion de grado: identificar el formato FINV001</comment>
+        <update tableName="requisito">
+            <column name="nombre" value="Formato de inscripcion de la opcion de grado (FINV001)"/>
+            <column name="descripcion" value="Formato FINV001 de inscripcion de la opcion de grado diligenciado y firmado (Acuerdo 025, art. 5, par. 1)."/>
+            <where>codigo = 'REQ_FORMATO_INSCRIPCION'</where>
+        </update>
+    </changeSet>
+
+    <changeSet id="20261105000002-2" author="ciecyt">
+        <comment>Retirar el formato de inscripcion de la propuesta de tesis (duplicado del FINV001)</comment>
+        <update tableName="requisito">
+            <column name="activo" valueBoolean="false"/>
+            <where>codigo = 'T-FORMATO-INSCRIPCION-TESIS'</where>
+        </update>
+        <sql>
+            DELETE FROM requisito_proyecto
+            WHERE requisito_proyecto_requisito_id IN (
+                SELECT id FROM requisito WHERE codigo = 'T-FORMATO-INSCRIPCION-TESIS'
+            );
+        </sql>
+    </changeSet>
+
+    <changeSet id="20261105000002-3" author="ciecyt">
+        <comment>En tesis la propuesta extensa se carga en Adjuntar propuesta, no en el checklist</comment>
+        <sql>
+            DELETE FROM requisito_proyecto
+            WHERE requisito_proyecto_requisito_id IN (
+                SELECT id FROM requisito WHERE codigo = 'REQ_PROPUESTA'
+            )
+            AND requisito_proyecto_proyecto_id IN (
+                SELECT id FROM proyecto WHERE proyecto_modalidad_id = 9004
+            );
+        </sql>
+    </changeSet>
+
+    <changeSet id="20261105000002-4" author="ciecyt">
+        <comment>El avance del trabajo de grado no es requisito de inscripcion</comment>
+        <update tableName="requisito">
+            <column name="requisito_estado" value="EN_ELABORACION_PROYECTO"/>
+            <where>codigo = 'REQ_AVANCE_75'</where>
+        </update>
+    </changeSet>
+
+</databaseChangeLog>

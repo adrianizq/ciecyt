@@ -60,6 +60,29 @@ public class DocenteHabilitadoService {
         return docenteHabilitadoRepository.findVigentesPorFacultadYRol(facultadId, normalizarRol(rol));
     }
 
+    /**
+     * Padron vigente completo. Lo usa el reporte de estado de docentes del CIECYT, que necesita
+     * ver las horas semanales de todos los docentes y no de una sola facultad.
+     */
+    @Transactional(readOnly = true)
+    public List<DocenteHabilitado> vigentesGlobal() {
+        return docenteHabilitadoRepository.findAllVigentes();
+    }
+
+    /**
+     * Actualiza las horas semanales asignadas a un docente dentro del padron. Es un dato de
+     * gestion que se captura despues de habilitar a la persona, por eso se edita aparte.
+     */
+    public DocenteHabilitado actualizarHorasSemanales(Long id, Integer horasSemanales) {
+        DocenteHabilitado docenteHabilitado = docenteHabilitadoRepository.findById(id)
+            .orElseThrow(() -> new BadRequestAlertException("La habilitacion indicada no existe", "docenteHabilitado", "inexistente"));
+        if (horasSemanales != null && horasSemanales < 0) {
+            throw new BadRequestAlertException("Las horas semanales no pueden ser negativas", "docenteHabilitado", "horasInvalidas");
+        }
+        docenteHabilitado.setHorasSemanales(horasSemanales);
+        return docenteHabilitadoRepository.save(docenteHabilitado);
+    }
+
     @Transactional(readOnly = true)
     public List<DocenteHabilitado> historialEnFacultad(Long userId, Long facultadId) {
         return docenteHabilitadoRepository.findHistorialDeUsuarioEnFacultad(userId, facultadId);
@@ -91,17 +114,17 @@ public class DocenteHabilitadoService {
        * evita que el navegador tenga que consultar el directorio de usuarios para poder mantener la
        * lista.
        */
-      public DocenteHabilitado habilitarPorLogin(String login, Long facultadId, String rol, String actoResolucion, String observaciones) {
+      public DocenteHabilitado habilitarPorLogin(String login, Long facultadId, String rol, String actoResolucion, String observaciones, Integer horasSemanales) {
           if (login == null || login.trim().isEmpty()) {
               throw new BadRequestAlertException("Indique la cedula o el login del docente", "docenteHabilitado", "loginVacio");
           }
           User user = userRepository.findOneWithAuthoritiesByLogin(login.trim())
               .orElseThrow(() -> new BadRequestAlertException(
                   "No hay ningun usuario con la cedula o login " + login.trim(), "docenteHabilitado", "usuarioInexistente"));
-          return habilitar(user.getId(), facultadId, rol, null, actoResolucion, observaciones);
+          return habilitar(user.getId(), facultadId, rol, null, actoResolucion, observaciones, horasSemanales);
       }
 
-      public DocenteHabilitado habilitar(Long userId, Long facultadId, String rol, LocalDate fechaDesde, String actoResolucion, String observaciones) {
+      public DocenteHabilitado habilitar(Long userId, Long facultadId, String rol, LocalDate fechaDesde, String actoResolucion, String observaciones, Integer horasSemanales) {
         String rolNormalizado = normalizarRol(rol);
         User user = userRepository.findById(userId)
             .orElseThrow(() -> new BadRequestAlertException("El docente indicado no existe", "docenteHabilitado", "usuarioInexistente"));
@@ -120,7 +143,12 @@ public class DocenteHabilitadoService {
         List<DocenteHabilitado> vigente = docenteHabilitadoRepository.findVigente(userId, facultadId, rolNormalizado);
         if (!vigente.isEmpty()) {
             log.debug("El docente {} ya estaba habilitado como {} en la facultad {}", userId, rolNormalizado, facultadId);
-            return vigente.get(0);
+            DocenteHabilitado existente = vigente.get(0);
+            if (horasSemanales != null) {
+                existente.setHorasSemanales(horasSemanales);
+                return docenteHabilitadoRepository.save(existente);
+            }
+            return existente;
         }
 
         DocenteHabilitado docenteHabilitado = new DocenteHabilitado();
@@ -130,6 +158,7 @@ public class DocenteHabilitadoService {
         docenteHabilitado.setFechaDesde(fechaDesde != null ? fechaDesde : LocalDate.now());
         docenteHabilitado.setActoResolucion(actoResolucion);
         docenteHabilitado.setObservaciones(observaciones);
+        docenteHabilitado.setHorasSemanales(horasSemanales);
         return docenteHabilitadoRepository.save(docenteHabilitado);
     }
 

@@ -298,7 +298,13 @@ import { numeric, required, minLength, maxLength, between, url } from '@vuelidat
 
 import JhiDataUtils from '@/shared/data/data-utils.service';
 import { categoriaCalificacion, textoEscalaCalificacion } from '@/shared/config/calificacion';
-import { estadoActoRealizado, estadoEvaluacionActo, nombreActoPublico, tieneJurado } from '@/shared/config/opcion_grado';
+import {
+  estadoActoRealizado,
+  estadoEvaluacionActo,
+  nombreActoPublico,
+  requiereActoPublico,
+  tieneJurado,
+} from '@/shared/config/opcion_grado';
 
 const validations: any = {
   adjuntoProyectoFase: {
@@ -596,11 +602,17 @@ export default class PropuestaEvaluar extends mixins(JhiDataUtils) {
             acto + ' en evaluación por ' + (tieneJurado(this.modalidadId) ? 'el jurado' : 'el asesor')
           )
         : Promise.resolve(null);
+    // La nota definitiva es un hito: se entrega al CIECYT para que la publique al estudiante.
+    const destino = requiereActoPublico(this.modalidadId)
+      ? 'EVALUACION_SUSTENTACION_ENTREGADA'
+      : 'NOTA_DEFINITIVA';
     return previo
-      .then(() => this.proyectoService().cambiarEstado(this.proyecto.id, 'NOTA_DEFINITIVA', observacion))
+      .then(() => this.proyectoService().cambiarEstado(this.proyecto.id, destino, observacion))
       .then(() => {
-        const message = this.$t('ciecytApp.proyecto.estadoActualizado', { estado: 'NOTA_DEFINITIVA' });
-        this.alertService().showAlert(message, 'success');
+        const mensaje = requiereActoPublico(this.modalidadId)
+          ? 'Nota definitiva entregada al CIECYT. El CIECYT la publicará al estudiante.'
+          : this.$t('ciecytApp.proyecto.estadoActualizado', { estado: destino });
+        this.alertService().showAlert(mensaje, 'success');
       });
   }
 

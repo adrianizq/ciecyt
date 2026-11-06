@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Padron de profesores habilitados por facultad.
@@ -58,6 +59,34 @@ public class DocenteHabilitadoResource {
     }
 
     /**
+     * Padron vigente de todas las facultades. Alimenta el reporte de estado de docentes y solo lo
+     * puede consultar quien dirige el proceso (CIECYT o admin).
+     */
+    @GetMapping("/docente-habilitados/vigentes")
+    public List<DocenteHabilitado> getVigentesGlobal() {
+        if (!autorizacion.esGestorGlobal()) {
+            throw new AccessDeniedException("No puede consultar el padr��n global de docentes");
+        }
+        return docenteHabilitadoService.vigentesGlobal();
+    }
+
+    /**
+     * Registra las horas semanales que la decanatura asigna al docente. Se edita por separado de
+     * la habilitacion porque es un dato de carga academica, no de vigencia.
+     */
+    @PostMapping("/docente-habilitados/{id}/horas-semanales")
+    public DocenteHabilitado actualizarHorasSemanales(@PathVariable Long id, @RequestBody Map<String, Integer> payload) {
+        DocenteHabilitado docente = docenteHabilitadoService.findOne(id)
+            .orElseThrow(() -> new AccessDeniedException("La habilitacion indicada no existe"));
+        boolean puedeEditar = autorizacion.esGestorGlobal()
+            || autorizacion.puedeHabilitarDocentesEn(docente.getFacultad() != null ? docente.getFacultad().getId() : null);
+        if (!puedeEditar) {
+            throw new AccessDeniedException("No puede modificar las horas semanales de ese docente");
+        }
+        return docenteHabilitadoService.actualizarHorasSemanales(id, payload != null ? payload.get("horasSemanales") : null);
+    }
+
+    /**
      * El historial de habilitaciones de un docente en una facultad, para saber en que periodos
      * estuvo. Se pide por facultad y autorizacion sobre esa facultad: de otro modo a quien puede
      * ver una facultad le bastaria con una sola habilitacion en ella para que le llegaran tambien
@@ -84,11 +113,12 @@ public class DocenteHabilitadoResource {
             // que el navegador no tenga que consultar el directorio de usuarios.
             return docenteHabilitadoService.habilitarPorLogin(
                 solicitud.getLogin(), solicitud.getFacultadId(), solicitud.getRol(),
-                solicitud.getActoResolucion(), solicitud.getObservaciones());
+                solicitud.getActoResolucion(), solicitud.getObservaciones(), solicitud.getHorasSemanales());
         }
         return docenteHabilitadoService.habilitar(
             solicitud.getUserId(), solicitud.getFacultadId(), solicitud.getRol(),
-            solicitud.getFechaDesde(), solicitud.getActoResolucion(), solicitud.getObservaciones());
+            solicitud.getFechaDesde(), solicitud.getActoResolucion(), solicitud.getObservaciones(),
+            solicitud.getHorasSemanales());
     }
 
     /**
@@ -117,6 +147,7 @@ public class DocenteHabilitadoResource {
         private LocalDate fechaHasta;
         private String actoResolucion;
         private String observaciones;
+        private Integer horasSemanales;
 
         public Long getUserId() { return userId; }
         public void setUserId(Long userId) { this.userId = userId; }
@@ -134,5 +165,7 @@ public class DocenteHabilitadoResource {
         public void setActoResolucion(String actoResolucion) { this.actoResolucion = actoResolucion; }
         public String getObservaciones() { return observaciones; }
         public void setObservaciones(String observaciones) { this.observaciones = observaciones; }
+        public Integer getHorasSemanales() { return horasSemanales; }
+        public void setHorasSemanales(Integer horasSemanales) { this.horasSemanales = horasSemanales; }
     }
 }

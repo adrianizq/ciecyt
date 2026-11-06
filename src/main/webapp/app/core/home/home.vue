@@ -117,7 +117,7 @@
       </div>
 
       <!-- Vista DECANO: padron de habilitados + remision. Acuerdo 25 art. 8 par. 2 y art. 9 par. 2. -->
-      <div v-else-if="esDecano" class="row">
+      <div v-if="!esEstudiante && esDecano" class="row">
         <div class="col-12 mb-4">
           <h2 class="mb-0" style="color:#1a2332; font-weight:600;">Decanatura</h2>
           <p class="text-muted mb-0" style="font-size:0.9rem;">
@@ -178,7 +178,7 @@
       </div>
 
       <!-- Vista ASESOR: mis propuestas a evaluar. Acuerdo 25 art. 8. -->
-      <div v-else-if="esAsesor" class="row">
+      <div v-if="!esEstudiante && esAsesor" class="row">
         <div class="col-12 mb-4">
           <h2 class="mb-0" style="color:#1a2332; font-weight:600;">Asesoría</h2>
           <p class="text-muted mb-0" style="font-size:0.9rem;">
@@ -265,7 +265,7 @@
       </div>
 
       <!-- Vista JURADO: mis evaluaciones pendientes y sustentaciones. Acuerdo 25 art. 9, 10. -->
-      <div v-else-if="esJurado" class="row">
+      <div v-if="!esEstudiante && esJurado" class="row">
         <div class="col-12 mb-4">
           <h2 class="mb-0" style="color:#1a2332; font-weight:600;">Jurado</h2>
           <p class="text-muted mb-0" style="font-size:0.9rem;">
@@ -320,7 +320,7 @@
       </div>
 
       <!-- Vista CIECYT: seguimiento y gestion integral del proceso de grado. -->
-      <div v-else-if="esCiecyt" class="row">
+      <div v-if="!esEstudiante && esCiecyt" class="row">
         <div class="col-12 mb-4">
           <h2 class="mb-0" style="color:#1a2332; font-weight:600;">CIECYT</h2>
           <p class="text-muted mb-0" style="font-size:0.9rem;">
@@ -407,6 +407,20 @@
                 <div class="card-icon" style="background-color:#C62828;"><font-awesome-icon icon="bell" /></div>
                 <h3 class="card-title">Plazos y continuidad</h3>
                 <p class="card-text">Vencimientos, actos programados y proyectos al limite de continuidad.</p>
+              </div>
+            </div>
+          </router-link>
+        </div>
+
+        <div class="col-md-4 mb-4">
+          <router-link :to="{ name: 'EstadoDocentesCiecytView' }" class="text-decoration-none">
+            <div class="card modalidad-card" role="button" tabindex="0" aria-label="Estado de docentes"
+              @keydown.enter.prevent="$router.push({ name: 'EstadoDocentesCiecytView' })"
+              @keydown.space.prevent="$router.push({ name: 'EstadoDocentesCiecytView' })">
+              <div class="card-body">
+                <div class="card-icon" style="background-color:#00695C;"><font-awesome-icon icon="users" /></div>
+                <h3 class="card-title">Estado de docentes</h3>
+                <p class="card-text">Tesis y jurados por docente, horas semanales, alertas por periodo y certificacion.</p>
               </div>
             </div>
           </router-link>
@@ -514,7 +528,7 @@
       <!-- Vista ESTUDIANTE: tarjetas por modalidad. -->
 
       <!-- Vista ADMIN o ROOT: gestion administrativa integral. -->
-      <div v-else-if="esAdmin" class="row">
+      <div v-if="!esEstudiante && esAdmin" class="row">
         <div class="col-12 mb-4">
           <h2 class="mb-0" style="color:#1a2332; font-weight:600;">Administración</h2>
           <p class="text-muted mb-0" style="font-size:0.9rem;">
@@ -789,6 +803,20 @@
         </div>
 
         <div class="col-md-4 mb-4">
+          <router-link :to="{ name: 'EstadoDocentesCiecytView' }" class="text-decoration-none">
+            <div class="card modalidad-card" role="button" tabindex="0" aria-label="Estado de docentes"
+              @keydown.enter.prevent="$router.push({ name: 'EstadoDocentesCiecytView' })"
+              @keydown.space.prevent="$router.push({ name: 'EstadoDocentesCiecytView' })">
+              <div class="card-body">
+                <div class="card-icon" style="background-color:#00695C;"><font-awesome-icon icon="users" /></div>
+                <h3 class="card-title">Estado de docentes</h3>
+                <p class="card-text">Tesis y jurados por docente, horas semanales, alertas por periodo y certificacion.</p>
+              </div>
+            </div>
+          </router-link>
+        </div>
+
+        <div class="col-md-4 mb-4">
           <router-link :to="{ name: 'AsesoresExternosCiecytView' }" class="text-decoration-none">
             <div class="card modalidad-card" role="button" tabindex="0" aria-label="Asesores externos"
               @keydown.enter.prevent="$router.push({ name: 'AsesoresExternosCiecytView' })"
@@ -804,7 +832,7 @@
       </div>
 
       <!-- Sin rol academico especifico ni admin: pagina neutra con instrucciones. -->
-      <div v-else class="row">
+      <div v-if="!esEstudiante && !esDecano && !esAsesor && !esJurado && !esCiecyt && !esAdmin" class="row">
         <div class="col-12">
           <div class="alert alert-info">
             <strong>Cuenta sin rol asignado.</strong>

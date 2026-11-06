@@ -27,7 +27,7 @@
                 <span class="pull-left">{{ adjuntoProyectoFase.nombreArchivoOriginal }} <br /> {{ adjuntoProyectoFase.archivoContentType }}, {{ byteSize(adjuntoProyectoFase.archivo || adjuntoProyectoFase.file) }}</span>
                 <button type="button" v-on:click="this.eliminar" v-text="$t('entity.action.delete')"></button>
               </div>
-              <input v-if="!adjuntoProyectoFase.id" type="file" ref="file_archivo" id="file_archivo" v-on:change="asignarData($event, adjuntoProyectoFase, 'archivo', false)" v-text="$t('entity.action.addblob')"/>
+              <input v-if="!adjuntoProyectoFase.id" type="file" accept=".doc,.docx,.pdf" ref="file_archivo" id="file_archivo" v-on:change="asignarData($event, adjuntoProyectoFase, 'archivo', false)" v-text="$t('entity.action.addblob')"/>
               <span v-if="adjuntoProyectoFase.id">Si desea subir otro adjunto de la propuesta, deberá eliminar el archivo actual</span>
             </div>
             <input

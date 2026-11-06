@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.20.xsd">
+
+    <!--
+      El asesor del proyecto entrega su aprobacion al CIECYT y es el CIECYT quien la remite
+      al jurado del proyecto. Antes el asesor pasaba directamente a EN_REVISION_JURADO_PROYECTO.
+    -->
+
+    <changeSet id="20261105000006-1" author="ciecyt">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT COUNT(*) FROM transicion_estado
+                WHERE estado_destino = 'APROBADA_POR_ASESOR_PROYECTO'
+            </sqlCheck>
+        </preConditions>
+        <comment>Transiciones asesor -> CIECYT -> jurado para el proyecto</comment>
+        <sql>
+            INSERT INTO transicion_estado
+                (id, estado_origen, estado_destino, rol_requerido, activo, transicion_estado_modalidad_id)
+            VALUES
+                (97500, 'EN_REVISION_ASESOR_PROYECTO', 'APROBADA_POR_ASESOR_PROYECTO', 'ROLE_ASESOR', true, 9001),
+                (97501, 'EN_REVISION_ASESOR_PROYECTO', 'APROBADA_POR_ASESOR_PROYECTO', 'ROLE_ASESOR', true, 9002),
+                (97502, 'EN_REVISION_ASESOR_PROYECTO', 'APROBADA_POR_ASESOR_PROYECTO', 'ROLE_ASESOR', true, 9003),
+                (97503, 'EN_REVISION_ASESOR_PROYECTO', 'APROBADA_POR_ASESOR_PROYECTO', 'ROLE_ASESOR', true, 9004),
+                (97504, 'EN_REVISION_ASESOR_PROYECTO', 'APROBADA_POR_ASESOR_PROYECTO', 'ROLE_ASESOR', true, 9006),
+                (97505, 'EN_REVISION_ASESOR_PROYECTO', 'APROBADA_POR_ASESOR_PROYECTO', 'ROLE_ASESOR', true, 9007),
+
+                (97510, 'APROBADA_POR_ASESOR_PROYECTO', 'EN_REVISION_JURADO_PROYECTO', 'ROLE_CIECYT', true, 9001),
+                (97511, 'APROBADA_POR_ASESOR_PROYECTO', 'EN_REVISION_JURADO_PROYECTO', 'ROLE_CIECYT', true, 9002),
+                (97512, 'APROBADA_POR_ASESOR_PROYECTO', 'EN_REVISION_JURADO_PROYECTO', 'ROLE_CIECYT', true, 9003),
+                (97513, 'APROBADA_POR_ASESOR_PROYECTO', 'EN_REVISION_JURADO_PROYECTO', 'ROLE_CIECYT', true, 9004),
+                (97514, 'APROBADA_POR_ASESOR_PROYECTO', 'EN_REVISION_JURADO_PROYECTO', 'ROLE_CIECYT', true, 9006),
+                (97515, 'APROBADA_POR_ASESOR_PROYECTO', 'EN_REVISION_JURADO_PROYECTO', 'ROLE_CIECYT', true, 9007);
+        </sql>
+    </changeSet>
+
+</databaseChangeLog>

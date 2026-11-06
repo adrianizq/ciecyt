@@ -261,9 +261,14 @@
                   <span v-if="adjunto.fechaCreacion"> · {{ fechaCorta(adjunto.fechaCreacion) }}</span>
                 </div>
               </div>
-              <button type="button" class="btn btn-outline-primary btn-sm" @click="descargarAdjunto(adjunto)">
-                <font-awesome-icon icon="download" /> Descargar
-              </button>
+              <div class="d-flex gap-1">
+                <button type="button" class="btn btn-outline-primary btn-sm" @click="previsualizarAdjunto(adjunto)">
+                  <font-awesome-icon icon="eye" /> Previsualizar
+                </button>
+                <button type="button" class="btn btn-outline-secondary btn-sm" @click="descargarAdjunto(adjunto)">
+                  <font-awesome-icon icon="download" /> Descargar
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -303,9 +308,15 @@
               </div>
 
               <div class="small mt-2 text-muted">
-                <span v-if="requisito.fechaEntrega">Entregado el {{ dateToString(requisito.fechaEntrega) }}</span>
+                <span v-if="requisito.fechaEntrega">Entregado el {{ fechaHora(requisito.fechaEntrega) }}</span>
                 <span v-if="requisito.validadoPor"> · validado por {{ requisito.validadoPor }}</span>
-                <span v-if="requisito.fechaValidacion"> el {{ dateToString(requisito.fechaValidacion) }}</span>
+                <span v-if="requisito.fechaValidacion"> el {{ fechaHora(requisito.fechaValidacion) }}</span>
+              </div>
+
+              <div v-if="requisito.archivo" class="mt-2">
+                <button type="button" class="btn btn-outline-primary btn-sm" @click="previsualizarRequisito(requisito)">
+                  <font-awesome-icon icon="eye" /> Previsualizar documento
+                </button>
               </div>
 
               <div class="mt-2">
@@ -406,6 +417,42 @@
                   Asignar/cambiar jurado
                 </button>
                 <button
+                  v-if="proyectoRequisitos.estado === 'APROBADA_POR_ASESOR' && tieneJurado(proyectoRequisitos.proyectoModalidadId)"
+                  type="button"
+                  class="btn btn-success btn-sm"
+                  :disabled="guardandoDocumentacion"
+                  @click="remitirAlJurado(proyectoRequisitos)"
+                >
+                  Remitir propuesta al jurado
+                </button>
+                <button
+                  v-if="proyectoRequisitos.estado === 'APROBADA_POR_ASESOR_PROYECTO' && tieneJurado(proyectoRequisitos.proyectoModalidadId)"
+                  type="button"
+                  class="btn btn-success btn-sm"
+                  :disabled="guardandoDocumentacion"
+                  @click="remitirProyectoAlJurado(proyectoRequisitos)"
+                >
+                  Remitir proyecto al jurado
+                </button>
+                <button
+                  v-if="proyectoRequisitos.estado === 'EVALUACION_JURADO_PROYECTO_ENTREGADA'"
+                  type="button"
+                  class="btn btn-success btn-sm"
+                  :disabled="guardandoDocumentacion"
+                  @click="publicarEvaluacionProyecto(proyectoRequisitos)"
+                >
+                  Publicar evaluación del proyecto
+                </button>
+                <button
+                  v-if="proyectoRequisitos.estado === 'EVALUACION_SUSTENTACION_ENTREGADA'"
+                  type="button"
+                  class="btn btn-success btn-sm"
+                  :disabled="guardandoDocumentacion"
+                  @click="publicarNotaDefinitiva(proyectoRequisitos)"
+                >
+                  Publicar nota definitiva
+                </button>
+                <button
                   v-if="proyectoRequisitos.proyectoModalidadId === 9003"
                   type="button"
                   class="btn btn-outline-primary btn-sm"
@@ -414,12 +461,31 @@
                   Asignar asesor internacional
                 </button>
                 <button
-                  v-if="proyectoRequisitos.proyectoModalidadId === 9003"
+                  v-if="esPasantia(proyectoRequisitos.proyectoModalidadId)"
                   type="button"
                   class="btn btn-outline-primary btn-sm"
                   @click="irAAsignarCoordinador(proyectoRequisitos)"
                 >
-                  Asignar coordinador
+                  Asignar coordinador de seguimiento
+                </button>
+              </div>
+            </div>
+            <div v-if="proyectoRequisitos.estado === 'EVALUACION_JURADO_ENTREGADA'" class="col-12">
+              <h6>Evaluación del jurado</h6>
+              <p class="small text-muted mb-2">
+                El jurado entregó su concepto al CIECYT. Revise la evaluación y publíquela al estudiante.
+              </p>
+              <div class="d-flex flex-wrap gap-2">
+                <button type="button" class="btn btn-outline-secondary btn-sm" @click="verEvaluacionJurado(proyectoRequisitos)">
+                  <font-awesome-icon icon="eye" /> Ver evaluación del jurado
+                </button>
+                <button
+                  type="button"
+                  class="btn btn-success btn-sm"
+                  :disabled="guardandoDocumentacion"
+                  @click="publicarEvaluacionJurado(proyectoRequisitos)"
+                >
+                  <font-awesome-icon icon="check-circle" /> Publicar evaluación
                 </button>
               </div>
             </div>
@@ -688,7 +754,9 @@ import PlazoService from '@/entities/plazo/plazo.service';
 import { jsPDF } from 'jspdf';
 import {
   estadoActoProgramado,
+  estadoCorreccionesProyecto,
   estadoListoParaActo,
+  requiereActoPublico,
   requiereSustentacion,
   tieneJurado as requiereJuradoModalidad,
 } from '@/shared/config/opcion_grado';
@@ -738,6 +806,7 @@ export default class BandejaCiecyt extends Vue {
     { id: 'todos', etiqueta: 'Todos' },
     { id: 'validar', etiqueta: 'Por validar' },
     { id: 'jurado', etiqueta: 'Por asignar jurado' },
+    { id: 'evaluacion', etiqueta: 'Evaluación por publicar' },
     { id: 'asesor', etiqueta: 'Por asignar asesor' },
     { id: 'acto', etiqueta: 'Por programar acto' },
     { id: 'continuidad', etiqueta: 'Continuidad' },
@@ -856,6 +925,8 @@ export default class BandejaCiecyt extends Vue {
         return proyecto.estado === 'EN_VALIDACION_DOCUMENTAL';
       case 'jurado':
         return requiereJuradoModalidad(proyecto.proyectoModalidadId) && this.juradosDe(proyecto).length === 0 && !!proyecto.enviado;
+      case 'evaluacion':
+        return proyecto.estado === 'EVALUACION_JURADO_ENTREGADA';
       case 'asesor':
         return this.asesoresDe(proyecto).length === 0 && !!proyecto.enviado;
       case 'acto':
@@ -951,6 +1022,14 @@ export default class BandejaCiecyt extends Vue {
         return 'Correcciones del asesor';
       case 'APROBADA_POR_ASESOR':
         return 'Aprobada por el asesor';
+      case 'APROBADA_POR_ASESOR_PROYECTO':
+        return 'Proyecto aprobado por el asesor';
+      case 'EVALUACION_JURADO_ENTREGADA':
+        return 'Evaluación del jurado entregada al CIECYT';
+      case 'EVALUACION_JURADO_PROYECTO_ENTREGADA':
+        return 'Evaluación del jurado del proyecto entregada al CIECYT';
+      case 'EVALUACION_SUSTENTACION_ENTREGADA':
+        return 'Nota definitiva entregada al CIECYT';
       case 'EN_REVISION_JURADO_PROPUESTA':
         return 'En revisión del jurado';
       case 'CORRECCIONES_JURADO_PROPUESTA':
@@ -1009,9 +1088,13 @@ export default class BandejaCiecyt extends Vue {
       case 'HABILITADO':
       case 'VIABLE':
       case 'APROBADA_POR_ASESOR':
+      case 'APROBADA_POR_ASESOR_PROYECTO':
         return 'bg-success';
       case 'EN_REVISION_ASESOR':
       case 'EN_REVISION_JURADO_PROPUESTA':
+      case 'EVALUACION_JURADO_ENTREGADA':
+      case 'EVALUACION_JURADO_PROYECTO_ENTREGADA':
+      case 'EVALUACION_SUSTENTACION_ENTREGADA':
       case 'EN_REVISION_ASESOR_PROYECTO':
       case 'EN_REVISION_JURADO_PROYECTO':
       case 'EN_EVALUACION_SUSTENTACION':
@@ -1112,7 +1195,16 @@ export default class BandejaCiecyt extends Vue {
   public abrirRequisitos(proyecto: IProyecto): void {
     this.marcarNotificacionesProyecto(proyecto);
     this.proyectoRequisitos = proyecto;
-    this.detalleSeccion = proyecto.estado === 'EN_VALIDACION_DOCUMENTAL' ? 'requisitos' : 'documentos';
+    this.detalleSeccion =
+      proyecto.estado === 'EN_VALIDACION_DOCUMENTAL'
+        ? 'requisitos'
+        : proyecto.estado === 'EVALUACION_JURADO_ENTREGADA' ||
+            proyecto.estado === 'EVALUACION_JURADO_PROYECTO_ENTREGADA' ||
+            proyecto.estado === 'EVALUACION_SUSTENTACION_ENTREGADA' ||
+            proyecto.estado === 'APROBADA_POR_ASESOR' ||
+            proyecto.estado === 'APROBADA_POR_ASESOR_PROYECTO'
+          ? 'gestion'
+          : 'documentos';
     this.requisitos = [];
     this.observacionesRequisito = {};
     this.observacionDocumentacion = '';
@@ -1225,6 +1317,23 @@ export default class BandejaCiecyt extends Vue {
 
   public descargarAdjunto(adjunto: IAdjuntoProyectoFase): void {
     this.adjuntoProyectoFaseService().downloadFile(adjunto.id, this.nombreAdjunto(adjunto));
+  }
+
+  public previsualizarAdjunto(adjunto: IAdjuntoProyectoFase): void {
+    this.adjuntoProyectoFaseService().previewFile(
+      adjunto.id,
+      adjunto.nombreArchivoOriginal || adjunto.nombreAdjunto || ''
+    );
+  }
+
+  public previsualizarRequisito(requisito: IRequisitoProyecto): void {
+    if (requisito.archivo) {
+      const adjunto = this.adjuntos.find(item => Number(item.id) === Number(requisito.archivo));
+      this.adjuntoProyectoFaseService().previewFile(
+        Number(requisito.archivo),
+        adjunto ? adjunto.nombreArchivoOriginal || adjunto.nombreAdjunto || '' : ''
+      );
+    }
   }
 
   public get requisitosAprobados(): number {
@@ -1528,12 +1637,156 @@ export default class BandejaCiecyt extends Vue {
     this.$router.push({ name: 'AsignarJuradoView', params: { proyectoId: proyecto.id } });
   }
 
+  /**
+   * El asesor aprueba la propuesta y la entrega al CIECYT; es el CIECYT quien la remite al
+   * jurado. Asi la viabilidad no pasa directamente del asesor al jurado.
+   */
+  public remitirAlJurado(proyecto: IProyecto): void {
+    if (!proyecto || !proyecto.id) {
+      return;
+    }
+    this.guardandoDocumentacion = true;
+    this.proyectoService()
+      .cambiarEstado(proyecto.id, 'EN_REVISION_JURADO_PROPUESTA', 'CIECYT remite la propuesta al jurado')
+      .then(() => {
+        this.guardandoDocumentacion = false;
+        this.alertService().showAlert('Propuesta remitida al jurado.', 'success');
+        this.cerrarModalYRecargar();
+      })
+      .catch(err => {
+        this.guardandoDocumentacion = false;
+        this.alertService().showHttpError(this, err.response);
+      });
+  }
+
+  /**
+   * El jurado entrego la aprobacion del proyecto al CIECYT; el CIECYT publica el paso a
+   * sustentacion/socializacion (o la finalizacion si la modalidad no tiene acto publico).
+   */
+  public publicarEvaluacionProyecto(proyecto: IProyecto): void {
+    if (!proyecto || !proyecto.id) {
+      return;
+    }
+    const modalidad = Number(proyecto.proyectoModalidadId);
+    let nuevoEstado: string;
+    if (proyecto.sustentar) {
+      nuevoEstado = requiereActoPublico(modalidad) ? String(estadoListoParaActo(modalidad)) : 'FINALIZADO';
+    } else {
+      nuevoEstado = estadoCorreccionesProyecto(modalidad);
+    }
+    this.guardandoDocumentacion = true;
+    this.proyectoService()
+      .cambiarEstado(proyecto.id, nuevoEstado, 'CIECYT publica la evaluacion del jurado del proyecto')
+      .then(() => {
+        this.guardandoDocumentacion = false;
+        this.alertService().showAlert('Evaluación del proyecto publicada al estudiante.', 'success');
+        this.cerrarModalYRecargar();
+      })
+      .catch(err => {
+        this.guardandoDocumentacion = false;
+        this.alertService().showHttpError(this, err.response);
+      });
+  }
+
+  /**
+   * El jurado o el asesor entrego la nota definitiva al CIECYT; el CIECYT la publica.
+   */
+  public publicarNotaDefinitiva(proyecto: IProyecto): void {
+    if (!proyecto || !proyecto.id) {
+      return;
+    }
+    this.guardandoDocumentacion = true;
+    this.proyectoService()
+      .cambiarEstado(proyecto.id, 'NOTA_DEFINITIVA', 'CIECYT publica la nota definitiva al estudiante')
+      .then(() => {
+        this.guardandoDocumentacion = false;
+        this.alertService().showAlert('Nota definitiva publicada al estudiante.', 'success');
+        this.cerrarModalYRecargar();
+      })
+      .catch(err => {
+        this.guardandoDocumentacion = false;
+        this.alertService().showHttpError(this, err.response);
+      });
+  }
+
+  /**
+   * El asesor aprobo el proyecto y lo entrego al CIECYT; el CIECYT lo remite al jurado.
+   */
+  public remitirProyectoAlJurado(proyecto: IProyecto): void {
+    if (!proyecto || !proyecto.id) {
+      return;
+    }
+    this.guardandoDocumentacion = true;
+    this.proyectoService()
+      .cambiarEstado(proyecto.id, 'EN_REVISION_JURADO_PROYECTO', 'CIECYT remite el proyecto al jurado')
+      .then(() => {
+        this.guardandoDocumentacion = false;
+        this.alertService().showAlert('Proyecto remitido al jurado.', 'success');
+        this.cerrarModalYRecargar();
+      })
+      .catch(err => {
+        this.guardandoDocumentacion = false;
+        this.alertService().showHttpError(this, err.response);
+      });
+  }
+
   public irAAsignarAsesorInternacional(proyecto: IProyecto): void {
     this.$router.push({ name: 'AsignarAsesorInternacionalView', params: { proyectoId: proyecto.id } });
   }
 
   public irAAsignarCoordinador(proyecto: IProyecto): void {
     this.$router.push({ name: 'AsignarCoordinadorView', params: { proyectoId: proyecto.id } });
+  }
+
+  public esPasantia(modalidadId: any): boolean {
+    return [9001, 9002, 9003].indexOf(Number(modalidadId)) >= 0;
+  }
+
+  public verEvaluacionJurado(proyecto: IProyecto): void {
+    if (!proyecto || !proyecto.id) {
+      return;
+    }
+    const modalidad = Number(proyecto.proyectoModalidadId);
+    let nombre = 'RetroalimentacionViabilidadView';
+    if (this.esPasantia(modalidad)) {
+      nombre = 'RetroalimentacionPasantiaViabilidadView';
+    } else if (modalidad === 9005) {
+      nombre = 'RetroalimentacionDiplomadoViabilidadView';
+    }
+    this.$router.push({ name: nombre, params: { proyectoId: proyecto.id } });
+  }
+
+  /**
+   * El jurado ya entrego su concepto al CIECYT; aqui el CIECYT lo publica al estudiante
+   * con el estado definitivo (viable, no viable o correcciones).
+   */
+  public publicarEvaluacionJurado(proyecto: IProyecto): void {
+    if (!proyecto || !proyecto.id) {
+      return;
+    }
+    const viabilidad = String(proyecto.viabilidad || '').toUpperCase();
+    const nuevoEstado =
+      viabilidad === 'VIABLE'
+        ? 'VIABLE'
+        : viabilidad === 'NO_VIABLE'
+          ? 'NO_VIABLE'
+          : 'CORRECCIONES_JURADO_PROPUESTA';
+    this.guardandoDocumentacion = true;
+    this.proyectoService()
+      .cambiarEstado(
+        proyecto.id,
+        nuevoEstado,
+        `CIECYT publica la evaluacion del jurado. Concepto: ${viabilidad || 'SIN CONCEPTO'}`
+      )
+      .then(() => {
+        this.guardandoDocumentacion = false;
+        this.alertService().showAlert('Evaluación del jurado publicada al estudiante.', 'success');
+        this.cerrarModalYRecargar();
+      })
+      .catch(err => {
+        this.guardandoDocumentacion = false;
+        this.alertService().showHttpError(this, err.response);
+      });
   }
 
   public continuidadEtiquetaCiecyt(proyecto: IProyecto): string {

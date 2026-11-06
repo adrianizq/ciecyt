@@ -318,6 +318,7 @@ const ProyectosDecanura = () => import('../pages/decanura/proyectos_decanura.vue
 const ConvocatoriasPasantia = () => import('../pages/pasantia/convocatorias_pasantia.vue');
 const SolicitudesCiecyt = () => import('../pages/ciecyt/solicitudes_ciecyt.vue');
 const PlazosCiecyt = () => import('../pages/ciecyt/plazos_ciecyt.vue');
+const EstadoDocentesCiecyt = () => import('../pages/ciecyt/estado_docentes.vue');
 const AsesoresExternosCiecyt = () => import('../pages/ciecyt/asesores_externos_ciecyt.vue');
 
 const PropuestaInformacionGeneralNueva = () => import('../pages/propuesta_nueva/informacion_general_nueva.vue');
@@ -1241,6 +1242,12 @@ const router = createRouter({
       meta: { authorities: ['ROLE_CIECYT', 'ROLE_ADMIN'] }
     },
     {
+      path: '/ciecyt/estado-docentes',
+      name: 'EstadoDocentesCiecytView',
+      component: EstadoDocentesCiecyt,
+      meta: { authorities: ['ROLE_CIECYT', 'ROLE_ADMIN'] }
+    },
+    {
       path: '/ciecyt/asesores-externos',
       name: 'AsesoresExternosCiecytView',
       component: AsesoresExternosCiecyt,
@@ -1843,7 +1850,7 @@ const router = createRouter({
       path: '/propuesta/retroalimentacion-viabilidad/:proyectoId',
       name: 'RetroalimentacionViabilidadView',
       component: PropuestaRetroalimentacionViabilidad,
-      meta: { authorities: ['ROLE_USER', 'ROLE_ESTUDIANTE'] }
+      meta: { authorities: ['ROLE_USER', 'ROLE_ESTUDIANTE', 'ROLE_CIECYT', 'ROLE_ADMIN'] }
     },
     {
       path: '/propuesta/adjuntar_propuesta/:proyectoId',
@@ -1877,13 +1884,13 @@ const router = createRouter({
       path: '/viabilidad-propuesta/listado-asesor',
       name: 'PropuestaListadoAsesorView',
       component: PropuestaListadoAsesor,
-      meta: { authorities: ['ROLE_ASESOR', 'ROLE_ADMIN']  }
+      meta: { authorities: ['ROLE_ASESOR', 'ROLE_JURADO', 'ROLE_ADMIN']  }
     },
     {
       path: '/viabilidad-proyecto/listado-asesor-proyecto',
       name: 'ProyectoListadoAsesorView',
       component: ProyectoListadoAsesor,
-      meta: { authorities: ['ROLE_ASESOR', 'ROLE_ADMIN']  }
+      meta: { authorities: ['ROLE_ASESOR', 'ROLE_JURADO', 'ROLE_ADMIN']  }
     },
 
     {
@@ -1940,14 +1947,14 @@ const router = createRouter({
       path: '/viabilidad-propuesta/asesoria-evaluar/:proyectoId',
       name: 'AsesoriaEvaluarView',
       component: AsesoriaEvaluar,
-      meta: { authorities: ['ROLE_ASESOR', 'ROLE_ADMIN']  }
+      meta: { authorities: ['ROLE_ASESOR', 'ROLE_JURADO', 'ROLE_ADMIN']  }
     },
 
     {
       path: '/viabilidad-propuesta/asesoria-evaluar-proyecto/:proyectoId',
       name: 'AsesoriaEvaluarProyectoView',
       component: AsesoriaEvaluarProyecto,
-      meta: { authorities: ['ROLE_ASESOR', 'ROLE_ADMIN']  }
+      meta: { authorities: ['ROLE_ASESOR', 'ROLE_JURADO', 'ROLE_ADMIN']  }
     },
 
 

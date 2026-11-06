@@ -7,103 +7,158 @@
       <form @submit.prevent="solicitarConfirmacion()">
         <div class="row">
           <div class="col-12">
-
             <div v-if="alertaEstadoVisible" class="alert" :class="alertaEstado.clase" role="alert">
               <strong>{{ alertaEstado.titulo }}.</strong> {{ alertaEstado.mensaje }}
             </div>
 
             <div class="mb-3 form-group">
               <label class="form-control-label" for="proyecto-titulo">
-               <h2>{{ esReenvioJurado ? 'Reenviar propuesta al jurado' : (esReenvioAsesor ? 'Reenviar propuesta al asesor' : (esSolicitudAval ? 'Solicitar aval al asesor' : 'Radicar la propuesta ante el CIECYT')) }}</h2><br />
+                <h2>
+                  {{
+                    esReenvioJurado
+                      ? 'Reenviar propuesta al jurado'
+                      : esReenvioAsesor
+                        ? 'Reenviar propuesta al asesor'
+                        : esSolicitudAval
+                          ? 'Solicitar aval al asesor'
+                          : 'Radicar la propuesta ante el CIECYT'
+                  }}
+                </h2>
+              </label>
+            </div>
 
-               <ul>
-               <li>Título {{proyecto.titulo}} </li>
-            <li v-for="l in integrants" v-bind:key="l">{{l.integranteProyectoRolesModalidadRol}}: {{l.integranteProyectoUserLogin}}</li>
-             <ol></ol>
+            <div class="card mb-3">
+              <div class="card-body">
+                <h4 class="mb-3">{{ proyecto.titulo }}</h4>
+                <div class="row g-2">
+                  <div class="col-md-4">
+                    <div class="small text-muted">Modalidad</div>
+                    <div>{{ proyecto.proyectoModalidadModalidad || 'Sin modalidad' }}</div>
+                  </div>
+                  <div class="col-md-4">
+                    <div class="small text-muted">Programa</div>
+                    <div>{{ proyecto.programa || '—' }}</div>
+                  </div>
+                  <div class="col-md-4">
+                    <div class="small text-muted">Ciclo</div>
+                    <div>{{ proyecto.ciclo || '—' }}</div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="small text-muted">Estudiante(s)</div>
+                    <div v-for="estudiante in estudiantes" :key="estudiante.id">
+                      {{ nombreIntegrante(estudiante) }}
+                    </div>
+                    <span v-if="estudiantes.length === 0" class="text-muted">Sin registrar</span>
+                  </div>
+                  <div class="col-md-3">
+                    <div class="small text-muted">Asesor</div>
+                    <div v-if="asesor">{{ nombreIntegrante(asesor) }}</div>
+                    <span v-else class="text-muted">Sin asignar</span>
+                  </div>
+                  <div class="col-md-3">
+                    <div class="small text-muted">Jurado</div>
+                    <div v-for="jurado in jurados" :key="jurado.id">{{ nombreIntegrante(jurado) }}</div>
+                    <span v-if="jurados.length === 0" class="text-muted">Sin asignar / No aplica</span>
+                  </div>
+                  <div class="col-md-4">
+                    <div class="small text-muted">Estado actual</div>
+                    <div>{{ proyecto.estado }}</div>
+                  </div>
+                  <div class="col-md-4">
+                    <div class="small text-muted">Periodo / ciclo académico</div>
+                    <div>{{ proyecto.ciclo || '—' }}</div>
+                  </div>
+                  <div class="col-md-4">
+                    <div class="small text-muted">Última actividad</div>
+                    <div>{{ fechaHora(proyecto.fechaUltimoCambio) }}</div>
+                  </div>
+                </div>
+              </div>
+            </div>
 
-        </ul>
-                <template v-if="esReenvioJurado">
-                  El jurado solicitó correcciones. Ajusta la propuesta, incorpora los cambios y reenvíala para
-                  continuar con la evaluación (Acuerdo 25, art. 10).
-                </template>
-                <template v-else-if="esReenvioAsesor">
-                  El asesor solicitó correcciones. Ajusta la propuesta, incorpora los cambios y reenvíala para
-                  que emita su aval (Acuerdo 25, art. 8 y art. 10).
-                </template>
-                <template v-else-if="esSolicitudAval">
-                  El CIECYT aprobó la documentación. Solicita al asesor su aval para continuar con la evaluación
-                  de la propuesta (Acuerdo 25, art. 8).
-                </template>
-                <template v-else>
-                  La propuesta y sus anexos se radicarán ante el CIECYT. Esa dependencia validará la documentación
-                  y designará el jurado que evaluará la propuesta (Acuerdo 25, art. 5 y art. 28).
-                </template>
-                <br /><br />
-                Si está de acuerdo marque la opción
-                <strong>{{ esReenvioJurado ? 'Reenviar al jurado' : (esReenvioAsesor ? 'Reenviar al asesor' : (esSolicitudAval ? 'Solicitar aval al asesor' : 'Radicar ante el CIECYT')) }}</strong>
-                y haga clic en el botón <strong>{{ textoBoton }}</strong>.</label
-              >
+            <div class="mb-3 form-group">
+              <h3>Documentación requerida</h3>
+              <p class="text-muted">
+                El CIECYT valida los requisitos de inscripción. Los documentos extensos de la propuesta se cargan
+                en la pantalla <strong>Adjuntar propuesta</strong>.
+              </p>
 
-              <div class="mb-3 form-group" v-if="esTesis">
-                <h3>Documentación requerida</h3>
-                <p>Para la modalidad Tesis debe adjuntar los siguientes documentos antes de radicar la propuesta:</p>
-                <table class="table table-sm table-bordered">
-                  <thead>
+              <div v-if="cargandoRequisitos" class="text-muted">Cargando requisitos...</div>
+              <div v-else-if="requisitos.length === 0" class="alert alert-info">
+                No hay requisitos configurados para esta modalidad.
+              </div>
+              <div v-else class="table-responsive">
+                <table class="table table-sm table-bordered align-middle">
+                  <thead class="table-light">
                     <tr>
                       <th>Documento</th>
                       <th>Estado</th>
-                      <th>Acciones</th>
+                      <th>Observación / validación</th>
+                      <th class="text-end">Acciones</th>
                     </tr>
                   </thead>
                   <tbody>
-                    <tr v-for="(d, i) in documentos" :key="i">
+                    <tr v-for="requisito in requisitos" :key="requisito.id">
                       <td>
-                        <strong>{{ d.titulo }}</strong><br />
-                        <small>{{ d.descripcion }}</small>
-                      </td>
-                      <td>
-                        <span v-if="d.adjunto && d.adjunto.file" class="text-success">Cargado</span>
-                        <span v-else class="text-danger">Pendiente</span>
-                      </td>
-                      <td>
-                        <router-link
-                          :to="{ name: d.route, params: { proyectoId: proyId } }"
-                          class="btn btn-sm btn-outline-primary"
+                        <strong>{{ requisito.requisitoProyectoRequisitoNombre }}</strong>
+                        <span
+                          v-if="requisito.requisitoProyectoRequisitoObligatorio"
+                          class="badge bg-dark ms-1"
+                          >Obligatorio</span
                         >
-                          {{ d.adjunto && d.adjunto.file ? 'Ver / Reemplazar' : 'Cargar' }}
-                        </router-link>
+                        <div v-if="requisito.requisitoProyectoRequisitoDescripcion" class="small text-muted">
+                          {{ requisito.requisitoProyectoRequisitoDescripcion }}
+                        </div>
+                        <div class="small text-muted">{{ requisito.requisitoProyectoRequisitoCodigo }}</div>
+                      </td>
+                      <td>
+                        <span class="badge" :class="claseEstadoRequisito(requisito)">
+                          {{ etiquetaEstadoRequisito(requisito) }}
+                        </span>
+                      </td>
+                      <td>
+                        <div v-if="requisito.observacion">{{ requisito.observacion }}</div>
+                        <div v-if="requisito.fechaValidacion" class="small text-muted">
+                          {{ requisito.estado === 'RECHAZADO' ? 'Rechazado' : 'Validado' }} el
+                          {{ fechaHora(requisito.fechaValidacion) }}
+                          <span v-if="requisito.validadoPor">por {{ requisito.validadoPor }}</span>
+                        </div>
+                      </td>
+                      <td class="text-end text-nowrap">
                         <button
-                          v-if="d.adjunto && d.adjunto.file"
+                          v-if="requisito.archivo"
                           type="button"
-                          class="btn btn-sm btn-outline-secondary"
-                          v-on:click="descargarDoc(d.adjunto)"
+                          class="btn btn-sm btn-outline-primary"
+                          @click="previsualizarRequisito(requisito)"
                         >
-                          Descargar
+                          <font-awesome-icon icon="eye"></font-awesome-icon> Previsualizar
                         </button>
+                        <router-link
+                          :to="{ name: 'PropuestaChecklistView', params: { proyectoId: proyId } }"
+                          class="btn btn-sm btn-outline-secondary ms-1"
+                        >
+                          Cargar / corregir
+                        </router-link>
                       </td>
                     </tr>
                   </tbody>
                 </table>
               </div>
 
-              <b-form-checkbox
-                id="terms"
-                v-model="terms"
-                name="terms"
-                class="mb-2"
-              >
-                {{ textoConfirmacion }}
-              </b-form-checkbox>
-
-              <small v-if="!terms" class="form-text text-muted">
-                Debe marcar la confirmación para habilitar el botón.
+              <small v-if="requisitosObligatorios.length > 0 && !documentosCompletos" class="form-text text-danger">
+                Faltan requisitos obligatorios por cargar o corregir antes de radicar.
               </small>
-              <small v-else-if="esTesis && !documentosCompletos" class="form-text text-danger">
-                Faltan documentos obligatorios por cargar.
-              </small>
-
-              <div v-if="errorEnvio" class="alert alert-danger mt-3" role="alert">{{ errorEnvio }}</div>
             </div>
+
+            <b-form-checkbox id="terms" v-model="terms" name="terms" class="mb-2">
+              {{ textoConfirmacion }}
+            </b-form-checkbox>
+
+            <small v-if="!terms" class="form-text text-muted">
+              Debe marcar la confirmación para habilitar el botón.
+            </small>
+
+            <div v-if="errorEnvio" class="alert alert-danger mt-3" role="alert">{{ errorEnvio }}</div>
           </div>
         </div>
 
@@ -147,10 +202,14 @@
           <div class="modal-body">
             <p v-if="esReenvioJurado">¿Reenviar la propuesta <strong>{{ proyecto.titulo }}</strong> al jurado?</p>
             <p v-else-if="esReenvioAsesor">¿Reenviar la propuesta <strong>{{ proyecto.titulo }}</strong> al asesor?</p>
-            <p v-else-if="esSolicitudAval">¿Solicitar el aval del asesor para la propuesta <strong>{{ proyecto.titulo }}</strong>?</p>
+            <p v-else-if="esSolicitudAval">
+              ¿Solicitar el aval del asesor para la propuesta <strong>{{ proyecto.titulo }}</strong>?
+            </p>
             <p v-else>¿Radicar la propuesta <strong>{{ proyecto.titulo }}</strong> ante el CIECYT?</p>
             <p class="mb-0" v-if="esReenvioJurado">El jurado evaluará la propuesta corregida.</p>
-            <p class="mb-0" v-else-if="esReenvioAsesor || esSolicitudAval">El asesor revisará la propuesta y emitirá su aval.</p>
+            <p class="mb-0" v-else-if="esReenvioAsesor || esSolicitudAval">
+              El asesor revisará la propuesta y emitirá su aval.
+            </p>
             <p class="mb-0" v-else>El CIECYT validará la documentación y designará el jurado.</p>
           </div>
           <div class="modal-footer">
@@ -170,24 +229,27 @@ import { Component, Inject, Vue, Hook } from 'vue-facing-decorator';
 
 import MenuLateral from '@/components/propuesta/menu_lateral.vue';
 import { IProyecto, Proyecto } from '@/shared/model/proyecto.model';
+import { IIntegranteProyecto } from '@/shared/model/integrante-proyecto.model';
+import { IRequisitoProyecto } from '@/shared/model/requisito-proyecto.model';
+import { EnumEstadoRequisito } from '@/shared/model/enumerations/enum-estado-requisito.model';
+import { TipoRequisito } from '@/shared/model/enumerations/tipo-requisito.model';
 
 import ProyectoService from '@/entities/proyecto/proyecto.service';
 import AlertService from '@/shared/alert/alert.service';
-import { IIntegranteProyecto } from '@/shared/model/integrante-proyecto.model';
-import { IAdjuntoProyectoFase } from '@/shared/model/adjunto-proyecto-fase.model';
 import AdjuntoProyectoFaseService from '@/entities/adjunto-proyecto-fase/adjunto-proyecto-fase.service';
-import FasesService from '@/entities/fases/fases.service';
+import RequisitoProyectoService from '@/entities/requisito-proyecto/requisito-proyecto.service';
 
 @Component({
   components: { MenuLateral },
 })
 export default class EnviarPropuesta extends Vue {
-  @Inject  private proyectoService: () => ProyectoService;
-  @Inject  private adjuntoProyectoFaseService: () => AdjuntoProyectoFaseService;
-  @Inject  private fasesService: () => FasesService;
-  @Inject  private alertService: () => AlertService;
+  @Inject private proyectoService: () => ProyectoService;
+  @Inject private adjuntoProyectoFaseService: () => AdjuntoProyectoFaseService;
+  @Inject private requisitoProyectoService: () => RequisitoProyectoService;
+  @Inject private alertService: () => AlertService;
 
   public integrants: IIntegranteProyecto[] = [];
+  public requisitos: IRequisitoProyecto[] = [];
   public terms: Boolean = false;
 
   public proyecto: IProyecto = new Proyecto();
@@ -196,41 +258,8 @@ export default class EnviarPropuesta extends Vue {
   public mostrarConfirmacion = false;
   public errorEnvio: string | null = null;
   public modalidadId: any = null;
-  public docFaseId: number = null;
-  public faseDocumentos = 'Documentos';
-  public documentos: any[] = [
-    {
-      key: 'certificado-estudiante',
-      titulo: 'Certificado de Estudiante Activo',
-      descripcion: 'Expedido por Registro y Control',
-      route: 'PropuestaDocumentoCertificadoView',
-      adjunto: null,
-    },
-    {
-      key: 'recibo-pago',
-      titulo: 'Recibo de Pago de la Opción de Grado',
-      descripcion: 'Validado por Tesorería de la institución',
-      route: 'PropuestaDocumentoReciboView',
-      adjunto: null,
-    },
-    {
-      key: 'record-academico',
-      titulo: 'Récord Académico',
-      descripcion: 'Expedido por Registro y Control',
-      route: 'PropuestaDocumentoRecordView',
-      adjunto: null,
-    },
-    {
-      key: 'formato-inscripcion',
-      titulo: 'Formato de Inscripción de la Opción de Grado',
-      descripcion: 'Formato de inscripción de la opción de grado',
-      route: 'PropuestaDocumentoFormatoView',
-      adjunto: null,
-    },
-  ];
+  public cargandoRequisitos = false;
 
-  // El template llamaba previousState() pero el metodo no existia, asi que el boton
-  // Cancel/atrás fallaba con un TypeError y no hacia nada.
   previousState() {
     window.history.back();
   }
@@ -312,8 +341,11 @@ export default class EnviarPropuesta extends Vue {
   }
 
   private mensajeDeError(err: any): string {
-    const detalle = err && err.response && err.response.data ? err.response.data.detail || err.response.data.title : null;
-    return detalle ? 'No se pudo radicar la propuesta: ' + detalle : 'No se pudo radicar la propuesta. Intente de nuevo.';
+    const detalle =
+      err && err.response && err.response.data ? err.response.data.detail || err.response.data.title : null;
+    return detalle
+      ? 'No se pudo radicar la propuesta: ' + detalle
+      : 'No se pudo radicar la propuesta. Intente de nuevo.';
   }
 
   get esReenvioJurado(): boolean {
@@ -380,7 +412,8 @@ export default class EnviarPropuesta extends Vue {
         return {
           clase: 'alert-info',
           titulo: 'Propuesta radicada ante el CIECYT',
-          mensaje: 'El CIECYT está validando la documentación. Si hay observaciones podrás corregirlas y volver a radicar.',
+          mensaje:
+            'El CIECYT está validando la documentación. Si hay observaciones podrás corregirlas y volver a radicar.',
         };
       case 'OBSERVACIONES_DOCUMENTACION':
         return {
@@ -445,59 +478,149 @@ export default class EnviarPropuesta extends Vue {
     }
   }
 
+  public get estudiantes(): IIntegranteProyecto[] {
+    return this.integrants.filter(integrante => this.rolDe(integrante).indexOf('ESTUDIANTE') >= 0);
+  }
+
+  public get asesor(): IIntegranteProyecto | null {
+    return this.integrants.find(integrante => this.rolDe(integrante).indexOf('ASESOR') >= 0) || null;
+  }
+
+  public get jurados(): IIntegranteProyecto[] {
+    return this.integrants.filter(integrante => this.rolDe(integrante).indexOf('JURADO') >= 0);
+  }
+
+  public get requisitosObligatorios(): IRequisitoProyecto[] {
+    return this.requisitos.filter(requisito => requisito.requisitoProyectoRequisitoObligatorio);
+  }
+
+  public get documentosCompletos(): boolean {
+    return this.requisitosObligatorios.every(requisito => {
+      if (requisito.requisitoProyectoRequisitoTipo === TipoRequisito.CAMPO) {
+        return !!requisito.observacion;
+      }
+      return requisito.estado === EnumEstadoRequisito.APROBADO || requisito.estado === EnumEstadoRequisito.ENTREGADO;
+    });
+  }
+
+  public get isDisabled(): boolean {
+    if (!this.terms) {
+      return true;
+    }
+    return this.requisitosObligatorios.length > 0 && !this.documentosCompletos;
+  }
+
+  public nombreIntegrante(integrante: any): string {
+    const nombre = `${integrante.integranteProyectoUserFirstName || ''} ${integrante.integranteProyectoUserLastName || ''}`.trim();
+    return (
+      nombre ||
+      integrante.integranteProyectoExternoNombre ||
+      integrante.integranteProyectoUserLogin ||
+      integrante.integrante ||
+      'Sin nombre'
+    );
+  }
+
+  public etiquetaEstadoRequisito(requisito: IRequisitoProyecto): string {
+    switch (requisito.estado) {
+      case EnumEstadoRequisito.APROBADO:
+        return 'Aprobado';
+      case EnumEstadoRequisito.ENTREGADO:
+        return 'Entregado';
+      case EnumEstadoRequisito.RECHAZADO:
+        return 'Rechazado';
+      default:
+        return 'Pendiente';
+    }
+  }
+
+  public claseEstadoRequisito(requisito: IRequisitoProyecto): string {
+    switch (requisito.estado) {
+      case EnumEstadoRequisito.APROBADO:
+        return 'bg-success';
+      case EnumEstadoRequisito.ENTREGADO:
+        return 'bg-info';
+      case EnumEstadoRequisito.RECHAZADO:
+        return 'bg-danger';
+      default:
+        return 'bg-secondary';
+    }
+  }
+
+  public previsualizarRequisito(requisito: IRequisitoProyecto): void {
+    if (requisito.archivo) {
+      const id = Number(requisito.archivo);
+      this.adjuntoProyectoFaseService()
+        .find(id)
+        .then(adjunto => {
+          this.adjuntoProyectoFaseService().previewFile(id, adjunto.nombreArchivoOriginal || '');
+        })
+        .catch(() => {
+          this.adjuntoProyectoFaseService().previewFile(id);
+        });
+    }
+  }
+
+  public fechaHora(value: any): string {
+    if (!value) {
+      return '—';
+    }
+    const fecha = value instanceof Date ? value : new Date(value);
+    if (isNaN(fecha.getTime())) {
+      return String(value);
+    }
+    const dos = (numero: number) => String(numero).padStart(2, '0');
+    return `${dos(fecha.getDate())}/${dos(fecha.getMonth() + 1)}/${fecha.getFullYear()} ${dos(
+      fecha.getHours()
+    )}:${dos(fecha.getMinutes())}`;
+  }
+
+  private rolDe(integrante: IIntegranteProyecto): string {
+    return String(integrante.integranteProyectoRolesModalidadRol || '')
+      .toUpperCase()
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '');
+  }
+
   retrieveProyecto() {
     return this.proyectoService()
       .findProyectoIntegrantes(parseInt(this.$route.params.proyectoId))
       .then(res => {
         this.proyecto = res.data;
-        this.integrants = this.proyecto.listaIntegrantesProyecto;
+        this.integrants = this.proyecto.listaIntegrantesProyecto || [];
         this.modalidadId = this.proyecto.proyectoModalidadId;
       });
   }
 
+  async cargarRequisitos(): Promise<void> {
+    this.cargandoRequisitos = true;
+    try {
+      const lista = await this.requisitoProyectoService().generarPorProyecto(Number(this.proyId));
+      this.requisitos = this.filtrarRequisitosInscripcion(lista || []);
+    } catch (e) {
+      try {
+        const lista = await this.requisitoProyectoService().findByProyecto(Number(this.proyId));
+        this.requisitos = this.filtrarRequisitosInscripcion(lista || []);
+      } catch (error) {
+        this.requisitos = [];
+      }
+    } finally {
+      this.cargandoRequisitos = false;
+    }
+  }
+
+  private filtrarRequisitosInscripcion(lista: IRequisitoProyecto[]): IRequisitoProyecto[] {
+    return lista.filter(
+      requisito =>
+        !requisito.requisitoProyectoRequisitoEstado ||
+        String(requisito.requisitoProyectoRequisitoEstado) === 'EN_VALIDACION_DOCUMENTAL'
+    );
+  }
+
   async initRelationships() {
     this.proyId = this.$route.params.proyectoId;
-
     await this.retrieveProyecto();
-
-    if (this.esTesis) {
-      await this.fasesService()
-        .findByFase(this.faseDocumentos)
-        .then(res => {
-          this.docFaseId = res.id;
-        });
-
-      if (this.docFaseId) {
-        await this.adjuntoProyectoFaseService()
-          .findAdjuntoProyectoFase(this.proyId, this.docFaseId)
-          .then(res => {
-            const docs: IAdjuntoProyectoFase[] = res.data || [];
-            this.documentos.forEach(d => {
-              const match = docs.find(x => x.nombreAdjunto === d.key);
-              d.adjunto = match || null;
-            });
-          });
-      }
-    }
-  }
-
-  descargarDoc(adjunto) {
-    this.adjuntoProyectoFaseService().downloadFile(adjunto.id, adjunto.nombreArchivoOriginal);
-  }
-
-  get esTesis() {
-    return Number(this.modalidadId) === 9004;
-  }
-
-  get documentosCompletos() {
-    return this.documentos.every(d => d.adjunto && d.adjunto.file);
-  }
-
-  get isDisabled() {
-    if (!this.terms) {
-      return true;
-    }
-    return this.esTesis && !this.documentosCompletos;
+    await this.cargarRequisitos();
   }
 }
 </script>

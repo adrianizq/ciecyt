@@ -1,8 +1,11 @@
 package co.edu.itp.ciecyt.web.rest;
 
+import co.edu.itp.ciecyt.domain.enumeration.EnumEstadoProyecto;
 import co.edu.itp.ciecyt.domain.enumeration.TipoRequisito;
 import co.edu.itp.ciecyt.security.AuthoritiesConstants;
+import co.edu.itp.ciecyt.service.AdjuntoProyectoFaseService;
 import co.edu.itp.ciecyt.service.RequisitoProyectoService;
+import co.edu.itp.ciecyt.service.dto.AdjuntoProyectoFaseDTO;
 import co.edu.itp.ciecyt.service.dto.RequisitoProyectoDTO;
 import co.edu.itp.ciecyt.errors.BadRequestAlertException;
 import tech.jhipster.web.util.HeaderUtil;
@@ -39,9 +42,14 @@ public class RequisitoProyectoResource {
     private String applicationName;
 
     private final RequisitoProyectoService requisitoProyectoService;
+    private final AdjuntoProyectoFaseService adjuntoProyectoFaseService;
 
-    public RequisitoProyectoResource(RequisitoProyectoService requisitoProyectoService) {
+    public RequisitoProyectoResource(
+        RequisitoProyectoService requisitoProyectoService,
+        AdjuntoProyectoFaseService adjuntoProyectoFaseService
+    ) {
         this.requisitoProyectoService = requisitoProyectoService;
+        this.adjuntoProyectoFaseService = adjuntoProyectoFaseService;
     }
 
     /**
@@ -113,9 +121,23 @@ public class RequisitoProyectoResource {
      */
     @PostMapping("/requisito-proyectos/generar/proyecto/{proyectoId}")
     @PreAuthorize("@proyectoAutorizacionService.puedeModificarAdjuntoDe(#proyectoId)")
-    public ResponseEntity<List<RequisitoProyectoDTO>> generarRequisitosProyecto(@PathVariable Long proyectoId) {
-        log.debug("REST request to generar RequisitoProyectos de proyecto : {}", proyectoId);
-        List<RequisitoProyectoDTO> list = requisitoProyectoService.generarParaProyecto(proyectoId);
+    public ResponseEntity<List<RequisitoProyectoDTO>> generarRequisitosProyecto(
+        @PathVariable Long proyectoId,
+        @RequestParam(required = false) String fase
+    ) {
+        log.debug("REST request to generar RequisitoProyectos de proyecto : {} fase : {}", proyectoId, fase);
+        List<RequisitoProyectoDTO> list;
+        if (fase != null && !fase.trim().isEmpty()) {
+            EnumEstadoProyecto faseEnum;
+            try {
+                faseEnum = EnumEstadoProyecto.valueOf(fase.trim());
+            } catch (IllegalArgumentException e) {
+                throw new BadRequestAlertException("La fase indicada no es valida: " + fase, "requisitoProyecto", "faseInvalida");
+            }
+            list = requisitoProyectoService.generarParaProyecto(proyectoId, faseEnum);
+        } else {
+            list = requisitoProyectoService.generarParaProyecto(proyectoId);
+        }
         return ResponseEntity.ok().body(list);
     }
 
@@ -136,10 +158,14 @@ public class RequisitoProyectoResource {
         String archivo = payload != null ? payload.get("archivo") : null;
         String observacion = payload != null ? payload.get("observacion") : null;
 
-        requisitoProyectoService
-            .findOne(id)
-            .filter(dto -> dto.getRequisitoProyectoRequisitoTipo() == TipoRequisito.CAMPO)
-            .ifPresent(dto -> validarDatoNumerico(dto.getRequisitoProyectoRequisitoNombre(), observacion));
+        Optional<RequisitoProyectoDTO> requisitoOpt = requisitoProyectoService.findOne(id);
+        requisitoOpt.ifPresent(dto -> {
+            if (dto.getRequisitoProyectoRequisitoTipo() == TipoRequisito.CAMPO) {
+                validarDatoNumerico(dto.getRequisitoProyectoRequisitoNombre(), observacion);
+            } else if (archivo != null && !archivo.trim().isEmpty()) {
+                validarTipoArchivo(dto, archivo);
+            }
+        });
 
         RequisitoProyectoDTO result = requisitoProyectoService.entregar(id, archivo, observacion);
         return ResponseEntity.ok().body(result);
@@ -164,6 +190,40 @@ public class RequisitoProyectoResource {
                 "El requisito '" + nombreRequisito + "' espera un valor numerico y se recibio: " + dato,
                 "requisitoProyecto", "datoNoNumerico");
         }
+    }
+
+    /**
+     * Valida que el archivo entregado tenga una extension permitida por el requisito.
+     * Los documentos de requisito se exigen en PDF y los editables en Word/PDF.
+     */
+    private void validarTipoArchivo(RequisitoProyectoDTO requisito, String archivoId) {
+        String acepta = requisito.getRequisitoProyectoRequisitoAceptaTipos();
+        if (acepta == null || acepta.trim().isEmpty()) {
+            return;
+        }
+        Long id;
+        try {
+            id = Long.valueOf(archivoId.trim());
+        } catch (NumberFormatException e) {
+            return;
+        }
+        AdjuntoProyectoFaseDTO adjunto = adjuntoProyectoFaseService.findOne(id).orElse(null);
+        if (adjunto == null || adjunto.getNombreArchivoOriginal() == null) {
+            return;
+        }
+        String nombre = adjunto.getNombreArchivoOriginal().toLowerCase();
+        int punto = nombre.lastIndexOf('.');
+        String extension = punto >= 0 ? nombre.substring(punto) : "";
+        for (String permitido : acepta.split(",")) {
+            if (permitido.trim().toLowerCase().equals(extension)) {
+                return;
+            }
+        }
+        throw new BadRequestAlertException(
+            "El requisito '" + requisito.getRequisitoProyectoRequisitoNombre() + "' solo acepta archivos " + acepta,
+            "requisitoProyecto",
+            "tipoArchivoNoPermitido"
+        );
     }
 
     /**

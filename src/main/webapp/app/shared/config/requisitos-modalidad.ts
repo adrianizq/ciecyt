@@ -153,14 +153,8 @@ export const REQUISITOS_ADICIONALES_POR_MODALIDAD: Record<number, RequisitoAdici
     },
   ],
   9004: [
-    // Tesis de pregrado (no aplica al ciclo de posgrado).
-    {
-      codigo: 'T-FORMATO-INSCRIPCION-TESIS',
-      nombre: 'Formato de inscripcion de la propuesta de tesis',
-      descripcion: 'Diligenciado por el estudiante y avalado por el asesor.',
-      referencia: 'Acuerdo 25 art. 5 par. 2 y art. 28 par. 1',
-      firmantes: ['Estudiante', 'Asesor'],
-    },
+    // Tesis de pregrado. El formato de inscripcion es el comun FINV001; el documento extenso
+    // de la propuesta se carga en la pantalla "Adjuntar propuesta".
     {
       codigo: 'T-CARTA-AVAL-ASESOR',
       nombre: 'Carta de aval del asesor de tesis',
@@ -278,8 +272,8 @@ export const REQUISITOS_COMUNES_PREGRADO: RequisitoCompleto[] = [
   {
     codigo: 'COMUN-FORMATO-INSCRIPCION',
     tipo: 'comun',
-    nombre: 'Formato de inscripcion',
-    descripcion: 'Diligenciado por el estudiante.',
+    nombre: 'Formato de inscripcion de la opcion de grado (FINV001)',
+    descripcion: 'Formato FINV001 diligenciado y firmado por el estudiante.',
     referencia: 'Acuerdo 25 art. 5 par. 1, Tabla 2',
     firmantes: ['Estudiante'],
   },

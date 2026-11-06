@@ -60,6 +60,9 @@
                         <div v-for="rol in item.roles" :key="rol.id" class="d-flex flex-wrap align-items-center gap-2 mb-1">
                             <b-badge :variant="rol.rol === 'ASESOR' ? 'primary' : 'dark'">{{ rol.rol }}</b-badge>
                             <span class="small text-muted">Desde {{ fechaCorta(rol.fechaDesde) }}</span>
+                            <span v-if="rol.horasSemanales != null" class="small text-muted">
+                                · {{ rol.horasSemanales }} h/semana
+                            </span>
                             <b-button
                                 v-if="puedeModificarPadron()"
                                 size="sm"
@@ -92,6 +95,10 @@
                             <b-form-checkbox v-model="nuevo.habilitarAsesor">Asesor</b-form-checkbox>
                             <b-form-checkbox v-model="nuevo.habilitarJurado">Jurado</b-form-checkbox>
                         </div>
+                    </b-form-group>
+                    <b-form-group class="mb-3" label="Horas semanales" label-for="alta-horas">
+                        <b-form-input id="alta-horas" type="number" min="0" v-model.number="nuevo.horasSemanales"
+                            placeholder="Horas semanales de dedicación a asesorías y jurados"></b-form-input>
                     </b-form-group>
                     <b-form-group class="mb-3" label="Acto de resolución" label-for="alta-acto">
                         <b-form-input id="alta-acto" v-model="nuevo.actoResolucion" placeholder="número de resolución, si existe"></b-form-input>
@@ -147,7 +154,7 @@
         public filtroAsesor = true;
         public filtroJurado = true;
         public isSaving = false;
-        public nuevo: any = { login: '', habilitarAsesor: true, habilitarJurado: false, actoResolucion: '', observaciones: '' };
+        public nuevo: any = { login: '', habilitarAsesor: true, habilitarJurado: false, actoResolucion: '', observaciones: '', horasSemanales: null };
 
         public historial: any[] = [];
         public tituloHistorial: string = '';
@@ -372,6 +379,10 @@
                     solicitud.rol = rol;
                     solicitud.actoResolucion = this.nuevo.actoResolucion || null;
                     solicitud.observaciones = this.nuevo.observaciones || null;
+                    solicitud.horasSemanales =
+                        this.nuevo.horasSemanales != null && this.nuevo.horasSemanales !== ''
+                            ? Number(this.nuevo.horasSemanales)
+                            : null;
                     await this.docenteHabilitadoService().habilitar(solicitud);
                     habilitados++;
                 } catch (e) {

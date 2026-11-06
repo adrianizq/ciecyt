@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.20.xsd">
+
+    <!--
+      El jurado entrega su evaluacion de la propuesta al CIECYT y es el CIECYT quien la
+      publica al estudiante. Antes el jurado pasaba directamente a VIABLE, NO_VIABLE o
+      CORRECCIONES_JURADO_PROPUESTA.
+    -->
+
+    <changeSet id="20261105000005-1" author="ciecyt">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT COUNT(*) FROM transicion_estado
+                WHERE estado_destino = 'EVALUACION_JURADO_ENTREGADA'
+            </sqlCheck>
+        </preConditions>
+        <comment>Transiciones jurado -> CIECYT -> estudiante para la evaluacion de la propuesta</comment>
+        <sql>
+            INSERT INTO transicion_estado
+                (id, estado_origen, estado_destino, rol_requerido, activo, transicion_estado_modalidad_id)
+            VALUES
+                (97400, 'EN_REVISION_JURADO_PROPUESTA', 'EVALUACION_JURADO_ENTREGADA', 'ROLE_JURADO', true, 9001),
+                (97401, 'EN_REVISION_JURADO_PROPUESTA', 'EVALUACION_JURADO_ENTREGADA', 'ROLE_JURADO', true, 9002),
+                (97402, 'EN_REVISION_JURADO_PROPUESTA', 'EVALUACION_JURADO_ENTREGADA', 'ROLE_JURADO', true, 9003),
+                (97403, 'EN_REVISION_JURADO_PROPUESTA', 'EVALUACION_JURADO_ENTREGADA', 'ROLE_JURADO', true, 9004),
+                (97404, 'EN_REVISION_JURADO_PROPUESTA', 'EVALUACION_JURADO_ENTREGADA', 'ROLE_JURADO', true, 9006),
+                (97405, 'EN_REVISION_JURADO_PROPUESTA', 'EVALUACION_JURADO_ENTREGADA', 'ROLE_JURADO', true, 9007),
+
+                (97410, 'EVALUACION_JURADO_ENTREGADA', 'VIABLE', 'ROLE_CIECYT', true, 9001),
+                (97411, 'EVALUACION_JURADO_ENTREGADA', 'VIABLE', 'ROLE_CIECYT', true, 9002),
+                (97412, 'EVALUACION_JURADO_ENTREGADA', 'VIABLE', 'ROLE_CIECYT', true, 9003),
+                (97413, 'EVALUACION_JURADO_ENTREGADA', 'VIABLE', 'ROLE_CIECYT', true, 9004),
+                (97414, 'EVALUACION_JURADO_ENTREGADA', 'VIABLE', 'ROLE_CIECYT', true, 9006),
+                (97415, 'EVALUACION_JURADO_ENTREGADA', 'VIABLE', 'ROLE_CIECYT', true, 9007),
+
+                (97420, 'EVALUACION_JURADO_ENTREGADA', 'NO_VIABLE', 'ROLE_CIECYT', true, 9001),
+                (97421, 'EVALUACION_JURADO_ENTREGADA', 'NO_VIABLE', 'ROLE_CIECYT', true, 9002),
+                (97422, 'EVALUACION_JURADO_ENTREGADA', 'NO_VIABLE', 'ROLE_CIECYT', true, 9003),
+                (97423, 'EVALUACION_JURADO_ENTREGADA', 'NO_VIABLE', 'ROLE_CIECYT', true, 9004),
+                (97424, 'EVALUACION_JURADO_ENTREGADA', 'NO_VIABLE', 'ROLE_CIECYT', true, 9006),
+                (97425, 'EVALUACION_JURADO_ENTREGADA', 'NO_VIABLE', 'ROLE_CIECYT', true, 9007),
+
+                (97430, 'EVALUACION_JURADO_ENTREGADA', 'CORRECCIONES_JURADO_PROPUESTA', 'ROLE_CIECYT', true, 9001),
+                (97431, 'EVALUACION_JURADO_ENTREGADA', 'CORRECCIONES_JURADO_PROPUESTA', 'ROLE_CIECYT', true, 9002),
+                (97432, 'EVALUACION_JURADO_ENTREGADA', 'CORRECCIONES_JURADO_PROPUESTA', 'ROLE_CIECYT', true, 9003),
+                (97433, 'EVALUACION_JURADO_ENTREGADA', 'CORRECCIONES_JURADO_PROPUESTA', 'ROLE_CIECYT', true, 9004),
+                (97434, 'EVALUACION_JURADO_ENTREGADA', 'CORRECCIONES_JURADO_PROPUESTA', 'ROLE_CIECYT', true, 9006),
+                (97435, 'EVALUACION_JURADO_ENTREGADA', 'CORRECCIONES_JURADO_PROPUESTA', 'ROLE_CIECYT', true, 9007);
+        </sql>
+    </changeSet>
+
+</databaseChangeLog>

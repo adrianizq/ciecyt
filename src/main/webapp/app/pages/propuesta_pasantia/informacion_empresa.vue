@@ -63,6 +63,16 @@
                 Se espera un valor numerico entre {{ v$.informacionPasantia.duracionHoras.$params.between.min }} y
                 {{ v$.informacionPasantia.duracionHoras.$params.between.max }} .
               </div>
+              <small v-if="duracionSemanasPasantia" class="text-muted d-block mt-1">
+                Con 42 horas semanales equivale a {{ duracionSemanasPasantia.toFixed(1) }} semanas y
+                {{ diasHabilesPasantia }} días hábiles.
+              </small>
+              <small v-if="fechaFinEstimadaPasantia" class="text-success d-block">
+                Fecha estimada de finalización: {{ fechaCorta(fechaFinEstimadaPasantia) }} (días hábiles, sin festivos).
+              </small>
+              <small v-else class="text-muted d-block">
+                La fecha estimada de finalización se calcula cuando el proyecto tenga fecha de inicio.
+              </small>
             </div>
 
             <div class="mb-3 form-group">
@@ -516,6 +526,10 @@
             <hr />
             <div class="mb-3 form-group">
               <label class="form-control-label" for="informacion-pasantia-asesor-empresa">Asesor de la empresa </label>
+              <small class="form-text text-muted d-block mb-1">
+                El asesor de la empresa certifica el cumplimiento de los objetivos. El seguimiento académico lo
+                realizan el asesor designado por la decanatura y el coordinador del CIECYT.
+              </small>
               <input
                 type="text"
                 class="form-control"
@@ -682,6 +696,7 @@ const digitsLineasValidator = helpers.regex('digitsLineas', /^[0-9 \u002D]+$/i);
 const nitValidator = helpers.regex('nit', /(^[0-9]+-{1}[0-9]{1})/);
 
 import { id } from 'date-fns/esm/locale';
+import { sumarDiasHabiles } from '@/shared/composables/dias-habiles';
 
 const validations: any = {
   informacionPasantia: {
@@ -760,6 +775,53 @@ export default class PasantiaInformacionEmpresa extends Vue {
     return null;
   }
 
+  /**
+   * La jornada legal es de 42 horas semanales. A partir de las horas efectivas del ciclo se
+   * estima cuantas semanas y dias habiles dura la pasantia, sin atarla a un solo semestre.
+   */
+  public get duracionSemanasPasantia(): number | null {
+    const horas = Number(this.informacionPasantia.duracionHoras);
+    if (!horas || horas <= 0) {
+      return null;
+    }
+    return horas / 42;
+  }
+
+  public get diasHabilesPasantia(): number | null {
+    const semanas = this.duracionSemanasPasantia;
+    return semanas != null ? Math.ceil(semanas * 5) : null;
+  }
+
+  public get fechaFinEstimadaPasantia(): Date | null {
+    if (!this.proyecto.fechaIni || this.diasHabilesPasantia == null) {
+      return null;
+    }
+    return sumarDiasHabiles(this.proyecto.fechaIni, this.diasHabilesPasantia);
+  }
+
+  public fechaCorta(value: any): string {
+    if (!value) {
+      return '-';
+    }
+    const fecha = value instanceof Date ? value : new Date(value);
+    if (isNaN(fecha.getTime())) {
+      return String(value);
+    }
+    const dos = (numero: number) => String(numero).padStart(2, '0');
+    return `${dos(fecha.getUTCDate())}/${dos(fecha.getUTCMonth() + 1)}/${fecha.getUTCFullYear()}`;
+  }
+
+  private actualizarFechaFinEstimada(): Promise<any> {
+    const fecha = this.fechaFinEstimadaPasantia;
+    if (!fecha) {
+      return Promise.resolve();
+    }
+    this.proyecto.fechaFin = fecha;
+    // La fecha es una ayuda de planeacion: si el proyecto no admite aun el cambio no se
+    // interrumpe el guardado de la informacion de la empresa.
+    return this.proyectoService().updateProyecto(this.proyecto).catch(() => null);
+  }
+
   mounted() {
     this.proyId = this.$route.params.proyectoId;
   }
@@ -824,14 +886,17 @@ export default class PasantiaInformacionEmpresa extends Vue {
       this.informacionPasantiaService()
         .update(this.informacionPasantia)
         .then(param => {
-          this.isSaving = false;
           if (accion === 'borrador') {
-            this.alertService().showAlert('Borrador guardado. Aún puedes continuar más tarde.', 'info');
+            this.isSaving = false;
+            this.alertService().showAlert('Borrador guardado. Aǧn puedes continuar mǭs tarde.', 'info');
             return;
           }
-          this.$router.push({ name: 'PropuestaPasantiaElementosView', params: { proyectoId: this.proyId } });
-          const message = this.$t('ciecytApp.proyecto.updated', { param: param.id });
-          this.alertService().showAlert(message, 'info');
+          return this.actualizarFechaFinEstimada().then(() => {
+            this.isSaving = false;
+            this.$router.push({ name: 'PropuestaPasantiaElementosView', params: { proyectoId: this.proyId } });
+            const message = this.$t('ciecytApp.proyecto.updated', { param: param.id });
+            this.alertService().showAlert(message, 'info');
+          });
         })
         .catch(err => {
           this.isSaving = false;
@@ -842,15 +907,18 @@ export default class PasantiaInformacionEmpresa extends Vue {
       this.informacionPasantiaService()
         .create(this.informacionPasantia)
         .then(param => {
-          this.isSaving = false;
           this.informacionPasantia.id = param.id;
           if (accion === 'borrador') {
-            this.alertService().showAlert('Borrador guardado. Aún puedes continuar más tarde.', 'info');
+            this.isSaving = false;
+            this.alertService().showAlert('Borrador guardado. Aǧn puedes continuar mǭs tarde.', 'info');
             return;
           }
-          this.$router.push({ name: 'PropuestaPasantiaElementosView', params: { proyectoId: this.proyId } });
-          const message = 'Se ha creado un nuevo elemento de pasantia';
-          this.alertService().showAlert(message, 'success');
+          return this.actualizarFechaFinEstimada().then(() => {
+            this.isSaving = false;
+            this.$router.push({ name: 'PropuestaPasantiaElementosView', params: { proyectoId: this.proyId } });
+            const message = 'Se ha creado un nuevo elemento de pasantia';
+            this.alertService().showAlert(message, 'success');
+          });
         })
         .catch(err => {
           this.isSaving = false;

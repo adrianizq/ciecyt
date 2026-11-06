@@ -100,7 +100,9 @@ export default class Home extends Vue {
   }
 
   public get esAsesor(): boolean {
-    return this.tieneRol('ROLE_ASESOR');
+    // Un jurado puede ser designado asesor de un proyecto; el listado solo muestra los
+    // proyectos en los que realmente figura con el rol Asesor.
+    return this.tieneRol('ROLE_ASESOR') || this.tieneRol('ROLE_JURADO');
   }
 
   public get esJurado(): boolean {

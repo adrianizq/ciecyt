@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.20.xsd">
+
+    <!--
+      Seguimiento de pasantias: el CIECYT designa un coordinador que acompana y revisa el
+      proceso en las pasantias tecnologica e investigativa, igual que ya ocurre en la
+      internacional y en el diplomado.
+    -->
+
+    <changeSet id="20261105000003-1" author="ciecyt">
+        <comment>Coordinador de seguimiento para Pasantia Tecnologica (9001)</comment>
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT COUNT(*) FROM roles_modalidad
+                WHERE rol = 'Coordinador' AND roles_modalidad_modalidad_id = 9001
+            </sqlCheck>
+        </preConditions>
+        <insert tableName="roles_modalidad">
+            <column name="id" valueNumeric="9170"/>
+            <column name="rol" value="Coordinador"/>
+            <column name="cantidad" valueNumeric="1"/>
+            <column name="calificador" valueBoolean="true"/>
+            <column name="roles_modalidad_modalidad_id" valueNumeric="9001"/>
+            <column name="roles_modalidad_authority_name" value="ROLE_CIECYT"/>
+        </insert>
+    </changeSet>
+
+    <changeSet id="20261105000003-2" author="ciecyt">
+        <comment>Coordinador de seguimiento para Pasantia Investigativa (9002)</comment>
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT COUNT(*) FROM roles_modalidad
+                WHERE rol = 'Coordinador' AND roles_modalidad_modalidad_id = 9002
+            </sqlCheck>
+        </preConditions>
+        <insert tableName="roles_modalidad">
+            <column name="id" valueNumeric="9171"/>
+            <column name="rol" value="Coordinador"/>
+            <column name="cantidad" valueNumeric="1"/>
+            <column name="calificador" valueBoolean="true"/>
+            <column name="roles_modalidad_modalidad_id" valueNumeric="9002"/>
+            <column name="roles_modalidad_authority_name" value="ROLE_CIECYT"/>
+        </insert>
+    </changeSet>
+
+</databaseChangeLog>

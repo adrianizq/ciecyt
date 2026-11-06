@@ -30,6 +30,13 @@ public interface DocenteHabilitadoRepository extends JpaRepository<DocenteHabili
     List<DocenteHabilitado> findVigentesPorFacultad(@Param("facultadId") Long facultadId);
 
     /**
+     * Todos los vigentes del sistema, para el reporte global de estado de docentes que consulta
+     * el CIECYT. Solo se expone a los gestores globales.
+     */
+    @Query("select d from DocenteHabilitado d where d.fechaHasta is null order by d.user.id, d.rol")
+    List<DocenteHabilitado> findAllVigentes();
+
+    /**
      * Si una persona esta habilitada hoy para un rol en una facultad. Es la pregunta que se hace
      * al designar, y se responde en una sola consulta para no cargar la lista completa.
      */

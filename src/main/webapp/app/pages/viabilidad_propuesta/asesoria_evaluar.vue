@@ -393,7 +393,7 @@ export default class PropuestaEvaluar extends mixins(JhiDataUtils) {
 
   public get textoEnvioRevisionDescripcion(): string {
     return tieneJurado(this.modalidadId)
-      ? 'publica la evaluación y continúa el flujo hacia el jurado de la propuesta.'
+      ? 'publica la evaluación y continúa el flujo al CIECYT; el CIECYT la remitirá al jurado de la propuesta.'
       : 'publica la evaluación, registra el concepto favorable del asesor y habilita el desarrollo del proyecto.';
   }
 
@@ -604,11 +604,11 @@ export default class PropuestaEvaluar extends mixins(JhiDataUtils) {
   public cambiarEstadoSegunAsesoria(accion: 'correcciones' | 'jurado'): Promise<any> {
     const enviado = this.proyecto.enviado;
     const conJurado = tieneJurado(this.modalidadId);
-    const nuevoEstado = !enviado ? ESTADO_CORRECCIONES_ASESOR : conJurado ? 'EN_REVISION_JURADO_PROPUESTA' : ESTADO_APROBADA_POR_ASESOR;
+    const nuevoEstado = !enviado ? ESTADO_CORRECCIONES_ASESOR : ESTADO_APROBADA_POR_ASESOR;
     const observacion = !enviado
       ? 'Asesor solicita correcciones en la propuesta'
       : conJurado
-      ? 'Asesor aprueba y envía la propuesta al jurado'
+      ? 'Asesor aprueba la propuesta y la remite al CIECYT para que la envie al jurado'
       : 'Asesor emite concepto favorable de la propuesta (Acuerdo 025, art. 24, literal b)';
     return this.proyectoService()
       .cambiarEstado(this.proyecto.id, nuevoEstado, observacion)
@@ -617,7 +617,7 @@ export default class PropuestaEvaluar extends mixins(JhiDataUtils) {
         const message = !enviado
           ? 'Correcciones enviadas al estudiante.'
           : conJurado
-          ? 'Propuesta enviada al jurado.'
+          ? 'Propuesta aprobada por el asesor. El CIECYT la remitira al jurado.'
           : 'Concepto favorable registrado. El estudiante puede iniciar el desarrollo del proyecto.';
         this.alertService().showAlert(message, 'success');
         this.getAlertFromStore();

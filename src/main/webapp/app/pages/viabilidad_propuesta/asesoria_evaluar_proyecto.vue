@@ -350,11 +350,11 @@ export default class PropuestaEvaluar extends mixins(JhiDataUtils) {
   public enumRespuestas: EnumRespuestas;
 
   public get textoEnvioFinal(): string {
-    return tieneJurado(this.modalidadId) ? 'Enviar al jurado' : 'Aprobar para socialización';
+    return tieneJurado(this.modalidadId) ? 'Enviar al CIECYT' : 'Aprobar para socialización';
   }
 
   public get textoEnvioFinalDestino(): string {
-    return tieneJurado(this.modalidadId) ? 'el jurado del proyecto' : 'la socialización, que CIECYT programará sin jurado';
+    return tieneJurado(this.modalidadId) ? 'el CIECYT, que lo remitirá al jurado del proyecto' : 'la socialización, que CIECYT programará sin jurado';
   }
 
   public isSaving = false;
@@ -374,6 +374,7 @@ export default class PropuestaEvaluar extends mixins(JhiDataUtils) {
       EN_REVISION_JURADO_PROYECTO: 'En revisión del jurado (proyecto)',
       CORRECCIONES_JURADO_PROYECTO: 'Correcciones del jurado (proyecto)',
       APROBADA_POR_ASESOR: 'Concepto favorable del asesor',
+      APROBADA_POR_ASESOR_PROYECTO: 'Proyecto aprobado por el asesor, pendiente de remisión al jurado',
       EN_REVISION_ASESOR_PROYECTO: 'En revisión del asesor (proyecto)',
       CORRECCIONES_ASESOR_PROYECTO: 'Correcciones del asesor (proyecto)',
       VIABLE: 'Propuesta viable',
@@ -400,6 +401,7 @@ export default class PropuestaEvaluar extends mixins(JhiDataUtils) {
       EN_REVISION_JURADO_PROYECTO: 'info',
       CORRECCIONES_JURADO_PROYECTO: 'warning',
       APROBADA_POR_ASESOR: 'success',
+      APROBADA_POR_ASESOR_PROYECTO: 'success',
       EN_REVISION_ASESOR_PROYECTO: 'info',
       CORRECCIONES_ASESOR_PROYECTO: 'warning',
       VIABLE: 'success',
@@ -542,11 +544,11 @@ export default class PropuestaEvaluar extends mixins(JhiDataUtils) {
 
   public enviarAlJurado(): Promise<any> {
     const conJurado = tieneJurado(this.modalidadId);
-    const nuevoEstado = conJurado ? 'EN_REVISION_JURADO_PROYECTO' : ESTADO_LISTO_PARA_SOCIALIZAR;
+    const nuevoEstado = conJurado ? 'APROBADA_POR_ASESOR_PROYECTO' : ESTADO_LISTO_PARA_SOCIALIZAR;
     const observacion = conJurado
-      ? 'Asesor aprueba y envía el proyecto al jurado'
+      ? 'Asesor aprueba y envía el proyecto al CIECYT para que lo envie al jurado'
       : 'Asesor aprueba el proyecto y lo deja listo para la socialización (Acuerdo 025, art. 25, literal b)';
-    const mensaje = conJurado ? 'Proyecto enviado al jurado.' : 'Proyecto aprobado. CIECYT puede programar la socialización.';
+    const mensaje = conJurado ? 'Proyecto aprobado por el asesor. El CIECYT lo remitirá al jurado.' : 'Proyecto aprobado. CIECYT puede programar la socialización.';
     return this.proyectoService()
       .cambiarEstado(this.proyecto.id, nuevoEstado, observacion)
       .then(() => {

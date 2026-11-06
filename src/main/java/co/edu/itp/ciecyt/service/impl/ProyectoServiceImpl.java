@@ -415,7 +415,10 @@ public class ProyectoServiceImpl implements ProyectoService {
         if (
             nuevoEstado == EnumEstadoProyecto.EN_ELABORACION_PROYECTO &&
             proyecto.getProyectoModalidad() != null &&
-            Long.valueOf(9004L).equals(proyecto.getProyectoModalidad().getId())
+            (Long.valueOf(9001L).equals(proyecto.getProyectoModalidad().getId()) ||
+                Long.valueOf(9002L).equals(proyecto.getProyectoModalidad().getId()) ||
+                Long.valueOf(9003L).equals(proyecto.getProyectoModalidad().getId()) ||
+                Long.valueOf(9004L).equals(proyecto.getProyectoModalidad().getId()))
         ) {
             requisitoProyectoService.generarParaProyecto(proyectoId, EnumEstadoProyecto.EN_ELABORACION_PROYECTO);
         }
@@ -567,6 +570,13 @@ public class ProyectoServiceImpl implements ProyectoService {
             case EN_REVISION_JURADO_PROYECTO:
             case EN_EVALUACION_SUSTENTACION:
                 rolResponsable = "Jurado";
+                break;
+            case EVALUACION_JURADO_ENTREGADA:
+            case EVALUACION_JURADO_PROYECTO_ENTREGADA:
+            case EVALUACION_SUSTENTACION_ENTREGADA:
+            case APROBADA_POR_ASESOR_PROYECTO:
+                // El asesor o el jurado ya entregaron su concepto; ahora le corresponde al CIECYT.
+                notificarCiecyt = true;
                 break;
             case SOCIALIZACION_REALIZADA:
             case EN_EVALUACION_SOCIALIZACION:
@@ -1084,6 +1094,22 @@ public class ProyectoServiceImpl implements ProyectoService {
      * Sincroniza los booleanos legacy con el nuevo estado para mantener compatibilidad
      * mientras el frontend transiciona a usar exclusivamente {@code estado}.
      */
+    /**
+     * Indica si la modalidad tiene jurado activo. Se usa para no declarar viable una propuesta
+     * con el solo aval del asesor cuando el jurado todavia debe evaluarla.
+     */
+    private boolean tieneJurado(Long modalidadId) {
+        if (modalidadId == null) {
+            return false;
+        }
+        try {
+            RolesModalidadDTO rol = rolesModalidadService.findByRolAndRolesModalidadModalidadId("Jurado", modalidadId);
+            return rol != null && rol.getId() != null;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
     private void sincronizarFlagsLegacy(Proyecto proyecto, EnumEstadoProyecto estado) {
         switch (estado) {
             case PREINSCRITA:
@@ -1099,8 +1125,12 @@ public class ProyectoServiceImpl implements ProyectoService {
             case APROBADA_POR_ASESOR:
                 proyecto.setPreEnviado(true);
                 proyecto.setEnviado(true);
-                proyecto.setViabilidad("VIABLE");
-                proyecto.setViable(true);
+                // En modalidades con jurado el concepto favorable del asesor no es la
+                // viabilidad definitiva: primero lo remite el CIECYT y luego decide el jurado.
+                if (!tieneJurado(proyecto.getProyectoModalidad() != null ? proyecto.getProyectoModalidad().getId() : null)) {
+                    proyecto.setViabilidad("VIABLE");
+                    proyecto.setViable(true);
+                }
                 break;
             case EN_REVISION_JURADO_PROPUESTA:
             case CORRECCIONES_JURADO_PROPUESTA:
@@ -1126,6 +1156,7 @@ public class ProyectoServiceImpl implements ProyectoService {
                 proyecto.setViable(true);
                 proyecto.setProyectoEnviado(false);
                 break;
+            case APROBADA_POR_ASESOR_PROYECTO:
             case EN_REVISION_JURADO_PROYECTO:
             case CORRECCIONES_JURADO_PROYECTO:
             case EN_REVISION_ASESOR_PROYECTO:
@@ -1136,6 +1167,7 @@ public class ProyectoServiceImpl implements ProyectoService {
                 proyecto.setViable(true);
                 proyecto.setProyectoEnviado(true);
                 break;
+            case EVALUACION_JURADO_PROYECTO_ENTREGADA:
             case LISTO_PARA_SUSTENTAR:
             case SUSTENTACION_PROGRAMADA:
             case SUSTENTACION_REALIZADA:
@@ -1152,6 +1184,7 @@ public class ProyectoServiceImpl implements ProyectoService {
                 proyecto.setProyectoEnviado(true);
                 proyecto.setSustentar(true);
                 break;
+            case EVALUACION_SUSTENTACION_ENTREGADA:
             case NOTA_DEFINITIVA:
             case FINALIZADO:
                 proyecto.setPreEnviado(true);

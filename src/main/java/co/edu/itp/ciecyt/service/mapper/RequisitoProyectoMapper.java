@@ -13,6 +13,8 @@ public interface RequisitoProyectoMapper extends EntityMapper<RequisitoProyectoD
     @Mapping(source = "requisitoProyectoRequisito.id", target = "requisitoProyectoRequisitoId")
     @Mapping(source = "requisitoProyectoRequisito.nombre", target = "requisitoProyectoRequisitoNombre")
     @Mapping(source = "requisitoProyectoRequisito.codigo", target = "requisitoProyectoRequisitoCodigo")
+    @Mapping(source = "requisitoProyectoRequisito.descripcion", target = "requisitoProyectoRequisitoDescripcion")
+    @Mapping(source = "requisitoProyectoRequisito.aceptaTipos", target = "requisitoProyectoRequisitoAceptaTipos")
     @Mapping(source = "requisitoProyectoRequisito.obligatorio", target = "requisitoProyectoRequisitoObligatorio")
     @Mapping(source = "requisitoProyectoRequisito.tipo", target = "requisitoProyectoRequisitoTipo")
     @Mapping(source = "requisitoProyectoRequisito.requisitoEstado", target = "requisitoProyectoRequisitoEstado")

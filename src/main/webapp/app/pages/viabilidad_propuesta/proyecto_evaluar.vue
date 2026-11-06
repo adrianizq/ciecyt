@@ -309,11 +309,9 @@ import AdjuntoRetroalimentacionService from '@/entities/adjunto-retroalimentacio
 import JhiDataUtils from '@/shared/data/data-utils.service';
 import {
   estadoCorreccionesProyecto,
-  estadoListoParaActo,
   nombreActoPublico,
   referenciaAcuerdoActoPublico,
   requiereActoPublico,
-  tipoActoPublico,
 } from '@/shared/config/opcion_grado';
 
 const validations: any = {
@@ -585,16 +583,12 @@ export default class PropuestaEvaluar extends mixins(JhiDataUtils) {
 
   public cambiarEstadoSegunSustentacion(): Promise<any> {
     const sustentar = this.proyecto.sustentar;
-    let nuevoEstado: string | null = null;
+    let nuevoEstado: string;
     let observacion;
     if (sustentar) {
-      if (requiereActoPublico(this.modalidadId)) {
-        nuevoEstado = estadoListoParaActo(this.modalidadId);
-        observacion = 'Proyecto listo para ' + this.actoTitulo.toLowerCase();
-      } else {
-        nuevoEstado = 'FINALIZADO';
-        observacion = 'Documento final aprobado - opción de grado sin acto público (Acuerdo 025, art. 14, parágrafos 3 y 4)';
-      }
+      // Hito: el jurado entrega la aprobacion del proyecto al CIECYT; el CIECYT la publica.
+      nuevoEstado = 'EVALUACION_JURADO_PROYECTO_ENTREGADA';
+      observacion = 'Evaluacion del jurado entregada al CIECYT para ' + this.actoTitulo.toLowerCase();
     } else {
       nuevoEstado = estadoCorreccionesProyecto(this.modalidadId);
       observacion = 'Proyecto requiere correcciones antes de ' + this.actoTitulo.toLowerCase();
@@ -602,8 +596,10 @@ export default class PropuestaEvaluar extends mixins(JhiDataUtils) {
     return this.proyectoService()
       .cambiarEstado(this.proyecto.id, nuevoEstado, observacion)
       .then(() => {
-        const message = this.$t('ciecytApp.proyecto.estadoActualizado', { estado: nuevoEstado });
-        this.alertService().showAlert(message, 'success');
+        const mensaje = sustentar
+          ? 'Evaluación entregada al CIECYT. El CIECYT publicará el paso a ' + this.actoTitulo.toLowerCase() + '.'
+          : 'Correcciones enviadas directamente al estudiante.';
+        this.alertService().showAlert(mensaje, 'success');
       });
   }
 

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.20.xsd">
+
+    <!--
+      Tipo de archivo permitido por requisito:
+        - Documentos de requisito (certificados, records, cartas, actas, soportes): PDF.
+        - Documentos editables (propuesta, documento final de tesis, articulo, propuesta de
+          especializacion): Word y PDF.
+    -->
+
+    <changeSet id="20261105000009-1" author="ciecyt">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists tableName="requisito" columnName="acepta_tipos"/>
+            </not>
+        </preConditions>
+        <addColumn tableName="requisito">
+            <column name="acepta_tipos" type="varchar(100)"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="20261105000009-2" author="ciecyt">
+        <comment>Documentos editables: Word y PDF</comment>
+        <update tableName="requisito">
+            <column name="acepta_tipos" value=".doc,.docx,.pdf"/>
+            <where>
+                codigo IN ('REQ_PROPUESTA', 'T-DOCUMENTO-FINAL-TESIS', 'T-ARTICULO-CIENTIFICO', 'E-PROPUESTA-INVESTIGACION')
+            </where>
+        </update>
+    </changeSet>
+
+    <changeSet id="20261105000009-3" author="ciecyt">
+        <comment>El resto de documentos de requisito se entregan en PDF</comment>
+        <update tableName="requisito">
+            <column name="acepta_tipos" value=".pdf"/>
+            <where>
+                tipo = 'DOCUMENTO'
+                AND codigo NOT IN ('REQ_PROPUESTA', 'T-DOCUMENTO-FINAL-TESIS', 'T-ARTICULO-CIENTIFICO', 'E-PROPUESTA-INVESTIGACION')
+            </where>
+        </update>
+    </changeSet>
+
+</databaseChangeLog>

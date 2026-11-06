@@ -23,6 +23,8 @@ public class RequisitoDTO implements Serializable {
 
     private Boolean activo;
 
+    private String aceptaTipos;
+
     private Long requisitoModalidadId;
 
     private String requisitoModalidadModalidad;
@@ -83,6 +85,14 @@ public class RequisitoDTO implements Serializable {
 
     public void setActivo(Boolean activo) {
         this.activo = activo;
+    }
+
+    public String getAceptaTipos() {
+        return aceptaTipos;
+    }
+
+    public void setAceptaTipos(String aceptaTipos) {
+        this.aceptaTipos = aceptaTipos;
     }
 
     public Long getRequisitoModalidadId() {

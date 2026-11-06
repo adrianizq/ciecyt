@@ -146,9 +146,14 @@
                         
                         <div>
                             <div v-if="adjuntoRetroalimentacion.id"  class="form-text text-danger clearfix">
-                               <a class="pull-left" v-on:click="this.descargarRetro" v-text="$t('entity.action.open')"></a>
+                               <a class="pull-left mr-2" v-on:click="this.descargarRetro" v-text="$t('entity.action.open')"></a>
+                               <button type="button" class="btn btn-sm btn-outline-primary mr-2" v-on:click="previsualizarRetro">
+                                 Previsualizar
+                               </button>
                                 <span class="pull-left">{{adjuntoRetroalimentacion.nombreArchivoOriginal }} <br /> {{adjuntoRetroalimentacion.archivoContentType}}, {{byteSize(adjuntoRetroalimentacion.file)}}</span>
-                                
+                                <span v-if="adjuntoRetroalimentacion.fechaCreacion" class="d-block small text-muted">
+                                  {{ fechaHora(adjuntoRetroalimentacion.fechaCreacion) }}
+                                </span>
                             </div> 
                  
                         </div>
@@ -192,6 +197,7 @@ import { mixins } from 'vue-facing-decorator';
 import MenuLateral from '@/components/propuesta/menu_lateral.vue';
 import { IProyecto, Proyecto } from '@/shared/model/proyecto.model';
 import { opcionViabilidad, textoViabilidad, descripcionViabilidad } from '@/shared/config/viabilidad';
+import { tieneJurado } from '@/shared/config/opcion_grado';
 import { IUser } from '@/shared/model/user.model';
 
 import ProyectoService from '@/entities/proyecto/proyecto.service';
@@ -297,6 +303,25 @@ export default class Retroalimentacion extends mixins(JhiDataUtils){
         this.adjuntoRetroalimentacionService().downloadFile(this.adjuntoRetroalimentacion.id, this.adjuntoRetroalimentacion.nombreArchivoOriginal);
      }
 
+     previsualizarRetro() {
+        this.adjuntoRetroalimentacionService().previewFile(
+          this.adjuntoRetroalimentacion.id,
+          this.adjuntoRetroalimentacion.nombreArchivoOriginal || ''
+        );
+     }
+
+     fechaHora(value: any): string {
+        if (!value) {
+          return '';
+        }
+        const fecha = value instanceof Date ? value : new Date(value);
+        if (isNaN(fecha.getTime())) {
+          return String(value);
+        }
+        const dos = (numero: number) => String(numero).padStart(2, '0');
+        return `${dos(fecha.getDate())}/${dos(fecha.getMonth() + 1)}/${fecha.getFullYear()} ${dos(fecha.getHours())}:${dos(fecha.getMinutes())}`;
+     }
+
       
 
      eliminarRetro(ob) {
@@ -377,7 +402,21 @@ export default class Retroalimentacion extends mixins(JhiDataUtils){
      
   }
 
+  get esGestor(): boolean {
+    const account: any = this.$store?.getters?.account;
+    const authorities: string[] = account?.authorities || [];
+    return authorities.indexOf('ROLE_CIECYT') >= 0 || authorities.indexOf('ROLE_ADMIN') >= 0;
+  }
+
   get retroalimentacionVisible(): boolean {
+    // Mientras el jurado no la entregue al CIECYT, la evaluacion no se muestra al estudiante.
+    if (this.proyecto.estado === 'EVALUACION_JURADO_ENTREGADA') {
+      return this.esGestor;
+    }
+    if (this.proyecto.estado === 'APROBADA_POR_ASESOR' && tieneJurado(this.proyecto.proyectoModalidadId)) {
+      // Aun falta el concepto del jurado; el estudiante vera la evaluacion cuando el CIECYT la publique.
+      return this.esGestor;
+    }
     return (
       this.proyecto.estado === 'VIABLE' ||
       this.proyecto.estado === 'APROBADA_POR_ASESOR' ||

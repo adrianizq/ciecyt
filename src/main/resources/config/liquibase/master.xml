@@ -147,6 +147,24 @@
     <include file="config/liquibase/changelog/20261005000001_jhi_user_needs_password_change.xml" relativeToChangelogFile="false"/>
     <!-- Requisitos Acuerdo 025, art. 7 par. 1: la tesis admite hasta 2 estudiantes -->
     <include file="config/liquibase/changelog/20261011000001_tesis_dos_estudiantes_acuerdo25.xml" relativeToChangelogFile="false"/>
+    <!-- Reporte de estado de docentes: horas semanales de asesorias y jurados -->
+    <include file="config/liquibase/changelog/20261105000001_docente_horas_semanales.xml" relativeToChangelogFile="false"/>
+    <!-- Ajuste de requisitos de inscripcion: FINV001, sin duplicados ni avance como inscripcion -->
+    <include file="config/liquibase/changelog/20261105000002_ajuste_requisitos_inscripcion.xml" relativeToChangelogFile="false"/>
+    <!-- Autoridades que usa el flujo y que faltaban en jhi_authority -->
+    <include file="config/liquibase/changelog/20261105000004_autoridades_faltantes.xml" relativeToChangelogFile="false"/>
+    <!-- Coordinador de seguimiento en las pasantias tecnologica e investigativa -->
+    <include file="config/liquibase/changelog/20261105000003_pasantias_coordinador.xml" relativeToChangelogFile="false"/>
+    <!-- El jurado entrega su evaluacion al CIECYT y el CIECYT la publica -->
+    <include file="config/liquibase/changelog/20261105000005_evaluacion_jurado_ciecyt.xml" relativeToChangelogFile="false"/>
+    <!-- El asesor del proyecto entrega su aprobacion al CIECYT y el CIECYT la remite al jurado -->
+    <include file="config/liquibase/changelog/20261105000006_aprobacion_asesor_proyecto_ciecyt.xml" relativeToChangelogFile="false"/>
+    <!-- Hitos trascendentes: paso a sustentacion y nota definitiva pasan por CIECYT -->
+    <include file="config/liquibase/changelog/20261105000007_hitos_ciecyt.xml" relativeToChangelogFile="false"/>
+    <!-- Seguimiento de pasantias: ficha de inicio y certificacion de objetivos -->
+    <include file="config/liquibase/changelog/20261105000008_pasantias_seguimiento.xml" relativeToChangelogFile="false"/>
+    <!-- Tipos de archivo permitidos por requisito (PDF / Word) -->
+    <include file="config/liquibase/changelog/20261105000009_tipos_archivo_requisitos.xml" relativeToChangelogFile="false"/>
     <!-- jhipster-needle-liquibase-add-constraints-changelog - JHipster will add liquibase constraints changelogs here -->
     <!-- jhipster-needle-liquibase-add-incremental-changelog - JHipster will add incremental liquibase changelogs here -->
 </databaseChangeLog>

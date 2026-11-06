@@ -65,6 +65,13 @@ public class DocenteHabilitado implements Serializable {
     @Column(name = "observaciones")
     private String observaciones;
 
+    /**
+     * Horas semanales que la decanatura asigna al docente dentro de su carga academica para
+     * atender asesorias y jurados. Se usa en el reporte de estado de docentes; es opcional.
+     */
+    @Column(name = "horas_semanales")
+    private Integer horasSemanales;
+
     public Long getId() {
         return id;
     }
@@ -127,6 +134,14 @@ public class DocenteHabilitado implements Serializable {
 
     public void setObservaciones(String observaciones) {
         this.observaciones = observaciones;
+    }
+
+    public Integer getHorasSemanales() {
+        return horasSemanales;
+    }
+
+    public void setHorasSemanales(Integer horasSemanales) {
+        this.horasSemanales = horasSemanales;
     }
 
     /**

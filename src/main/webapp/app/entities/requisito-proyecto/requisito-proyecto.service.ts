@@ -40,10 +40,11 @@ export default class RequisitoProyectoService {
     });
   }
 
-  public generarPorProyecto(proyectoId: number): Promise<IRequisitoProyecto[]> {
+  public generarPorProyecto(proyectoId: number, fase?: string): Promise<IRequisitoProyecto[]> {
     return new Promise<IRequisitoProyecto[]>((resolve, reject) => {
+      const filtro = fase ? `?fase=${encodeURIComponent(fase)}` : '';
       axios
-        .post(`${baseApiUrl}/generar/proyecto/${proyectoId}`)
+        .post(`${baseApiUrl}/generar/proyecto/${proyectoId}${filtro}`)
         .then(function (res) {
           resolve(res.data);
         })

@@ -21,6 +21,7 @@ export interface IDocenteHabilitado {
   fechaHasta?: string;
   actoResolucion?: string;
   observaciones?: string;
+  horasSemanales?: number;
 }
 
 /**
@@ -34,6 +35,7 @@ export class SolicitudHabilitacion {
     public facultadId?: number,
     public rol?: string,
     public actoResolucion?: string,
-    public observaciones?: string
+    public observaciones?: string,
+    public horasSemanales?: number
   ) {}
 }

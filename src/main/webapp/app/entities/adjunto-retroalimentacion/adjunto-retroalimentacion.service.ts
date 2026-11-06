@@ -90,6 +90,66 @@ export default class AdjuntoRetroalimentacionService {
     });
   }
 
+  public previewFile(id?: any, fileName?: string) {
+    // Abrir la ventana en el gesto del usuario evita el bloqueo de popups y la descarga forzada.
+    const ventana = window.open('', '_blank');
+    return axios({
+      url: baseApiUrl + `/downloadFile` + `/${id}`,
+      method: 'GET',
+      responseType: 'blob',
+    })
+      .then(response => {
+        const headers: any = response.headers || {};
+        const headerType = String(headers['content-type'] || (headers.get ? headers.get('content-type') : '') || '');
+        const contentType = this.tipoContenidoArchivo(fileName) || headerType || 'application/octet-stream';
+        const blob = new Blob([response.data], { type: contentType });
+        const fileURL = window.URL.createObjectURL(blob);
+        if (ventana) {
+          ventana.location.href = fileURL;
+        } else {
+          const fileLink = document.createElement('a');
+          fileLink.href = fileURL;
+          fileLink.setAttribute('download', fileName || 'archivo');
+          document.body.appendChild(fileLink);
+          fileLink.click();
+          document.body.removeChild(fileLink);
+        }
+        setTimeout(() => window.URL.revokeObjectURL(fileURL), 60000);
+      })
+      .catch(err => {
+        if (ventana) {
+          ventana.close();
+        }
+        throw err;
+      });
+  }
+
+  private tipoContenidoArchivo(fileName?: string): string {
+    const nombre = String(fileName || '').toLowerCase();
+    if (nombre.endsWith('.pdf')) {
+      return 'application/pdf';
+    }
+    if (nombre.endsWith('.png')) {
+      return 'image/png';
+    }
+    if (nombre.endsWith('.jpg') || nombre.endsWith('.jpeg')) {
+      return 'image/jpeg';
+    }
+    if (nombre.endsWith('.gif')) {
+      return 'image/gif';
+    }
+    if (nombre.endsWith('.webp')) {
+      return 'image/webp';
+    }
+    if (nombre.endsWith('.txt')) {
+      return 'text/plain';
+    }
+    if (nombre.endsWith('.html') || nombre.endsWith('.htm')) {
+      return 'text/html';
+    }
+    return '';
+  }
+
   public findAdjuntoRetroalimentacionProyectoFaseAuthority(idProyecto?: any, idFase?: any, authority?: any): Promise<any> {
     return new Promise<any>((resolve, reject) => {
       axios

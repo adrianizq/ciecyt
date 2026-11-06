@@ -141,9 +141,14 @@
                         
                         <div>
                             <div v-if="adjuntoAsesorRetroalimentacion.id"  class="form-text text-danger clearfix">
-                               <a class="pull-left" v-on:click="this.descargarAsesorRetro" v-text="$t('entity.action.open')"></a>
+                               <a class="pull-left mr-2" v-on:click="this.descargarAsesorRetro" v-text="$t('entity.action.open')"></a>
+                               <button type="button" class="btn btn-sm btn-outline-primary mr-2" v-on:click="previsualizarAsesorRetro">
+                                 Previsualizar
+                               </button>
                                 <span class="pull-left">{{adjuntoAsesorRetroalimentacion.nombreArchivoOriginal }} <br /> {{adjuntoAsesorRetroalimentacion.archivoContentType}}, {{byteSize(adjuntoAsesorRetroalimentacion.file)}}</span>
-                                
+                                <span v-if="adjuntoAsesorRetroalimentacion.fechaCreacion" class="d-block small text-muted">
+                                  {{ fechaHora(adjuntoAsesorRetroalimentacion.fechaCreacion) }}
+                                </span>
                             </div> 
                  
                         </div>
@@ -301,6 +306,25 @@ export default class Retroalimentacion extends mixins(JhiDataUtils){
 
        descargarAsesorRetro() {
         this.adjuntoRetroalimentacionService().downloadFile(this.adjuntoAsesorRetroalimentacion.id, this.adjuntoAsesorRetroalimentacion.nombreArchivoOriginal);
+     }
+
+     previsualizarAsesorRetro() {
+        this.adjuntoRetroalimentacionService().previewFile(
+          this.adjuntoAsesorRetroalimentacion.id,
+          this.adjuntoAsesorRetroalimentacion.nombreArchivoOriginal || ''
+        );
+     }
+
+     fechaHora(value: any): string {
+        if (!value) {
+          return '';
+        }
+        const fecha = value instanceof Date ? value : new Date(value);
+        if (isNaN(fecha.getTime())) {
+          return String(value);
+        }
+        const dos = (numero: number) => String(numero).padStart(2, '0');
+        return `${dos(fecha.getDate())}/${dos(fecha.getMonth() + 1)}/${fecha.getFullYear()} ${dos(fecha.getHours())}:${dos(fecha.getMinutes())}`;
      }
 
     

@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.20.xsd">
+
+    <!--
+      Hitos trascendentes: la aprobacion del proyecto para pasar a sustentacion/socializacion y
+      la nota definitiva se entregan al CIECYT, que es quien las publica. Las correcciones
+      siguen pasando directo al estudiante.
+    -->
+
+    <changeSet id="20261105000007-1" author="ciecyt">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT COUNT(*) FROM transicion_estado
+                WHERE estado_destino = 'EVALUACION_JURADO_PROYECTO_ENTREGADA'
+            </sqlCheck>
+        </preConditions>
+        <comment>Jurado del proyecto entrega el hito al CIECYT</comment>
+        <sql>
+            INSERT INTO transicion_estado
+                (id, estado_origen, estado_destino, rol_requerido, activo, transicion_estado_modalidad_id)
+            VALUES
+                (97600, 'EN_REVISION_JURADO_PROYECTO', 'EVALUACION_JURADO_PROYECTO_ENTREGADA', 'ROLE_JURADO', true, 9002),
+                (97601, 'EN_REVISION_JURADO_PROYECTO', 'EVALUACION_JURADO_PROYECTO_ENTREGADA', 'ROLE_JURADO', true, 9004),
+
+                (97610, 'EVALUACION_JURADO_PROYECTO_ENTREGADA', 'LISTO_PARA_SUSTENTAR', 'ROLE_CIECYT', true, 9002),
+                (97611, 'EVALUACION_JURADO_PROYECTO_ENTREGADA', 'LISTO_PARA_SUSTENTAR', 'ROLE_CIECYT', true, 9004),
+                (97612, 'EVALUACION_JURADO_PROYECTO_ENTREGADA', 'LISTO_PARA_SOCIALIZAR', 'ROLE_CIECYT', true, 9002),
+                (97613, 'EVALUACION_JURADO_PROYECTO_ENTREGADA', 'LISTO_PARA_SOCIALIZAR', 'ROLE_CIECYT', true, 9004),
+                (97614, 'EVALUACION_JURADO_PROYECTO_ENTREGADA', 'FINALIZADO', 'ROLE_CIECYT', true, 9002),
+                (97615, 'EVALUACION_JURADO_PROYECTO_ENTREGADA', 'FINALIZADO', 'ROLE_CIECYT', true, 9004);
+        </sql>
+    </changeSet>
+
+    <changeSet id="20261105000007-2" author="ciecyt">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT COUNT(*) FROM transicion_estado
+                WHERE estado_destino = 'EVALUACION_SUSTENTACION_ENTREGADA'
+            </sqlCheck>
+        </preConditions>
+        <comment>Jurado o asesor entrega la nota definitiva al CIECYT</comment>
+        <sql>
+            INSERT INTO transicion_estado
+                (id, estado_origen, estado_destino, rol_requerido, activo, transicion_estado_modalidad_id)
+            VALUES
+                (97620, 'EN_EVALUACION_SUSTENTACION', 'EVALUACION_SUSTENTACION_ENTREGADA', 'ROLE_JURADO', true, 9002),
+                (97621, 'EN_EVALUACION_SUSTENTACION', 'EVALUACION_SUSTENTACION_ENTREGADA', 'ROLE_JURADO', true, 9004),
+                (97622, 'EN_EVALUACION_SOCIALIZACION', 'EVALUACION_SUSTENTACION_ENTREGADA', 'ROLE_ASESOR', true, 9001),
+                (97623, 'EN_EVALUACION_SOCIALIZACION', 'EVALUACION_SUSTENTACION_ENTREGADA', 'ROLE_ASESOR', true, 9003),
+                (97624, 'EN_EVALUACION_SOCIALIZACION', 'EVALUACION_SUSTENTACION_ENTREGADA', 'ROLE_ASESOR', true, 9006),
+
+                (97630, 'EVALUACION_SUSTENTACION_ENTREGADA', 'NOTA_DEFINITIVA', 'ROLE_CIECYT', true, 9001),
+                (97631, 'EVALUACION_SUSTENTACION_ENTREGADA', 'NOTA_DEFINITIVA', 'ROLE_CIECYT', true, 9002),
+                (97632, 'EVALUACION_SUSTENTACION_ENTREGADA', 'NOTA_DEFINITIVA', 'ROLE_CIECYT', true, 9003),
+                (97633, 'EVALUACION_SUSTENTACION_ENTREGADA', 'NOTA_DEFINITIVA', 'ROLE_CIECYT', true, 9004),
+                (97634, 'EVALUACION_SUSTENTACION_ENTREGADA', 'NOTA_DEFINITIVA', 'ROLE_CIECYT', true, 9006);
+        </sql>
+    </changeSet>
+
+</databaseChangeLog>
