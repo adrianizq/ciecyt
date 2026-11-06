@@ -76,6 +76,35 @@
               </div>
             </div>
 
+            <div class="card mb-3">
+              <div class="card-body">
+                <h5 class="mb-2">Propuesta extensa</h5>
+                <p class="text-muted small mb-2">
+                  Documento de la propuesta (Word o PDF). Es obligatorio para radicar ante el CIECYT.
+                </p>
+                <div v-if="propuestaExtensa" class="mb-2">
+                  <span class="text-success">Cargada:</span> {{ propuestaExtensa.nombreArchivoOriginal }}
+                  <button type="button" class="btn btn-sm btn-outline-primary ms-2" @click="previsualizarPropuesta">
+                    <font-awesome-icon icon="eye"></font-awesome-icon> Previsualizar
+                  </button>
+                </div>
+                <file-upload
+                  accept=".doc,.docx,.pdf"
+                  help="Máx. 20 MB. Word o PDF."
+                  label="Adjuntar propuesta extensa"
+                  @change="asignarPropuesta"
+                />
+                <button
+                  type="button"
+                  class="btn btn-sm btn-primary mt-2"
+                  :disabled="guardandoPropuesta || !propuestaPendiente"
+                  @click="guardarPropuesta"
+                >
+                  <font-awesome-icon icon="save"></font-awesome-icon> Guardar propuesta
+                </button>
+              </div>
+            </div>
+
             <div class="mb-3 form-group">
               <h3>Documentación requerida</h3>
               <p class="text-muted">
@@ -124,20 +153,36 @@
                           <span v-if="requisito.validadoPor">por {{ requisito.validadoPor }}</span>
                         </div>
                       </td>
-                      <td class="text-end text-nowrap">
+                      <td class="text-end" style="min-width: 260px">
+                        <div v-if="esRequisitoEditable(requisito)" class="text-start">
+                          <file-upload
+                            :accept="requisito.requisitoProyectoRequisitoAceptaTipos || '.pdf'"
+                            :help="'Máx. 20 MB. Formatos: ' + (requisito.requisitoProyectoRequisitoAceptaTipos || '.pdf')"
+                            label="Adjuntar requisito"
+                            @change="archivo => asignarArchivo(archivo, requisito)"
+                          />
+                          <button
+                            type="button"
+                            class="btn btn-sm btn-primary mt-1"
+                            :disabled="guardandoRequisito"
+                            @click="entregarRequisito(requisito)"
+                          >
+                            <font-awesome-icon icon="save"></font-awesome-icon> Entregar
+                          </button>
+                        </div>
                         <button
                           v-if="requisito.archivo"
                           type="button"
-                          class="btn btn-sm btn-outline-primary"
+                          class="btn btn-sm btn-outline-primary mt-1"
                           @click="previsualizarRequisito(requisito)"
                         >
                           <font-awesome-icon icon="eye"></font-awesome-icon> Previsualizar
                         </button>
                         <router-link
                           :to="{ name: 'PropuestaChecklistView', params: { proyectoId: proyId } }"
-                          class="btn btn-sm btn-outline-secondary ms-1"
+                          class="btn btn-sm btn-outline-secondary mt-1 ms-1"
                         >
-                          Cargar / corregir
+                          Abrir checklist
                         </router-link>
                       </td>
                     </tr>
@@ -225,12 +270,14 @@
 </template>
 
 <script lang="ts">
-import { Component, Inject, Vue, Hook } from 'vue-facing-decorator';
+import { Component, Inject, Hook, mixins } from 'vue-facing-decorator';
 
 import MenuLateral from '@/components/propuesta/menu_lateral.vue';
+import JhiDataUtils from '@/shared/data/data-utils.service';
 import { IProyecto, Proyecto } from '@/shared/model/proyecto.model';
 import { IIntegranteProyecto } from '@/shared/model/integrante-proyecto.model';
 import { IRequisitoProyecto } from '@/shared/model/requisito-proyecto.model';
+import { IAdjuntoProyectoFase, AdjuntoProyectoFase } from '@/shared/model/adjunto-proyecto-fase.model';
 import { EnumEstadoRequisito } from '@/shared/model/enumerations/enum-estado-requisito.model';
 import { TipoRequisito } from '@/shared/model/enumerations/tipo-requisito.model';
 
@@ -238,19 +285,29 @@ import ProyectoService from '@/entities/proyecto/proyecto.service';
 import AlertService from '@/shared/alert/alert.service';
 import AdjuntoProyectoFaseService from '@/entities/adjunto-proyecto-fase/adjunto-proyecto-fase.service';
 import RequisitoProyectoService from '@/entities/requisito-proyecto/requisito-proyecto.service';
+import FasesService from '@/entities/fases/fases.service';
 
 @Component({
   components: { MenuLateral },
 })
-export default class EnviarPropuesta extends Vue {
+export default class EnviarPropuesta extends mixins(JhiDataUtils) {
   @Inject private proyectoService: () => ProyectoService;
   @Inject private adjuntoProyectoFaseService: () => AdjuntoProyectoFaseService;
   @Inject private requisitoProyectoService: () => RequisitoProyectoService;
+  @Inject private fasesService: () => FasesService;
   @Inject private alertService: () => AlertService;
 
   public integrants: IIntegranteProyecto[] = [];
   public requisitos: IRequisitoProyecto[] = [];
   public terms: Boolean = false;
+  public pendientes: { [id: number]: any } = {};
+  public adjuntosDocumentos: IAdjuntoProyectoFase[] = [];
+  public documentosFaseId: number = null;
+  public propuestaFaseId: number = null;
+  public propuestaExtensa: IAdjuntoProyectoFase = null;
+  public propuestaPendiente: any = null;
+  public guardandoRequisito = false;
+  public guardandoPropuesta = false;
 
   public proyecto: IProyecto = new Proyecto();
   public proyId: string = null;
@@ -507,6 +564,9 @@ export default class EnviarPropuesta extends Vue {
     if (!this.terms) {
       return true;
     }
+    if (!this.propuestaExtensa) {
+      return true;
+    }
     return this.requisitosObligatorios.length > 0 && !this.documentosCompletos;
   }
 
@@ -559,6 +619,155 @@ export default class EnviarPropuesta extends Vue {
           this.adjuntoProyectoFaseService().previewFile(id);
         });
     }
+  }
+
+  public esRequisitoEditable(requisito: IRequisitoProyecto): boolean {
+    return requisito.estado === EnumEstadoRequisito.PENDIENTE || requisito.estado === EnumEstadoRequisito.RECHAZADO;
+  }
+
+  public asignarArchivo(archivo: File | Event | null, requisito: IRequisitoProyecto): void {
+    let fileData: File | null = null;
+    if (archivo instanceof File) {
+      fileData = archivo;
+    } else if (archivo && (archivo as any).target && (archivo as any).target.files) {
+      fileData = (archivo as any).target.files[0] || null;
+    }
+    if (!fileData) {
+      delete this.pendientes[requisito.id];
+      return;
+    }
+    const pendiente: any = { nombreArchivoOriginal: fileData.name };
+    const syntheticEvent: any = { target: { files: [fileData] } };
+    this.setFileData(syntheticEvent, pendiente, 'archivo', false);
+    this.pendientes[requisito.id] = pendiente;
+  }
+
+  public entregarRequisito(requisito: IRequisitoProyecto): void {
+    if (requisito.requisitoProyectoRequisitoTipo === TipoRequisito.CAMPO) {
+      this.alertService().showAlert('Este requisito se diligencia en el checklist.', 'warning');
+      return;
+    }
+    const pendiente = this.pendientes[requisito.id];
+    if (!pendiente || !pendiente.archivo) {
+      this.alertService().showAlert('Debe seleccionar un archivo', 'warning');
+      return;
+    }
+
+    this.guardandoRequisito = true;
+    const adjunto = this.adjuntoDeRequisito(requisito) || new AdjuntoProyectoFase();
+    adjunto.proyectoFaseProyectoId = this.proyecto.id;
+    adjunto.proyectoFaseProyectoTitulo = this.proyecto.titulo;
+    adjunto.adjuntoProyectoFaseFaseId = this.documentosFaseId;
+    adjunto.nombreAdjunto = requisito.requisitoProyectoRequisitoCodigo;
+    adjunto.nombreArchivoOriginal = pendiente.nombreArchivoOriginal;
+    adjunto.archivo = pendiente.archivo;
+    adjunto.archivoContentType = pendiente.archivoContentType;
+    adjunto.fechaCreacion = new Date();
+
+    const guardar = adjunto.id
+      ? this.adjuntoProyectoFaseService().update(adjunto)
+      : this.adjuntoProyectoFaseService().create(adjunto);
+
+    guardar
+      .then((guardado: IAdjuntoProyectoFase) => {
+        const indice = this.adjuntosDocumentos.findIndex(item => item.nombreAdjunto === guardado.nombreAdjunto);
+        if (indice >= 0) {
+          this.adjuntosDocumentos.splice(indice, 1, guardado);
+        } else {
+          this.adjuntosDocumentos.push(guardado);
+        }
+        return this.requisitoProyectoService().entregar(requisito.id, String(guardado.id), null);
+      })
+      .then((actualizado: IRequisitoProyecto) => {
+        this.guardandoRequisito = false;
+        delete this.pendientes[requisito.id];
+        this.reemplazarRequisito(actualizado);
+        this.alertService().showAlert('Requisito entregado', 'success');
+      })
+      .catch(err => {
+        this.guardandoRequisito = false;
+        this.alertService().showAlert(this.mensajeDeErrorDocumento(err), 'danger');
+      });
+  }
+
+  public asignarPropuesta(archivo: File | Event | null): void {
+    let fileData: File | null = null;
+    if (archivo instanceof File) {
+      fileData = archivo;
+    } else if (archivo && (archivo as any).target && (archivo as any).target.files) {
+      fileData = (archivo as any).target.files[0] || null;
+    }
+    if (!fileData) {
+      this.propuestaPendiente = null;
+      return;
+    }
+    const pendiente: any = { nombreArchivoOriginal: fileData.name };
+    const syntheticEvent: any = { target: { files: [fileData] } };
+    this.setFileData(syntheticEvent, pendiente, 'archivo', false);
+    this.propuestaPendiente = pendiente;
+  }
+
+  public guardarPropuesta(): void {
+    if (!this.propuestaPendiente || !this.propuestaPendiente.archivo) {
+      this.alertService().showAlert('Seleccione el archivo de la propuesta extensa', 'warning');
+      return;
+    }
+    this.guardandoPropuesta = true;
+    const adjunto = this.propuestaExtensa || new AdjuntoProyectoFase();
+    adjunto.proyectoFaseProyectoId = this.proyecto.id;
+    adjunto.proyectoFaseProyectoTitulo = this.proyecto.titulo;
+    adjunto.adjuntoProyectoFaseFaseId = this.propuestaFaseId;
+    adjunto.nombreAdjunto = 'Propuesta';
+    adjunto.nombreArchivoOriginal = this.propuestaPendiente.nombreArchivoOriginal;
+    adjunto.archivo = this.propuestaPendiente.archivo;
+    adjunto.archivoContentType = this.propuestaPendiente.archivoContentType;
+    adjunto.fechaCreacion = new Date();
+
+    const guardar = adjunto.id
+      ? this.adjuntoProyectoFaseService().update(adjunto)
+      : this.adjuntoProyectoFaseService().create(adjunto);
+
+    guardar
+      .then((guardado: IAdjuntoProyectoFase) => {
+        this.propuestaExtensa = guardado;
+        this.propuestaPendiente = null;
+        this.guardandoPropuesta = false;
+        this.alertService().showAlert('Propuesta extensa cargada', 'success');
+      })
+      .catch(err => {
+        this.guardandoPropuesta = false;
+        this.alertService().showAlert(this.mensajeDeErrorDocumento(err), 'danger');
+      });
+  }
+
+  public previsualizarPropuesta(): void {
+    if (this.propuestaExtensa) {
+      this.adjuntoProyectoFaseService().previewFile(
+        this.propuestaExtensa.id,
+        this.propuestaExtensa.nombreArchivoOriginal || ''
+      );
+    }
+  }
+
+  private adjuntoDeRequisito(requisito: IRequisitoProyecto): IAdjuntoProyectoFase {
+    return this.adjuntosDocumentos.find(
+      adjunto => adjunto.nombreAdjunto === requisito.requisitoProyectoRequisitoCodigo
+    );
+  }
+
+  private reemplazarRequisito(actualizado: IRequisitoProyecto): void {
+    const indice = this.requisitos.findIndex(requisito => requisito.id === actualizado.id);
+    if (indice >= 0) {
+      this.requisitos.splice(indice, 1, actualizado);
+    }
+  }
+
+  private mensajeDeErrorDocumento(err: any): string {
+    const detalle =
+      err && err.response && err.response.data
+        ? err.response.data.detail || err.response.data.title || err.response.data.message
+        : null;
+    return detalle || 'No se pudo guardar el documento.';
   }
 
   public fechaHora(value: any): string {
@@ -620,7 +829,42 @@ export default class EnviarPropuesta extends Vue {
   async initRelationships() {
     this.proyId = this.$route.params.proyectoId;
     await this.retrieveProyecto();
+
+    const faseDocumentos = await this.fasesService().findByFase('Documentos');
+    this.documentosFaseId = faseDocumentos ? faseDocumentos.id : null;
+    const fasePropuesta = await this.fasesService().findByFase('Propuesta');
+    this.propuestaFaseId = fasePropuesta ? fasePropuesta.id : null;
+
     await this.cargarRequisitos();
+    await this.cargarAdjuntosDocumentos();
+    await this.cargarPropuestaExtensa();
+  }
+
+  private async cargarAdjuntosDocumentos(): Promise<void> {
+    if (!this.documentosFaseId) {
+      this.adjuntosDocumentos = [];
+      return;
+    }
+    try {
+      const res = await this.adjuntoProyectoFaseService().findAdjuntoProyectoFase(this.proyId, this.documentosFaseId);
+      this.adjuntosDocumentos = res.data || [];
+    } catch (e) {
+      this.adjuntosDocumentos = [];
+    }
+  }
+
+  private async cargarPropuestaExtensa(): Promise<void> {
+    if (!this.propuestaFaseId) {
+      this.propuestaExtensa = null;
+      return;
+    }
+    try {
+      const res = await this.adjuntoProyectoFaseService().findAdjuntoProyectoFase(this.proyId, this.propuestaFaseId);
+      const lista: IAdjuntoProyectoFase[] = res.data || [];
+      this.propuestaExtensa = lista.find(adjunto => adjunto.nombreAdjunto === 'Propuesta') || lista[0] || null;
+    } catch (e) {
+      this.propuestaExtensa = null;
+    }
   }
 }
 </script>
