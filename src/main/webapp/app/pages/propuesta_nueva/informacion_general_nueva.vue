@@ -340,6 +340,24 @@ export default class PropuestaInformacionGeneral extends Vue {
     });
   }
 
+  /**
+   * Cada modalidad tiene su propio asistente. La pantalla generica de creacion no debe
+   * continuar en el wizard de publicacion/especializacion cuando se eligio tesis, pasantia
+   * o diplomado.
+   */
+  private rutaSiguiente(proyectoId: string): void {
+    const modalidad = Number(this.proyecto.proyectoModalidadId);
+    if (modalidad === 9004) {
+      this.$router.push({ name: 'PropuestaInformacionGeneraEditlView', params: { proyectoId } });
+    } else if ([9001, 9002, 9003].indexOf(modalidad) >= 0) {
+      this.$router.push({ name: 'PropuestaPasantiaInformacionGeneraEditlView', params: { proyectoId } });
+    } else if (modalidad === 9005) {
+      this.$router.push({ name: 'PropuestaDiplomadoInformacionGeneralEditView', params: { proyectoId } });
+    } else {
+      this.$router.push({ name: 'PropuestaIntegrantesNuevaEditView', params: { proyectoId } });
+    }
+  }
+
   public save(accion: 'borrador' | 'continuar' = 'continuar'): void {
     if (this.esPublicacionArticulo && !this.proyecto.publicacionCategoriaRevista) {
       this.alertService().showAlert(
@@ -391,11 +409,7 @@ export default class PropuestaInformacionGeneral extends Vue {
             this.alertService().showAlert('Borrador guardado. Aún puedes continuar más tarde.', 'info');
             return;
           }
-          if (this.esSinFlujo) {
-            this.$router.push({ name: 'PropuestasInvestigadorEditView' });
-          } else {
-            this.$router.push({ name: 'PropuestaIntegrantesNuevaEditView', params: { proyectoId: this.proyecto.id.toString() } });
-          }
+          this.rutaSiguiente(this.proyecto.id.toString());
           const message = this.$t('ciecytApp.proyecto.updated', { param: param.id });
           this.alertService().showAlert(message, 'info');
         })
@@ -418,11 +432,7 @@ export default class PropuestaInformacionGeneral extends Vue {
             return;
           }
 
-          if (this.esSinFlujo) {
-            this.$router.push({ name: 'PropuestasInvestigadorEditView' });
-          } else {
-            this.$router.push({ name: 'PropuestaIntegrantesNuevaEditView', params: { proyectoId: this.proyId } });
-          }
+          this.rutaSiguiente(this.proyId);
 
           const message = 'Se ha creado un nuevo proyecto';
           this.alertService().showAlert(message, 'success');
@@ -489,17 +499,6 @@ export default class PropuestaInformacionGeneral extends Vue {
 
   get esPublicacionArticulo(): boolean {
     return this.proyecto.proyectoModalidadId === MODALIDAD_PUBLICACION_ARTICULO;
-  }
-
-  get esSinFlujo(): boolean {
-    if (this.modalidad && this.modalidad.modalidad) {
-      return this.modalidad.modalidad === 'Diplomado' || this.modalidad.modalidad === 'Especializacion';
-    }
-    const found = this.modalidads.find(m => m.id === this.proyecto.proyectoModalidadId);
-    if (found && found.modalidad) {
-      return found.modalidad === 'Diplomado' || found.modalidad === 'Especializacion';
-    }
-    return false;
   }
 
   async initRelationships() {

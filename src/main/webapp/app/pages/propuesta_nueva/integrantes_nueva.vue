@@ -241,6 +241,23 @@ import { useVuelidate } from '@vuelidate/core';
                 this.proyecto = await this.proyectoService().find(this.proyId);
                 this.modalidadId = this.proyecto.proyectoModalidadId;
 
+                // Cada modalidad tiene su propio asistente; esta pantalla es la de
+                // publicacion/especializacion. Si el proyecto es de otra modalidad se
+                // redirige al wizard correcto para no intentar guardar integrantes ahi.
+                const modalidad = Number(this.modalidadId);
+                if (modalidad === 9004) {
+                    this.$router.replace({ name: 'PropuestaIntegrantesView', params: { proyectoId: this.proyId } });
+                    return;
+                }
+                if ([9001, 9002, 9003].indexOf(modalidad) >= 0) {
+                    this.$router.replace({ name: 'PropuestaPasantiaIntegrantesView', params: { proyectoId: this.proyId } });
+                    return;
+                }
+                if (modalidad === 9005) {
+                    this.$router.replace({ name: 'PropuestaDiplomadoIntegrantesView', params: { proyectoId: this.proyId } });
+                    return;
+                }
+
                 await this.integranteProyectoService()
                     .retrieveEstudiantesProyecto(this.proyId)
                     .then(res => {

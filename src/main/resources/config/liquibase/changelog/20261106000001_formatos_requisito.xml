@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.20.xsd">
+
+    <!--
+      Formato institucional descargable por requisito. El administrador carga el
+      archivo (PDF/Word) y el estudiante lo descarga desde el checklist y las
+      pantallas de envio de propuesta. Se guarda en base64 para reutilizar el
+      mismo patron de los adjuntos existentes.
+    -->
+
+    <changeSet id="20261106000001-1" author="ciecyt">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists tableName="requisito" columnName="archivo_formato"/>
+            </not>
+        </preConditions>
+        <addColumn tableName="requisito">
+            <column name="archivo_formato" type="text"/>
+            <column name="archivo_formato_content_type" type="varchar(255)"/>
+            <column name="nombre_archivo_formato" type="varchar(255)"/>
+        </addColumn>
+    </changeSet>
+
+</databaseChangeLog>

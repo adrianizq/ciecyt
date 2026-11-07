@@ -165,6 +165,8 @@
     <include file="config/liquibase/changelog/20261105000008_pasantias_seguimiento.xml" relativeToChangelogFile="false"/>
     <!-- Tipos de archivo permitidos por requisito (PDF / Word) -->
     <include file="config/liquibase/changelog/20261105000009_tipos_archivo_requisitos.xml" relativeToChangelogFile="false"/>
+    <!-- Formatos institucionales descargables por requisito, cargados por el administrador -->
+    <include file="config/liquibase/changelog/20261106000001_formatos_requisito.xml" relativeToChangelogFile="false"/>
     <!-- jhipster-needle-liquibase-add-constraints-changelog - JHipster will add liquibase constraints changelogs here -->
     <!-- jhipster-needle-liquibase-add-incremental-changelog - JHipster will add incremental liquibase changelogs here -->
 </databaseChangeLog>

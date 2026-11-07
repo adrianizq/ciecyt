@@ -45,6 +45,19 @@ public class Requisito implements Serializable {
     @Column(name = "acepta_tipos", length = 100)
     private String aceptaTipos;
 
+    /**
+     * Formato institucional descargable (PDF/Word) en base64. Lo carga el administrador
+     * y el estudiante solo lo descarga.
+     */
+    @Column(name = "archivo_formato", columnDefinition = "text")
+    private String archivoFormato;
+
+    @Column(name = "archivo_formato_content_type", length = 255)
+    private String archivoFormatoContentType;
+
+    @Column(name = "nombre_archivo_formato", length = 255)
+    private String nombreArchivoFormato;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "requisito_modalidad_id")
     private Modalidad requisitoModalidad;
@@ -115,6 +128,30 @@ public class Requisito implements Serializable {
 
     public void setAceptaTipos(String aceptaTipos) {
         this.aceptaTipos = aceptaTipos;
+    }
+
+    public String getArchivoFormato() {
+        return archivoFormato;
+    }
+
+    public void setArchivoFormato(String archivoFormato) {
+        this.archivoFormato = archivoFormato;
+    }
+
+    public String getArchivoFormatoContentType() {
+        return archivoFormatoContentType;
+    }
+
+    public void setArchivoFormatoContentType(String archivoFormatoContentType) {
+        this.archivoFormatoContentType = archivoFormatoContentType;
+    }
+
+    public String getNombreArchivoFormato() {
+        return nombreArchivoFormato;
+    }
+
+    public void setNombreArchivoFormato(String nombreArchivoFormato) {
+        this.nombreArchivoFormato = nombreArchivoFormato;
     }
 
     public Modalidad getRequisitoModalidad() {

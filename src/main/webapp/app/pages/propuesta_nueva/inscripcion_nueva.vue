@@ -149,6 +149,14 @@
                         >
                           <font-awesome-icon icon="eye"></font-awesome-icon> Previsualizar
                         </button>
+                        <button
+                          v-if="requisito.requisitoProyectoRequisitoTieneFormato"
+                          type="button"
+                          class="btn btn-sm btn-outline-primary mt-1 ms-1"
+                          @click="descargarFormato(requisito)"
+                        >
+                          <font-awesome-icon icon="download"></font-awesome-icon> Descargar formato
+                        </button>
                         <router-link
                           :to="{ name: 'PropuestaChecklistView', params: { proyectoId: proyId } }"
                           class="btn btn-sm btn-outline-secondary mt-1 ms-1"
@@ -256,6 +264,7 @@ import ProyectoService from '@/entities/proyecto/proyecto.service';
 import AlertService from '@/shared/alert/alert.service';
 import AdjuntoProyectoFaseService from '@/entities/adjunto-proyecto-fase/adjunto-proyecto-fase.service';
 import RequisitoProyectoService from '@/entities/requisito-proyecto/requisito-proyecto.service';
+import RequisitoService from '@/entities/requisito/requisito.service';
 import FasesService from '@/entities/fases/fases.service';
 
 @Component({
@@ -265,6 +274,7 @@ export default class EnviarPropuesta extends mixins(JhiDataUtils) {
   @Inject private proyectoService: () => ProyectoService;
   @Inject private adjuntoProyectoFaseService: () => AdjuntoProyectoFaseService;
   @Inject private requisitoProyectoService: () => RequisitoProyectoService;
+  @Inject private requisitoService: () => RequisitoService;
   @Inject private fasesService: () => FasesService;
   @Inject private alertService: () => AlertService;
 
@@ -583,6 +593,13 @@ export default class EnviarPropuesta extends mixins(JhiDataUtils) {
           this.adjuntoProyectoFaseService().previewFile(id);
         });
     }
+  }
+
+  public descargarFormato(requisito: IRequisitoProyecto): void {
+    this.requisitoService().downloadFormato(
+      requisito.requisitoProyectoRequisitoId,
+      requisito.requisitoProyectoRequisitoNombreFormato || 'formato-requisito'
+    );
   }
 
   public esRequisitoEditable(requisito: IRequisitoProyecto): boolean {

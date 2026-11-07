@@ -12,6 +12,10 @@ public interface RequisitoMapper extends EntityMapper<RequisitoDTO, Requisito> {
 
     @Mapping(source = "requisitoModalidad.id", target = "requisitoModalidadId")
     @Mapping(source = "requisitoModalidad.modalidad", target = "requisitoModalidadModalidad")
+    @Mapping(
+        target = "tieneFormato",
+        expression = "java(requisito.getArchivoFormato() != null && !requisito.getArchivoFormato().isEmpty())"
+    )
     RequisitoDTO toDto(Requisito requisito);
 
     @Mapping(source = "requisitoModalidadId", target = "requisitoModalidad")

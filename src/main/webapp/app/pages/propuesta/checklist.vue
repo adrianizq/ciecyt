@@ -40,6 +40,15 @@
                 <div v-if="requisito.requisitoProyectoRequisitoDescripcion" class="small text-muted mt-1">
                   {{ requisito.requisitoProyectoRequisitoDescripcion }}
                 </div>
+                <div v-if="requisito.requisitoProyectoRequisitoTieneFormato" class="mt-2">
+                  <button
+                    type="button"
+                    class="btn btn-sm btn-outline-primary"
+                    v-on:click="descargarFormato(requisito)"
+                  >
+                    <font-awesome-icon icon="download"></font-awesome-icon>&nbsp;Descargar formato
+                  </button>
+                </div>
               </div>
               <span class="badge" :class="claseEstado(requisito)">{{ etiquetaEstado(requisito) }}</span>
             </div>
@@ -120,6 +129,7 @@ import AlertService from '@/shared/alert/alert.service';
 import FasesService from '@/entities/fases/fases.service';
 import AdjuntoProyectoFaseService from '@/entities/adjunto-proyecto-fase/adjunto-proyecto-fase.service';
 import RequisitoProyectoService from '@/entities/requisito-proyecto/requisito-proyecto.service';
+import RequisitoService from '@/entities/requisito/requisito.service';
 import { IProyecto, Proyecto } from '@/shared/model/proyecto.model';
 import { IFases, Fases } from '@/shared/model/fases.model';
 import { IAdjuntoProyectoFase, AdjuntoProyectoFase } from '@/shared/model/adjunto-proyecto-fase.model';
@@ -138,6 +148,7 @@ export default class ChecklistPropuesta extends mixins(JhiDataUtils) {
   @Inject  private fasesService: () => FasesService;
   @Inject  private adjuntoProyectoFaseService: () => AdjuntoProyectoFaseService;
   @Inject  private requisitoProyectoService: () => RequisitoProyectoService;
+  @Inject  private requisitoService: () => RequisitoService;
 
   public requisitos: IRequisitoProyecto[] = [];
   public adjuntos: IAdjuntoProyectoFase[] = [];
@@ -249,6 +260,13 @@ export default class ChecklistPropuesta extends mixins(JhiDataUtils) {
     if (adjunto) {
       this.adjuntoProyectoFaseService().downloadFile(adjunto.id, adjunto.nombreArchivoOriginal);
     }
+  }
+
+  descargarFormato(requisito: IRequisitoProyecto) {
+    this.requisitoService().downloadFormato(
+      requisito.requisitoProyectoRequisitoId,
+      requisito.requisitoProyectoRequisitoNombreFormato || 'formato-requisito'
+    );
   }
 
   previsualizar(requisito: IRequisitoProyecto) {

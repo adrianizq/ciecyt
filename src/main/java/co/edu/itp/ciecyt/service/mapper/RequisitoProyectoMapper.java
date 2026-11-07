@@ -15,6 +15,11 @@ public interface RequisitoProyectoMapper extends EntityMapper<RequisitoProyectoD
     @Mapping(source = "requisitoProyectoRequisito.codigo", target = "requisitoProyectoRequisitoCodigo")
     @Mapping(source = "requisitoProyectoRequisito.descripcion", target = "requisitoProyectoRequisitoDescripcion")
     @Mapping(source = "requisitoProyectoRequisito.aceptaTipos", target = "requisitoProyectoRequisitoAceptaTipos")
+    @Mapping(source = "requisitoProyectoRequisito.nombreArchivoFormato", target = "requisitoProyectoRequisitoNombreFormato")
+    @Mapping(
+        target = "requisitoProyectoRequisitoTieneFormato",
+        expression = "java(requisitoProyecto.getRequisitoProyectoRequisito() != null && requisitoProyecto.getRequisitoProyectoRequisito().getArchivoFormato() != null && !requisitoProyecto.getRequisitoProyectoRequisito().getArchivoFormato().isEmpty())"
+    )
     @Mapping(source = "requisitoProyectoRequisito.obligatorio", target = "requisitoProyectoRequisitoObligatorio")
     @Mapping(source = "requisitoProyectoRequisito.tipo", target = "requisitoProyectoRequisitoTipo")
     @Mapping(source = "requisitoProyectoRequisito.requisitoEstado", target = "requisitoProyectoRequisitoEstado")

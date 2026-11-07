@@ -18,6 +18,7 @@ const PeriodosAdmin = () => import('../pages/admin/periodos.vue');
 const MetricasNegocio = () => import('../pages/admin/metricas_negocio.vue');
 const ReportesAdmin = () => import('../pages/admin/reportes.vue');
 const FestivosAdmin = () => import('../pages/admin/festivos.vue');
+const AdminRequisitos = () => import('../pages/admin/requisitos.vue');
 const JhiUserManagementViewComponent = () => import('../admin/user-management/user-management-view.vue');
 const JhiUserManagementEditComponent = () => import('../admin/user-management/user-management-edit.vue');
 const JhiConfigurationComponent = () => import('../admin/configuration/configuration.vue');
@@ -260,8 +261,6 @@ const PropuestaInformacionGeneral = () => import('../pages/propuesta/informacion
 const PropuestaPasantiaIntegrantes = () => import('../pages/propuesta_pasantia/integrantes_pasantia.vue');
 const PropuestaPasantiaInformacionGeneral = () => import('../pages/propuesta_pasantia/informacion_general_pasantia.vue');
 const PropuestaPasantiaInformacionEmpresa = () => import('../pages/propuesta_pasantia/informacion_empresa.vue');
-const PropuestaPasantiaElementos = () => import('../pages/propuesta_pasantia/elementos_pasantia.vue');
-const PropuestaPasantiaCronograma = () => import('../pages/propuesta_pasantia/cronograma_pasantia.vue');
 const PropuestaEnviarPropuestaPasantia = () => import('../pages/propuesta_pasantia/enviar_propuesta_pasantia.vue');
 const PropuestaAdjuntarPropuestaPasantia = () => import('../pages/propuesta_pasantia/adjuntar_propuesta_pasantia.vue');
 //const PropuestaRetroalimentacionPasantia = () => import('../pages/propuesta_pasantia/retroalimentacion_pasantia.vue');
@@ -270,8 +269,6 @@ const PropuestaRetroalimentacionViabilidadPasantia = () => import('../pages/prop
 
 const PropuestaDiplomadoInformacionGeneral = () => import('../pages/propuesta_diplomado/informacion_general_diplomado.vue');
 const PropuestaDiplomadoIntegrantes = () => import('../pages/propuesta_diplomado/integrantes_diplomado.vue');
-const PropuestaDiplomadoElementos = () => import('../pages/propuesta_diplomado/elementos_diplomado.vue');
-const PropuestaDiplomadoCronograma = () => import('../pages/propuesta_diplomado/cronograma_diplomado.vue');
 const PropuestaEnviarPropuestaDiplomado = () => import('../pages/propuesta_diplomado/enviar_propuesta_diplomado.vue');
 const PropuestaAdjuntarPropuestaDiplomado = () => import('../pages/propuesta_diplomado/adjuntar_propuesta_diplomado.vue');
 const PropuestaRetroalimentacionDiplomado = () => import('../pages/propuesta_diplomado/retroalimentacion.vue');
@@ -391,6 +388,12 @@ const router = createRouter({
     {
       path: '/admin',
       redirect: '/admin/configuracion-academica'
+    },
+    {
+      path: '/admin/requisitos',
+      name: 'AdminRequisitos',
+      component: AdminRequisitos,
+      meta: { authorities: ['ROLE_ADMIN'] }
     },
     {
       path: '/admin/user-management',
@@ -1631,23 +1634,6 @@ const router = createRouter({
     },
     
     {
-      path: '/propuesta-pasantia/elementos-pasantia/:proyectoId',
-      name: 'PropuestaPasantiaElementosView',
-      component: PropuestaPasantiaElementos,
-      props: true,
-      meta: { authorities: ['ROLE_USER', 'ROLE_ESTUDIANTE'] }
-    },
-    
-    {
-      path: '/propuesta-pasantia/cronograma-pasantia/:proyectoId',
-      name: 'PropuestaPasantiaCronogramaView',
-      component: PropuestaPasantiaCronograma,
-      props: true,
-      meta: { authorities: ['ROLE_USER', 'ROLE_ESTUDIANTE'] }
-    },
-
-     
-    {
       path: '/propuesta-pasantia/retroalimentacion-pasantia/:proyectoId',
       name: 'PropuestaRetroalimentacionPasantiaView',
       component: PropuestaRetroalimentacionPasantia,
@@ -1708,22 +1694,6 @@ const router = createRouter({
       meta: { authorities: ['ROLE_USER', 'ROLE_ESTUDIANTE'] }
     },
       
-    {
-      path: '/propuesta-diplomado/elementos-diplomado/:proyectoId',
-      name: 'PropuestaDiplomadoElementosView',
-      component: PropuestaDiplomadoElementos,
-      props: true,
-      meta: { authorities: ['ROLE_USER', 'ROLE_ESTUDIANTE'] }
-    },
-    
-    {
-      path: '/propuesta-diplomado/cronograma-diplomado/:proyectoId',
-      name: 'PropuestaDiplomadoCronogramaView',
-      component: PropuestaDiplomadoCronograma,
-      props: true,
-      meta: { authorities: ['ROLE_USER', 'ROLE_ESTUDIANTE'] }
-    },
-
     ////////////////////////////////////////////////77
   
     {

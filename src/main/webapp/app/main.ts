@@ -67,6 +67,7 @@ import InformacionPasantiaService from '@/entities/informacion-pasantia/informac
 import SolicitudService from '@/entities/solicitud/solicitud.service';
 import AdjuntoProyectoFaseService from '@/entities/adjunto-proyecto-fase/adjunto-proyecto-fase.service';
 import RequisitoProyectoService from '@/entities/requisito-proyecto/requisito-proyecto.service';
+import RequisitoService from '@/entities/requisito/requisito.service';
 import ProyectoHistorialEstadoService from '@/entities/proyecto-historial-estado/proyecto-historial-estado.service';
 import ConvocatoriaPasantiaService from '@/entities/convocatoria-pasantia/convocatoria-pasantia.service';
 import RetroalimentacionService from '@/entities/retroalimentacion/retroalimentacion.service';
@@ -193,6 +194,7 @@ const provide: Record<string, unknown> = {
   solicitudService: () => new SolicitudService(),
   adjuntoProyectoFaseService: () => new AdjuntoProyectoFaseService(),
   requisitoProyectoService: () => new RequisitoProyectoService(),
+  requisitoService: () => new RequisitoService(),
   proyectoHistorialEstadoService: () => new ProyectoHistorialEstadoService(),
   convocatoriaPasantiaService: () => new ConvocatoriaPasantiaService(),
   retroalimentacionService: () => new RetroalimentacionService(),

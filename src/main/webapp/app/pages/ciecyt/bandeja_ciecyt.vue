@@ -319,6 +319,12 @@
                 </button>
               </div>
 
+              <div v-if="requisito.requisitoProyectoRequisitoTieneFormato" class="mt-2">
+                <button type="button" class="btn btn-outline-secondary btn-sm" @click="descargarFormato(requisito)">
+                  <font-awesome-icon icon="download" /> Descargar formato
+                </button>
+              </div>
+
               <div class="mt-2">
                 <label class="small mb-0" :for="'observacion-' + requisito.id">
                   Observación<span v-if="esCampoRequisito(requisito)"> / dato entregado</span>
@@ -741,6 +747,7 @@ import ProyectoService from '@/entities/proyecto/proyecto.service';
 import { IPrograma } from '@/shared/model/programa.model';
 import ProgramaService from '@/entities/programa/programa.service';
 import RequisitoProyectoService from '@/entities/requisito-proyecto/requisito-proyecto.service';
+import RequisitoService from '@/entities/requisito/requisito.service';
 import { IRequisitoProyecto } from '@/shared/model/requisito-proyecto.model';
 import { EnumEstadoRequisito } from '@/shared/model/enumerations/enum-estado-requisito.model';
 import { TipoRequisito } from '@/shared/model/enumerations/tipo-requisito.model';
@@ -774,6 +781,9 @@ export default class BandejaCiecyt extends Vue {
 
   @Inject
   private requisitoProyectoService: () => RequisitoProyectoService;
+
+  @Inject
+  private requisitoService: () => RequisitoService;
 
   @Inject
   private adjuntoProyectoFaseService: () => AdjuntoProyectoFaseService;
@@ -1323,6 +1333,13 @@ export default class BandejaCiecyt extends Vue {
     this.adjuntoProyectoFaseService().previewFile(
       adjunto.id,
       adjunto.nombreArchivoOriginal || adjunto.nombreAdjunto || ''
+    );
+  }
+
+  public descargarFormato(requisito: IRequisitoProyecto): void {
+    this.requisitoService().downloadFormato(
+      requisito.requisitoProyectoRequisitoId,
+      requisito.requisitoProyectoRequisitoNombreFormato || 'formato-requisito'
     );
   }
 

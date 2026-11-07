@@ -2,6 +2,7 @@ package co.edu.itp.ciecyt.service.dto;
 
 import co.edu.itp.ciecyt.domain.enumeration.EnumEstadoProyecto;
 import co.edu.itp.ciecyt.domain.enumeration.TipoRequisito;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import java.io.Serializable;
 
 /**
@@ -24,6 +25,15 @@ public class RequisitoDTO implements Serializable {
     private Boolean activo;
 
     private String aceptaTipos;
+
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    private String archivoFormato;
+
+    private String archivoFormatoContentType;
+
+    private String nombreArchivoFormato;
+
+    private Boolean tieneFormato;
 
     private Long requisitoModalidadId;
 
@@ -93,6 +103,38 @@ public class RequisitoDTO implements Serializable {
 
     public void setAceptaTipos(String aceptaTipos) {
         this.aceptaTipos = aceptaTipos;
+    }
+
+    public String getArchivoFormato() {
+        return archivoFormato;
+    }
+
+    public void setArchivoFormato(String archivoFormato) {
+        this.archivoFormato = archivoFormato;
+    }
+
+    public String getArchivoFormatoContentType() {
+        return archivoFormatoContentType;
+    }
+
+    public void setArchivoFormatoContentType(String archivoFormatoContentType) {
+        this.archivoFormatoContentType = archivoFormatoContentType;
+    }
+
+    public String getNombreArchivoFormato() {
+        return nombreArchivoFormato;
+    }
+
+    public void setNombreArchivoFormato(String nombreArchivoFormato) {
+        this.nombreArchivoFormato = nombreArchivoFormato;
+    }
+
+    public Boolean getTieneFormato() {
+        return tieneFormato;
+    }
+
+    public void setTieneFormato(Boolean tieneFormato) {
+        this.tieneFormato = tieneFormato;
     }
 
     public Long getRequisitoModalidadId() {

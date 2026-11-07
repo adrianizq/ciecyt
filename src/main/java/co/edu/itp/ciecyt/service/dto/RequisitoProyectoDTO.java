@@ -35,6 +35,10 @@ public class RequisitoProyectoDTO implements Serializable {
 
     private String requisitoProyectoRequisitoAceptaTipos;
 
+    private String requisitoProyectoRequisitoNombreFormato;
+
+    private Boolean requisitoProyectoRequisitoTieneFormato;
+
     private Boolean requisitoProyectoRequisitoObligatorio;
 
     private TipoRequisito requisitoProyectoRequisitoTipo;
@@ -139,6 +143,22 @@ public class RequisitoProyectoDTO implements Serializable {
 
     public void setRequisitoProyectoRequisitoAceptaTipos(String requisitoProyectoRequisitoAceptaTipos) {
         this.requisitoProyectoRequisitoAceptaTipos = requisitoProyectoRequisitoAceptaTipos;
+    }
+
+    public String getRequisitoProyectoRequisitoNombreFormato() {
+        return requisitoProyectoRequisitoNombreFormato;
+    }
+
+    public void setRequisitoProyectoRequisitoNombreFormato(String requisitoProyectoRequisitoNombreFormato) {
+        this.requisitoProyectoRequisitoNombreFormato = requisitoProyectoRequisitoNombreFormato;
+    }
+
+    public Boolean getRequisitoProyectoRequisitoTieneFormato() {
+        return requisitoProyectoRequisitoTieneFormato;
+    }
+
+    public void setRequisitoProyectoRequisitoTieneFormato(Boolean requisitoProyectoRequisitoTieneFormato) {
+        this.requisitoProyectoRequisitoTieneFormato = requisitoProyectoRequisitoTieneFormato;
     }
 
     public Boolean getRequisitoProyectoRequisitoObligatorio() {

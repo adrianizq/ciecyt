@@ -635,6 +635,20 @@
         </div>
 
         <div class="col-md-4 mb-4">
+          <router-link :to="{ name: 'AdminRequisitos' }" class="text-decoration-none">
+            <div class="card modalidad-card" role="button" tabindex="0" aria-label="Formatos de requisitos"
+              @keydown.enter.prevent="$router.push({ name: 'AdminRequisitos' })"
+              @keydown.space.prevent="$router.push({ name: 'AdminRequisitos' })">
+              <div class="card-body">
+                <div class="card-icon" style="background-color:#2E7D32;"><font-awesome-icon icon="file-alt" /></div>
+                <h3 class="card-title">Formatos de requisitos</h3>
+                <p class="card-text">Cargar los formatos institucionales que descargan los estudiantes.</p>
+              </div>
+            </div>
+          </router-link>
+        </div>
+
+        <div class="col-md-4 mb-4">
           <router-link :to="{ name: 'RolesComponent' }" class="text-decoration-none">
             <div class="card modalidad-card" role="button" tabindex="0" aria-label="Roles y permisos"
               @keydown.enter.prevent="$router.push({ name: 'RolesComponent' })"

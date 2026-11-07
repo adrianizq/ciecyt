@@ -9,6 +9,7 @@ import tech.jhipster.web.util.PaginationUtil;
 import tech.jhipster.web.util.ResponseUtil;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
 import org.slf4j.Logger;
@@ -17,6 +18,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -113,6 +116,58 @@ public class RequisitoResource {
         log.debug("REST request to get Requisito : {}", id);
         Optional<RequisitoDTO> requisitoDTO = requisitoService.findOne(id);
         return ResponseUtil.wrapOrNotFound(requisitoDTO);
+    }
+
+    /**
+     * {@code GET  /requisitos/:id/formato} : descarga el formato institucional del requisito.
+     */
+    @GetMapping("/requisitos/{id}/formato")
+    public ResponseEntity<byte[]> downloadFormato(@PathVariable Long id) {
+        log.debug("REST request to download formato of Requisito : {}", id);
+        Optional<RequisitoDTO> requisitoDTO = requisitoService.findOne(id);
+        if (requisitoDTO.isEmpty() || requisitoDTO.get().getArchivoFormato() == null || requisitoDTO.get().getArchivoFormato().isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        RequisitoDTO dto = requisitoDTO.get();
+        byte[] contenido;
+        try {
+            contenido = Base64.getDecoder().decode(dto.getArchivoFormato());
+        } catch (IllegalArgumentException ex) {
+            log.warn("El formato del requisito {} no es un base64 valido", id);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+        MediaType mediaType;
+        try {
+            mediaType = dto.getArchivoFormatoContentType() != null
+                ? MediaType.parseMediaType(dto.getArchivoFormatoContentType())
+                : MediaType.APPLICATION_OCTET_STREAM;
+        } catch (IllegalArgumentException ex) {
+            mediaType = MediaType.APPLICATION_OCTET_STREAM;
+        }
+        String fileName = dto.getNombreArchivoFormato() != null ? dto.getNombreArchivoFormato() : "formato-requisito";
+        return ResponseEntity.ok()
+            .contentType(mediaType)
+            .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + fileName.replace("\"", "") + "\"")
+            .body(contenido);
+    }
+
+    /**
+     * {@code DELETE  /requisitos/:id/formato} : elimina el formato institucional del requisito.
+     */
+    @DeleteMapping("/requisitos/{id}/formato")
+    @PreAuthorize("hasAnyRole('" + AuthoritiesConstants.ADMIN + "')")
+    public ResponseEntity<Void> deleteFormato(@PathVariable Long id) {
+        log.debug("REST request to delete formato of Requisito : {}", id);
+        Optional<RequisitoDTO> requisitoDTO = requisitoService.findOne(id);
+        if (requisitoDTO.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        RequisitoDTO dto = requisitoDTO.get();
+        dto.setArchivoFormato(null);
+        dto.setArchivoFormatoContentType(null);
+        dto.setNombreArchivoFormato(null);
+        requisitoService.save(dto);
+        return ResponseEntity.noContent().build();
     }
 
     /**
